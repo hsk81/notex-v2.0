@@ -34,15 +34,34 @@ class Set (db.Model):
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
-    size = db.Column (db.BigInteger)
 
-    def __init__ (self, name, size=0, uuid=None):
-        self.uuid = uuid if uuid is not None else str (uuid_random ())
+    def __init__ (self, name, uuid=None):
+        self.uuid = uuid if uuid else str (uuid_random ())
         self.name = name
-        self.size = size
 
     def __repr__ (self):
         return '<Set %r>' % self.name
+
+
+class Doc (db.Model):
+    id = db.Column (db.Integer, primary_key=True)
+    uuid = db.Column (db.String (36), unique=True)
+    name = db.Column (db.Unicode (256))
+    ext = db.Column (db.Unicode (16))
+    size = db.Column (db.BigInteger)
+
+    set_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    set = db.relationship ('Set', backref=db.backref ('docs', lazy='dynamic'))
+
+    def __init__ (self, name, ext, size, set, uuid=None):
+        self.uuid = uuid if uuid else str (uuid_random ())
+        self.name = name
+        self.ext = ext
+        self.size = size
+        self.set = set
+
+    def __repr__(self):
+        return '<Doc %r>' % (self.name + u'.' + self.ext)
 
 ###############################################################################
 ###############################################################################
