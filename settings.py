@@ -14,7 +14,7 @@ DEBUG = socket.gethostname () != SITE_HOST
 if not DEBUG:
     SERVER_NAME = '%s.%s' % (SITE_NAME, SITE_HOST)
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///./%s.db' % SITE_NAME
+SQLALCHEMY_DATABASE_URI = 'sqlite:///%s/%s.db' % (SITE_ROOT, SITE_NAME)
 SECRET_KEY = os.urandom (24)
 
 ###############################################################################
