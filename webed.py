@@ -37,7 +37,7 @@ class Set (db.Model):
 
     def __init__ (self, name, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
-        self.name = name
+        self.name = unicode (name)
 
     def __repr__ (self):
         return '<Set %r>' % self.name
@@ -55,20 +55,20 @@ class Doc (db.Model):
 
     def __init__ (self, name, ext, size, set, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
-        self.name = name
-        self.ext = ext
+        self.name = unicode (name)
+        self.ext = unicode (ext)
         self.size = size
         self.set = set
 
     def __repr__(self):
-        return '<Doc %r>' % (self.name + u'.' + self.ext)
+        return u'<Doc %r>' % (self.name + u'.' + self.ext)
 
 ###############################################################################
 ###############################################################################
 
 @app.route ('/')
 def main ():
-    if 'timestamp' in session and 'init' not in request.args:
+    if 'timestamp' in session and 'refresh' not in request.args:
         session['timestamp'] = datetime.now ()
     else:
         session['timestamp'] = datetime.now ()
@@ -88,7 +88,8 @@ def main ():
 
 
 def init ():
-    print "[init]"
+    sets = Set.query.all (); print '[init] sets:', sets
+    docs = Doc.query.all (); print '[init] docs:', docs
 
 ###############################################################################
 ###############################################################################
