@@ -1,0 +1,14 @@
+{
+    "results": [{
+        "id": 1, "uuid": "488989dc-b789-4729-9fb1-65fe6337f9c2",
+        "name": "R-XY", "size": 0, "loaded": true
+    },{
+        "id": 2, "uuid": "ba11ec2b-8473-44bb-ba8e-5058a42f7b94",
+        "name": "R-XZ", "size": 0, "loaded": true
+    },{
+        "id": 3, "uuid": "85f8190c-c074-49af-9d02-a460cd609c6f",
+        "name": "R-YZ", "size": 0, "loaded": false, "expanded": false
+    }],
+
+    "success": true
+}

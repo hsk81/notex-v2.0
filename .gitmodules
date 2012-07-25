@@ -1,0 +1,6 @@
+[submodule "static/lib/extjs.git"]
+	path = static/lib/extjs.git
+	url = git@github.com:hsk81/extjs.git
+[submodule "static/ico/fatcow.git"]
+	path = static/ico/fatcow.git
+	url = git@github.com:hsk81/fatcow-hosting-icon.git

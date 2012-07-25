@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>WebEd</title>
+
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='webed.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='ico/fatcow/16x16/icons.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='ico/fatcow/32x32/icons-32.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='lib/extjs/resources/css/ext-all.css') }}" />
+</head>
+
+<body>
+    <div id="load-progress">
+        <span class="animation" />
+    </div>
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/extjs/ext-debug.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
