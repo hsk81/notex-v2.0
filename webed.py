@@ -60,7 +60,7 @@ class Doc (db.Model):
         self.size = size
         self.set = set
 
-    def __repr__(self):
+    def __repr__ (self):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
 
 ###############################################################################
