@@ -3,8 +3,8 @@ Ext.define ('Webed.model.Doc', {
     fields: ['uuid', 'name', 'ext', 'size', 'rsrc'],
 
     proxy: {
-        type: 'ajax',
-        url: 'static/data/docs.json',
+        type: 'rest',
+        url: '/docs/',
         reader: {
             type: 'json',
             root: 'results'

@@ -5,7 +5,6 @@ Ext.define ('Webed.store.Sets', {
 
     root: {
         expanded: false,
-        id: 0,
         name: 'Root',
         size: 0,
         uuid: '00000000-0000-0000-0000-000000000000'

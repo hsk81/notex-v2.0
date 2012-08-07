@@ -42,26 +42,25 @@ class Set (db.Model):
     def __repr__ (self):
         return '<Set %r>' % self.name
 
-
 class Doc (db.Model):
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
     ext = db.Column (db.Unicode (16))
-    size = db.Column (db.BigInteger)
 
     set_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     set = db.relationship ('Set', backref=db.backref ('docs', lazy='dynamic'))
 
-    def __init__ (self, name, ext, size, set, uuid=None):
+    def __init__ (self, name, ext, set, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.ext = unicode (ext)
-        self.size = size
         self.set = set
 
     def __repr__ (self):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
+
+    fullname = property (lambda self: '%s.%s' % (self.name, self.ext))
 
 ###############################################################################
 ###############################################################################
@@ -72,7 +71,7 @@ def main ():
         session['timestamp'] = datetime.now ()
     else:
         session['timestamp'] = datetime.now ()
-        init ()
+        reset (); init ()
 
     if not request.args.get ('silent', False):
         if app.session_cookie_name in request.cookies:
@@ -86,20 +85,38 @@ def main ():
 
     return render_template ('index.html')
 
+def reset ():
+    db.drop_all ()
+    db.create_all ()
 
 def init ():
-    sets = Set.query.all (); print '[init] sets:', sets
-    docs = Doc.query.all (); print '[init] docs:', docs
+    init_article ()
+    init_report ()
+
+def init_article ():
+    set = Set ('Article'); db.session.add (set)
+    doc = Doc ('options', 'cfg', set); db.session.add (doc)
+    doc = Doc ('content', 'txt', set); db.session.add (doc)
+    db.session.commit ()
+
+def init_report ():
+    set = Set ('Report'); db.session.add (set)
+    doc = Doc ('options', 'cfg', set); db.session.add (doc)
+    doc = Doc ('content', 'txt', set); db.session.add (doc)
+    db.session.commit ()
 
 ###############################################################################
 ###############################################################################
 
 @app.route ('/sets/', methods=['PUT', 'GET', 'POST', 'DELETE'])
 def sets ():
+    """
+    TODO: Check out also if Flask-Restless is an option!
+    """
     if request.method == 'PUT':
         return set_create (None) ## TODO!
     elif request.method == 'GET':
-        return set_read (request.args.get ('node', None))
+        return set_read (request.args.get ('uuid', None))
     elif request.method == 'POST':
         return set_update (None) ## TODO!
     elif request.method == 'DELETE':
@@ -107,39 +124,104 @@ def sets ():
     else:
         return jsonify (success=False)
 
-
 def set_create (uuid):
     return jsonify (success=True, id=1, uuid=uuid)
 
+def set_read (uuid, json=True):
 
-def set_read (id):
-    if id == 0 or id == '0':
-        return jsonify (success=True, id=id, children=[{
-            'id': 1, 'uuid': '488989dc-b789-4729-9fb1-65fe6337f9c2',
-            'name': 'R-XY', 'size': 0, 'loaded': True
-        }, {
-            'id': 2, 'uuid': 'ba11ec2b-8473-44bb-ba8e-5058a42f7b94',
-            'name': 'R-XZ', 'size': 0, 'loaded': True
-        }, {
-            'id': 3, 'uuid': '85f8190c-c074-49af-9d02-a460cd609c6f',
-            'name': 'R-YZ', 'size': 0, 'loaded': False, 'expanded': False
-        }])
-
+    if not uuid:
+        sets = Set.query.all ()
     else:
-        return jsonify (success=True, id=id, children=[])
+        sets = Set.query.filter_by (uuid=uuid).all ()
 
+    result = {
+        'success': True, 'results': map (set2ext, sets)
+    }
 
-def set_update (id):
-    return jsonify (success=True, id=id)
+    return jsonify (result) if json else result
 
+def set_update (uuid):
+    return jsonify (success=True, uuid=uuid)
 
-def set_delete (id):
-    return jsonify (success=True, id=id)
+def set_delete (uuid):
+    return jsonify (success=True, uuid=uuid)
+
+###############################################################################
+###############################################################################
+
+@app.route ('/docs/', methods=['PUT', 'GET', 'POST', 'DELETE'])
+def docs ():
+    """
+    TODO: Check out also if Flask-Restless is an option!
+    """
+    if request.method == 'PUT':
+        return doc_create (None) ## TODO!
+    elif request.method == 'GET':
+        return doc_read (request.args.get ('uuid', None))
+    elif request.method == 'POST':
+        return doc_update (None) ## TODO!
+    elif request.method == 'DELETE':
+        return doc_delete (None) ## TODO!
+    else:
+        return jsonify (success=False)
+
+def doc_create (uuid):
+    return jsonify (success=True, id=1, uuid=uuid)
+
+def doc_read (uuid, json=True):
+
+    if not uuid:
+        docs = Doc.query.all ()
+    else:
+        docs = Doc.query.filter_by (uuid=uuid).all ()
+
+    result = {
+        'success': True, 'results': map (doc2ext, docs)
+    }
+
+    return jsonify (result) if json else result
+
+def doc_update (uuid):
+    return jsonify (success=True, uuid=uuid)
+
+def doc_delete (uuid):
+    return jsonify (success=True, uuid=uuid)
+
+###############################################################################
+###############################################################################
+
+def set2ext (set):
+
+    return {
+        'uuid': set.uuid,
+        'name': set.name,
+        'size': 0, ## TODO!
+        'loaded': True,
+        'iconCls': 'icon-report', ## TODO: 'icon-report-16'!
+        'results': map (lambda doc: doc2ext (doc, fullname=True), set.docs),
+    }
+
+def doc2ext (doc, fullname=False):
+    """
+    TODO: ExtJS should be able to stitch together fullname from name and ext,
+          which ExtJS is able to do for the grid, but not for the tree. Look
+          for a way to compose the fullname also for the tree! The `fullname`
+          parameter should ideally just be eliminated.
+    """
+    return {
+        'uuid': doc.uuid,
+        'name': doc.fullname if fullname else  doc.name,
+        'ext': doc.ext,
+        'size': 0, ## TODO!
+        'loaded': True,
+        'iconCls': 'icon-page', ## TODO: 'icon-page/picture-16'!
+    }
 
 ###############################################################################
 ###############################################################################
 
 if __name__ == '__main__':
+
     app.run (debug=True)
 
 ###############################################################################
