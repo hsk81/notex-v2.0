@@ -18,7 +18,7 @@ class WebedTestCase (unittest.TestCase):
 
     def test_models (self):
         set = webed.Set ('folder')
-        doc = webed.Doc ('file', 'txt', size=1024, set=set)
+        doc = webed.Doc ('file', 'txt', set=set)
         webed.db.session.add (set)
         webed.db.session.add (doc)
         webed.db.session.commit ()
