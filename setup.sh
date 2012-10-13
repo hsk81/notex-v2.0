@@ -3,6 +3,12 @@
 ###############################################################################
 ###############################################################################
 
+# Initial $ ./setup.sh init webed
+# Upgrade $ ./setup.sh init webed --upgrade
+
+###############################################################################
+###############################################################################
+
 ACTMETH=${1}
 APPNAME=${2-"webed"}
 PIPOPTS=${3-""}
@@ -14,7 +20,6 @@ function pipit () {
     pip install $1 Flask
     pip install $1 Flask-SQLAlchemy
     pip install $1 flask-debugtoolbar
-    pip install $1 coverage
     pip install $1 ipython
 }
 
