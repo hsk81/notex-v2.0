@@ -67,7 +67,7 @@ class Doc (db.Model):
 
 @app.route ('/')
 def main ():
-    if 'timestamp' in session and 'refresh' not in request.args:
+    if 'timestamp' in session and 'reset' not in request.args:
         session['timestamp'] = datetime.now ()
     else:
         session['timestamp'] = datetime.now ()
