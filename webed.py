@@ -35,9 +35,14 @@ class Set (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
 
-    def __init__ (self, name, uuid=None):
+    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    subsets = db.relationship ('Set', cascade='all', backref=db.backref ("root",
+        remote_side='Set.id'))
+
+    def __init__ (self, name, root=None, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
+        self.root = root
 
     def __repr__ (self):
         return '<Set %r>' % self.name
@@ -97,12 +102,18 @@ def init_article ():
     set = Set ('Article'); db.session.add (set)
     doc = Doc ('options', 'cfg', set); db.session.add (doc)
     doc = Doc ('content', 'txt', set); db.session.add (doc)
+    subset = Set ('resources', root=set); db.session.add (subset)
+    doc = Doc ('wiki', 'png', subset); db.session.add (doc)
+    doc = Doc ('time', 'jpg', subset); db.session.add (doc)
     db.session.commit ()
 
 def init_report ():
     set = Set ('Report'); db.session.add (set)
     doc = Doc ('options', 'cfg', set); db.session.add (doc)
     doc = Doc ('content', 'txt', set); db.session.add (doc)
+    subset = Set ('resources', root=set); db.session.add (subset)
+    doc = Doc ('wiki', 'png', subset); db.session.add (doc)
+    doc = Doc ('time', 'jpg', subset); db.session.add (doc)
     db.session.commit ()
 
 ###############################################################################
@@ -126,8 +137,14 @@ def sets ():
 
 
 @app.route ('/sets/root')
-def sets_root ():
-    return set_read (request.args.get ('uuid', None))
+def sets_root (json=True):
+
+    sets = Set.query.filter_by (root=None).all ()
+    result = {
+        'success': True, 'results': map (set2ext, sets)
+    }
+
+    return jsonify (result) if json else result
 
 def set_create (uuid):
     return jsonify (success=True, id=1, uuid=uuid)
@@ -197,13 +214,19 @@ def doc_delete (uuid):
 
 def set2ext (set):
 
+    docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
+    sets = map (lambda set: set2ext (set), set.subsets)
+
+    iconCls = 'icon-report' if not set.root else 'icon-folder' ## TODO: '-16'!
+    size = 0 ## TODO!
+
     return {
         'uuid': set.uuid,
         'name': set.name,
-        'size': 0, ## TODO!
+        'size': size,
         'loaded': True,
-        'iconCls': 'icon-report', ## TODO: 'icon-report-16'!
-        'results': map (lambda doc: doc2ext (doc, fullname=True), set.docs),
+        'iconCls': iconCls,
+        'results': docs + sets,
     }
 
 def doc2ext (doc, fullname=False):
@@ -213,13 +236,17 @@ def doc2ext (doc, fullname=False):
           for a way to compose the fullname also for the tree! The `fullname`
           parameter should ideally just be eliminated.
     """
+
+    size = 0 ## TODO!
+    iconCls = 'icon-page', ## TODO: 'icon-page/picture-16'!
+
     return {
         'uuid': doc.uuid,
         'name': doc.fullname if fullname else  doc.name,
         'ext': doc.ext,
-        'size': 0, ## TODO!
+        'size':size,
         'loaded': True,
-        'iconCls': 'icon-page', ## TODO: 'icon-page/picture-16'!
+        'iconCls': iconCls
     }
 
 ###############################################################################
