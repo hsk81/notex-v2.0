@@ -4,7 +4,7 @@ Ext.define ('Webed.model.Doc', {
 
     proxy: {
         type: 'rest',
-        url: '/docs/',
+        url: '/docs',
         reader: {
             type: 'json',
             root: 'results'

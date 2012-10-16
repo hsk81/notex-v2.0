@@ -4,7 +4,7 @@ Ext.define ('Webed.model.Set', {
 
     proxy: {
         type: 'rest',
-        url: '/sets/',
+        url: '/sets',
         reader: {
             type: 'json',
             root: 'results'

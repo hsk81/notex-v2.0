@@ -108,7 +108,7 @@ def init_report ():
 ###############################################################################
 ###############################################################################
 
-@app.route ('/sets/', methods=['PUT', 'GET', 'POST', 'DELETE'])
+@app.route ('/sets', methods=['PUT', 'GET', 'POST', 'DELETE'])
 def sets ():
     """
     TODO: Check out also if Flask-Restless is an option!
@@ -123,6 +123,11 @@ def sets ():
         return set_delete (None) ## TODO!
     else:
         return jsonify (success=False)
+
+
+@app.route ('/sets/root')
+def sets_root ():
+    return set_read (request.args.get ('uuid', None))
 
 def set_create (uuid):
     return jsonify (success=True, id=1, uuid=uuid)
@@ -149,7 +154,7 @@ def set_delete (uuid):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/docs/', methods=['PUT', 'GET', 'POST', 'DELETE'])
+@app.route ('/docs', methods=['PUT', 'GET', 'POST', 'DELETE'])
 def docs ():
     """
     TODO: Check out also if Flask-Restless is an option!
