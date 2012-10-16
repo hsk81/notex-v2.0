@@ -44,6 +44,7 @@ Ext.define ('Webed.controller.MainBar', {
     },
     add: function (item, event, options) {
         console.debug ('[MainBarCtrl.add]');
+        this.application.fireEvent ('synchronize');
     },
     addProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.addProject]');
