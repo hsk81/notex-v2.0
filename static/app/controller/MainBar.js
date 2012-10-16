@@ -3,11 +3,14 @@ Ext.define ('Webed.controller.MainBar', {
 
     init: function () {
         this.control ({
-            'main-bar menuitem[action=save-document]': {
+            'main-bar button[action=save-document]': {
                 click: this.saveDocument
             },
-            'main-bar menuitem[action=open-document]': {
+            'main-bar button[action=open-document]': {
                 click: this.openDocument
+            },
+            'main-bar splitbutton[action=add]': {
+                click: this.add
             },
             'main-bar menuitem[action=add-project]': {
                 click: this.addProject
@@ -18,28 +21,49 @@ Ext.define ('Webed.controller.MainBar', {
             'main-bar menuitem[action=add-text]': {
                 click: this.addText
             },
-            'main-bar menuitem[action=rename-project-or-document]': {
-                click: this.renameProjectOrDocument
+            'main-bar button[action=rename]': {
+                click: this.rename
             },
-            'main-bar menuitem[action=delete-project-or-document]': {
-                click: this.deleteProjectOrDocument
+            'main-bar button[action=delete]': {
+                click: this.delete
             },
-            'main-bar menuitem[action=import-project]': {
+            'main-bar button[action=import-project]': {
                 click: this.importProject
             },
-            'main-bar menuitem[action=export-project]': {
+            'main-bar button[action=export-project]': {
                 click: this.exportProject
             }
         });
     },
 
-    saveDocument: function (item, event, options) {},
-    openDocument: function (item, event, options) {},
-    addProject: function (item, event, options) {},
-    addFolder: function (item, event, options) {},
-    addText: function (item, event, options) {},
-    renameProjectOrDocument: function (item, event, options) {},
-    deleteProjectOrDocument: function (item, event, options) {},
-    importProject: function (item, event, options) {},
-    exportProject: function (item, event, options) {}
+    saveDocument: function (item, event, options) {
+        console.debug ('[MainBarCtrl.saveDocument]');
+    },
+    openDocument: function (item, event, options) {
+        console.debug ('[MainBarCtrl.openDocument]');
+    },
+    add: function (item, event, options) {
+        console.debug ('[MainBarCtrl.add]');
+    },
+    addProject: function (item, event, options) {
+        console.debug ('[MainBarCtrl.addProject]');
+    },
+    addFolder: function (item, event, options) {
+        console.debug ('[MainBarCtrl.addFolder]');
+    },
+    addText: function (item, event, options) {
+        console.debug ('[MainBarCtrl.addText]');
+    },
+    rename: function (item, event, options) {
+        console.debug ('[MainBarCtrl.rename]');
+    },
+    delete: function (item, event, options) {
+        console.debug ('[MainBarCtrl.delete]');
+    },
+    importProject: function (item, event, options) {
+        console.debug ('[MainBarCtrl.importProject]');
+    },
+    exportProject: function (item, event, options) {
+        console.debug ('[MainBarCtrl.exportProject]');
+    }
 });
