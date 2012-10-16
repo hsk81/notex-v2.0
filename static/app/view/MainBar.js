@@ -12,13 +12,13 @@ Ext.define ('Webed.view.MainBar', {
             iconCls : 'icon-disk',
             iconAlign: 'left',
             tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
-            handler : function (button, event) {}
+            action: 'save-document'
         },{
             text : 'Open',
             iconCls : 'icon-folder_page',
             iconAlign: 'left',
             tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)',
-            handler : function (button, event) {}
+            action: 'open-document'
         }]
 
     },{
@@ -38,15 +38,15 @@ Ext.define ('Webed.view.MainBar', {
                 items : [{
                     iconCls : 'icon-report',
                     text : 'Project',
-                    handler : function (button, event) {}
+                    action: 'add-project'
                 },{
                     iconCls : 'icon-folder',
                     text : 'Folder',
-                    handler : function (button, event) {}
+                    action: 'add-folder'
                 },{
                     iconCls : 'icon-page',
                     text : 'Plain Text',
-                    handler : function (button, event) {}
+                    action: 'add-text'
                 }]
             }
         },{
@@ -54,13 +54,13 @@ Ext.define ('Webed.view.MainBar', {
             iconCls : 'icon-pencil',
             iconAlign: 'left',
             tooltip : '<b>Rename</b><br/>Rename selected project, folder or file',
-            handler : function (button, event) {}
+            action: 'rename-project-or-document'
         },{
             text : 'Delete',
             iconCls : 'icon-delete',
             iconAlign: 'left',
             tooltip : '<b>Delete</b><br/>Delete selected project, folder or file',
-            handler : function (button, event) {}
+            action: 'delete-project-or-document'
         }]
 
     },{
@@ -73,14 +73,14 @@ Ext.define ('Webed.view.MainBar', {
             iconCls: 'icon-page_white_zip',
             iconAlign: 'left',
             tooltip : '<b>Import</b><br/>Open a project from a <b>ZIP</b> archive (at <i>local</i> storage)',
-            handler : function (button, event) {}
+            action: 'import-project'
         },{
             id : 'btn.export.editor.id',
             text: 'Export',
             iconCls: 'icon-report_go',
             iconAlign: 'left',
             tooltip : '<b>Export</b><br/>Save selected project (to <i>local</i> storage)',
-            handler : function (button, event) {}
+            action: 'export-project'
         }]
 
     }]

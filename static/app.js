@@ -9,6 +9,8 @@ Ext.application ({
     models: ['Set', 'Doc', 'Set2Doc', 'Resource'],
     stores: ['Sets', 'Docs', 'Set2Docs', 'Resources'],
 
+    controllers: ['MainBar', 'SetTree', 'DocList', 'StatusBar'],
+
     paths: {
         'Webed': '../static/app'
     },
