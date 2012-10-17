@@ -1,6 +1,9 @@
 Ext.define ('Webed.controller.MainBar', {
     extend: 'Ext.app.Controller',
 
+    models: ['Set', 'Doc', 'Set2Doc'],
+    stores: ['Sets', 'Docs', 'Set2Docs'],
+
     init: function () {
         this.control ({
             'main-bar button[action=save-document]': {
@@ -44,7 +47,12 @@ Ext.define ('Webed.controller.MainBar', {
     },
     add: function (item, event, options) {
         console.debug ('[MainBarCtrl.add]');
-        this.application.fireEvent ('synchronize');
+
+        this.application.fireEvent ('create-set', {
+            root: '00000000-0000-0000-0000-000000000000',
+            uuid: '744f1e0d-8c2a-4078-a2f5-d8a6c994724b',
+            name: 'Report II'
+        });
     },
     addProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.addProject]');

@@ -30,6 +30,24 @@ db = SQLAlchemy (app)
 ###############################################################################
 ###############################################################################
 
+class Query:
+
+    def __init__ (self, query):
+
+        self.query = query
+
+    def single (self, **kwargs):
+
+        return self.query.filter_by (**kwargs).one ()
+
+    def single_or_default (self, default=None, **kwargs):
+
+        query = self.query.filter_by (**kwargs)
+        return query.one () if query.count () == 1 else default
+
+###############################################################################
+###############################################################################
+
 class Set (db.Model):
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
@@ -125,13 +143,18 @@ def sets ():
     TODO: Check out also if Flask-Restless is an option!
     """
     if request.method == 'PUT':
-        return set_create (None) ## TODO!
+        return set_create ()
+
     elif request.method == 'GET':
         return set_read (request.args.get ('uuid', None))
+
     elif request.method == 'POST':
-        return set_update (None) ## TODO!
+        return set_create ()
+     ## return set_update (None) ## TODO!
+
     elif request.method == 'DELETE':
         return set_delete (None) ## TODO!
+
     else:
         return jsonify (success=False)
 
@@ -146,8 +169,23 @@ def sets_root (json=True):
 
     return jsonify (result) if json else result
 
-def set_create (uuid):
-    return jsonify (success=True, id=1, uuid=uuid)
+def set_create (json=True):
+
+    root = request.json.get ('root', None)
+    uuid = request.json.get ('uuid', None)
+    name = request.json.get ('name', uuid)
+
+    root = Query (Set.query).single_or_default (uuid=root)
+
+    set = Set (name, root=root, uuid=uuid)
+    db.session.add (set)
+    db.session.commit ()
+
+    result = {
+        'success': True, 'results': map (set2ext, [set])
+    }
+
+    return jsonify (result) if json else result
 
 def set_read (uuid, json=True):
 
@@ -221,6 +259,7 @@ def set2ext (set):
     size = 0 ## TODO!
 
     return {
+        'root': set.root.uuid if set.root else None,
         'uuid': set.uuid,
         'name': set.name,
         'size': size,

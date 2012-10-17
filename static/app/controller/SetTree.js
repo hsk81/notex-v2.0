@@ -15,8 +15,20 @@ Ext.define ('Webed.controller.SetTree', {
         });
 
         this.application.on ({
-            synchronize: this.synchronize, scope: this
+            'create-set': this['create-set'], scope: this
         });
+    },
+
+    'create-set': function (set) {
+        console.debug ('[SetTree.create-set]');
+
+        var store = this.getSetsStore ();
+        assert (store);
+
+        var model = Ext.create ('Webed.model.Set', set);
+        assert (model);
+
+        model.save ();
     },
 
     synchronize: function () {
