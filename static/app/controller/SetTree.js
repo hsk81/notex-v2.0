@@ -20,15 +20,28 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     'create-set': function (set) {
-        console.debug ('[SetTree.create-set]');
+        console.debug ('[SetTree.create-set] set:', set);
 
-        var store = this.getSetsStore ();
-        assert (store);
+        var view = this.getSetTree ();
+        assert (view);
+        var root = view.getRootNode ();
+        assert (root);
+        var uuid = set.uuid || UUID.random ();
+        assert (uuid);
 
-        var model = Ext.create ('Webed.model.Set', set);
+        var node = {
+            root_uuid: set.root_uuid || root.get ('uuid'),
+            uuid: uuid,
+            name: set.name || uuid,
+            size: set.size || 0
+        }
+
+        var model = Ext.create ('Webed.model.Set', node);
         assert (model);
-
-        model.save ();
+        var model = model.save ();
+        assert (model);
+        var node = root.appendChild (node);
+        assert (node);
     },
 
     synchronize: function () {

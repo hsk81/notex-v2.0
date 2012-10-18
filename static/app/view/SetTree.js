@@ -4,7 +4,7 @@ Ext.define ('Webed.view.SetTree', {
     store: Ext.create ('Webed.store.Sets'),
 
     useArrows: true,
-    rootVisible: false,
+    rootVisible: true,
     hideHeaders: false,
     fields: ['name', 'size'],
 

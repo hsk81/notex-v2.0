@@ -113,11 +113,16 @@ def reset ():
     db.create_all ()
 
 def init ():
-    init_article ()
-    init_report ()
+    root = Set ('Root', uuid='00000000-0000-0000-0000-000000000000');
+    db.session.add (root)
+    db.session.commit ()
 
-def init_article ():
-    set = Set ('Article'); db.session.add (set)
+    init_article (root=root)
+    init_report (root=root)
+
+def init_article (root):
+
+    set = Set ('Article', root=root); db.session.add (set)
     doc = Doc ('options', 'cfg', set); db.session.add (doc)
     doc = Doc ('content', 'txt', set); db.session.add (doc)
     subset = Set ('resources', root=set); db.session.add (subset)
@@ -125,8 +130,9 @@ def init_article ():
     doc = Doc ('time', 'jpg', subset); db.session.add (doc)
     db.session.commit ()
 
-def init_report ():
-    set = Set ('Report'); db.session.add (set)
+def init_report (root):
+
+    set = Set ('Report', root=root); db.session.add (set)
     doc = Doc ('options', 'cfg', set); db.session.add (doc)
     doc = Doc ('content', 'txt', set); db.session.add (doc)
     subset = Set ('resources', root=set); db.session.add (subset)
@@ -162,7 +168,9 @@ def sets ():
 @app.route ('/sets/root')
 def sets_root (json=True):
 
-    sets = Set.query.filter_by (root=None).all ()
+    root = Query (Set.query.filter_by (root=None)).single ()
+    sets = Set.query.filter_by (root=root).all ()
+
     result = {
         'success': True, 'results': map (set2ext, sets)
     }
@@ -171,13 +179,18 @@ def sets_root (json=True):
 
 def set_create (json=True):
 
-    root = request.json.get ('root', None)
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid
     uuid = request.json.get ('uuid', None)
+    assert uuid
     name = request.json.get ('name', uuid)
+    assert name
 
-    root = Query (Set.query).single_or_default (uuid=root)
-
+    root = Query (Set.query).single_or_default (uuid=root_uuid)
+    assert root
     set = Set (name, root=root, uuid=uuid)
+    assert set
+
     db.session.add (set)
     db.session.commit ()
 
@@ -252,20 +265,29 @@ def doc_delete (uuid):
 
 def set2ext (set):
 
-    docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
-    sets = map (lambda set: set2ext (set), set.subsets)
+    assert set;
+    assert set.root.uuid
+    assert set.uuid
+    assert set.name
 
-    iconCls = 'icon-report' if not set.root else 'icon-folder' ## TODO: '-16'!
-    size = 0 ## TODO!
+    docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
+    assert type (docs) == list
+    sets = map (lambda set: set2ext (set), set.subsets)
+    assert type (sets) == list
+
+    size = 0
+    leaf = False
+    loaded = True
+    results = docs + sets
 
     return {
-        'root': set.root.uuid if set.root else None,
+        'root_uuid': set.root.uuid,
         'uuid': set.uuid,
         'name': set.name,
         'size': size,
-        'loaded': True,
-        'iconCls': iconCls,
-        'results': docs + sets,
+        'leaf': leaf,
+        'loaded': loaded,
+        'results': results
     }
 
 def doc2ext (doc, fullname=False):
@@ -276,16 +298,24 @@ def doc2ext (doc, fullname=False):
           parameter should ideally just be eliminated.
     """
 
+    assert doc
+    assert doc.set.uuid
+    assert doc.uuid
+    assert doc.fullname if fullname else doc.name
+    assert doc.ext
+
     size = 0 ## TODO!
-    iconCls = 'icon-page', ## TODO: 'icon-page/picture-16'!
+    loaded = True
+    leaf = True
 
     return {
+        'root_uuid': doc.set.uuid,
         'uuid': doc.uuid,
-        'name': doc.fullname if fullname else  doc.name,
+        'name': doc.fullname if fullname else doc.name,
         'ext': doc.ext,
-        'size':size,
-        'loaded': True,
-        'iconCls': iconCls
+        'size': size,
+        'leaf': leaf,
+        'loaded': loaded,
     }
 
 ###############################################################################

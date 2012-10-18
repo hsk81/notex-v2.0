@@ -49,9 +49,7 @@ Ext.define ('Webed.controller.MainBar', {
         console.debug ('[MainBarCtrl.add]');
 
         this.application.fireEvent ('create-set', {
-            root: '00000000-0000-0000-0000-000000000000',
-            uuid: '744f1e0d-8c2a-4078-a2f5-d8a6c994724b',
-            name: 'Report II'
+            name: 'Thesis'
         });
     },
     addProject: function (item, event, options) {
