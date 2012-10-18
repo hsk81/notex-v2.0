@@ -1,4 +1,21 @@
 (function () {
+    Ext.define ('Webed.store.Sets', {
+        extend: 'Ext.data.TreeStore',
+        requires: 'Webed.model.Set',
+        model: 'Webed.model.Set',
+
+        root: {
+            expanded: true,
+            name: 'Root',
+            size: 0,
+            uuid: '00000000-0000-0000-0000-000000000000'
+        },
+
+        listeners: {
+            append: append
+        }
+    });
+
     function append (root, node, index, options) {
         if (node.isRoot ()) {
             node.set ('iconCls', 'icon-tree');
@@ -22,21 +39,4 @@
                 node.set ('iconCls', 'icon-folder');    //TODO: '-16'
         }
     }
-
-    Ext.define ('Webed.store.Sets', {
-        extend: 'Ext.data.TreeStore',
-        requires: 'Webed.model.Set',
-        model: 'Webed.model.Set',
-
-        root: {
-            expanded: true,
-            name: 'Root',
-            size: 0,
-            uuid: '00000000-0000-0000-0000-000000000000'
-        },
-
-        listeners: {
-            append: append
-        }
-    });
 })();
