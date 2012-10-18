@@ -18,7 +18,7 @@
 
     function append (root, node, index, options) {
         if (node.isRoot ()) {
-            node.set ('iconCls', 'icon-tree');
+            node.set ('iconCls', 'icon-tree');          //TODO: '-16'
         } else {
             var root_uuid = node.get ('root_uuid');
             assert (root_uuid);
