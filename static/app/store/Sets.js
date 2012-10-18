@@ -17,6 +17,9 @@
     });
 
     function append (root, node, index, options) {
+
+        assert (root || node);
+
         if (node.isRoot ()) {
             node.set ('iconCls', 'icon-tree');          //TODO: '-16'
         } else {
