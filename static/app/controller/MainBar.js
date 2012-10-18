@@ -48,7 +48,7 @@ Ext.define ('Webed.controller.MainBar', {
     add: function (item, event, options) {
         console.debug ('[MainBarCtrl.add]');
 
-        this.application.fireEvent ('create-set', {
+        this.application.fireEvent ('create_set', {
             name: 'Thesis'
         });
     },

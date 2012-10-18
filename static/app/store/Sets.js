@@ -1,5 +1,4 @@
 (function () {
-
     function append (root, node, index, options) {
         if (node.isRoot ()) {
             node.set ('iconCls', 'icon-tree');
