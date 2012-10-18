@@ -375,7 +375,7 @@ def doc2ext (doc, fullname=False):
 
 if __name__ == '__main__':
 
-    app.run (debug=True)
+    app.run (debug=True) ## TODO: Switch off in production!
 
 ###############################################################################
 ###############################################################################
