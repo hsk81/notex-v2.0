@@ -31,7 +31,9 @@ db = SQLAlchemy (app)
 ###############################################################################
 
 class Query:
-
+    """
+    TODO: Extend SQLAlchemy.query instead of using a wrapper around it!
+    """
     def __init__ (self, query):
 
         self.query = query
