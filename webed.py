@@ -58,6 +58,9 @@ class Set (db.Model):
         remote_side='Set.id'))
 
     def __init__ (self, name, root=None, uuid=None):
+        """
+        TODO: Is root=self reference possible?
+        """
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.root = root
@@ -143,41 +146,49 @@ def init_report (root):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/sets', methods=['PUT', 'GET', 'POST', 'DELETE'])
-def sets ():
-    """
-    TODO: Check out also if Flask-Restless is an option!
-    """
+##
+## TODO: Check out also if Flask-Restless is an option! PUT & DELETE required?
+##
+
+###############################################################################
+###############################################################################
+
+@app.route ('/node', methods=['PUT', 'GET', 'POST', 'DELETE'])
+def node (docs=True, json=True):
+
     if request.method == 'PUT':
-        return set_create ()
+        return node_create (docs, json) ## TODO!?
 
     elif request.method == 'GET':
-        return set_read (request.args.get ('uuid', None))
+        return node_read (docs, json)
 
     elif request.method == 'POST':
-        return set_create ()
-     ## return set_update (None) ## TODO!
+        return node_create (docs, json)
+     ## return node_update (docs, json) ## TODO!?
 
     elif request.method == 'DELETE':
-        return set_delete (None) ## TODO!
+        return node_delete (docs, json) ## TODO!?
 
     else:
-        return jsonify (success=False)
+        result = {
+            'success': False
+        }
 
+        return jsonify (result) if json else result
 
-@app.route ('/sets/root')
-def sets_root (json=True):
+@app.route ('/node/root', methods=['GET'])
+def node_root (docs=True, json=True):
 
     root = Query (Set.query.filter_by (root=None)).single ()
     sets = Set.query.filter_by (root=root).all ()
 
     result = {
-        'success': True, 'results': map (set2ext, sets)
+        'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
     }
 
     return jsonify (result) if json else result
 
-def set_create (json=True):
+def node_create (docs=True, json=True):
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid
@@ -195,54 +206,88 @@ def set_create (json=True):
     db.session.commit ()
 
     result = {
-        'success': True, 'results': map (set2ext, [set])
+        'success': True, 'results': map (lambda s: set2ext (s, docs), [set])
     }
 
     return jsonify (result) if json else result
 
-def set_read (uuid, json=True):
+def node_read (docs=True, json=True):
 
+    uuid = request.args.get ('uuid', None)
     if not uuid:
         sets = Set.query.all ()
     else:
         sets = Set.query.filter_by (uuid=uuid).all ()
 
     result = {
-        'success': True, 'results': map (set2ext, sets)
+        'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
     }
 
     return jsonify (result) if json else result
 
-def set_update (uuid):
-    return jsonify (success=True, uuid=uuid)
+def node_update (docs=True, json=True):
 
-def set_delete (uuid):
-    return jsonify (success=True, uuid=uuid)
+    result = {
+        'success': True
+    }
+
+    return jsonify (result) if json else result
+
+def node_delete (docs=True, json=True):
+
+    result = {
+        'success': True
+    }
+
+    return jsonify (result) if json else result
+
+###############################################################################
+###############################################################################
+
+@app.route ('/sets', methods=['PUT', 'GET', 'POST', 'DELETE'])
+def sets (json=True):
+    return node (docs=False, json=json)
+
+@app.route ('/sets/root', methods=['GET'])
+def sets_root (json=True):
+    return node_root (docs=False, json=json)
 
 ###############################################################################
 ###############################################################################
 
 @app.route ('/docs', methods=['PUT', 'GET', 'POST', 'DELETE'])
-def docs ():
-    """
-    TODO: Check out also if Flask-Restless is an option!
-    """
+def docs (json=True):
+
     if request.method == 'PUT':
-        return doc_create (None) ## TODO!
+        return doc_create (json)
+
     elif request.method == 'GET':
-        return doc_read (request.args.get ('uuid', None))
+        return doc_read (json)
+
     elif request.method == 'POST':
-        return doc_update (None) ## TODO!
+        return doc_update (json)
+
     elif request.method == 'DELETE':
-        return doc_delete (None) ## TODO!
+        return doc_delete (json)
+
     else:
-        return jsonify (success=False)
+        result = {
+            'success': False
+        }
 
-def doc_create (uuid):
-    return jsonify (success=True, id=1, uuid=uuid)
+        return jsonify (result) if json else result
 
-def doc_read (uuid, json=True):
+def doc_create (json=True):
 
+    result = {
+        'success': True, 'uuid': request.args.get ('uuid', None)
+    }
+
+    return jsonify (result) if json else result
+
+def doc_read (json=True):
+
+    uuid = request.args.get ('uuid', None)
     if not uuid:
         docs = Doc.query.all ()
     else:
@@ -254,31 +299,44 @@ def doc_read (uuid, json=True):
 
     return jsonify (result) if json else result
 
-def doc_update (uuid):
-    return jsonify (success=True, uuid=uuid)
+def doc_update (json=True):
 
-def doc_delete (uuid):
-    return jsonify (success=True, uuid=uuid)
+    result = {
+        'success': True, 'uuid': request.args.get ('uuid', None)
+    }
+
+    return jsonify (result) if json else result
+
+def doc_delete (json=True):
+
+    result = {
+        'success': True, 'uuid': request.args.get ('uuid', None)
+    }
+
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def set2ext (set):
+def set2ext (set, docs=True):
 
     assert set;
     assert set.root.uuid
     assert set.uuid
     assert set.name
 
-    docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
-    assert type (docs) == list
-    sets = map (lambda set: set2ext (set), set.subsets)
-    assert type (sets) == list
-
     size = 0
     leaf = False
     loaded = True
-    results = docs + sets
+
+    sets = map (lambda set: set2ext (set, docs), set.subsets)
+    assert type (sets) == list
+    results = sets
+
+    if docs:
+        docs = map (lambda doc: doc2ext (doc), set.docs)
+        assert type (docs) == list
+        results = docs + results
 
     return {
         'root_uuid': set.root.uuid,
@@ -291,12 +349,6 @@ def set2ext (set):
     }
 
 def doc2ext (doc, fullname=False):
-    """
-    TODO: ExtJS should be able to stitch together fullname from name and ext,
-          which ExtJS is able to do for the grid, but not for the tree. Look
-          for a way to compose the fullname also for the tree! The `fullname`
-          parameter should ideally just be eliminated.
-    """
 
     assert doc
     assert doc.set.uuid
