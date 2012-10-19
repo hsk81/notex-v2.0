@@ -21,7 +21,7 @@
         assert (root || node);
 
         if (node.isRoot ()) {
-            node.set ('iconCls', 'icon-tree');          //TODO: '-16'
+            node.set ('iconCls', 'icon-tree-16');
         } else {
             var root_uuid = node.get ('root_uuid');
             assert (root_uuid);
@@ -35,11 +35,11 @@
             assert (leaf == true || leaf == false);
 
             if (node.isLeaf ())
-                node.set ('iconCls', 'icon-page');      //TODO: '-16'
+                node.set ('iconCls', 'icon-page-16');
             else if (root.isRoot ())
-                node.set ('iconCls', 'icon-report');    //TODO: '-16'
+                node.set ('iconCls', 'icon-report-16');
             else
-                node.set ('iconCls', 'icon-folder');    //TODO: '-16'
+                node.set ('iconCls', 'icon-folder-16');
         }
     }
 })();
