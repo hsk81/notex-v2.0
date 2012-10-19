@@ -10,7 +10,7 @@
 }
 
 #load-progress .animation {
-    background: url(loading.gif) no-repeat;
+    background: url(../img/loading.gif) no-repeat;
     position: absolute;
     display: block;
     top: 25px;
