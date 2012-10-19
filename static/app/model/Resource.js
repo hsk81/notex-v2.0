@@ -4,7 +4,7 @@ Ext.define ('Webed.model.Resource', {
 
     proxy: {
         type: 'ajax',
-        url: 'static/data/resources.json',
+        url: '/static/data/resources.json',
         reader: {
             type: 'json',
             root: 'results'
