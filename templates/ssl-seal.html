@@ -1,0 +1,13 @@
+<div class="ssl-seal-wrap">
+    <span id="siteseal">
+        {% if debug %}
+        <div class="placeholder">
+            <p>SSL Seal</p>
+        </div>
+        {% else %}
+        <script
+            type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=">
+        </script>
+        {% endif %}
+    </span>
+</div>

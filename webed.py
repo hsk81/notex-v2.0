@@ -93,8 +93,19 @@ class Doc (db.Model):
 ###############################################################################
 ###############################################################################
 
+@app.route ('/home/')
+def home (): return main (page='home')
+@app.route ('/overview/')
+def overview (): return main (page='overview')
+@app.route ('/tutorial/')
+def tutorial (): return main (page='tutorial')
+@app.route ('/faq/')
+def faq (): return main (page='faq')
+@app.route ('/contact/')
+def contact (): return main (page='contact')
+
 @app.route ('/')
-def main ():
+def main (page='home'):
     if 'timestamp' in session and 'reset' not in request.args:
         session['timestamp'] = datetime.now ()
     else:
@@ -111,7 +122,7 @@ def main ():
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
-    return render_template ('index.html')
+    return render_template ('index.html', page=page, debug=app.debug)
 
 def reset ():
     db.drop_all ()

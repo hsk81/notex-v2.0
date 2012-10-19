@@ -5,7 +5,11 @@
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='ico/favicon.ico') }}">
     <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/webed.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/menu.css') }}" />
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/icons-16.css') }}" />
     <link rel="stylesheet" type="text/css"
@@ -15,8 +19,8 @@
 </head>
 
 <body>
-    <div id="load-progress">
-        <span class="animation" />
+    <div id="content-wrap">
+        <div id="content">{% include 'page.html' %}</div>
     </div>
 
     <script type="text/javascript"

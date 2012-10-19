@@ -1,89 +1,289 @@
-/*===========================================================================*/
+/******************************************************************************
+ * Base
+ *****************************************************************************/
 
-#load-progress {
-    position: absolute;
-    width: 180px;
-    margin: -70px 0 0 -90px;
-    height: 140px;
-    top: 50%;
-    left: 50%;
+html {
+    height: 100%;
 }
 
-#load-progress .animation {
-    background: url(../img/loading.gif) no-repeat;
-    position: absolute;
-    display: block;
-    top: 25px;
-    left: 22px;
-    width: 120px;
-    height: 120px;
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-/*===========================================================================*/
+/******************************************************************************
+ * Content Wrap
+ *****************************************************************************/
 
-#splash {
+#content-wrap {
+    display:table;
+    height: 100%;
+    width: 100%;
+}
+
+/******************************************************************************
+ * Content
+ *****************************************************************************/
+
+#content {
+    display:table-cell;
+    vertical-align:middle;
+}
+
+/******************************************************************************
+ * Page Wrap
+ *****************************************************************************/
+
+#page-wrap {
+}
+
+#page-wrap-content {
+    height: 100%;
+    overflow-y: auto;
+    position:relative;
+}
+
+/******************************************************************************
+ * Page
+ *****************************************************************************/
+
+#page h1 { font-weight: bold; font-size: xx-large; color: #888888; }
+#page h2 { font-weight: bold; font-size:  x-large; color: #888888; }
+#page h3 { font-weight: bold; font-size:    large; color: #888888; }
+#page h4 { font-weight: bold; font-size:   medium; color: #888888; }
+
+/******************************************************************************
+ * Page: Home
+ *****************************************************************************/
+
+#page.home {
     padding: 7.5% 0;
 }
 
-#splash div.inner {
-    padding: 10% 0;
-}
-
-#splash .title {
+#page.home .title {
     text-shadow: #888888 -1.25px -0.75px 2px;
     text-align:center;
     font-weight:bold;
     font-variant:small-caps;
-    font-size:12.5em;
+    font-size:13.750em;
     font-family:sans serif;
     color:#f0f0f0;
 }
 
-#splash .sub-title {
-    margin-left:auto; margin-right: auto; width:66.6%; height:32px;
+#page.home .sub-title {
+    margin-left:auto; margin-right: auto; width:75%; height:32px;
 }
 
-#splash .sub-title hr {
+#page.home .sub-title hr {
     border: 0;
     height: 2px;
     color: #888888;
     background-color: #888888;
 }
 
-#splash .sub-title .text {
+#page.home .sub-title .text {
     float:left;
     position:relative;
-    left:-16px;
     font-weight:bold;
-    font-size: 1.25em;
+    font-size: 1em;
     color:#888888;
 }
 
-#splash .link-icon {
+#page.home .link-icon {
     height:16px; width:16px; padding-top:4px;
+    background-repeat: no-repeat;
     text-align:center;
     text-decoration:none;
     color:#ffffff;
 }
 
-#splash .information {
+#page.home .information {
     float:left; position:relative; top:-28px;
 }
 
-#splash .youtube {
-    float:right; position:relative; top:-2px; left:0px;
+#page.home .youtube {
+    float:right; position:relative; top:-2px; left:0;
 }
 
-#splash .blogger {
+#page.home .blogger {
     float:right; position:relative; top:-2px; left:-1px;
 }
 
-#splash .twitter {
+#page.home .twitter {
     float:right; position:relative; top:-2px;
 }
 
-#splash .facebook {
+#page.home .facebook {
     float:right; position:relative; top:-2px;
 }
 
-/*===========================================================================*/
+#page.home .subline {
+    width: 100%;
+    margin-top: 36px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page.home .subline ul {
+    list-style-type:none;
+    text-align:center;
+    background-color:#f0f0f0;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+
+#page.home .subline ul li {
+    display:inline;
+    font-weight: normal;
+    font-size: 1em;
+    line-height: 32px;
+}
+
+#page.home .subline ul li.subline-text {
+    padding: 6.5px 32px 6.5px 1px;
+    border-left: 1px solid #888888;
+}
+
+#page.home .subline ul li.subline-icon {
+    padding: 1px 9px;
+    background-repeat: no-repeat;
+}
+
+/******************************************************************************
+ * Page: Download
+ *****************************************************************************/
+
+#page.download table.checkout img:hover {
+    cursor: pointer;
+}
+
+#page.download table.checkout img {
+    margin-left: 2em;
+}
+
+#page.download table.checkout li {
+    margin-left: 1em;
+}
+
+/******************************************************************************
+ * Page: Textual
+ *****************************************************************************/
+
+#page.textual {
+    margin: 0 auto;
+    width: 768px;
+}
+
+#page.textual p {
+    text-align: justify;
+    padding: 0.5em 0;
+}
+
+#page.textual strong {
+    font-weight: bold;
+}
+
+#page.textual em {
+    font-style: italic;
+}
+
+#page.textual ul li {
+    margin-left: 2em;
+}
+
+#page.textual div.slag-rhs {
+    float: right;
+    margin-left: 1em;
+}
+
+#page.textual div.slag-lhs {
+    float: left;
+    margin-right: 1em;
+}
+
+#page.textual div.slag {
+    font-weight: bold;
+    font-size: large;
+    color: #888888;
+    text-align: center;
+    width: 25%;
+}
+
+#page.textual div.slag hr {
+    height: 4px;
+    background-color: #888888;
+    border: 0;
+}
+
+#page.textual div.figure {
+    width: 652px;
+    margin: 0 auto;
+}
+
+#page.textual div.figure img {
+    width: 100%;
+}
+
+#page.textual div.figure img.border-black {
+    border: #000000 solid 1px;
+    border-radius: 2px;
+}
+
+#page.textual div.figure img.border-grey {
+    border: #888888 solid 1px;
+    border-radius: 2px;
+}
+
+#page.textual div.figure p {
+    text-align: justify;
+    font-size: xx-small;
+}
+
+/******************************************************************************
+ * Page Wrap: Footer
+ *****************************************************************************/
+
+#page-wrap-content .footer-sticky {
+    position: absolute;
+    margin-bottom: 24px;
+    width: 100%;
+    height: 32px;
+    bottom: 0;
+}
+
+#page-wrap-content .footer {
+    margin-bottom: 24px;
+    width: 100%;
+    height: 32px;
+}
+
+#page-wrap-content .ssl-seal-wrap {
+    margin: 0 auto;
+    width: 132px;
+    height: 32px;
+}
+
+#page-wrap-content .ssl-seal-wrap {
+    margin: 0 auto;
+    width: 132px;
+    height: 32px;
+}
+
+#page-wrap-content .ssl-seal-wrap .placeholder {
+    display: table;
+    height: 100%;
+    width: 100%;
+    background-color: #f5f5f5;
+    border-top: #d3d3d3 solid thin;
+    border-bottom: #d3d3d3 solid thin;
+}
+
+#page-wrap-content .ssl-seal-wrap .placeholder p {
+    display:table-cell;
+    vertical-align: middle;
+    text-align: center;
+    color: #808080;
+}
+
+/*****************************************************************************/
