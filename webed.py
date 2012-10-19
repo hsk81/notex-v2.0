@@ -79,14 +79,14 @@ class Doc (db.Model):
     name = db.Column (db.Unicode (256))
     ext = db.Column (db.Unicode (16))
 
-    set_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    set = db.relationship ('Set', backref=db.backref ('docs', lazy='dynamic'))
+    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    root = db.relationship ('Set', backref=db.backref ('docs', lazy='dynamic'))
 
-    def __init__ (self, name, ext, set, uuid=None):
+    def __init__ (self, name, ext, root, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.ext = unicode (ext)
-        self.set = set
+        self.root = root
 
     def __repr__ (self):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
@@ -406,7 +406,7 @@ def set2ext (set, docs=True):
 def doc2ext (doc, fullname=False):
 
     assert doc
-    assert doc.set.uuid
+    assert doc.root.uuid
     assert doc.uuid
     assert doc.fullname if fullname else doc.name
     assert doc.ext
@@ -416,7 +416,7 @@ def doc2ext (doc, fullname=False):
     leaf = True
 
     return {
-        'root_uuid': doc.set.uuid,
+        'root_uuid': doc.root.uuid,
         'uuid': doc.uuid,
         'name': doc.fullname if fullname else doc.name,
         'ext': doc.ext,
