@@ -30,6 +30,11 @@ db = SQLAlchemy (app)
 ###############################################################################
 ###############################################################################
 
+null_uuid = '00000000-0000-0000-0000-000000000000'
+
+###############################################################################
+###############################################################################
+
 class Query:
     """
     TODO: Extend SQLAlchemy.query instead of using a wrapper around it!
@@ -56,13 +61,11 @@ class Set (db.Model):
     name = db.Column (db.Unicode (256))
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    subsets = db.relationship ('Set', cascade='all', backref=db.backref ("root",
+    subsets = db.relationship ('Set', cascade='all', backref=db.backref ('root',
         remote_side='Set.id'))
 
-    def __init__ (self, name, root=None, uuid=None):
-        """
-        TODO: Is root=self reference possible?
-        """
+    def __init__ (self, name, root, uuid=None):
+
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.root = root
@@ -106,30 +109,36 @@ def contact (): return main (page='contact')
 
 @app.route ('/')
 def main (page='home'):
-    if 'timestamp' in session and 'reset' not in request.args:
-        session['timestamp'] = datetime.now ()
+
+    if not 'timestamp' in session: init ()
+    session['timestamp'] = datetime.now ()
+
+    if app.session_cookie_name in request.cookies:
+        session_cn = app.session_cookie_name
+        session_id = request.cookies[session_cn] ## .split ('?')[0]
     else:
-        session['timestamp'] = datetime.now ()
-        reset (); init ()
+        session_id = None
 
     if not request.args.get ('silent', False):
-        if app.session_cookie_name in request.cookies:
-            session_cn = app.session_cookie_name
-            session_id = request.cookies[session_cn].split ('?')[0]
-        else:
-            session_id = None
 
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
+    if 'reset' in request.args: reset (); init ()
+    if 'refresh' in request.args: init ()
+
     return render_template ('index.html', page=page, debug=app.debug)
 
 def reset ():
+
     db.drop_all ()
     db.create_all ()
 
 def init ():
-    root = Set ('Root', uuid='00000000-0000-0000-0000-000000000000');
+
+    root = Set ('root', root=None)
+    session['root_uuid'] = root.uuid
+
     db.session.add (root)
     db.session.commit ()
 
@@ -192,8 +201,12 @@ def node (docs=True, json=True):
 @app.route ('/node/root', methods=['GET'])
 def node_root (docs=True, json=True):
 
-    root = Query (Set.query.filter_by (root=None)).single ()
+    root_uuid = session['root_uuid']
+    assert root_uuid
+    root = Set.query.filter_by (uuid=root_uuid).one ()
+    assert root
     sets = Set.query.filter_by (root=root).all ()
+    assert sets
 
     result = {
         'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
@@ -203,16 +216,22 @@ def node_root (docs=True, json=True):
 
 def node_create (docs=True, json=True):
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request.json.get ('root_uuid', session['root_uuid'])
+    if root_uuid == null_uuid: root_uuid = session['root_uuid']
     assert root_uuid
+
     uuid = request.json.get ('uuid', None)
-    assert uuid
-    name = request.json.get ('name', uuid)
+    assert uuid or not uuid
+    name = request.json.get ('name', None)
     assert name
 
     root = Query (Set.query).single_or_default (uuid=root_uuid)
-    assert root
-    set = Set (name, root=root, uuid=uuid)
+    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+
+    if uuid:
+        set = Set (name, root=root, uuid=uuid)
+    else:
+        set = Set (name, root=root)
     assert set
 
     db.session.add (set)
@@ -226,11 +245,20 @@ def node_create (docs=True, json=True):
 
 def node_read (docs=True, json=True):
 
+    root_uuid = request.json.get ('root_uuid', session['root_uuid'])
+    if root_uuid == null_uuid: root_uuid = session['root_uuid']
+    assert root_uuid
+
     uuid = request.args.get ('uuid', None)
-    if not uuid:
-        sets = Set.query.all ()
+    assert uuid or not uuid
+
+    root = Query (Set.query).single_or_default (uuid=root_uuid)
+    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+
+    if uuid:
+        sets = Set.query.filter_by (root=root, uuid=uuid).all ()
     else:
-        sets = Set.query.filter_by (uuid=uuid).all ()
+        sets = Set.query.filter_by (root=root).all ()
 
     result = {
         'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
@@ -300,11 +328,25 @@ def doc_create (json=True):
 
 def doc_read (json=True):
 
+    root_uuid = request.args.get ('root_uuid', session['root_uuid'])
+    if root_uuid == null_uuid: root_uuid = session['root_uuid']
+    assert root_uuid
+
     uuid = request.args.get ('uuid', None)
-    if not uuid:
-        docs = Doc.query.all ()
-    else:
+    assert uuid or not uuid
+
+    root = Query (Set.query).single_or_default (uuid=root_uuid)
+    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+
+    if uuid: ## TODO!
+     ## base = Query (Set.query).single (uuid=session['root_uuid'])
+     ## docs = Doc.query.filter_by (base=base, uuid=uuid).all ()
         docs = Doc.query.filter_by (uuid=uuid).all ()
+
+    else: ## TODO!
+     ## base = Query (Set.query).single (uuid=session['root_uuid'])
+     ## docs = Doc.query.filter_by (base=base, ???).all ()
+        docs = Doc.query.all ()
 
     result = {
         'success': True, 'results': map (doc2ext, docs)
