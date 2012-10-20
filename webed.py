@@ -216,8 +216,8 @@ def node_root (docs=True, json=True):
 
     base = Q (Set.query).single (uuid=session['root_uuid'])
     assert base
-    sets = Q (Set.query).all (root=base, base=base)
-    assert sets
+    sets = Q (Set.query).all (base=base, root=base)
+    assert type (sets) == list
 
     result = {
         'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
@@ -228,7 +228,7 @@ def node_root (docs=True, json=True):
 def node_create (docs=True, json=True):
 
     root_uuid = request.json.get ('root_uuid', None)
-    assert root_uuid or not root_uuid
+    assert root_uuid
     uuid = request.json.get ('uuid', None)
     assert uuid or not uuid
     name = request.json.get ('name', None)
@@ -236,18 +236,16 @@ def node_create (docs=True, json=True):
 
     base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
-    assert root or not root
+    root = Q (Set.query).single_or_default (base=base, uuid=root_uuid,
+        default=base)
+    assert root
 
     if uuid:
-        if root: set = Set (name, uuid=uuid, root=root, base=base)
-        else: set = Set (name, uuid=uuid, root=base, base=base)
-
+        set = Set (name, base=base, root=root, uuid=uuid)
+        assert set
     else:
-        if root: set = Set (name, root=root, base=base)
-        else: set = Set (name, root=base, base=base)
-
-    assert set
+        set = Set (name, base=base, root=root)
+        assert set
 
     db.session.add (set)
     db.session.commit ()
@@ -260,23 +258,17 @@ def node_create (docs=True, json=True):
 
 def node_read (docs=True, json=True):
 
-    root_uuid = request.json.get ('root_uuid', None)
-    assert root_uuid or not root_uuid
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
-
     base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
-    assert root or not root
 
     if uuid:
-        if root: sets = Q (Set.query).all (uuid=uuid, root=root)
-        else: sets = Q (Set.query).all (uuid=uuid, base=base)
-
+        sets = Q (Set.query).all (base=base, uuid=uuid)
+        assert type (sets) == list
     else:
-        if root: sets = Q (Set.query).all (root=root)
-        else: sets = Q (Set.query).all (base=base)
+        sets = Q (Set.query).all (base=base)
+        assert type (sets) == list
 
     result = {
         'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
@@ -346,23 +338,17 @@ def doc_create (json=True):
 
 def doc_read (json=True):
 
-    root_uuid = request.args.get ('root_uuid', None)
-    assert root_uuid or not root_uuid
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
-
     base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
-    assert root or not root
 
-    if uuid: ## TODO: Q (root.subdocs).all (uuid=uuid)
-        if root: docs = Q (Doc.query).all (uuid=uuid, base=base)
-        else: docs = Q (Doc.query).all (uuid=uuid, base=base)
-
-    else: ## TODO: Q (root.subdocs).all ()
-        if root: docs = Q (Doc.query).all (base=base)
-        else: docs = Q (Doc.query).all (base=base)
+    if uuid:
+        docs = Q (Doc.query).all (base=base, uuid=uuid)
+        assert type (docs) == list
+    else:
+        docs = Q (Doc.query).all (base=base)
+        assert type (docs) == list
 
     result = {
         'success': True, 'results': map (doc2ext, docs)
@@ -405,7 +391,7 @@ def set2ext (set, docs=True):
     results = sets
 
     if docs:
-        docs = map (lambda doc: doc2ext (doc), set.docs)
+        docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
         assert type (docs) == list
         results = docs + results
 
