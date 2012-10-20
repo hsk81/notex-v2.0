@@ -45,11 +45,11 @@ class Q:
         query = self.query.filter_by (**kwargs)
         return query.all () if query.count () >= 1 else default
 
-    def single (self, **kwargs):
+    def one (self, **kwargs):
 
         return self.query.filter_by (**kwargs).one ()
 
-    def single_or_default (self, default=None, **kwargs):
+    def one_or_default (self, default=None, **kwargs):
 
         query = self.query.filter_by (**kwargs)
         return query.one () if query.count () == 1 else default
@@ -214,7 +214,7 @@ def node (docs=True, json=True):
 @app.route ('/node/root', methods=['GET'])
 def node_root (docs=True, json=True):
 
-    base = Q (Set.query).single (uuid=session['root_uuid'])
+    base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
     sets = Q (Set.query).all (base=base, root=base)
     assert type (sets) == list
@@ -234,9 +234,9 @@ def node_create (docs=True, json=True):
     name = request.json.get ('name', None)
     assert name
 
-    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).single_or_default (base=base, uuid=root_uuid,
+    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid,
         default=base)
     assert root
 
@@ -260,7 +260,7 @@ def node_read (docs=True, json=True):
 
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
-    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
 
     if uuid:
@@ -340,7 +340,7 @@ def doc_read (json=True):
 
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
-    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
 
     if uuid:
