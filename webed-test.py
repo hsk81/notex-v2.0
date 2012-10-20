@@ -10,6 +10,7 @@ import unittest
 ###############################################################################
 
 class WebedTestCase (unittest.TestCase):
+
     def setUp (self):
         webed.db.create_all ()
 
