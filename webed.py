@@ -188,21 +188,13 @@ def init_report (root, base):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/node', methods=['PUT', 'GET', 'POST', 'DELETE'])
+@app.route ('/node', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def node (docs=True, json=True):
 
-    if request.method == 'PUT':
-        return node_create (docs, json) ## TODO!?
-
-    elif request.method == 'GET':
-        return node_read (docs, json)
-
-    elif request.method == 'POST':
-        return node_create (docs, json)
-     ## return node_update (docs, json) ## TODO!?
-
-    elif request.method == 'DELETE':
-        return node_delete (docs, json) ## TODO!?
+    if request.method == 'POST': return node_create (docs, json)
+    elif request.method == 'GET': return node_read (docs, json)
+    elif request.method == 'PUT': return node_update (docs, json)
+    elif request.method == 'DELETE': return node_delete (docs, json)
 
     else:
         result = {
@@ -306,20 +298,13 @@ def sets_root (json=True):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/docs', methods=['PUT', 'GET', 'POST', 'DELETE'])
+@app.route ('/docs', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def docs (json=True):
 
-    if request.method == 'PUT':
-        return doc_create (json)
-
-    elif request.method == 'GET':
-        return doc_read (json)
-
-    elif request.method == 'POST':
-        return doc_update (json)
-
-    elif request.method == 'DELETE':
-        return doc_delete (json)
+    if request.method == 'POST': return doc_create (json)
+    elif request.method == 'GET': return doc_read (json)
+    elif request.method == 'PUT': return doc_update (json)
+    elif request.method == 'DELETE': return doc_delete (json)
 
     else:
         result = {
