@@ -46,36 +46,15 @@ class WebedTestCase (unittest.TestCase):
 
     def assert_models_relations (self, (set, sub, doc)):
 
-        self.assertIsNotNone (set.sets)
-        self.assertIsNotNone (set.subsets)
-        self.assertIsNotNone (set.docs)
-        self.assertIsNotNone (set.subdocs)
+        self.assertEqual (set.sets.all (), [sub])
+        self.assertEqual (set.subsets.all (), [sub])
+        self.assertEqual (set.docs.all (), [])
+        self.assertEqual (set.subdocs.all (), [doc])
 
-        self.assertIn (sub, set.sets)
-        self.assertIn (sub, set.subsets)
-        self.assertNotIn (doc, set.docs.all ())
-        self.assertIn (doc, set.subdocs.all ())
-
-        self.assertIsNotNone (sub.sets)
-        self.assertIsNotNone (sub.subsets)
-        self.assertIsNotNone (sub.docs)
-        self.assertIsNotNone (sub.subdocs)
-
-        self.assertEqual ([], sub.sets.all ())
-        self.assertEqual ([], sub.subsets.all ())
-        self.assertIn (doc, sub.docs.all ())
-        self.assertNotIn (doc, sub.subdocs.all ())
-
-    def assert_models_relation_types (self, (set, sub, doc)):
-
-        self.assertEqual (str (type (set.sets)),
-            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
-        self.assertEqual (str (type (set.subsets)),
-            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
-        self.assertEqual (str (type (set.docs)),
-            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
-        self.assertEqual (str (type (set.subdocs)),
-            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
+        self.assertEqual (sub.sets.all (), [])
+        self.assertEqual (sub.subsets.all (), [])
+        self.assertEqual (sub.docs.all (), [doc])
+        self.assertEqual (sub.subdocs.all (), [])
 
     def test_models_after_commit (self):
 
@@ -83,14 +62,12 @@ class WebedTestCase (unittest.TestCase):
         self.commit_models (models)
         self.assert_models_basic (models)
         self.assert_models_relations (models)
-        self.assert_models_relation_types (models)
 
     def test_models_before_commit (self):
 
         models = self.create_models ()
         self.assert_models_basic (models)
         self.assert_models_relations (models)
-        self.assert_models_relation_types (models)
         self.commit_models (models)
 
 ###############################################################################

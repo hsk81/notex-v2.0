@@ -63,11 +63,21 @@ class Set (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
 
+    ##
+    ## Set.subsets = Q (Set.query).all (base=set) for a set, which means that
+    ## for any *non-base* "set": Q (set.subsets).all () = [].
+    ##
+
     base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     subsets = db.relationship ('Set',
         cascade='all', lazy='dynamic',
         primaryjoin="Set.base_id==Set.id",
         backref=db.backref ('base', remote_side='Set.id'))
+
+    ##
+    ## Set.sets = Q (Set.query).all (root=set) for a set, which means only the
+    ## *immediate* sets for a given set.
+    ##
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     sets = db.relationship ('Set',
@@ -92,9 +102,19 @@ class Doc (db.Model):
     name = db.Column (db.Unicode (256))
     ext = db.Column (db.Unicode (16))
 
+    ##
+    ## Set.subdocs = Q (Doc.query).all (base=set) for a set, which means that
+    ## for any *non-base* "set": Q (set.subdocs).all () = [].
+    ##
+
     base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     base = db.relationship ('Set', primaryjoin="Doc.base_id==Set.id",
         backref=db.backref ('subdocs', lazy='dynamic'))
+
+    ##
+    ## Set.docs = Q (Doc.query).all (root=set) for a set, which means only the
+    ## *immediate* docs for a given set.
+    ##
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     root = db.relationship ('Set', primaryjoin="Doc.root_id==Set.id",
@@ -262,10 +282,10 @@ def node_read (docs=True, json=True):
     assert base
 
     if uuid:
-        sets = Q (base.subsets).all (uuid=uuid)
+        sets = Q (base.sets).all (uuid=uuid)
         assert type (sets) == list
     else:
-        sets = Q (base.subsets).all ()
+        sets = Q (base.sets).all ()
         assert type (sets) == list
 
     result = {
