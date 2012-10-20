@@ -208,7 +208,7 @@ def init_report (root, base):
 ###############################################################################
 
 ##
-## TODO: Check out also if Flask-Restless is an option! PUT & DELETE required?
+## TODO: Check out also if Flask-Restless is an option!
 ##
 
 ###############################################################################
