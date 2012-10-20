@@ -128,7 +128,7 @@ def main (page='home'):
 
     if app.session_cookie_name in request.cookies:
         session_cn = app.session_cookie_name
-        session_id = request.cookies[session_cn] ## .split ('?')[0]
+        session_id = request.cookies[session_cn].split ('?')[0]
     else:
         session_id = None
 
