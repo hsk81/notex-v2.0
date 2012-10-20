@@ -62,9 +62,17 @@ class Set (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
 
+    ##
+    ## TODO: type (Set.subsets) == InstrumentedList, and != AppenderBaseQuery;
+    ##
+
     base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     subsets = db.relationship ('Set', primaryjoin="Set.base_id==Set.id",
         backref=db.backref ('base', remote_side='Set.id'), cascade='all')
+
+    ##
+    ## TODO: type (Set.sets) == InstrumentedList, and != AppenderBaseQuery;
+    ##
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     sets = db.relationship ('Set', primaryjoin="Set.root_id==Set.id",
