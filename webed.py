@@ -30,18 +30,20 @@ db = SQLAlchemy (app)
 ###############################################################################
 ###############################################################################
 
-null_uuid = '00000000-0000-0000-0000-000000000000'
+class Q:
 
-###############################################################################
-###############################################################################
-
-class Query:
-    """
-    TODO: Extend SQLAlchemy.query instead of using a wrapper around it!
-    """
     def __init__ (self, query):
 
         self.query = query
+
+    def all (self, **kwargs):
+
+        return self.query.filter_by (**kwargs).all ()
+
+    def all_or_default (self, default=None, **kwargs):
+
+        query = self.query.filter_by (**kwargs)
+        return query.all () if query.count () >= 1 else default
 
     def single (self, **kwargs):
 
@@ -60,15 +62,20 @@ class Set (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
 
-    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    subsets = db.relationship ('Set', cascade='all', backref=db.backref ('root',
-        remote_side='Set.id'))
+    base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    subsets = db.relationship ('Set', primaryjoin="Set.base_id==Set.id",
+        backref=db.backref ('base', remote_side='Set.id'), cascade='all')
 
-    def __init__ (self, name, root, uuid=None):
+    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    sets = db.relationship ('Set', primaryjoin="Set.root_id==Set.id",
+        backref=db.backref ('root', remote_side='Set.id'), cascade='all')
+
+    def __init__ (self, name, root, base, uuid=None):
 
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.root = root
+        self.base = base
 
     def __repr__ (self):
         return '<Set %r>' % self.name
@@ -79,14 +86,20 @@ class Doc (db.Model):
     name = db.Column (db.Unicode (256))
     ext = db.Column (db.Unicode (16))
 
-    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    root = db.relationship ('Set', backref=db.backref ('docs', lazy='dynamic'))
+    base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    base = db.relationship ('Set', primaryjoin="Doc.base_id==Set.id",
+        backref=db.backref ('subdocs', lazy='dynamic'))
 
-    def __init__ (self, name, ext, root, uuid=None):
+    root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
+    root = db.relationship ('Set', primaryjoin="Doc.root_id==Set.id",
+        backref=db.backref ('docs', lazy='dynamic'))
+
+    def __init__ (self, name, ext, root, base, uuid=None):
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.ext = unicode (ext)
         self.root = root
+        self.base = base
 
     def __repr__ (self):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
@@ -136,33 +149,33 @@ def reset ():
 
 def init ():
 
-    root = Set ('root', root=None)
+    root = Set ('root', root=None, base=None)
     session['root_uuid'] = root.uuid
 
     db.session.add (root)
     db.session.commit ()
 
-    init_article (root=root)
-    init_report (root=root)
+    init_article (root=root, base=root)
+    init_report (root=root, base=root)
 
-def init_article (root):
+def init_article (root, base):
 
-    set = Set ('Article', root=root); db.session.add (set)
-    doc = Doc ('options', 'cfg', set); db.session.add (doc)
-    doc = Doc ('content', 'txt', set); db.session.add (doc)
-    subset = Set ('resources', root=set); db.session.add (subset)
-    doc = Doc ('wiki', 'png', subset); db.session.add (doc)
-    doc = Doc ('time', 'jpg', subset); db.session.add (doc)
+    set = Set ('Article', root, base); db.session.add (set)
+    doc = Doc ('options', 'cfg', set, base); db.session.add (doc)
+    doc = Doc ('content', 'txt', set, base); db.session.add (doc)
+    set = Set ('resources', set, base); db.session.add (set)
+    doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
+    doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
     db.session.commit ()
 
-def init_report (root):
+def init_report (root, base):
 
-    set = Set ('Report', root=root); db.session.add (set)
-    doc = Doc ('options', 'cfg', set); db.session.add (doc)
-    doc = Doc ('content', 'txt', set); db.session.add (doc)
-    subset = Set ('resources', root=set); db.session.add (subset)
-    doc = Doc ('wiki', 'png', subset); db.session.add (doc)
-    doc = Doc ('time', 'jpg', subset); db.session.add (doc)
+    set = Set ('Report', root, base); db.session.add (set)
+    doc = Doc ('options', 'cfg', set, base); db.session.add (doc)
+    doc = Doc ('content', 'txt', set, base); db.session.add (doc)
+    set = Set ('resources', set, base); db.session.add (set)
+    doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
+    doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
     db.session.commit ()
 
 ###############################################################################
@@ -201,11 +214,9 @@ def node (docs=True, json=True):
 @app.route ('/node/root', methods=['GET'])
 def node_root (docs=True, json=True):
 
-    root_uuid = session['root_uuid']
-    assert root_uuid
-    root = Set.query.filter_by (uuid=root_uuid).one ()
-    assert root
-    sets = Set.query.filter_by (root=root).all ()
+    base = Q (Set.query).single (uuid=session['root_uuid'])
+    assert base
+    sets = Q (Set.query).all (root=base, base=base)
     assert sets
 
     result = {
@@ -216,22 +227,26 @@ def node_root (docs=True, json=True):
 
 def node_create (docs=True, json=True):
 
-    root_uuid = request.json.get ('root_uuid', session['root_uuid'])
-    if root_uuid == null_uuid: root_uuid = session['root_uuid']
-    assert root_uuid
-
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid or not root_uuid
     uuid = request.json.get ('uuid', None)
     assert uuid or not uuid
     name = request.json.get ('name', None)
     assert name
 
-    root = Query (Set.query).single_or_default (uuid=root_uuid)
-    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    assert base
+    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
+    assert root or not root
 
     if uuid:
-        set = Set (name, root=root, uuid=uuid)
+        if root: set = Set (name, uuid=uuid, root=root, base=base)
+        else: set = Set (name, uuid=uuid, root=base, base=base)
+
     else:
-        set = Set (name, root=root)
+        if root: set = Set (name, root=root, base=base)
+        else: set = Set (name, root=base, base=base)
+
     assert set
 
     db.session.add (set)
@@ -245,20 +260,23 @@ def node_create (docs=True, json=True):
 
 def node_read (docs=True, json=True):
 
-    root_uuid = request.json.get ('root_uuid', session['root_uuid'])
-    if root_uuid == null_uuid: root_uuid = session['root_uuid']
-    assert root_uuid
-
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid or not root_uuid
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
 
-    root = Query (Set.query).single_or_default (uuid=root_uuid)
-    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    assert base
+    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
+    assert root or not root
 
     if uuid:
-        sets = Set.query.filter_by (root=root, uuid=uuid).all ()
+        if root: sets = Q (Set.query).all (uuid=uuid, root=root)
+        else: sets = Q (Set.query).all (uuid=uuid, base=base)
+
     else:
-        sets = Set.query.filter_by (root=root).all ()
+        if root: sets = Q (Set.query).all (root=root)
+        else: sets = Q (Set.query).all (base=base)
 
     result = {
         'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
@@ -328,25 +346,23 @@ def doc_create (json=True):
 
 def doc_read (json=True):
 
-    root_uuid = request.args.get ('root_uuid', session['root_uuid'])
-    if root_uuid == null_uuid: root_uuid = session['root_uuid']
-    assert root_uuid
-
+    root_uuid = request.args.get ('root_uuid', None)
+    assert root_uuid or not root_uuid
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
 
-    root = Query (Set.query).single_or_default (uuid=root_uuid)
-    assert root ## TODO: Check session['root_uuid'] >= root.uuid!
+    base = Q (Set.query).single_or_default (uuid=session['root_uuid'])
+    assert base
+    root = Q (Set.query).single_or_default (uuid=root_uuid, base=base)
+    assert root or not root
 
-    if uuid: ## TODO!
-     ## base = Query (Set.query).single (uuid=session['root_uuid'])
-     ## docs = Doc.query.filter_by (base=base, uuid=uuid).all ()
-        docs = Doc.query.filter_by (uuid=uuid).all ()
+    if uuid: ## TODO: Q (root.subdocs).all (uuid=uuid)
+        if root: docs = Q (Doc.query).all (uuid=uuid, base=base)
+        else: docs = Q (Doc.query).all (uuid=uuid, base=base)
 
-    else: ## TODO!
-     ## base = Query (Set.query).single (uuid=session['root_uuid'])
-     ## docs = Doc.query.filter_by (base=base, ???).all ()
-        docs = Doc.query.all ()
+    else: ## TODO: Q (root.subdocs).all ()
+        if root: docs = Q (Doc.query).all (base=base)
+        else: docs = Q (Doc.query).all (base=base)
 
     result = {
         'success': True, 'results': map (doc2ext, docs)
@@ -384,7 +400,7 @@ def set2ext (set, docs=True):
     leaf = False
     loaded = True
 
-    sets = map (lambda set: set2ext (set, docs), set.subsets)
+    sets = map (lambda set: set2ext (set, docs), set.sets)
     assert type (sets) == list
     results = sets
 
