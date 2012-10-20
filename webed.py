@@ -58,6 +58,7 @@ class Q:
 ###############################################################################
 
 class Set (db.Model):
+
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
@@ -89,6 +90,7 @@ class Set (db.Model):
         return '<Set %r>' % self.name
 
 class Doc (db.Model):
+
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
