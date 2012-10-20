@@ -63,21 +63,17 @@ class Set (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
 
-    ##
-    ## TODO: type (Set.subsets) == InstrumentedList, and != AppenderBaseQuery;
-    ##
-
     base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    subsets = db.relationship ('Set', primaryjoin="Set.base_id==Set.id",
-        backref=db.backref ('base', remote_side='Set.id'), cascade='all')
-
-    ##
-    ## TODO: type (Set.sets) == InstrumentedList, and != AppenderBaseQuery;
-    ##
+    subsets = db.relationship ('Set',
+        cascade='all', lazy='dynamic',
+        primaryjoin="Set.base_id==Set.id",
+        backref=db.backref ('base', remote_side='Set.id'))
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
-    sets = db.relationship ('Set', primaryjoin="Set.root_id==Set.id",
-        backref=db.backref ('root', remote_side='Set.id'), cascade='all')
+    sets = db.relationship ('Set',
+        cascade='all', lazy='dynamic',
+        primaryjoin="Set.root_id==Set.id",
+        backref=db.backref ('root', remote_side='Set.id'))
 
     def __init__ (self, name, root, base, uuid=None):
 
@@ -266,10 +262,10 @@ def node_read (docs=True, json=True):
     assert base
 
     if uuid:
-        sets = Q (Set.query).all (base=base, uuid=uuid)
+        sets = Q (base.subsets).all (uuid=uuid)
         assert type (sets) == list
     else:
-        sets = Q (Set.query).all (base=base)
+        sets = Q (base.subsets).all ()
         assert type (sets) == list
 
     result = {
@@ -339,10 +335,10 @@ def doc_read (json=True):
     assert base
 
     if uuid:
-        docs = Q (Doc.query).all (base=base, uuid=uuid)
+        docs = Q (base.subdocs).all (uuid=uuid)
         assert type (docs) == list
     else:
-        docs = Q (Doc.query).all (base=base)
+        docs = Q (base.subdocs).all ()
         assert type (docs) == list
 
     result = {

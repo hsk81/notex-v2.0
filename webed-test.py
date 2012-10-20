@@ -61,17 +61,17 @@ class WebedTestCase (unittest.TestCase):
         self.assertIsNotNone (sub.docs)
         self.assertIsNotNone (sub.subdocs)
 
-        self.assertEqual ([], sub.sets)
-        self.assertEqual ([], sub.subsets)
+        self.assertEqual ([], sub.sets.all ())
+        self.assertEqual ([], sub.subsets.all ())
         self.assertIn (doc, sub.docs.all ())
         self.assertNotIn (doc, sub.subdocs.all ())
 
     def assert_models_relation_types (self, (set, sub, doc)):
 
         self.assertEqual (str (type (set.sets)),
-            "<class 'sqlalchemy.orm.collections.InstrumentedList'>")
+            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
         self.assertEqual (str (type (set.subsets)),
-            "<class 'sqlalchemy.orm.collections.InstrumentedList'>")
+            "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
         self.assertEqual (str (type (set.docs)),
             "<class 'sqlalchemy.orm.dynamic.AppenderBaseQuery'>")
         self.assertEqual (str (type (set.subdocs)),
