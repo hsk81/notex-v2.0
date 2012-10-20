@@ -17,8 +17,8 @@ class WebedTestCase (unittest.TestCase):
         webed.db.drop_all ()
 
     def test_models (self):
-        set = webed.Set ('folder')
-        doc = webed.Doc ('file', 'txt', set=set)
+        set = webed.Set ('folder', root=None, base=None)
+        doc = webed.Doc ('file', 'txt', root=set, base=set)
         webed.db.session.add (set)
         webed.db.session.add (doc)
         webed.db.session.commit ()
