@@ -406,6 +406,10 @@ def set2ext (set, docs=True):
         assert type (docs) == list
         results = docs + results
 
+    ##
+    ## TODO: Tweak 'expanded', 'loaded', and 'results' for large 'results'!
+    ##
+
     return {
         'root_uuid': set.root.uuid,
         'uuid': set.uuid,
