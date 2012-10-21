@@ -13,6 +13,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 from datetime import datetime
 from uuid import uuid4 as uuid_random
+from json import dumps as json_encode
 
 import sys
 import settings
@@ -175,14 +176,18 @@ def reset ():
 
 def init ():
 
-    root = Set ('root', root=None, base=None)
-    session['root_uuid'] = root.uuid
+    base = Set ('root', root=None, base=None)
+    session['root_uuid'] = base.uuid
 
-    db.session.add (root)
+    db.session.add (base)
     db.session.commit ()
 
-    init_article (root=root, base=root)
-    init_report (root=root, base=root)
+    init_article (root=base, base=base)
+    init_report (root=base, base=base)
+
+    doc = Doc ('author', 'txt', base, base)
+    db.session.add (doc)
+    db.session.commit ()
 
 def init_article (root, base):
 
@@ -192,7 +197,6 @@ def init_article (root, base):
     set = Set ('resources', set, base); db.session.add (set)
     doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
     doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
-    db.session.commit ()
 
 def init_report (root, base):
 
@@ -202,14 +206,6 @@ def init_report (root, base):
     set = Set ('resources', set, base); db.session.add (set)
     doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
     doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
-    db.session.commit ()
-
-###############################################################################
-###############################################################################
-
-##
-## TODO: Check out also if Flask-Restless is an option!
-##
 
 ###############################################################################
 ###############################################################################
@@ -234,11 +230,14 @@ def node_root (docs=True, json=True):
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    sets = Q (Set.query).all (base=base, root=base)
-    assert type (sets) == list
+
+    doc2exts = map (lambda d:
+        doc2ext (d, fullname=True), base.docs) if docs else []
+    set2exts = map (lambda s:
+        set2ext (s, docs, skip=lambda z: True), base.sets)
 
     result = {
-        'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
+        'success': True, 'results': set2exts + doc2exts
     }
 
     return jsonify (result) if json else result
@@ -277,19 +276,19 @@ def node_create (docs=True, json=True):
 def node_read (docs=True, json=True):
 
     uuid = request.args.get ('uuid', None)
-    assert uuid or not uuid
+    assert uuid
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
+    node = Q (base.subsets).one_or_default (uuid=uuid)
+    assert node
 
-    if uuid:
-        sets = Q (base.sets).all (uuid=uuid)
-        assert type (sets) == list
-    else:
-        sets = Q (base.sets).all ()
-        assert type (sets) == list
+    doc2exts = map (lambda d:
+        doc2ext (d, fullname=True), node.docs) if docs else []
+    set2exts = map (lambda s:
+        set2ext (s, docs, skip=lambda z: True), node.sets)
 
     result = {
-        'success': True, 'results': map (lambda s: set2ext (s, docs), sets)
+        'success': True, 'results': doc2exts + set2exts
     }
 
     return jsonify (result) if json else result
@@ -386,18 +385,26 @@ def doc_delete (json=True):
 ###############################################################################
 ###############################################################################
 
-def set2ext (set, docs=True):
+def set2ext (set, docs=True, skip=None):
 
     assert set;
     assert set.root.uuid
     assert set.uuid
     assert set.name
 
-    size = 0
-    leaf = False
-    loaded = True
+    if skip and skip (set):
 
-    sets = map (lambda set: set2ext (set, docs), set.sets)
+        return {
+            'root_uuid': set.root.uuid,
+            'uuid': set.uuid,
+            'name': set.name,
+            'size': 0,
+            'leaf': False,
+            'loaded': False,
+            'results': None
+        }
+
+    sets = map (lambda s: set2ext (s, docs, skip=skip), set.sets)
     assert type (sets) == list
     results = sets
 
@@ -406,17 +413,13 @@ def set2ext (set, docs=True):
         assert type (docs) == list
         results = docs + results
 
-    ##
-    ## TODO: Tweak 'expanded', 'loaded', and 'results' for large 'results'!
-    ##
-
     return {
         'root_uuid': set.root.uuid,
         'uuid': set.uuid,
         'name': set.name,
-        'size': size,
-        'leaf': leaf,
-        'loaded': loaded,
+        'size': 0,
+        'leaf': False,
+        'loaded': True,
         'results': results
     }
 
@@ -428,18 +431,14 @@ def doc2ext (doc, fullname=False):
     assert doc.fullname if fullname else doc.name
     assert doc.ext
 
-    size = 0 ## TODO!
-    loaded = True
-    leaf = True
-
     return {
         'root_uuid': doc.root.uuid,
         'uuid': doc.uuid,
         'name': doc.fullname if fullname else doc.name,
         'ext': doc.ext,
-        'size': size,
-        'leaf': leaf,
-        'loaded': loaded,
+        'size': 0,
+        'leaf': True,
+        'loaded': True,
     }
 
 ###############################################################################

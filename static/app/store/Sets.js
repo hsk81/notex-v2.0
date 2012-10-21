@@ -5,16 +5,24 @@
         model: 'Webed.model.Set',
 
         root: {
+            uuid: '00000000-0000-0000-0000-000000000000',
             expanded: true,
             name: 'Root',
-            size: 0,
-            uuid: '00000000-0000-0000-0000-000000000000'
+            size: 0
         },
 
         listeners: {
-            append: append
+            append: append,
+            beforeload: beforeload
         }
     });
+
+    function beforeload (store, operation, options) {
+
+        var uuid = operation.node.get ('uuid');
+        assert (uuid);
+        store.proxy.setExtraParam ('uuid', uuid);
+    }
 
     function append (root, node, index, options) {
 
