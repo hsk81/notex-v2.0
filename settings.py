@@ -25,7 +25,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///%s/%s.db' % (SITE_ROOT, SITE_NAME)
 ## is loaded only on demand.
 ##
 
-LOADSKIP_LIMIT = 0
+LOADSKIP_LIMIT = 16
 
 ###############################################################################
 ###############################################################################
