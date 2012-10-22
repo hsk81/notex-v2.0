@@ -11,58 +11,29 @@ Ext.define ('Webed.controller.SetTree', {
 
     init: function () {
         this.control ({
-            // TODO: Wire view events!
+            'set-tree' : {
+                afterrender : this.select_base
+            }
         });
 
         this.application.on ({
             create_set: this.create_set, scope: this
         });
-
-        this.application.on ({
-            synchronize: this.synchronize, scope: this
-        });
     },
 
-    create_set: function (set) {
-
+    select_base: function () {
         var view = this.getSetTree ();
         assert (view);
         var base = view.getRootNode ();
         assert (base);
+        var model = view.getSelectionModel ();
+        assert (model);
+        model.select (base);
+    },
 
-        if (set.root_uuid) {
-            var root_uuid = set.root_uuid;
-            assert (root_uuid);
-        }
-
-        else if (set.cls == 'project') {
-            var root_uuid = base.get ('uuid');
-            assert (root_uuid);
-        }
-
-        else if (set.cls == 'folder') {
-            var model = view.getSelectionModel ();
-            assert (model);
-            var record = model.getLastSelected ();
-            if (record) {
-                var expandable = record.get ('expandable');
-                if (expandable) {
-                    var root_uuid = record.get ('uuid');
-                    assert (root_uuid);
-                } else {
-                    console.debug ('[SetTreeCtrl] expandable:', expandable);
-                    return;
-                }
-            } else {
-                console.debug ('[SetTreeCtrl] record:', record);
-                return;
-            }
-        }
-
-        else {
-            console.debug ('[SetTreeCtrl] set.cls:', set.cls);
-            return;
-        }
+    create_set: function create_set (set) {
+        var root_uuid = get_root_uuid.call (this, set);
+        if (root_uuid == null) return;
 
         var uuid = set.uuid || UUID.random ();
         assert (uuid);
@@ -81,27 +52,61 @@ Ext.define ('Webed.controller.SetTree', {
         assert (model);
         var model = model.save ();
         assert (model);
-
-        var root = (root_uuid != base.get ('uuid'))
-            ? base.findChild ('uuid', root_uuid, true)
-            : base;
+        var root = get_root.call (this, root_uuid);
         assert (root);
-
         var node = root.appendChild (node);
         assert (node);
-    },
 
-    synchronize: function () {
-        console.debug ('[SetTreeCtrl.synchronize]', this);
+        root.expand (false, function () {
+            var view = this.getSetTree ();
+            assert (view);
+            var model = view.getSelectionModel ();
+            assert (model);
+            model.select (node);
+        }, this);
 
-        var modelClass = this.getSetModel ();
-        assert (modelClass);
-        var storeInstance = this.getSetsStore ();
-        assert (storeInstance);
+        function get_root_uuid (set) {
+            if (set.root_uuid) return set.root_uuid;
+            var view = this.getSetTree ();
+            assert (view);
 
-        var viewClass = this.getSetTreeView ();
-        assert (viewClass);
-        var viewInstance = this.getSetTree ();
-        assert (viewInstance);
+            assert (set.cls in {project:1, folder:1});
+            switch (set.cls) {
+                case 'project':
+                    var base = view.getRootNode ();
+                    assert (base);
+                    var root_uuid = base.get ('uuid');
+                    assert (root_uuid);
+                    break;
+
+                case 'folder':
+                    var model = view.getSelectionModel ();
+                    assert (model);
+                    var record = model.getLastSelected ();
+                    assert (record);
+                    var expandable = record.get ('expandable');
+                    if (expandable) {
+                        var root_uuid = record.get ('uuid');
+                        assert (root_uuid);
+                    } else {
+                        var root_uuid = record.parentNode.get ('uuid');
+                        assert (root_uuid);
+                    } break;
+            }
+
+            return root_uuid;
+        }
+
+        function get_root (root_uuid) {
+            var view = this.getSetTree ();
+            assert (view);
+            var base = view.getRootNode ();
+            assert (base);
+
+            return (root_uuid != base.get ('uuid'))
+                ? base.findChild ('uuid', root_uuid, true)
+                : base;
+        }
     }
 });
+

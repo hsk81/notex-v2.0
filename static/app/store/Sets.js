@@ -41,7 +41,6 @@
             assert (size >= 0);
             var leaf = node.get ('leaf');
             assert (leaf == true || leaf == false);
-
             var cls = node.get ('cls');
             assert (cls);
 

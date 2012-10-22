@@ -20,6 +20,15 @@ Ext.define ('Webed.view.Viewport', {
             minWidth: 256,
             flex: 1,
 
+            tools: [{
+                type: 'refresh',
+                tooltip: '<p>Refresh</p>',
+                handler: function (event, toolEl, panel) {}
+            },{
+                type: 'gear',
+                tooltip: '<p>Settings</p>'
+            }],
+
             layout: 'border',
             items: [{
                 region: 'center',
@@ -32,7 +41,16 @@ Ext.define ('Webed.view.Viewport', {
                 collapsible: true,
                 collapseMode: 'header',
                 split: true,
-                flex: 1
+                flex: 1,
+
+                tools: [{
+                    type: 'refresh',
+                    tooltip: '<p>Refresh</p>',
+                    handler: function (event, toolEl, panel) {}
+                },{
+                    type: 'gear',
+                    tooltip: '<p>Settings</p>'
+                }]
             }]
         },{
             region: 'center',

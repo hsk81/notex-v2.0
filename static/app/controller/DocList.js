@@ -5,13 +5,5 @@ Ext.define ('Webed.controller.DocList', {
         this.control ({
             // TODO: Wire view events!
         });
-
-        this.application.on ({
-            synchronize: this.synchronize, scope: this
-        });
-    },
-
-    synchronize: function () {
-        console.debug ('[DocListCtrl.synchronize]', this);
     }
 });

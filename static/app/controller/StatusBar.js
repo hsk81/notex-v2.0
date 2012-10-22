@@ -3,6 +3,7 @@ Ext.define ('Webed.controller.StatusBar', {
 
     init: function () {
         this.control ({
+            // TODO: Wire view events!
         });
     }
 });
