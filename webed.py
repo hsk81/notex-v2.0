@@ -13,7 +13,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 from datetime import datetime
 from uuid import uuid4 as uuid_random
-from json import dumps as json_encode
 
 import sys
 import settings
@@ -219,28 +218,8 @@ def node (docs=True, json=True):
     elif request.method == 'DELETE': return node_delete (docs, json)
 
     else:
-        result = {
-            'success': False
-        }
-
+        result = dict (success=False)
         return jsonify (result) if json else result
-
-@app.route ('/node/root', methods=['GET'])
-def node_root (docs=True, json=True):
-
-    base = Q (Set.query).one (uuid=session['root_uuid'])
-    assert base
-
-    doc2exts = map (lambda d:
-        doc2ext (d, fullname=True), base.docs) if docs else []
-    set2exts = map (lambda s:
-        set2ext (s, docs, skip=lambda z: True), base.sets)
-
-    result = {
-        'success': True, 'results': set2exts + doc2exts
-    }
-
-    return jsonify (result) if json else result
 
 def node_create (docs=True, json=True):
 
@@ -257,20 +236,28 @@ def node_create (docs=True, json=True):
         default=base)
     assert root
 
-    if uuid:
-        set = Set (name, base=base, root=root, uuid=uuid)
-        assert set
-    else:
-        set = Set (name, base=base, root=root)
-        assert set
+    if uuid: set = Set (name, base=base, root=root, uuid=uuid)
+    else: set = Set (name, base=base, root=root)
 
     db.session.add (set)
     db.session.commit ()
 
-    result = {
-        'success': True, 'results': map (lambda s: set2ext (s, docs), [set])
-    }
+    result = dict (
+        success=True, results=map (lambda s: set2ext (s, docs=docs), [set])
+    )
 
+    return jsonify (result) if json else result
+
+@app.route ('/node/root', methods=['GET'])
+def node_root (docs=True, json=True):
+
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
+
+    doc2exts = map (lambda d: doc2ext (d, True), base.docs) if docs else []
+    set2exts = map (lambda s: set2ext (s, docs=docs), base.sets)
+
+    result = dict (success=True, results=set2exts + doc2exts)
     return jsonify (result) if json else result
 
 def node_read (docs=True, json=True):
@@ -280,33 +267,26 @@ def node_read (docs=True, json=True):
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
     node = Q (base.subsets).one_or_default (uuid=uuid)
-    assert node
+    assert node or not node
 
-    doc2exts = map (lambda d:
-        doc2ext (d, fullname=True), node.docs) if docs else []
-    set2exts = map (lambda s:
-        set2ext (s, docs, skip=lambda z: True), node.sets)
+    if not node:
+        result = dict (success=False, results=None)
+        return jsonify (result) if json else result
 
-    result = {
-        'success': True, 'results': doc2exts + set2exts
-    }
+    doc2exts = map (lambda d: doc2ext (d, True), node.docs) if docs else []
+    set2exts = map (lambda s: set2ext (s, docs=docs), node.sets)
 
+    result = dict (success=True, results=doc2exts + set2exts)
     return jsonify (result) if json else result
 
 def node_update (docs=True, json=True):
 
-    result = {
-        'success': True
-    }
-
+    result = dict (success=True)
     return jsonify (result) if json else result
 
 def node_delete (docs=True, json=True):
 
-    result = {
-        'success': True
-    }
-
+    result = dict (success=True)
     return jsonify (result) if json else result
 
 ###############################################################################
@@ -332,18 +312,15 @@ def docs (json=True):
     elif request.method == 'DELETE': return doc_delete (json)
 
     else:
-        result = {
-            'success': False
-        }
-
+        result = dict (success=False)
         return jsonify (result) if json else result
 
 def doc_create (json=True):
 
-    result = {
-        'success': True, 'uuid': request.args.get ('uuid', None)
-    }
+    uuid = request.args.get ('uuid', None)
+    assert uuid
 
+    result = dict (success=True, uuid=uuid)
     return jsonify (result) if json else result
 
 def doc_read (json=True):
@@ -353,46 +330,39 @@ def doc_read (json=True):
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
 
-    if uuid:
-        docs = Q (base.subdocs).all (uuid=uuid)
-        assert type (docs) == list
-    else:
-        docs = Q (base.subdocs).all ()
-        assert type (docs) == list
+    if uuid: docs = Q (base.subdocs).all (uuid=uuid)
+    else: docs = Q (base.subdocs).all ()
 
-    result = {
-        'success': True, 'results': map (doc2ext, docs)
-    }
-
+    result = dict (success=True, results=map (doc2ext, docs))
     return jsonify (result) if json else result
 
 def doc_update (json=True):
 
-    result = {
-        'success': True, 'uuid': request.args.get ('uuid', None)
-    }
+    uuid = request.args.get ('uuid', None)
+    assert uuid
 
+    result = dict (success=True, uuid=uuid)
     return jsonify (result) if json else result
 
 def doc_delete (json=True):
 
-    result = {
-        'success': True, 'uuid': request.args.get ('uuid', None)
-    }
+    uuid = request.args.get ('uuid', None)
+    assert uuid
 
+    result = dict (success=True, uuid=uuid)
     return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def set2ext (set, docs=True, skip=None):
+def set2ext (set, docs=True):
 
     assert set;
     assert set.root.uuid
     assert set.uuid
     assert set.name
 
-    if skip and skip (set):
+    if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
 
         return {
             'root_uuid': set.root.uuid,
@@ -404,14 +374,13 @@ def set2ext (set, docs=True, skip=None):
             'results': None
         }
 
-    sets = map (lambda s: set2ext (s, docs, skip=skip), set.sets)
-    assert type (sets) == list
-    results = sets
+    sets = map (lambda s: set2ext (s, docs=docs), set.sets)
 
     if docs:
         docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
-        assert type (docs) == list
-        results = docs + results
+        results = docs + sets
+    else:
+        results = sets
 
     return {
         'root_uuid': set.root.uuid,
