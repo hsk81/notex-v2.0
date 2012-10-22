@@ -46,17 +46,17 @@ Ext.define ('Webed.controller.MainBar', {
         console.debug ('[MainBarCtrl.openDocument]');
     },
     add: function (item, event, options) {
-        console.debug ('[MainBarCtrl.add]');
-
-        this.application.fireEvent ('create_set', {
-            name: 'Thesis'
-        });
+        this.addProject (item, event, options);
     },
     addProject: function (item, event, options) {
-        console.debug ('[MainBarCtrl.addProject]');
+        this.application.fireEvent ('create_set', {
+            name: 'Project', cls: 'project'
+        });
     },
     addFolder: function (item, event, options) {
-        console.debug ('[MainBarCtrl.addFolder]');
+        this.application.fireEvent ('create_set', {
+            name: 'folder', cls: 'folder'
+        });
     },
     addText: function (item, event, options) {
         console.debug ('[MainBarCtrl.addText]');

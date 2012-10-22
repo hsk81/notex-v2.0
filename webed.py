@@ -260,7 +260,7 @@ def node_root (docs=True, json=True):
     result = dict (success=True, results=set2exts + doc2exts)
     return jsonify (result) if json else result
 
-def node_read (docs=True, json=True):
+def node_read (docs=True, json=True, uuid=None):
 
     uuid = request.args.get ('uuid', None)
     assert uuid
@@ -357,7 +357,7 @@ def doc_delete (json=True):
 
 def set2ext (set, docs=True):
 
-    assert set;
+    assert set
     assert set.root.uuid
     assert set.uuid
     assert set.name
@@ -365,13 +365,16 @@ def set2ext (set, docs=True):
     if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
 
         return {
+            'cls': 'folder' if set.root and set.root.root else 'project',
             'root_uuid': set.root.uuid,
+            'expandable': True,
+            'expanded': False,
             'uuid': set.uuid,
             'name': set.name,
-            'size': 0,
-            'leaf': False,
             'loaded': False,
-            'results': None
+            'results': None,
+            'leaf': False,
+            'size': 0,
         }
 
     sets = map (lambda s: set2ext (s, docs=docs), set.sets)
@@ -383,13 +386,16 @@ def set2ext (set, docs=True):
         results = sets
 
     return {
+        'cls': 'folder' if set.root and set.root.root else 'project',
         'root_uuid': set.root.uuid,
+        'expandable': True,
+        'results': results,
+        'expanded': False,
         'uuid': set.uuid,
         'name': set.name,
-        'size': 0,
-        'leaf': False,
         'loaded': True,
-        'results': results
+        'leaf': False,
+        'size': 0
     }
 
 def doc2ext (doc, fullname=False):
@@ -401,13 +407,16 @@ def doc2ext (doc, fullname=False):
     assert doc.ext
 
     return {
-        'root_uuid': doc.root.uuid,
-        'uuid': doc.uuid,
         'name': doc.fullname if fullname else doc.name,
+        'root_uuid': doc.root.uuid,
+        'expandable': False,
+        'expanded': False,
+        'cls': 'document',
+        'uuid': doc.uuid,
         'ext': doc.ext,
-        'size': 0,
-        'leaf': True,
         'loaded': True,
+        'leaf': True,
+        'size': 0
     }
 
 ###############################################################################

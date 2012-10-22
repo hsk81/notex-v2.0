@@ -42,12 +42,17 @@
             var leaf = node.get ('leaf');
             assert (leaf == true || leaf == false);
 
-            if (node.isLeaf ())
+            var cls = node.get ('cls');
+            assert (cls);
+
+            if (cls == 'document')
                 node.set ('iconCls', 'icon-page-16');
-            else if (root.isRoot ())
+            else if (cls == 'folder')
+                node.set ('iconCls', 'icon-folder-16');
+            else if (cls == 'project')
                 node.set ('iconCls', 'icon-report-16');
             else
-                node.set ('iconCls', 'icon-folder-16');
+                node.set ('iconCls', 'icon-bullet_white-16');
         }
     }
 })();

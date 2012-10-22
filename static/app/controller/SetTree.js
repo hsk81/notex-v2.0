@@ -24,30 +24,69 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     create_set: function (set) {
-        console.debug ('[SetTreeCtrl.create_set]');
 
         var view = this.getSetTree ();
         assert (view);
-        var root = view.getRootNode ();
-        assert (root);
+        var base = view.getRootNode ();
+        assert (base);
 
-        var root_uuid = set.root_uuid || root.get ('uuid');
-        assert (root_uuid);
+        if (set.root_uuid) {
+            var root_uuid = set.root_uuid;
+            assert (root_uuid);
+        }
+
+        else if (set.cls == 'project') {
+            var root_uuid = base.get ('uuid');
+            assert (root_uuid);
+        }
+
+        else if (set.cls == 'folder') {
+            var model = view.getSelectionModel ();
+            assert (model);
+            var record = model.getLastSelected ();
+            if (record) {
+                var expandable = record.get ('expandable');
+                if (expandable) {
+                    var root_uuid = record.get ('uuid');
+                    assert (root_uuid);
+                } else {
+                    console.debug ('[SetTreeCtrl] expandable:', expandable);
+                    return;
+                }
+            } else {
+                console.debug ('[SetTreeCtrl] record:', record);
+                return;
+            }
+        }
+
+        else {
+            console.debug ('[SetTreeCtrl] set.cls:', set.cls);
+            return;
+        }
+
         var uuid = set.uuid || UUID.random ();
         assert (uuid);
         var name = set.name || uuid;
         assert (name);
         var size = set.size || 0;
         assert (size >= 0);
+        var cls = set.cls;
+        assert (cls);
 
         var node = {
-            root_uuid: root_uuid, uuid: uuid, name: name, size: size
+            root_uuid: root_uuid, uuid: uuid, name: name, size: size, cls: cls
         }
 
         var model = Ext.create ('Webed.model.Set', node);
         assert (model);
         var model = model.save ();
         assert (model);
+
+        var root = (root_uuid != base.get ('uuid'))
+            ? base.findChild ('uuid', root_uuid, true)
+            : base;
+        assert (root);
+
         var node = root.appendChild (node);
         assert (node);
     },
