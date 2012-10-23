@@ -4,3 +4,6 @@
 [submodule "static/ico/fatcow.git"]
 	path = static/ico/fatcow.git
 	url = git@github.com:hsk81/fatcow-hosting-icon.git
+[submodule "static/lib/node-uuid.git"]
+	path = static/lib/node-uuid.git
+	url = git@github.com:hsk81/node-uuid.git
