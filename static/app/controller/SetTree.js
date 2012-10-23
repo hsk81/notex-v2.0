@@ -6,19 +6,27 @@ Ext.define ('Webed.controller.SetTree', {
     stores: ['Sets', 'Docs', 'Set2Docs'],
 
     refs: [{
-        selector: 'set-tree', ref: 'setTree' // getSetTree: view *instance*
+        selector: 'set-tree', ref: 'setTree'
     }],
 
     init: function () {
         this.control ({
-            'set-tree' : {
-                afterrender : this.select_base
-            }
+            'set-tree': { afterrender: this.select_base },
+            'tool[action=set-tree:refresh]': { click: this.refresh },
+            'tool[action=set-tree:settings]': { click: this.settings }
         });
 
         this.application.on ({
             create_set: this.create_set, scope: this
         });
+    },
+
+    settings: function () {
+        console.debug ('[SetTreeCtrl.settings]');
+    },
+
+    refresh: function () {
+        console.debug ('[SetTreeCtrl.refresh]');
     },
 
     select_base: function () {

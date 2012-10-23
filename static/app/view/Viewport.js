@@ -23,10 +23,11 @@ Ext.define ('Webed.view.Viewport', {
             tools: [{
                 type: 'refresh',
                 tooltip: '<p>Refresh</p>',
-                handler: function (event, toolEl, panel) {}
+                action: 'set-tree:refresh'
             },{
                 type: 'gear',
-                tooltip: '<p>Settings</p>'
+                tooltip: '<p>Settings</p>',
+                action: 'set-tree:settings'
             }],
 
             layout: 'border',
@@ -46,10 +47,11 @@ Ext.define ('Webed.view.Viewport', {
                 tools: [{
                     type: 'refresh',
                     tooltip: '<p>Refresh</p>',
-                    handler: function (event, toolEl, panel) {}
+                    action: 'refresh'
                 },{
                     type: 'gear',
-                    tooltip: '<p>Settings</p>'
+                    tooltip: '<p>Settings</p>',
+                    action: 'settings'
                 }]
             }]
         },{
