@@ -53,7 +53,7 @@ Ext.define ('Webed.controller.SetTree', {
         var root_uuid = get_root_uuid.call (this, set);
         if (root_uuid == null) return;
 
-        var uuid = set.uuid || UUID.fast ();
+        var uuid = set.uuid || UUID.random ();
         assert (uuid);
         var name = set.name || uuid;
         assert (name);
