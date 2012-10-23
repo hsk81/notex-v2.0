@@ -2,8 +2,8 @@ Ext.define ('Webed.controller.SetTree', {
     extend: 'Ext.app.Controller',
 
     views: ['SetTree'],
-    models: ['Set', 'Doc', 'Set2Doc'],
-    stores: ['Sets', 'Docs', 'Set2Docs'],
+    models: ['Set'],
+    stores: ['Sets'],
 
     refs: [{
         selector: 'set-tree', ref: 'setTree'
@@ -26,7 +26,17 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     refresh: function () {
-        console.debug ('[SetTreeCtrl.refresh]');
+        var view = this.getSetTree ();
+        assert (view);
+        var base = view.getRootNode ();
+        assert (base);
+        var base = base.removeAll (false);
+        assert (base);
+
+        var store = this.getSetsStore ();
+        assert (store);
+        var store = store.load ({node: base});
+        assert (store);
     },
 
     select_base: function () {
@@ -117,4 +127,3 @@ Ext.define ('Webed.controller.SetTree', {
         }
     }
 });
-

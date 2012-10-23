@@ -1,9 +1,6 @@
 Ext.define ('Webed.controller.MainBar', {
     extend: 'Ext.app.Controller',
 
-    models: ['Set', 'Doc', 'Set2Doc'],
-    stores: ['Sets', 'Docs', 'Set2Docs'],
-
     init: function () {
         this.control ({
             'main-bar button[action=save-document]': {
