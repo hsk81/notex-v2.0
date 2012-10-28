@@ -12,7 +12,7 @@ Ext.define ('Webed.store.Sets', {
 
     listeners: {
         append: function (root, node, index, options) {
-            assert (root || node);
+            assert (node);
             if (node.isRoot ()) {
                 node.set ('iconCls', 'icon-tree-16');
             } else {
@@ -41,6 +41,8 @@ Ext.define ('Webed.store.Sets', {
         },
 
         beforeload: function (store, operation, options) {
+            assert (store);
+            assert (operation);
             var uuid = operation.node.get ('uuid');
             assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
