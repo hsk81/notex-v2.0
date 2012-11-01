@@ -10,6 +10,7 @@ from flask.helpers import jsonify
 from flask.templating import render_template
 from flask.ext.debugtoolbar import DebugToolbarExtension
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.views import MethodView
 
 from datetime import datetime
 from uuid import uuid4 as uuid_random
@@ -209,17 +210,14 @@ def init_report (root, base):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/node', methods=['POST', 'GET', 'PUT', 'DELETE'])
-def node (docs=True, json=True):
+class NodeApi (MethodView):
 
-    if request.method == 'POST': return node_create (docs, json)
-    elif request.method == 'GET': return node_read (docs, json)
-    elif request.method == 'PUT': return node_update (docs, json)
-    elif request.method == 'DELETE': return node_delete (docs, json)
+    def post (self, docs=True, json=True): return node_create (docs, json)
+    def get (self, docs=True, json=True): return node_read (docs, json)
+    def put (self, docs=True, json=True): return node_update (docs, json)
+    def delete (self, docs=True, json=True): return node_delete (docs, json)
 
-    else:
-        result = dict (success=False)
-        return jsonify (result) if json else result
+app.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
 def node_create (docs=True, json=True):
 
@@ -292,9 +290,14 @@ def node_delete (docs=True, json=True):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/sets', methods=['PUT', 'GET', 'POST', 'DELETE'])
-def sets (json=True):
-    return node (docs=False, json=json)
+class SetsApi (MethodView):
+
+    def post (self, json=True): return node_create (docs=False, json=json)
+    def get (self, json=True): return node_read (docs=False, json=json)
+    def put (self, json=True): return node_update (docs=False, json=json)
+    def delete (self, json=True): return node_delete (docs=False, json=json)
+
+app.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
 
 @app.route ('/sets/root', methods=['GET'])
 def sets_root (json=True):
@@ -303,17 +306,14 @@ def sets_root (json=True):
 ###############################################################################
 ###############################################################################
 
-@app.route ('/docs', methods=['POST', 'GET', 'PUT', 'DELETE'])
-def docs (json=True):
+class DocsApi (MethodView):
 
-    if request.method == 'POST': return doc_create (json)
-    elif request.method == 'GET': return doc_read (json)
-    elif request.method == 'PUT': return doc_update (json)
-    elif request.method == 'DELETE': return doc_delete (json)
+    def post (self, json=True): return doc_create (json)
+    def get (self, json=True): return doc_read (json)
+    def put (self, json=True): return doc_update (json)
+    def delete (self, json=True): return doc_delete (json)
 
-    else:
-        result = dict (success=False)
-        return jsonify (result) if json else result
+app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
 
