@@ -258,7 +258,7 @@ def node_root (docs=True, json=True):
     result = dict (success=True, results=set2exts + doc2exts)
     return jsonify (result) if json else result
 
-def node_read (docs=True, json=True, uuid=None):
+def node_read (docs=True, json=True):
 
     uuid = request.args.get ('uuid', None)
     assert uuid
