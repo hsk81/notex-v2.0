@@ -20,6 +20,8 @@ Ext.define ('Webed.store.Sets', {
 
                 if (mime == 'text/plain')
                     node.set ('iconCls', 'icon-page-16');
+                else if (mime.match (/^image/))
+                    node.set ('iconCls', 'icon-picture-16');
                 else if (mime == 'application/folder')
                     node.set ('iconCls', 'icon-folder-16');
                 else if (mime == 'application/project')

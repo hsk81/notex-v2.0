@@ -366,9 +366,10 @@ def doc_delete (json=True):
 def set2ext (set, docs=True):
 
     assert set
-    assert set.root.uuid
     assert set.uuid
     assert set.name
+    assert set.mime
+    assert set.root.uuid
 
     def to_ext (set, results):
 
@@ -403,18 +404,19 @@ def set2ext (set, docs=True):
 def doc2ext (doc, fullname=False):
 
     assert doc
-    assert doc.root.uuid
-    assert doc.uuid
-    assert doc.fullname if fullname else doc.name
     assert doc.ext
+    assert doc.uuid
+    assert doc.mime
+    assert doc.root.uuid
+    assert doc.fullname if fullname else doc.name
 
     return {
         'name': doc.fullname if fullname else doc.name,
-        'mime': doc.mime,
         'root_uuid': doc.root.uuid,
         'expandable': False,
         'expanded': False,
         'uuid': doc.uuid,
+        'mime': doc.mime,
         'ext': doc.ext,
         'loaded': True,
         'leaf': True,
