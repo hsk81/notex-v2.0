@@ -399,11 +399,6 @@ def set2ext (set, docs=True):
 
     def to_ext (set, results):
 
-        if set.root == set.base:
-            mime = 'application/project'
-        else:
-            mime = 'application/folder'
-
         return {
             'loaded': results is not None,
             'root_uuid': set.root.uuid,
@@ -413,7 +408,7 @@ def set2ext (set, docs=True):
             'name': set.name,
             'results': results,
             'leaf': False,
-            'mime': mime,
+            'mime': set.mime,
             'size': 0,
         }
 
