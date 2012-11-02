@@ -1,6 +1,10 @@
 Ext.define ('Webed.controller.DocList', {
     extend: 'Ext.app.Controller',
 
+    views: ['DocList'],
+    models: ['Doc'],
+    stores: ['Docs'],
+
     refs: [{
         selector: 'doc-list', ref: 'docList'
     }],
@@ -17,6 +21,9 @@ Ext.define ('Webed.controller.DocList', {
     },
 
     refresh: function () {
-        console.debug ('[DocListCtrl.refresh]');
+        var store = this.getDocsStore ();
+        assert (store);
+        var store = store.load ();
+        assert (store);
     }
 });
