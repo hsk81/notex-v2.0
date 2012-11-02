@@ -57,7 +57,7 @@ Ext.define ('Webed.controller.MainBar', {
     },
     addText: function (item, event, options) {
         this.application.fireEvent ('create_doc', {
-            name: 'option', ext: 'cfg', mime: 'text/plain'
+            name: 'options', ext: 'cfg', mime: 'text/plain'
         });
     },
     rename: function (item, event, options) {
