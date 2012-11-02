@@ -53,89 +53,7 @@ Ext.define ('Webed.controller.SetTree', {
         model.select (base);
     },
 
-    create_doc: function create_doc (doc) {
-        var root_uuid = get_root_uuid.call (this, doc);
-        assert (root_uuid);
-
-        var uuid = doc.uuid || UUID.random ();
-        assert (uuid);
-        var name = doc.name || uuid;
-        assert (name);
-        var ext = doc.ext || null;
-        assert (ext || !ext);
-        var size = doc.size || 0;
-        assert (size >= 0);
-        var mime = doc.mime;
-        assert (mime);
-
-        var node = {
-            root_uuid: root_uuid,
-            uuid: uuid,
-            name: name,
-            ext: ext,
-            size: size,
-            mime: mime
-        }
-
-        var model = Ext.create ('Webed.model.Doc', node);
-        assert (model);
-        var model = model.save ();
-        assert (model);
-
-        $.extend (node, {
-            name: Ext.String.format ('{0}.{1}', name, ext),
-            expandable: false,
-            leaf: true
-        });
-
-        var root = get_root.call (this, root_uuid);
-        assert (root);
-        var node = root.appendChild (node);
-        assert (node);
-
-        root.expand (false, function () {
-            var view = this.getSetTree ();
-            assert (view);
-            var model = view.getSelectionModel ();
-            assert (model);
-            model.select (node);
-        }, this);
-
-        function get_root_uuid (doc) {
-            if (doc.root_uuid) return doc.root_uuid;
-
-            var view = this.getSetTree ();
-            assert (view);
-            var model = view.getSelectionModel ();
-            assert (model);
-            var record = model.getLastSelected ();
-            assert (record);
-
-            var expandable = record.get ('expandable');
-            if (expandable) {
-                var root_uuid = record.get ('uuid');
-                assert (root_uuid);
-            } else {
-                var root_uuid = record.parentNode.get ('uuid');
-                assert (root_uuid);
-            }
-
-            return root_uuid;
-        }
-
-        function get_root (root_uuid) {
-            var view = this.getSetTree ();
-            assert (view);
-            var base = view.getRootNode ();
-            assert (base);
-
-            return (root_uuid != base.get ('uuid'))
-                ? base.findChild ('uuid', root_uuid, true)
-                : base;
-        }
-    },
-
-    create_set: function create_set (set) {
+    create_set: function (set) {
         var root_uuid = get_root_uuid.call (this, set);
         assert (root_uuid);
 
@@ -153,15 +71,19 @@ Ext.define ('Webed.controller.SetTree', {
             uuid: uuid,
             mime: mime,
             name: name,
-            size: size,
-            expandable: true,
-            leaf: false
+            size: size
         }
 
         var model = Ext.create ('Webed.model.Set', node);
         assert (model);
         var model = model.save ();
         assert (model);
+
+        $.extend (node, {
+            expandable: true,
+            leaf: false
+        })
+
         var root = get_root.call (this, root_uuid);
         assert (root);
         var node = root.appendChild (node);
@@ -208,7 +130,93 @@ Ext.define ('Webed.controller.SetTree', {
                     } break;
 
                 default:
-                    throw new AssertException ('invalid set.mime');
+                    throw new AssertException (Ext.String.format (
+                        'no case for set.mime={0}', set.mime
+                    ));
+            }
+
+            return root_uuid;
+        }
+
+        function get_root (root_uuid) {
+            var view = this.getSetTree ();
+            assert (view);
+            var base = view.getRootNode ();
+            assert (base);
+
+            return (root_uuid != base.get ('uuid'))
+                ? base.findChild ('uuid', root_uuid, true)
+                : base;
+        }
+    },
+
+    create_doc: function (doc) {
+        var root_uuid = get_root_uuid.call (this, doc);
+        assert (root_uuid);
+
+        var uuid = doc.uuid || UUID.random ();
+        assert (uuid);
+        var name = doc.name || uuid;
+        assert (name);
+        var ext = doc.ext || null;
+        assert (ext || !ext);
+        var size = doc.size || 0;
+        assert (size >= 0);
+        var mime = doc.mime;
+        assert (mime);
+
+        var node = {
+            root_uuid: root_uuid,
+            uuid: uuid,
+            name: name,
+            ext: ext,
+            size: size,
+            mime: mime
+        }
+
+        var model = Ext.create ('Webed.model.Doc', node);
+        assert (model);
+        var model = model.save ();
+        assert (model);
+
+        $.extend (node, {
+            name: (ext != undefined)
+                ? Ext.String.format ('{0}.{1}', name, ext)
+                : name,
+            expandable: false,
+            leaf: true
+        });
+
+        var root = get_root.call (this, root_uuid);
+        assert (root);
+        var node = root.appendChild (node);
+        assert (node);
+
+        root.expand (false, function () {
+            var view = this.getSetTree ();
+            assert (view);
+            var model = view.getSelectionModel ();
+            assert (model);
+            model.select (node);
+        }, this);
+
+        function get_root_uuid (doc) {
+            if (doc.root_uuid) return doc.root_uuid;
+
+            var view = this.getSetTree ();
+            assert (view);
+            var model = view.getSelectionModel ();
+            assert (model);
+            var record = model.getLastSelected ();
+            assert (record);
+
+            var expandable = record.get ('expandable');
+            if (expandable) {
+                var root_uuid = record.get ('uuid');
+                assert (root_uuid);
+            } else {
+                var root_uuid = record.parentNode.get ('uuid');
+                assert (root_uuid);
             }
 
             return root_uuid;

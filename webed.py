@@ -370,41 +370,35 @@ def set2ext (set, docs=True):
     assert set.uuid
     assert set.name
 
-    if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
+    def to_ext (set, results):
+
+        if set.root == set.base:
+            mime = 'application/project'
+        else:
+            mime = 'application/folder'
 
         return {
-            'mime': 'application/project' if set.root == set.base else 'application/folder',
+            'loaded': results is not None,
             'root_uuid': set.root.uuid,
             'expandable': True,
             'expanded': False,
             'uuid': set.uuid,
             'name': set.name,
-            'loaded': False,
-            'results': None,
+            'results': results,
             'leaf': False,
+            'mime': mime,
             'size': 0,
         }
 
+    if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
+
+        return to_ext (set, results=None)
+
     sets = map (lambda s: set2ext (s, docs=docs), set.sets)
+    results = map (lambda doc: doc2ext (doc, fullname=True), set.docs) + sets \
+        if docs else sets
 
-    if docs:
-        docs = map (lambda doc: doc2ext (doc, fullname=True), set.docs)
-        results = docs + sets
-    else:
-        results = sets
-
-    return {
-        'mime': 'application/project' if set.root == set.base else 'application/folder',
-        'root_uuid': set.root.uuid,
-        'expandable': True,
-        'results': results,
-        'expanded': False,
-        'uuid': set.uuid,
-        'name': set.name,
-        'loaded': True,
-        'leaf': False,
-        'size': 0
-    }
+    return to_ext (set, results=results)
 
 def doc2ext (doc, fullname=False):
 
