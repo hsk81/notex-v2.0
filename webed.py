@@ -62,6 +62,7 @@ class Set (db.Model):
 
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
+    mime = db.Column (db.String (256))
     name = db.Column (db.Unicode (256))
 
     ##
@@ -86,20 +87,23 @@ class Set (db.Model):
         primaryjoin="Set.root_id==Set.id",
         backref=db.backref ('root', remote_side='Set.id'))
 
-    def __init__ (self, name, root, base, uuid=None):
+    def __init__ (self, name, root, uuid=None, mime=None):
 
+        self.base = root.base if root and root.base else root
         self.uuid = uuid if uuid else str (uuid_random ())
+        self.mime = mime if mime else 'application/set'
         self.name = unicode (name)
         self.root = root
-        self.base = base
 
     def __repr__ (self):
+
         return '<Set %r>' % self.name
 
 class Doc (db.Model):
 
     id = db.Column (db.Integer, primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
+    mime = db.Column (db.String (256))
     name = db.Column (db.Unicode (256))
     ext = db.Column (db.Unicode (16))
 
@@ -121,14 +125,17 @@ class Doc (db.Model):
     root = db.relationship ('Set', primaryjoin="Doc.root_id==Set.id",
         backref=db.backref ('docs', lazy='dynamic'))
 
-    def __init__ (self, name, ext, root, base, uuid=None):
+    def __init__ (self, name, ext, root, uuid=None, mime=None):
+
+        self.base = root.base if root and root.base else root
+        self.mime = mime if mime else 'application/document'
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.ext = unicode (ext)
         self.root = root
-        self.base = base
 
     def __repr__ (self):
+
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
 
     fullname = property (lambda self: '%s.%s' % (self.name, self.ext))
@@ -176,36 +183,38 @@ def reset ():
 
 def init ():
 
-    base = Set ('root', root=None, base=None)
-    session['root_uuid'] = base.uuid
-
+    base = Set ('root', root=None)
     db.session.add (base)
     db.session.commit ()
 
-    init_article (root=base, base=base)
-    init_report (root=base, base=base)
+    init_article (root=base)
+    init_report (root=base)
 
-    doc = Doc ('author', 'txt', base, base)
+    doc = Doc ('author', 'txt', root=base, mime='text/plain')
     db.session.add (doc)
     db.session.commit ()
 
-def init_article (root, base):
+    session['root_uuid'] = base.uuid
 
-    set = Set ('Article', root, base); db.session.add (set)
-    doc = Doc ('options', 'cfg', set, base); db.session.add (doc)
-    doc = Doc ('content', 'txt', set, base); db.session.add (doc)
-    set = Set ('resources', set, base); db.session.add (set)
-    doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
-    doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
+def init_article (root):
 
-def init_report (root, base):
+    set = Set ('Article', root, mime='application/project'); db.session.add (set)
+    doc = Doc ('options', 'cfg', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('content', 'txt', set, mime='text/plain'); db.session.add (doc)
 
-    set = Set ('Report', root, base); db.session.add (set)
-    doc = Doc ('options', 'cfg', set, base); db.session.add (doc)
-    doc = Doc ('content', 'txt', set, base); db.session.add (doc)
-    set = Set ('resources', set, base); db.session.add (set)
-    doc = Doc ('wiki', 'png', set, base); db.session.add (doc)
-    doc = Doc ('time', 'jpg', set, base); db.session.add (doc)
+    set = Set ('resources', set, mime='application/folder'); db.session.add (set)
+    doc = Doc ('wiki', 'png', set, mime='image/png'); db.session.add (doc)
+    doc = Doc ('time', 'jpg', set, mime='image/jpg'); db.session.add (doc)
+
+def init_report (root):
+
+    set = Set ('Report', root, mime='application/project'); db.session.add (set)
+    doc = Doc ('options', 'cfg', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('content', 'txt', set, mime='text/plain'); db.session.add (doc)
+
+    set = Set ('resources', set, mime='application/folder'); db.session.add (set)
+    doc = Doc ('wiki', 'png', set, mime='image/png'); db.session.add (doc)
+    doc = Doc ('time', 'jpg', set, mime='image/png'); db.session.add (doc)
 
 ###############################################################################
 ###############################################################################
@@ -234,15 +243,14 @@ def node_create (docs=True, json=True):
         default=base)
     assert root
 
-    if uuid: set = Set (name, base=base, root=root, uuid=uuid)
-    else: set = Set (name, base=base, root=root)
+    if uuid: set = Set (name, root, uuid=uuid) ## TODO: mime!
+    else: set = Set (name, root) ## TODO: mime!
 
     db.session.add (set)
     db.session.commit ()
 
-    result = dict (
-        success=True, results=map (lambda s: set2ext (s, docs=docs), [set])
-    )
+    result = dict (success=True, results=
+        map (lambda s: set2ext (s, docs=docs), [set]))
 
     return jsonify (result) if json else result
 
@@ -317,7 +325,7 @@ app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
 
-    uuid = request.args.get ('uuid', None)
+    uuid = request.json.get ('uuid', None)
     assert uuid
 
     result = dict (success=True, uuid=uuid)
@@ -365,7 +373,7 @@ def set2ext (set, docs=True):
     if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
 
         return {
-            'cls': 'folder' if set.root and set.root.root else 'project',
+            'mime': 'application/project' if set.root == set.base else 'application/folder',
             'root_uuid': set.root.uuid,
             'expandable': True,
             'expanded': False,
@@ -386,7 +394,7 @@ def set2ext (set, docs=True):
         results = sets
 
     return {
-        'cls': 'folder' if set.root and set.root.root else 'project',
+        'mime': 'application/project' if set.root == set.base else 'application/folder',
         'root_uuid': set.root.uuid,
         'expandable': True,
         'results': results,
@@ -408,10 +416,10 @@ def doc2ext (doc, fullname=False):
 
     return {
         'name': doc.fullname if fullname else doc.name,
+        'mime': doc.mime,
         'root_uuid': doc.root.uuid,
         'expandable': False,
         'expanded': False,
-        'cls': 'document',
         'uuid': doc.uuid,
         'ext': doc.ext,
         'loaded': True,

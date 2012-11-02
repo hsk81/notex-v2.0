@@ -21,9 +21,9 @@ class WebedTestCase (unittest.TestCase):
 
     def create_models (self):
 
-        set = webed.Set ('root', root=None, base=None)
-        sub = webed.Set ('folder', root=set, base=set)
-        doc = webed.Doc ('file', 'txt', root=sub, base=set)
+        set = webed.Set ('root', root=None)
+        sub = webed.Set ('folder', root=set)
+        doc = webed.Doc ('file', 'txt', root=sub)
 
         return set, sub, doc
 

@@ -47,16 +47,18 @@ Ext.define ('Webed.controller.MainBar', {
     },
     addProject: function (item, event, options) {
         this.application.fireEvent ('create_set', {
-            name: 'Project', cls: 'project'
+            name: 'Project', mime: 'application/project'
         });
     },
     addFolder: function (item, event, options) {
         this.application.fireEvent ('create_set', {
-            name: 'folder', cls: 'folder'
+            name: 'folder', mime: 'application/folder'
         });
     },
     addText: function (item, event, options) {
-        console.debug ('[MainBarCtrl.addText]');
+        this.application.fireEvent ('create_doc', {
+            name: 'option', ext: 'cfg', mime: 'text/plain'
+        });
     },
     rename: function (item, event, options) {
         console.debug ('[MainBarCtrl.rename]');

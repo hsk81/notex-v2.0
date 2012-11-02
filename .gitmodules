@@ -7,3 +7,6 @@
 [submodule "static/lib/node-uuid.git"]
 	path = static/lib/node-uuid.git
 	url = git@github.com:hsk81/node-uuid.git
+[submodule "static/lib/jquery.git"]
+	path = static/lib/jquery.git
+	url = https://github.com/jquery/jquery.git
