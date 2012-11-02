@@ -41,6 +41,8 @@ Ext.define ('Webed.controller.SetTree', {
         assert (store);
         var store = store.load ({node: base});
         assert (store);
+
+        this.select_base ();
     },
 
     select_base: function () {
