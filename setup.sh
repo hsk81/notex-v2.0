@@ -3,6 +3,9 @@
 ###############################################################################
 ###############################################################################
 
+# Require $ sudo pacman -S nodejs
+# Require $ sudo npm install -g grunt
+
 # Initial $ ./setup.sh init webed
 # Upgrade $ ./setup.sh init webed --upgrade
 
@@ -42,7 +45,7 @@ function setup_env () {
     if [ $VIRTUAL_ENV ] ; then
         exit 0
     else
-        git submodule update --init
+        git submodule update --init && build
         virtualenv . --prompt="[$1] "
     fi
 }
@@ -55,6 +58,11 @@ function clear_env () {
     rm bin/ include/ lib/ -r
 }
 
+function build () {
+    cd ./static/lib/jquery.git/
+    npm install && grunt
+    cd ./../../../
+}
 
 ###############################################################################
 ###############################################################################
