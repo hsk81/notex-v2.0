@@ -232,6 +232,8 @@ def node_create (docs=True, json=True):
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid
+    mime = request.json.get ('mime', None)
+    assert mime
     uuid = request.json.get ('uuid', None)
     assert uuid or not uuid
     name = request.json.get ('name', None)
@@ -239,18 +241,19 @@ def node_create (docs=True, json=True):
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid,
-        default=base)
+    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid, default=base)
     assert root
 
-    if uuid: set = Set (name, root, uuid=uuid) ## TODO: mime!
-    else: set = Set (name, root) ## TODO: mime!
+    if uuid:
+        set = Set (name, root, mime=mime, uuid=uuid)
+    else:
+        set = Set (name, root, mime=mime)
 
     db.session.add (set)
     db.session.commit ()
 
-    result = dict (success=True, results=
-        map (lambda s: set2ext (s, docs=docs), [set]))
+    result = dict (success=True,
+        results=map (lambda s: set2ext (s, docs=docs), [set]))
 
     return jsonify (result) if json else result
 
@@ -325,10 +328,31 @@ app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
 
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid
     uuid = request.json.get ('uuid', None)
-    assert uuid
+    assert uuid or not uuid
+    mime = request.json.get ('mime', None)
+    assert mime
+    name = request.json.get ('name', None)
+    assert name
+    ext = request.json.get ('ext', None)
+    assert ext or not ext
 
-    result = dict (success=True, uuid=uuid)
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
+    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid, default=base)
+    assert root
+
+    if uuid:
+        doc = Doc (name, ext, root, mime=mime, uuid=uuid)
+    else:
+        doc = Doc (name, ext, root, mime=mime)
+
+    db.session.add (doc)
+    db.session.commit ()
+
+    result = dict (success=True, results=map (lambda d: doc2ext (d), [doc]))
     return jsonify (result) if json else result
 
 def doc_read (json=True):
@@ -338,8 +362,10 @@ def doc_read (json=True):
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
 
-    if uuid: docs = Q (base.subdocs).all (uuid=uuid)
-    else: docs = Q (base.subdocs).all ()
+    if uuid:
+        docs = Q (base.subdocs).all (uuid=uuid)
+    else:
+        docs = Q (base.subdocs).all ()
 
     result = dict (success=True, results=map (doc2ext, docs))
     return jsonify (result) if json else result
