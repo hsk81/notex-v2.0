@@ -14,6 +14,10 @@ Ext.define ('Webed.controller.DocList', {
             'doc-list tool[action=refresh]': { click: this.refresh },
             'doc-list tool[action=settings]': { click: this.settings }
         });
+
+        this.application.on ({
+            refresh_docs: this.refresh, scope: this
+        });
     },
 
     settings: function () {

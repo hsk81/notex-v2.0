@@ -202,6 +202,10 @@ Ext.define ('Webed.controller.SetTree', {
             model.select (node);
         }, this);
 
+        this.application.fireEvent ('refresh_docs', {
+            node: root
+        });
+
         function get_root_uuid (doc) {
             if (doc.root_uuid) return doc.root_uuid;
 
