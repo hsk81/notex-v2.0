@@ -7,15 +7,19 @@ from flask import session
 from flask.app import Flask
 from flask.globals import request
 from flask.helpers import jsonify
-from flask.templating import render_template
-from flask.ext.debugtoolbar import DebugToolbarExtension
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.admin import Admin
 from flask.views import MethodView
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.templating import render_template
+from flask.ext.admin.contrib.fileadmin import FileAdmin
+from flask.ext.admin.contrib.sqlamodel import ModelView
+from flask.ext.debugtoolbar import DebugToolbarExtension
 
 from datetime import datetime
 from uuid import uuid4 as uuid_random
 
 import sys
+import os.path
 import settings
 
 ###############################################################################
@@ -27,6 +31,7 @@ app.config.from_envvar ('WEBED_SETTINGS', silent=True)
 
 toolbar = DebugToolbarExtension (app)
 db = SQLAlchemy (app)
+admin = Admin(app)
 
 ###############################################################################
 ###############################################################################
@@ -139,6 +144,33 @@ class Doc (db.Model):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
 
     fullname = property (lambda self: '%s.%s' % (self.name, self.ext))
+
+###############################################################################
+###############################################################################
+
+class SetAdmin (ModelView):
+
+    list_columns = ('base', 'root', 'uuid', 'mime', 'name')
+    searchable_columns = (Set.uuid, Set.mime, Set.name)
+    column_filters = (Set.uuid, Set.mime, Set.name)
+
+    def __init__ (self, session):
+        super (SetAdmin, self).__init__(Set, session)
+
+class DocAdmin (ModelView):
+
+    list_columns = ('base', 'root', 'uuid', 'mime', 'name', 'ext')
+    searchable_columns = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
+    column_filters = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
+
+    def __init__ (self, session):
+        super (DocAdmin, self).__init__(Doc, session)
+
+admin.add_view (SetAdmin (db.session))
+admin.add_view (DocAdmin (db.session))
+
+path = os.path.join (os.path.dirname (__file__), 'static')
+admin.add_view (FileAdmin (path, '/static/', name='Files'))
 
 ###############################################################################
 ###############################################################################
@@ -402,13 +434,13 @@ def set2ext (set, docs=True):
         return {
             'loaded': results is not None,
             'root_uuid': set.root.uuid,
+            'results': results,
             'expandable': True,
             'expanded': False,
             'uuid': set.uuid,
             'name': set.name,
-            'results': results,
-            'leaf': False,
             'mime': set.mime,
+            'leaf': False,
             'size': 0,
         }
 
