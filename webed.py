@@ -119,7 +119,7 @@ class Doc (db.Model):
 
     base_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     base = db.relationship ('Set', primaryjoin="Doc.base_id==Set.id",
-        backref=db.backref ('subdocs', lazy='dynamic'))
+        backref=db.backref ('subdocs', lazy='dynamic', cascade='all'))
 
     ##
     ## Set.docs = Q (Doc.query).all (root=set) for a set, which means only the
@@ -128,7 +128,7 @@ class Doc (db.Model):
 
     root_id = db.Column (db.Integer, db.ForeignKey ('set.id'))
     root = db.relationship ('Set', primaryjoin="Doc.root_id==Set.id",
-        backref=db.backref ('docs', lazy='dynamic'))
+        backref=db.backref ('docs', lazy='dynamic', cascade='all'))
 
     def __init__ (self, name, ext, root, uuid=None, mime=None):
 
@@ -204,7 +204,7 @@ def main (page='home'):
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
     if 'reset' in request.args: reset (); init ()
-    if 'refresh' in request.args: init ()
+    if 'refresh' in request.args: clean (); init ()
 
     return render_template ('index.html', page=page, debug=app.debug)
 
@@ -212,6 +212,14 @@ def reset ():
 
     db.drop_all ()
     db.create_all ()
+
+def clean ():
+
+    if 'root_uuid' in session:
+        base = Q (Set.query).one_or_default (uuid=session['root_uuid'])
+        if base:
+            db.session.delete (base)
+            db.session.commit ()
 
 def init ():
 
