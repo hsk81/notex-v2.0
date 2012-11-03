@@ -31,7 +31,7 @@ app.config.from_envvar ('WEBED_SETTINGS', silent=True)
 
 toolbar = DebugToolbarExtension (app)
 db = SQLAlchemy (app)
-admin = Admin(app)
+admin = Admin (app)
 
 ###############################################################################
 ###############################################################################
