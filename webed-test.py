@@ -3,6 +3,8 @@
 ###############################################################################
 ###############################################################################
 
+from json import loads
+
 import webed
 import unittest
 
@@ -13,11 +15,26 @@ class WebedTestCase (unittest.TestCase):
 
     def setUp (self):
 
-        webed.db.create_all ()
+        webed.app.config['TESTING'] = True
+        webed.app.config['DEBUG'] = False
+
+        SITE_ROOT = webed.app.config['SITE_ROOT']
+        assert SITE_ROOT
+        SITE_NAME = webed.app.config['SITE_NAME']
+        assert SITE_NAME
+
+        webed.app.config['SQLALCHEMY_DATABASE_URI'] = \
+            'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
+
+        self.app = webed.app.test_client ()
+        self.db = webed.db
+
+        self.db.create_all ()
 
     def tearDown (self):
 
-        webed.db.drop_all ()
+        self.db.session.remove ()
+        self.db.drop_all ()
 
     def create_models (self):
 
@@ -29,10 +46,10 @@ class WebedTestCase (unittest.TestCase):
 
     def commit_models (self, (set, sub, doc)):
 
-        webed.db.session.add (set)
-        webed.db.session.add (sub)
-        webed.db.session.add (doc)
-        webed.db.session.commit ()
+        self.db.session.add (set)
+        self.db.session.add (sub)
+        self.db.session.add (doc)
+        self.db.session.commit ()
 
     def assert_models_basic (self, (set, sub, doc)):
 
@@ -69,6 +86,52 @@ class WebedTestCase (unittest.TestCase):
         self.assert_models_basic (models)
         self.assert_models_relations (models)
         self.commit_models (models)
+
+    def page (self, value = None):
+
+        if value != 'index':
+            response = self.app.get ('/%s/?silent=True' % value)
+        else:
+            response = self.app.get ('/?silent=True')
+
+        assert response
+        assert response.status_code == 200
+        assert response.status == '200 OK'
+
+        assert response.headers
+        assert response.headers['Content-Type'] == 'text/html; charset=utf-8'
+        assert response.headers['Content-Length'] > 0
+        assert response.headers['Set-Cookie']
+
+        return response
+
+    def test_pages (self):
+
+        self.page (value='index')
+        self.page (value='home')
+        self.page (value='overview')
+        self.page (value='tutorial')
+        self.page (value='faq')
+        self.page (value='contact')
+
+    def test_node_root (self):
+
+        response = self.page (value='index')
+        assert response
+
+        response = self.app.get ('/node/root')
+        assert response
+        assert response.status_code == 200
+        assert response.content_type == 'application/json'
+        assert response.content_length > 0
+        assert response.data
+
+        json = loads (response.data)
+        assert json
+        assert json['success']
+        assert json['results'] and len (json['results']) > 0
+
+        return response, json
 
 ###############################################################################
 ###############################################################################
