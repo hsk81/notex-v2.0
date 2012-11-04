@@ -298,34 +298,19 @@ def node_create (docs=True, json=True):
     return jsonify (result) if json else result
 
 @app.route ('/node/root', methods=['GET'])
-def node_root (docs=True, json=True):
-
-    base = Q (Set.query).one (uuid=session['root_uuid'])
-    assert base
-
-    doc2exts = map (lambda d: doc2ext (d, True), base.docs) if docs else []
-    set2exts = map (lambda s: set2ext (s, docs=docs), base.sets)
-
-    result = dict (success=True, results=set2exts + doc2exts)
-    return jsonify (result) if json else result
-
 def node_read (docs=True, json=True):
 
-    uuid = request.args.get ('uuid', None)
+    uuid = request.args.get ('uuid', session['root_uuid'])
     assert uuid
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subsets).one_or_default (uuid=uuid)
-    assert node or not node
-
-    if not node:
-        result = dict (success=False, results=None)
-        return jsonify (result) if json else result
+    node = Q (base.subsets).one_or_default (uuid=uuid, default=base)
+    assert node
 
     doc2exts = map (lambda d: doc2ext (d, True), node.docs) if docs else []
     set2exts = map (lambda s: set2ext (s, docs=docs), node.sets)
 
-    result = dict (success=True, results=doc2exts + set2exts)
+    result = dict (success=True, results=set2exts + doc2exts)
     return jsonify (result) if json else result
 
 def node_update (docs=True, json=True):
@@ -343,16 +328,25 @@ def node_delete (docs=True, json=True):
 
 class SetsApi (MethodView):
 
-    def post (self, json=True): return node_create (docs=False, json=json)
-    def get (self, json=True): return node_read (docs=False, json=json)
-    def put (self, json=True): return node_update (docs=False, json=json)
-    def delete (self, json=True): return node_delete (docs=False, json=json)
+    def post (self, json=True): return sets_create (json=json)
+    def get (self, json=True): return sets_read (json=json)
+    def put (self, json=True): return sets_update (json=json)
+    def delete (self, json=True): return sets_delete (json=json)
 
 app.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
 
+def sets_create (json=True):
+    return node_create (docs=False, json=json)
+
 @app.route ('/sets/root', methods=['GET'])
-def sets_root (json=True):
-    return node_root (docs=False, json=json)
+def sets_read (json=True):
+    return node_read (docs=False, json=json)
+
+def sets_update (json=True):
+    return node_update (docs=False, json=json)
+
+def sets_delete (json=True):
+    return node_delete (docs=False, json=json)
 
 ###############################################################################
 ###############################################################################
