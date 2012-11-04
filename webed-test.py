@@ -128,10 +128,39 @@ class WebedTestCase (unittest.TestCase):
 
         json = loads (response.data)
         assert json
-        assert json['success']
-        assert json['results'] and len (json['results']) > 0
+        assert 'success' in json; success = json['success']
+        assert success
+        assert 'results' in json; results = json['results']
+        assert results and len (results) > 0
 
         return response, json
+
+    def test_node_read (self):
+
+        _ = self.page (value='index')
+        _, json = self.test_node_root ()
+        results = json['results']
+        nodes = [n for n in results if n['mime'] == 'application/project']
+
+        assert nodes and len (nodes) > 0
+        node = nodes.pop ()
+        assert node
+        assert 'uuid' in node; uuid = node['uuid']
+        assert uuid
+
+        response = self.app.get ('/node?uuid=%s' % uuid)
+        assert response
+        assert response.status_code == 200
+        assert response.content_type == 'application/json'
+        assert response.content_length > 0
+        assert response.data
+
+        json = loads (response.data)
+        assert json
+        assert 'success' in json; success = json['success']
+        assert success
+        assert 'results' in json; results = json['results']
+        assert results and len (results) > 0
 
 ###############################################################################
 ###############################################################################
