@@ -116,10 +116,9 @@ class WebedTestCase (unittest.TestCase):
 
     def test_node_root (self):
 
-        response = self.page (value='index')
-        assert response
-
+        _ = self.page (value='index')
         response = self.app.get ('/node/root')
+
         assert response
         assert response.status_code == 200
         assert response.content_type == 'application/json'
@@ -137,7 +136,6 @@ class WebedTestCase (unittest.TestCase):
 
     def test_node_read (self):
 
-        _ = self.page (value='index')
         _, json = self.test_node_root ()
         results = json['results']
         nodes = [n for n in results if n['mime'] == 'application/project']
