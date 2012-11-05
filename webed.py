@@ -295,13 +295,13 @@ app.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
 def node_create (docs=True, json=True):
 
-    root_uuid = request.form.get ('root_uuid', None)
+    root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
-    uuid = request.form.get ('uuid', None)
+    uuid = request.json.get ('uuid', None)
     assert uuid or not uuid
-    mime = request.form.get ('mime', None)
+    mime = request.json.get ('mime', None)
     assert mime
-    name = request.form.get ('name', None)
+    name = request.json.get ('name', None)
     assert name
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
@@ -378,15 +378,15 @@ app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
 
-    root_uuid = request.form.get ('root_uuid', None)
+    root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
-    uuid = request.form.get ('uuid', None)
+    uuid = request.json.get ('uuid', None)
     assert uuid or not uuid
-    mime = request.form.get ('mime', None)
+    mime = request.json.get ('mime', None)
     assert mime
-    name = request.form.get ('name', None)
+    name = request.json.get ('name', None)
     assert name
-    ext = request.form.get ('ext', None)
+    ext = request.json.get ('ext', None)
     assert ext or not ext
 
     base = Q (Set.query).one (uuid=session['root_uuid'])

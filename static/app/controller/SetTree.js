@@ -45,6 +45,8 @@ Ext.define ('Webed.controller.SetTree', {
                 }
             });
         }
+
+        this.select_base ();
     },
 
     settings: function () {
