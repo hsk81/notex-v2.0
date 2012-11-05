@@ -23,6 +23,28 @@ Ext.define ('Webed.controller.SetTree', {
         this.application.on ({
             create_doc: this.create_doc, scope: this
         });
+
+        this.application.on ({
+            destroy_node: this.destroy_node, scope: this
+        });
+    },
+
+    destroy_node: function () {
+        var view = this.getSetTree ();
+        assert (view);
+        var model = view.getSelectionModel ();
+        assert (model);
+
+        var record = model.getLastSelected ();
+        if (record) {
+            record.destroy ({
+                scope: this, callback: function (rec, op) {
+                    if (op.success) {
+                        this.application.fireEvent ('refresh_docs');
+                    }
+                }
+            });
+        }
     },
 
     settings: function () {
@@ -202,9 +224,7 @@ Ext.define ('Webed.controller.SetTree', {
             model.select (node);
         }, this);
 
-        this.application.fireEvent ('refresh_docs', {
-            node: root
-        });
+        this.application.fireEvent ('refresh_docs');
 
         function get_root_uuid (doc) {
             if (doc.root_uuid) return doc.root_uuid;

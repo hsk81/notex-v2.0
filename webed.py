@@ -259,6 +259,31 @@ def init_report (root):
 ###############################################################################
 ###############################################################################
 
+class SetsApi (MethodView):
+
+    def post (self, json=True): return sets_create (json=json)
+    def get (self, json=True): return sets_read (json=json)
+    def put (self, json=True): return sets_update (json=json)
+    def delete (self, json=True): return sets_delete (json=json)
+
+app.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
+
+def sets_create (json=True):
+    return node_create (docs=False, json=json)
+
+@app.route ('/sets/root', methods=['GET'])
+def sets_read (json=True):
+    return node_read (docs=False, json=json)
+
+def sets_update (json=True):
+    return node_update (docs=False, json=json)
+
+def sets_delete (json=True):
+    return node_delete (docs=False, json=json)
+
+###############################################################################
+###############################################################################
+
 class NodeApi (MethodView):
 
     def post (self, docs=True, json=True): return node_create (docs, json)
@@ -320,33 +345,24 @@ def node_update (docs=True, json=True):
 
 def node_delete (docs=True, json=True):
 
-    result = dict (success=True)
+    uuid = request.json.get ('uuid', None)
+    assert uuid
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
+
+    set = Q (base.subsets).one_or_default (uuid=uuid)
+    if set:
+        db.session.delete (set)
+        db.session.commit ()
+        result = dict (success=True, uuid=uuid)
+
+    elif docs:
+        result = doc_delete (json=False)
+
+    else:
+        result = dict (success=False, uuid=uuid)
+
     return jsonify (result) if json else result
-
-###############################################################################
-###############################################################################
-
-class SetsApi (MethodView):
-
-    def post (self, json=True): return sets_create (json=json)
-    def get (self, json=True): return sets_read (json=json)
-    def put (self, json=True): return sets_update (json=json)
-    def delete (self, json=True): return sets_delete (json=json)
-
-app.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
-
-def sets_create (json=True):
-    return node_create (docs=False, json=json)
-
-@app.route ('/sets/root', methods=['GET'])
-def sets_read (json=True):
-    return node_read (docs=False, json=json)
-
-def sets_update (json=True):
-    return node_update (docs=False, json=json)
-
-def sets_delete (json=True):
-    return node_delete (docs=False, json=json)
 
 ###############################################################################
 ###############################################################################
@@ -414,10 +430,20 @@ def doc_update (json=True):
 
 def doc_delete (json=True):
 
-    uuid = request.args.get ('uuid', None)
+    uuid = request.json.get ('uuid', None)
     assert uuid
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
 
-    result = dict (success=True, uuid=uuid)
+    doc = Q (base.subdocs).one_or_default (uuid=uuid)
+    if doc:
+        db.session.delete (doc)
+        db.session.commit ()
+        result = dict (success=True, uuid=uuid)
+
+    else:
+        result = dict (success=False, uuid=uuid)
+
     return jsonify (result) if json else result
 
 ###############################################################################

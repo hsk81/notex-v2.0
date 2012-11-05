@@ -64,7 +64,7 @@ Ext.define ('Webed.controller.MainBar', {
         console.debug ('[MainBarCtrl.rename]');
     },
     delete: function (item, event, options) {
-        console.debug ('[MainBarCtrl.delete]');
+        this.application.fireEvent ('destroy_node');
     },
     importProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.importProject]');
