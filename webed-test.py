@@ -153,14 +153,14 @@ class CrudTestCase (BaseTestCase):
 
         _, json = self.test_set_root ()
 
-        node = Linq (json['results']) \
+        set = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assertIsNotNone (set['uuid'])
 
         response = self.app.post ('/node', data = dict (
-            root_uuid=node['uuid'], mime='application/folder', name='folder'))
+            root_uuid=set['uuid'], mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
         return response, json
@@ -169,13 +169,13 @@ class CrudTestCase (BaseTestCase):
 
         _, json = self.test_set_root ()
 
-        node = Linq (json['results']) \
+        set = Linq (json['results'])\
             .filter (lambda el: el['mime'] == 'application/project') \
             .first()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assertIsNotNone (set['uuid'])
 
-        response = self.app.get ('/node?uuid=%s' % node['uuid'])
+        response = self.app.get ('/node?uuid=%s' % set['uuid'])
         json = self.assert_ajax (response)
 
         return response, json
