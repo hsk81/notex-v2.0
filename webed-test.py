@@ -136,7 +136,7 @@ class PageTestCase (BaseTestCase):
 
 class CrudTestCase (BaseTestCase):
 
-    def test_node_root (self):
+    def test_set_root (self):
 
         response = self.app.get ('/?silent=True')
         self.assertIsNotNone (response)
@@ -149,9 +149,9 @@ class CrudTestCase (BaseTestCase):
 
         return response, json
 
-    def test_node_create (self):
+    def test_set_create (self):
 
-        _, json = self.test_node_root ()
+        _, json = self.test_set_root ()
 
         node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
@@ -165,9 +165,9 @@ class CrudTestCase (BaseTestCase):
 
         return response, json
 
-    def test_node_read (self):
+    def test_set_read (self):
 
-        _, json = self.test_node_root ()
+        _, json = self.test_set_root ()
 
         node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
