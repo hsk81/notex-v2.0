@@ -37,16 +37,32 @@ Ext.define ('Webed.controller.SetTree', {
 
         var record = model.getLastSelected ();
         if (record) {
+            var refresh_docs = record.isLeaf () || hasLeafs (record);
             record.destroy ({
                 scope: this, callback: function (rec, op) {
                     if (op.success) {
-                        this.application.fireEvent ('refresh_docs');
+                        if (refresh_docs) {
+                            this.application.fireEvent ('refresh_docs');
+                        }
                     }
                 }
             });
         }
 
         this.select_base ();
+
+        function hasLeafs (root) {
+            var result = false; root.eachChild (function (node) {
+                if (node.isLeaf ()) {
+                    result = true;
+                    return false;
+                } else {
+                    result = hasLeafs (node);
+                }
+            });
+
+            return result;
+        }
     },
 
     settings: function () {
