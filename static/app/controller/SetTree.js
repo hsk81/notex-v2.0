@@ -49,8 +49,6 @@ Ext.define ('Webed.controller.SetTree', {
             });
         }
 
-        this.select_base ();
-
         function hasLeafs (root) {
             var result = false; root.eachChild (function (node) {
                 if (node.isLeaf ()) {
@@ -63,6 +61,8 @@ Ext.define ('Webed.controller.SetTree', {
 
             return result;
         }
+
+        this.select_base ();
     },
 
     settings: function () {
