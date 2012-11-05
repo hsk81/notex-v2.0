@@ -295,6 +295,9 @@ app.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
 def node_create (docs=True, json=True):
 
+    if not request.is_xhr:
+        request.json = request.form
+
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
     uuid = request.json.get ('uuid', None)
@@ -377,6 +380,9 @@ class DocsApi (MethodView):
 app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
+
+    if not request.is_xhr:
+        request.json = request.form
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
