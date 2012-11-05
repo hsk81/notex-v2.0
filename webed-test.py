@@ -4,6 +4,7 @@
 ###############################################################################
 
 from json import loads
+from linq import Linq
 
 import webed
 import unittest
@@ -11,7 +12,7 @@ import unittest
 ###############################################################################
 ###############################################################################
 
-class WebedTestCase (unittest.TestCase):
+class BaseTestCase (unittest.TestCase):
 
     def setUp (self):
 
@@ -23,8 +24,8 @@ class WebedTestCase (unittest.TestCase):
         SITE_NAME = webed.app.config['SITE_NAME']
         assert SITE_NAME
 
-        webed.app.config['SQLALCHEMY_DATABASE_URI'] = \
-            'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
+        webed.app.config['SQLALCHEMY_DATABASE_URI'] =\
+        'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
 
         self.app = webed.app.test_client ()
         self.db = webed.db
@@ -35,6 +36,11 @@ class WebedTestCase (unittest.TestCase):
 
         self.db.session.remove ()
         self.db.drop_all ()
+
+###############################################################################
+###############################################################################
+
+class ModelTestCase (BaseTestCase):
 
     def create_models (self):
 
@@ -87,6 +93,11 @@ class WebedTestCase (unittest.TestCase):
         self.assert_models_relations (models)
         self.commit_models (models)
 
+###############################################################################
+###############################################################################
+
+class PageTestCase (BaseTestCase):
+
     def page (self, value = None):
 
         if value != 'index':
@@ -94,71 +105,95 @@ class WebedTestCase (unittest.TestCase):
         else:
             response = self.app.get ('/?silent=True')
 
-        assert response
-        assert response.status_code == 200
-        assert response.status == '200 OK'
+        self.assertIsNotNone (response)
+        self.assertEqual (response.status_code, 200)
+        self.assertEqual (response.status, '200 OK')
 
-        assert response.headers
-        assert response.headers['Content-Type'] == 'text/html; charset=utf-8'
-        assert response.headers['Content-Length'] > 0
-        assert response.headers['Set-Cookie']
+        headers = response.headers
+
+        self.assertIsNotNone (headers)
+        self.assertEqual (headers['Content-Type'], 'text/html; charset=utf-8')
+        self.assertGreater (['Content-Length'], 0)
+        self.assertIsNotNone (headers['Set-Cookie'])
 
         return response
 
-    def test_pages (self):
-
+    def test_index (self):
         self.page (value='index')
+    def test_home (self):
         self.page (value='home')
+    def test_overview (self):
         self.page (value='overview')
+    def test_tutorial (self):
         self.page (value='tutorial')
+    def test_faq (self):
         self.page (value='faq')
+    def test_contact (self):
         self.page (value='contact')
+
+###############################################################################
+###############################################################################
+
+class CrudTestCase (BaseTestCase):
 
     def test_node_root (self):
 
-        _ = self.page (value='index')
+        response = self.app.get ('/?silent=True')
+        self.assertIsNotNone (response)
+        self.assertEqual (response.status_code, 200)
+
         response = self.app.get ('/node/root')
+        self.assertIsNotNone (response)
+        self.assertEqual (response.status_code, 200)
+        json = self.assert_ajax (response)
 
-        assert response
-        assert response.status_code == 200
-        assert response.content_type == 'application/json'
-        assert response.content_length > 0
-        assert response.data
+        return response, json
 
-        json = loads (response.data)
-        assert json
-        assert 'success' in json; success = json['success']
-        assert success
-        assert 'results' in json; results = json['results']
-        assert results and len (results) > 0
+    def test_node_create (self):
+
+        _, json = self.test_node_root ()
+
+        node = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'application/project') \
+            .first()
+
+        self.assertIsNotNone (node['uuid'])
+
+        response = self.app.post ('/node', data = dict (
+            root_uuid=node['uuid'], mime='application/folder', name='folder'))
+        json = self.assert_ajax (response)
 
         return response, json
 
     def test_node_read (self):
 
         _, json = self.test_node_root ()
-        results = json['results']
-        nodes = [n for n in results if n['mime'] == 'application/project']
 
-        assert nodes and len (nodes) > 0
-        node = nodes.pop ()
-        assert node
-        assert 'uuid' in node; uuid = node['uuid']
-        assert uuid
+        node = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'application/project') \
+            .first()
 
-        response = self.app.get ('/node?uuid=%s' % uuid)
-        assert response
-        assert response.status_code == 200
-        assert response.content_type == 'application/json'
-        assert response.content_length > 0
-        assert response.data
+        self.assertIsNotNone (node['uuid'])
+
+        response = self.app.get ('/node?uuid=%s' % node['uuid'])
+        json = self.assert_ajax (response)
+
+        return response, json
+
+    def assert_ajax (self, response):
+
+        self.assertEqual (response.content_type, 'application/json')
+        self.assertGreater (response.content_length, 0)
+        self.assertIsNotNone (response.data)
 
         json = loads (response.data)
-        assert json
-        assert 'success' in json; success = json['success']
-        assert success
-        assert 'results' in json; results = json['results']
-        assert results and len (results) > 0
+
+        self.assertIsNotNone (json)
+        self.assertTrue (json['success'])
+        self.assertIsNotNone (json['results'])
+        self.assertGreater (len ('results'), 0)
+
+        return json
 
 ###############################################################################
 ###############################################################################

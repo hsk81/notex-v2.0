@@ -270,13 +270,13 @@ app.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
 def node_create (docs=True, json=True):
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request.form.get ('root_uuid', None)
     assert root_uuid
-    mime = request.json.get ('mime', None)
+    mime = request.form.get ('mime', None)
     assert mime
-    uuid = request.json.get ('uuid', None)
+    uuid = request.form.get ('uuid', None)
     assert uuid or not uuid
-    name = request.json.get ('name', None)
+    name = request.form.get ('name', None)
     assert name
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
