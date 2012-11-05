@@ -142,7 +142,7 @@ class CrudTestCase (BaseTestCase):
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
 
-        response = self.app.get ('/node/root')
+        response = self.app.get ('/sets/root')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
         json = self.assert_ajax (response)
@@ -159,7 +159,7 @@ class CrudTestCase (BaseTestCase):
 
         self.assertIsNotNone (set['uuid'])
 
-        response = self.app.post ('/node', data = dict (
+        response = self.app.post ('/sets', data = dict (
             root_uuid=set['uuid'], mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
@@ -175,7 +175,7 @@ class CrudTestCase (BaseTestCase):
 
         self.assertIsNotNone (set['uuid'])
 
-        response = self.app.get ('/node?uuid=%s' % set['uuid'])
+        response = self.app.get ('/sets?uuid=%s' % set['uuid'])
         json = self.assert_ajax (response)
 
         return response, json
