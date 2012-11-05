@@ -163,6 +163,10 @@ class CrudTestCase (BaseTestCase):
             root_uuid=set['uuid'], mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
+        response = self.app.post ('/sets', data = dict (
+            root_uuid=None, mime='application/folder', name='folder'))
+        json = self.assert_ajax (response)
+
         return response, json
 
     def test_set_read (self):
@@ -188,6 +192,26 @@ class CrudTestCase (BaseTestCase):
         response = self.app.get ('/docs')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
+        json = self.assert_ajax (response)
+
+        return response, json
+
+    def test_doc_create (self):
+
+        _, json = self.test_set_root ()
+
+        set = Linq (json['results'])\
+            .filter (lambda el: el['mime'] == 'application/project')\
+            .first()
+
+        self.assertIsNotNone (set['uuid'])
+
+        response = self.app.post ('/docs', data = dict (
+            root_uuid=set['uuid'], mime='text/plain', name='file', ext='txt'))
+        json = self.assert_ajax (response)
+
+        response = self.app.post ('/docs', data = dict (
+            root_uuid=None, mime='text/plain', name='file', ext='txt'))
         json = self.assert_ajax (response)
 
         return response, json
