@@ -29,33 +29,6 @@ Ext.define ('Webed.controller.SetTree', {
         });
     },
 
-    destroy_node: function () {
-        var view = this.getSetTree ();
-        assert (view);
-        var model = view.getSelectionModel ();
-        assert (model);
-
-        var record = model.getLastSelected ();
-        if (record) {
-            var refresh_docs =
-                record.isLeaf () ||
-                record.isExpanded () && record.hasChildNodes () ||
-               !record.isExpanded () && record.isExpandable ();
-
-            record.destroy ({
-                scope: this, callback: function (rec, op) {
-                    if (op.success) {
-                        if (refresh_docs) {
-                            this.application.fireEvent ('refresh_docs');
-                        }
-                    }
-                }
-            });
-        }
-
-        this.select_base ();
-    },
-
     settings: function () {
         console.debug ('[SetTreeCtrl.settings]');
     },
@@ -267,5 +240,32 @@ Ext.define ('Webed.controller.SetTree', {
                 ? base.findChild ('uuid', root_uuid, true)
                 : base;
         }
+    },
+
+    destroy_node: function () {
+        var view = this.getSetTree ();
+        assert (view);
+        var model = view.getSelectionModel ();
+        assert (model);
+
+        var record = model.getLastSelected ();
+        if (record) {
+            var refresh_docs =
+                record.isLeaf () ||
+                    record.isExpanded () && record.hasChildNodes () ||
+                    !record.isExpanded () && record.isExpandable ();
+
+            record.destroy ({
+                scope: this, callback: function (rec, op) {
+                    if (op.success) {
+                        if (refresh_docs) {
+                            this.application.fireEvent ('refresh_docs');
+                        }
+                    }
+                }
+            });
+        }
+
+        this.select_base ();
     }
 });
