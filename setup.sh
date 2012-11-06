@@ -60,7 +60,7 @@ function clear_env () {
 }
 
 function build () {
-    cd ./static/lib/jquery.git/
+    cd ./webed/static/lib/jquery.git/
     npm install && grunt
     cd ./../../../
 }

@@ -1,0 +1,12 @@
+[submodule "webed/static/ico/fatcow.git"]
+	path = webed/static/ico/fatcow.git
+	url = git@github.com:hsk81/fatcow-hosting-icon.git
+[submodule "webed/static/lib/extjs.git"]
+	path = webed/static/lib/extjs.git
+	url = git@github.com:hsk81/extjs.git
+[submodule "webed/static/lib/node-uuid.git"]
+	path = webed/static/lib/node-uuid.git
+	url = git@github.com:hsk81/node-uuid.git
+[submodule "webed/static/lib/jquery.git"]
+	path = webed/static/lib/jquery.git
+	url = https://github.com/jquery/jquery.git
