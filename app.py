@@ -1,23 +1,17 @@
-#!bin/python
+__author__ = 'hsk81'
 
 ###############################################################################
 ###############################################################################
 
-from app import app
-
-from extensions import db
-from models import Set, Doc
-
-import admin
-import views
-import rest
+from flask.app import Flask
+import settings
 
 ###############################################################################
 ###############################################################################
 
-if __name__ == '__main__':
-
-    app.run (debug=True) ## TODO: Switch off in production!
+app = Flask (__name__)
+app.config.from_object (settings)
+app.config.from_envvar ('WEBED_SETTINGS', silent=True)
 
 ###############################################################################
 ###############################################################################

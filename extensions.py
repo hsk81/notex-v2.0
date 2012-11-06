@@ -1,23 +1,20 @@
-#!bin/python
+__author__ = 'hsk81'
 
 ###############################################################################
 ###############################################################################
+
+from flask.ext.debugtoolbar import DebugToolbarExtension
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.admin import Admin
 
 from app import app
 
-from extensions import db
-from models import Set, Doc
-
-import admin
-import views
-import rest
-
 ###############################################################################
 ###############################################################################
 
-if __name__ == '__main__':
-
-    app.run (debug=True) ## TODO: Switch off in production!
+toolbar = DebugToolbarExtension (app)
+db = SQLAlchemy (app)
+admin = Admin (app)
 
 ###############################################################################
 ###############################################################################

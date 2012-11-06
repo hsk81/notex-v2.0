@@ -5,6 +5,7 @@
 
 from json import loads
 from linq import Linq
+from app import app
 
 import webed
 import unittest
@@ -16,18 +17,18 @@ class BaseTestCase (unittest.TestCase):
 
     def setUp (self):
 
-        webed.app.config['TESTING'] = True
-        webed.app.config['DEBUG'] = False
+        app.config['TESTING'] = True
+        app.config['DEBUG'] = False
 
-        SITE_ROOT = webed.app.config['SITE_ROOT']
+        SITE_ROOT = app.config['SITE_ROOT']
         assert SITE_ROOT
-        SITE_NAME = webed.app.config['SITE_NAME']
+        SITE_NAME = app.config['SITE_NAME']
         assert SITE_NAME
 
-        webed.app.config['SQLALCHEMY_DATABASE_URI'] = \
+        app.config['SQLALCHEMY_DATABASE_URI'] = \
             'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
 
-        self.app = webed.app.test_client ()
+        self.app = app.test_client ()
         self.db = webed.db
 
         self.db.create_all ()
