@@ -4,14 +4,13 @@
 ###############################################################################
 
 from json import loads
-from linq import Linq
+from webed.linq import Linq
 
-from models import Set, Doc
-from extensions import db
-from app import app
+from webed.models import Set, Doc
+from webed.extensions import db
+from webed import app, views, rest
 
 import unittest
-import webed
 
 ###############################################################################
 ###############################################################################

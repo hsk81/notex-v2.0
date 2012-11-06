@@ -15,7 +15,7 @@ import sys
 ###############################################################################
 ###############################################################################
 
-from app import app
+from webed import app
 from extensions import db
 from models import Set, Doc
 

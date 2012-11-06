@@ -11,7 +11,7 @@ from linq import Q
 
 import settings
 
-from app import app
+from webed import app
 from extensions import db
 from models import Set, Doc
 
