@@ -5,10 +5,13 @@
 
 from json import loads
 from linq import Linq
+
+from models import Set, Doc
+from extensions import db
 from app import app
 
-import webed
 import unittest
+import webed
 
 ###############################################################################
 ###############################################################################
@@ -29,7 +32,7 @@ class BaseTestCase (unittest.TestCase):
             'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
 
         self.app = app.test_client ()
-        self.db = webed.db
+        self.db = db
 
         self.db.create_all ()
 
@@ -45,9 +48,9 @@ class ModelTestCase (BaseTestCase):
 
     def create_models (self):
 
-        set = webed.Set ('root', root=None)
-        sub = webed.Set ('folder', root=set)
-        doc = webed.Doc ('file', 'txt', root=sub)
+        set = Set ('root', root=None)
+        sub = Set ('folder', root=set)
+        doc = Doc ('file', 'txt', root=sub)
 
         return set, sub, doc
 

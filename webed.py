@@ -5,9 +5,6 @@
 
 from app import app
 
-from extensions import db
-from models import Set, Doc
-
 import admin
 import views
 import rest

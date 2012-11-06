@@ -3,9 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask.ext.admin.contrib.sqlamodel import ModelView
 from uuid import uuid4 as uuid_random
-
 from extensions import db
 
 ###############################################################################
@@ -92,27 +90,6 @@ class Doc (db.Model):
         return u'<Doc %r>' % (self.name + u'.' + self.ext)
 
     fullname = property (lambda self: '%s.%s' % (self.name, self.ext))
-
-###############################################################################
-###############################################################################
-
-class SetAdmin (ModelView):
-
-    list_columns = ('base', 'root', 'uuid', 'mime', 'name')
-    searchable_columns = (Set.uuid, Set.mime, Set.name)
-    column_filters = (Set.uuid, Set.mime, Set.name)
-
-    def __init__ (self, session):
-        super (SetAdmin, self).__init__(Set, session)
-
-class DocAdmin (ModelView):
-
-    list_columns = ('base', 'root', 'uuid', 'mime', 'name', 'ext')
-    searchable_columns = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
-    column_filters = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
-
-    def __init__ (self, session):
-        super (DocAdmin, self).__init__(Doc, session)
 
 ###############################################################################
 ###############################################################################
