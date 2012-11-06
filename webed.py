@@ -332,11 +332,11 @@ def node_read (docs=True, json=True):
     assert uuid
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subsets).one_or_default (uuid=uuid, default=base)
-    assert node
+    set = Q (base.subsets).one_or_default (uuid=uuid, default=base)
+    assert set
 
-    doc2exts = map (lambda d: doc2ext (d, True), node.docs) if docs else []
-    set2exts = map (lambda s: set2ext (s, docs=docs), node.sets)
+    doc2exts = map (lambda d: doc2ext (d, True), set.docs) if docs else []
+    set2exts = map (lambda s: set2ext (s, docs=docs), set.sets)
 
     result = dict (success=True, results=set2exts + doc2exts)
     return jsonify (result) if json else result
@@ -348,6 +348,9 @@ def node_update (docs=True, json=True):
 
 def node_delete (docs=True, json=True):
 
+    if not request.is_xhr:
+        request.json = request.args
+
     uuid = request.json.get ('uuid', None)
     assert uuid
     base = Q (Set.query).one (uuid=session['root_uuid'])
@@ -357,13 +360,13 @@ def node_delete (docs=True, json=True):
     if set:
         db.session.delete (set)
         db.session.commit ()
-        result = dict (success=True, uuid=uuid)
+        result = dict (success=True, results=[])
 
     elif docs:
         result = doc_delete (json=False)
 
     else:
-        result = dict (success=False, uuid=uuid)
+        result = dict (success=False, results=[])
 
     return jsonify (result) if json else result
 
@@ -436,6 +439,9 @@ def doc_update (json=True):
 
 def doc_delete (json=True):
 
+    if not request.is_xhr:
+        request.json = request.args
+
     uuid = request.json.get ('uuid', None)
     assert uuid
     base = Q (Set.query).one (uuid=session['root_uuid'])
@@ -445,10 +451,10 @@ def doc_delete (json=True):
     if doc:
         db.session.delete (doc)
         db.session.commit ()
-        result = dict (success=True, uuid=uuid)
+        result = dict (success=True, results=[])
 
     else:
-        result = dict (success=False, uuid=uuid)
+        result = dict (success=False, results=[])
 
     return jsonify (result) if json else result
 

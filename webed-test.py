@@ -24,8 +24,8 @@ class BaseTestCase (unittest.TestCase):
         SITE_NAME = webed.app.config['SITE_NAME']
         assert SITE_NAME
 
-        webed.app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
+        webed.app.config['SQLALCHEMY_DATABASE_URI'] = \
+            'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
 
         self.app = webed.app.test_client ()
         self.db = webed.db
@@ -158,12 +158,11 @@ class CrudTestCase (BaseTestCase):
             .first()
 
         self.assertIsNotNone (set['uuid'])
-
-        response = self.app.post ('/sets', data = dict (
+        response = self.app.post ('/sets', data=dict (
             root_uuid=set['uuid'], mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
-        response = self.app.post ('/sets', data = dict (
+        response = self.app.post ('/sets', data=dict (
             root_uuid=None, mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
@@ -182,6 +181,22 @@ class CrudTestCase (BaseTestCase):
         json = self.assert_ajax (response)
 
         return response, json
+
+    def test_set_delete (self):
+
+        _, json = self.test_set_root ()
+
+        set = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'application/project') \
+            .first()
+
+        self.assertIsNotNone (set['uuid'])
+        response = self.app.delete ('/sets?uuid=%s' % set['uuid'])
+        json = self.assert_ajax (response)
+
+        return response, json
+
+    ###########################################################################
 
     def test_doc_root (self):
 
@@ -205,7 +220,6 @@ class CrudTestCase (BaseTestCase):
             .first()
 
         self.assertIsNotNone (set['uuid'])
-
         response = self.app.post ('/docs', data = dict (
             root_uuid=set['uuid'], mime='text/plain', name='file', ext='txt'))
         json = self.assert_ajax (response)
@@ -230,6 +244,22 @@ class CrudTestCase (BaseTestCase):
 
         return response, json
 
+    def test_doc_delete (self):
+
+        _, json = self.test_doc_root ()
+
+        doc = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'text/plain')\
+            .first()
+
+        self.assertIsNotNone (doc['uuid'])
+        response = self.app.delete ('/docs?uuid=%s' % doc['uuid'])
+        json = self.assert_ajax (response)
+
+        return response, json
+
+    ###########################################################################
+
     def assert_ajax (self, response):
 
         self.assertEqual (response.content_type, 'application/json')
@@ -241,7 +271,6 @@ class CrudTestCase (BaseTestCase):
         self.assertIsNotNone (json)
         self.assertTrue (json['success'])
         self.assertIsNotNone (json['results'])
-        self.assertGreater (len ('results'), 0)
 
         return json
 
