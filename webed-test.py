@@ -8,6 +8,7 @@ from webed.linq import Linq
 
 from webed.models import Set, Doc
 from webed.extensions import db
+from webed.config import TestConfig
 from webed import app, views, rest
 
 import unittest
@@ -19,20 +20,14 @@ class BaseTestCase (unittest.TestCase):
 
     def setUp (self):
 
-        app.config['TESTING'] = True
-        app.config['DEBUG'] = False
-
-        SITE_ROOT = app.config['SITE_ROOT']
-        assert SITE_ROOT
-        SITE_NAME = app.config['SITE_NAME']
-        assert SITE_NAME
-
+        app.config['TESTING'] = TestConfig.TESTING
+        app.config['CSRF_ENABLED'] = TestConfig.CSRF_ENABLED
+        app.config['SQLALCHEMY_ECHO'] = TestConfig.SQLALCHEMY_ECHO
         app.config['SQLALCHEMY_DATABASE_URI'] = \
-            'sqlite:///%s/%s-test.db' % (SITE_ROOT, SITE_NAME)
+            TestConfig.SQLALCHEMY_DATABASE_URI
 
         self.app = app.test_client ()
         self.db = db
-
         self.db.create_all ()
 
     def tearDown (self):

@@ -9,11 +9,10 @@ from flask.helpers import jsonify
 from flask import session
 from linq import Q
 
-import settings
-
 from webed import app
 from extensions import db
 from models import Set, Doc
+from webed.config import DefaultConfig as config
 
 ###############################################################################
 ###############################################################################
@@ -243,7 +242,7 @@ def set2ext (set, docs=True):
             'size': 0,
             }
 
-    if set.sets.count () + set.docs.count () >= settings.LOADSKIP_LIMIT:
+    if set.sets.count () + set.docs.count () >= config.LOADSKIP_LIMIT:
 
         return to_ext (set, results=None)
 

@@ -4,13 +4,14 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from flask.app import Flask
-import settings
+from config import DefaultConfig
+from config import APP_NAME
 
 ###############################################################################
 ###############################################################################
 
-app = Flask (__name__)
-app.config.from_object (settings)
+app = Flask (APP_NAME)
+app.config.from_object (DefaultConfig)
 app.config.from_envvar ('WEBED_SETTINGS', silent=True)
 
 ###############################################################################
