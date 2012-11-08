@@ -9,12 +9,8 @@ from webed.extensions import db
 from webed.models import Set, Doc
 from webed.linq import Linq
 
-from webed.views import *
-from webed.rest import *
-
-from json import loads
-
 import unittest
+import json as JSON
 
 ###############################################################################
 ###############################################################################
@@ -264,7 +260,7 @@ class CrudTestCase (BaseTestCase):
         self.assertGreater (response.content_length, 0)
         self.assertIsNotNone (response.data)
 
-        json = loads (response.data)
+        json = JSON.loads (response.data)
 
         self.assertIsNotNone (json)
         self.assertTrue (json['success'])
