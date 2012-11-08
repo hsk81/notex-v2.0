@@ -9,10 +9,10 @@ from flask.helpers import jsonify
 from flask import session
 from linq import Q
 
-from webed import app
+from app import app
 from extensions import db
 from models import Set, Doc
-from webed.config import DefaultConfig as config
+from config import DefaultConfig as config
 
 ###############################################################################
 ###############################################################################

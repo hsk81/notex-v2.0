@@ -3,13 +3,16 @@
 ###############################################################################
 ###############################################################################
 
-from json import loads
+from webed.app import app
+from webed.config import TestConfig
+from webed.extensions import db
+from webed.models import Set, Doc
 from webed.linq import Linq
 
-from webed.models import Set, Doc
-from webed.extensions import db
-from webed.config import TestConfig
-from webed import app, views, rest
+from webed.views import *
+from webed.rest import *
+
+from json import loads
 
 import unittest
 
@@ -20,13 +23,10 @@ class BaseTestCase (unittest.TestCase):
 
     def setUp (self):
 
-        app.config['TESTING'] = TestConfig.TESTING
-        app.config['CSRF_ENABLED'] = TestConfig.CSRF_ENABLED
-        app.config['SQLALCHEMY_ECHO'] = TestConfig.SQLALCHEMY_ECHO
-        app.config['SQLALCHEMY_DATABASE_URI'] = \
-            TestConfig.SQLALCHEMY_DATABASE_URI
-
+        app.config.from_object (TestConfig)
+        app.config.from_envvar ('WEBED_SETTINGS', silent=True)
         self.app = app.test_client ()
+
         self.db = db
         self.db.create_all ()
 

@@ -7,17 +7,14 @@ from flask.templating import render_template
 from flask.globals import request
 from flask import session
 
+from models import Set, Doc
+from extensions import db
+from app import app
+
 from datetime import datetime
 from linq import Q
 
 import sys
-
-###############################################################################
-###############################################################################
-
-from webed import app
-from extensions import db
-from models import Set, Doc
 
 ###############################################################################
 ###############################################################################
