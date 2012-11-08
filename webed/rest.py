@@ -7,12 +7,12 @@ from flask.views import MethodView
 from flask.globals import request
 from flask.helpers import jsonify
 from flask import session
-from linq import Q
 
 from app import app
 from extensions import db
 from models import Set, Doc
 from config import DefaultConfig as config
+from linq import Q
 
 ###############################################################################
 ###############################################################################
