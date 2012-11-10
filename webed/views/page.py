@@ -9,10 +9,10 @@ from flask import session
 
 from datetime import datetime
 
-from models import Set, Doc
-from extensions import db
-from app import app
-from linq import Q
+from webed.models import Set, Doc
+from webed.extensions import db
+from webed.app import app
+from webed.linq import Q
 
 import sys
 

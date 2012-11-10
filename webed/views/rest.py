@@ -8,11 +8,12 @@ from flask.globals import request
 from flask.helpers import jsonify
 from flask import session
 
-from app import app
-from extensions import db
-from models import Set, Doc
-from config import DefaultConfig as config
-from linq import Q
+from webed.app import app
+from webed.extensions import db
+from webed.models import Set, Doc
+from webed.linq import Q
+
+from webed.config import DefaultConfig as config
 
 ###############################################################################
 ###############################################################################
