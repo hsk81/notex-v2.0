@@ -11,7 +11,7 @@ from flask import session
 from webed.app import app
 from webed.ext import db
 from webed.models import Set, Doc
-from webed.linq import Q
+from webed.util import Q
 
 from webed.config import DefaultConfig
 

@@ -12,7 +12,7 @@ from datetime import datetime
 from webed.models import Set, Doc
 from webed.ext import db
 from webed.app import app
-from webed.linq import Q
+from webed.util import Q
 
 import sys
 

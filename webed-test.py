@@ -7,7 +7,7 @@ from webed.app import app
 from webed.config import TestConfig
 from webed.ext import db
 from webed.models import Set, Doc
-from webed.linq import Linq
+from webed.util import Linq
 
 import unittest
 import json as JSON
