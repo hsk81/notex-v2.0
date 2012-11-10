@@ -5,7 +5,7 @@
 
 from webed.app import app
 from webed.config import TestConfig
-from webed.extensions import db
+from webed.ext import db
 from webed.models import Set, Doc
 from webed.linq import Linq
 

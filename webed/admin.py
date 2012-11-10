@@ -6,7 +6,7 @@ __author__ = 'hsk81'
 from flask.ext.admin.contrib.fileadmin import FileAdmin
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
-from extensions import db, admin
+from ext import db, admin
 from models import Set, Doc
 
 import os.path
