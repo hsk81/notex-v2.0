@@ -3,25 +3,13 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask.ext.admin.contrib.fileadmin import FileAdmin
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
-from ext import db, admin
-from models import Set, Doc
-
-import os.path
+from webed.ext import db, admin
+from webed.models import Doc
 
 ###############################################################################
 ###############################################################################
-
-class SetAdmin (ModelView):
-
-    list_columns = ('base', 'root', 'uuid', 'mime', 'name')
-    searchable_columns = (Set.uuid, Set.mime, Set.name)
-    column_filters = (Set.uuid, Set.mime, Set.name)
-
-    def __init__ (self, session):
-        super (SetAdmin, self).__init__(Set, session)
 
 class DocAdmin (ModelView):
 
@@ -32,11 +20,7 @@ class DocAdmin (ModelView):
     def __init__ (self, session):
         super (DocAdmin, self).__init__(Doc, session)
 
-admin.add_view (SetAdmin (db.session))
 admin.add_view (DocAdmin (db.session))
-
-path = os.path.join (os.path.dirname (__file__), 'static')
-admin.add_view (FileAdmin (path, '/static/', name='Files'))
 
 ###############################################################################
 ###############################################################################
