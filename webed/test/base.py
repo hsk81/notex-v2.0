@@ -1,25 +1,32 @@
-#!bin/python
+__author__ = 'hsk81'
 
 ###############################################################################
 ###############################################################################
 
-from webed.ext import db
+from ..app import app
+from ..config import TestConfig
+from ..ext import db
+
+import unittest
 
 ###############################################################################
 ###############################################################################
 
-def init (db):
-    db.create_all ()
+class BaseTestCase (unittest.TestCase):
 
-def drop (db):
-    db.drop_all ()
+    def setUp (self):
 
-###############################################################################
-###############################################################################
+        app.config.from_object (TestConfig)
+        app.config.from_envvar ('WEBED_SETTINGS', silent=True)
+        self.app = app.test_client ()
 
-if __name__ == '__main__':
+        self.db = db
+        self.db.create_all ()
 
-    init (db)
+    def tearDown (self):
+
+        self.db.session.remove ()
+        self.db.drop_all ()
 
 ###############################################################################
 ###############################################################################
