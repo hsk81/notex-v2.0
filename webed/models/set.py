@@ -48,7 +48,11 @@ class Set (db.Model):
 
     def __repr__ (self):
 
-        return '<Set %r>' % self.name
+        if self.base:
+            return '<Set %r>' % self.name
+
+        else:
+            return '<Set %r>' % u'%s..%s' % (self.uuid[:3], self.uuid[-3:])
 
 ###############################################################################
 ###############################################################################
