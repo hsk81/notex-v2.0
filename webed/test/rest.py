@@ -32,7 +32,7 @@ class RestTestCase (BaseTestCase):
 
         set = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (set['uuid'])
         response = self.app.post ('/sets', data=dict (
@@ -51,7 +51,7 @@ class RestTestCase (BaseTestCase):
 
         set = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (set['uuid'])
         response = self.app.get ('/sets?uuid=%s' % set['uuid'])
@@ -65,7 +65,7 @@ class RestTestCase (BaseTestCase):
 
         set = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (set['uuid'])
         response = self.app.delete ('/sets?uuid=%s' % set['uuid'])
@@ -94,7 +94,7 @@ class RestTestCase (BaseTestCase):
 
         set = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (set['uuid'])
         response = self.app.post ('/docs', data = dict (
@@ -113,7 +113,7 @@ class RestTestCase (BaseTestCase):
 
         doc = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'text/plain') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (doc['uuid'])
         response = self.app.get ('/docs?uuid=%s' % doc['uuid'])
@@ -127,7 +127,7 @@ class RestTestCase (BaseTestCase):
 
         doc = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'text/plain') \
-            .first()
+            .first ()
 
         self.assertIsNotNone (doc['uuid'])
         response = self.app.delete ('/docs?uuid=%s' % doc['uuid'])
