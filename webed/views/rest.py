@@ -6,7 +6,8 @@ __author__ = 'hsk81'
 from flask.views import MethodView
 from flask.globals import request
 from flask.helpers import jsonify
-from flask import session
+
+from flask import Blueprint, session
 
 from webed.app import app
 from webed.ext import db
@@ -18,6 +19,11 @@ from webed.config import DefaultConfig
 ###############################################################################
 ###############################################################################
 
+rest = Blueprint ('rest', __name__)
+
+###############################################################################
+###############################################################################
+
 class SetsApi (MethodView):
 
     def post (self, json=True): return sets_create (json=json)
@@ -25,12 +31,12 @@ class SetsApi (MethodView):
     def put (self, json=True): return sets_update (json=json)
     def delete (self, json=True): return sets_delete (json=json)
 
-app.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
+rest.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
 
 def sets_create (json=True):
     return node_create (docs=False, json=json)
 
-@app.route ('/sets/root', methods=['GET'])
+@rest.route ('/sets/root', methods=['GET'])
 def sets_read (json=True):
     return node_read (docs=False, json=json)
 
@@ -50,7 +56,7 @@ class NodeApi (MethodView):
     def put (self, docs=True, json=True): return node_update (docs, json)
     def delete (self, docs=True, json=True): return node_delete (docs, json)
 
-app.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
+rest.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
 def node_create (docs=True, json=True):
 
@@ -84,7 +90,7 @@ def node_create (docs=True, json=True):
 
     return jsonify (result) if json else result
 
-@app.route ('/node/root', methods=['GET'])
+@rest.route ('/node/root', methods=['GET'])
 def node_read (docs=True, json=True):
 
     uuid = request.args.get ('uuid', session['root_uuid'])
@@ -139,7 +145,7 @@ class DocsApi (MethodView):
     def put (self, json=True): return doc_update (json)
     def delete (self, json=True): return doc_delete (json)
 
-app.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
+rest.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
 
 def doc_create (json=True):
 
@@ -274,6 +280,11 @@ def doc2ext (doc, fullname=False):
         'leaf': True,
         'size': 0
     }
+
+###############################################################################
+###############################################################################
+
+app.register_blueprint (rest)
 
 ###############################################################################
 ###############################################################################
