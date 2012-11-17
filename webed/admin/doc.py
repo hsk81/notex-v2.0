@@ -18,7 +18,7 @@ class DocAdmin (ModelView):
     column_filters = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
 
     def __init__ (self, session):
-        super (DocAdmin, self).__init__(Doc, session)
+        super (DocAdmin, self).__init__ (Doc, session)
 
 admin.add_view (DocAdmin (db.session))
 

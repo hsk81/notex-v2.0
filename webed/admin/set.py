@@ -18,7 +18,7 @@ class SetAdmin (ModelView):
     column_filters = (Set.uuid, Set.mime, Set.name)
 
     def __init__ (self, session):
-        super (SetAdmin, self).__init__(Set, session)
+        super (SetAdmin, self).__init__ (Set, session)
 
 admin.add_view (SetAdmin (db.session))
 
