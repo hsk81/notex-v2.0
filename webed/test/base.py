@@ -18,8 +18,8 @@ class BaseTestCase (unittest.TestCase):
 
         app.config.from_object (TestConfig)
         app.config.from_envvar ('WEBED_SETTINGS', silent=True)
-        self.app = app.test_client ()
 
+        self.app = app.test_client ()
         self.db = db
         self.db.create_all ()
 
