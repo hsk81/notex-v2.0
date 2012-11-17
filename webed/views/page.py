@@ -5,7 +5,7 @@ __author__ = 'hsk81'
 
 from flask.templating import render_template
 from flask.globals import request
-from flask import session
+from flask import Blueprint, session
 
 from datetime import datetime
 
@@ -19,18 +19,23 @@ import sys
 ###############################################################################
 ###############################################################################
 
-@app.route ('/home/')
+page = Blueprint ('page', __name__)
+
+###############################################################################
+###############################################################################
+
+@page.route ('/home/')
 def home (): return main (page='home')
-@app.route ('/overview/')
+@page.route ('/overview/')
 def overview (): return main (page='overview')
-@app.route ('/tutorial/')
+@page.route ('/tutorial/')
 def tutorial (): return main (page='tutorial')
-@app.route ('/faq/')
+@page.route ('/faq/')
 def faq (): return main (page='faq')
-@app.route ('/contact/')
+@page.route ('/contact/')
 def contact (): return main (page='contact')
 
-@app.route ('/')
+@page.route ('/')
 def main (page='home'):
 
     if not 'timestamp' in session: init ()
@@ -99,6 +104,11 @@ def init_report (root):
     set = Set ('resources', set, mime='application/folder'); db.session.add (set)
     doc = Doc ('wiki', 'png', set, mime='image/png'); db.session.add (doc)
     doc = Doc ('time', 'jpg', set, mime='image/png'); db.session.add (doc)
+
+###############################################################################
+###############################################################################
+
+app.register_blueprint (page)
 
 ###############################################################################
 ###############################################################################

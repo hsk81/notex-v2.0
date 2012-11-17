@@ -3,19 +3,19 @@
         <div id='cssmenu'>
             <ul>
                 <li class="{% if page == 'home' %}active{% endif %}">
-                    <a href="{{ url_for('home') }}"><span>Home</span></a>
+                    <a href="{{ url_for('.home') }}"><span>Home</span></a>
                 </li>
                 <li class="{% if page == 'overview' %}active{% endif %}">
-                    <a href="{{ url_for('overview') }}"><span>WebEd</span></a>
+                    <a href="{{ url_for('.overview') }}"><span>WebEd</span></a>
                 </li>
                 <li class="{% if page == 'tutorial' %}active{% endif %}">
-                    <a href="{{ url_for('tutorial') }}"><span>Tutorial</span></a>
+                    <a href="{{ url_for('.tutorial') }}"><span>Tutorial</span></a>
                 </li>
                 <li class="{% if page == 'faq' %}active{% endif %}">
-                    <a href="{{ url_for('faq') }}"><span>FAQ</span></a>
+                    <a href="{{ url_for('.faq') }}"><span>FAQ</span></a>
                 </li>
                 <li class="{% if page == 'contact' %}active{% endif %}">
-                    <a href="{{ url_for('contact') }}"><span>Contact</span></a>
+                    <a href="{{ url_for('.contact') }}"><span>Contact</span></a>
                 </li>
             </ul>
         </div>

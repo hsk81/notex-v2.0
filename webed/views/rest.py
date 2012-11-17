@@ -254,8 +254,8 @@ def set2ext (set, docs=True):
         return to_ext (set, results=None)
 
     sets = map (lambda s: set2ext (s, docs=docs), set.sets)
-    results = map (lambda doc: doc2ext (doc, fullname=True), set.docs) + sets\
-    if docs else sets
+    results = map (lambda doc: doc2ext (doc, fullname=True), set.docs) + sets \
+        if docs else sets
 
     return to_ext (set, results=results)
 
