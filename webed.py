@@ -27,13 +27,19 @@ def run (debug=False, config=None):
 
 @manager.command
 def init ():
-    """Creates & initializes database and tables"""
+    """Init database tables"""
     db.create_all ()
 
 @manager.command
 def drop ():
-    """Drops all database tables"""
+    """Drops database tables"""
     db.drop_all ()
+
+@manager.command
+def execute (source):
+    """Execute source in application context"""
+    with app.app_context():
+        exec source
 
 ###############################################################################
 ###############################################################################
