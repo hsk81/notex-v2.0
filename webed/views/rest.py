@@ -247,7 +247,7 @@ def set2ext (set, docs=True):
             'mime': set.mime,
             'leaf': False,
             'size': 0,
-            }
+        }
 
     if set.sets.count () + set.docs.count () >= DefaultConfig.LOADSKIP_LIMIT:
 
