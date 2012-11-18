@@ -19,6 +19,7 @@ setup (
     zip_safe=False,
     install_requires=[
         'Flask',
+        'Flask-Script',
         'Flask-SQLAlchemy',
         'Flask-Admin',
         'Flask-DebugToolbar',
