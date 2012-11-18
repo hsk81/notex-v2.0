@@ -31,11 +31,11 @@ function clean_env () {
         deactivate
     fi
 
-    rm bin/ include/ lib/ -r
+    rm bin/ include/ lib/ -rf
 }
 
 function clean_egg () {
-    rm build/ dist/ *.egg-info/ -r
+    rm build/ dist/ *.egg-info/ -rf
 }
 
 function build () {
