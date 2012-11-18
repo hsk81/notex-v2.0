@@ -25,7 +25,7 @@ Ext.define ('Webed.controller.MainBar', {
                 click: this.rename
             },
             'main-bar button[action=delete]': {
-                click: this.delete
+                click: this.destroy
             },
             'main-bar button[action=import-project]': {
                 click: this.importProject
@@ -61,9 +61,11 @@ Ext.define ('Webed.controller.MainBar', {
         });
     },
     rename: function (item, event, options) {
-        console.debug ('[MainBarCtrl.rename]');
+        this.application.fireEvent ('update_node', {
+            name: 'renamed'
+        });
     },
-    delete: function (item, event, options) {
+    destroy: function (item, event, options) {
         this.application.fireEvent ('destroy_node');
     },
     importProject: function (item, event, options) {

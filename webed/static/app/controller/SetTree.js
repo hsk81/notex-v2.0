@@ -25,8 +25,19 @@ Ext.define ('Webed.controller.SetTree', {
         });
 
         this.application.on ({
+            update_node: this.update_node, scope: this
+        });
+
+        this.application.on ({
             destroy_node: this.destroy_node, scope: this
         });
+    },
+
+    update_node: function (node) {
+        var name = node.name;
+        assert (name);
+
+        console.debug ('[SetTreeCtrl.update-node]', node);
     },
 
     settings: function () {
