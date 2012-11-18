@@ -9,12 +9,11 @@ from flask.helpers import jsonify
 
 from flask import Blueprint, session
 
-from webed.app import app
-from webed.ext import db
-from webed.models import Set, Doc
-from webed.util import Q
-
-from webed.config import DefaultConfig
+from ..config import DefaultConfig
+from ..models import Set, Doc
+from ..app import app
+from ..ext import db
+from ..util import Q
 
 ###############################################################################
 ###############################################################################

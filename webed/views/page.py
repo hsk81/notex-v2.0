@@ -9,10 +9,10 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from webed.models import Set, Doc
-from webed.ext import db
-from webed.app import app
-from webed.util import Q
+from ..models import Set, Doc
+from ..ext import db, logger
+from ..app import app
+from ..util import Q
 
 import sys
 
@@ -58,11 +58,13 @@ def main (page='home'):
     return render_template ('index.html', page=page, debug=app.debug)
 
 def reset ():
+    logger.debug (request)
 
     db.drop_all ()
     db.create_all ()
 
 def clean ():
+    logger.debug (request)
 
     if 'root_uuid' in session:
         base = Q (Set.query).one_or_default (uuid=session['root_uuid'])

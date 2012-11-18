@@ -38,8 +38,7 @@ def drop ():
 @manager.command
 def execute (source):
     """Execute source in application context"""
-    with app.app_context():
-        exec source
+    with app.app_context(): exec source
 
 ###############################################################################
 ###############################################################################

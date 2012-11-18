@@ -6,7 +6,7 @@ __author__ = 'hsk81'
 import os
 import socket
 
-from webed.util import in_rxs
+from ..util import in_rxs
 
 ###############################################################################
 ###############################################################################
@@ -19,6 +19,8 @@ class DefaultConfig:
 
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/webed.db'
+
+    LOG_FILE = '../webed.log'
 
     ##
     ## Override secret key in production environment using value from the
@@ -34,6 +36,7 @@ class DefaultConfig:
     ##
 
     LOADSKIP_LIMIT = 16
+
 
 ###############################################################################
 ###############################################################################
