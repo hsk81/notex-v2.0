@@ -72,7 +72,7 @@ case $ACTMETH in
     clear)
         clear_env ;;
     init)
-        setup_env $APPNAME && vexec_pip $PIPOPTS ;;
+        setup_env $APPNAME ;; ## && vexec_pip $PIPOPTS ;;
     *)
         $0 init $1 $2 ;;
 esac
