@@ -11,6 +11,12 @@
 /lib
 /share
 
+# setuptools
+
+/build
+/dist
+/*.egg-info
+
 # private
 
 production.py
