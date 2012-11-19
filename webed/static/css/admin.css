@@ -1,0 +1,147 @@
+/******************************************************************************
+ * Base
+ *****************************************************************************/
+
+html {
+    height:100%;
+}
+
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
+/******************************************************************************
+ * Container
+ *****************************************************************************/
+
+.container {
+    height:100%;
+    width:100%;
+}
+
+/******************************************************************************
+ * Content
+ *****************************************************************************/
+
+#content-wrap {
+    display:table;
+    height:100%;
+    width:100%;
+}
+
+#content {
+    display:table-cell;
+    vertical-align:middle;
+}
+
+/******************************************************************************
+ * Title & Sub-Title
+ *****************************************************************************/
+
+.title {
+    line-height:1.25em;
+}
+
+.title {
+    text-shadow:#888888 -1.25px -0.75px 2px;
+    text-align:center;
+    font-weight:bold;
+    font-variant:small-caps;
+    font-size:13.750em;
+    font-family:sans serif;
+    color:#f0f0f0;
+}
+
+.sub-title {
+    margin-left:auto; margin-right:auto; width:75%; height:32px;
+}
+
+.sub-title hr {
+    margin: 4px 0;
+    border:0;
+    height:2px;
+    color:#888888;
+    background-color:#888888;
+}
+
+.sub-title .text {
+    float:left;
+    position:relative;
+    font-weight:bold;
+    font-size: 1em;
+    color:#888888;
+}
+
+.sub-title .link-icon {
+    height:32px; width:32px; margin-top:2px;
+    background-repeat:no-repeat;
+    text-align:center;
+    text-decoration:none;
+    color:#ffffff;
+}
+
+.sub-title .youtube {
+    float:right; position:relative; top:-16px; left:50px;
+}
+
+.sub-title .blogger {
+    float:right; position:relative; top:-16px; left:33px;
+}
+
+.sub-title .twitter {
+    float:right; position:relative; top:-16px; left:18px;
+}
+
+.sub-title .facebook {
+    float:right; position:relative; top:-16px; left:2px;
+}
+
+/******************************************************************************
+ * Footer
+ *****************************************************************************/
+
+.footer-sticky {
+    position: absolute;
+    margin-bottom: 24px;
+    width: 100%;
+    height: 32px;
+    bottom: 0;
+}
+
+.footer {
+    margin-bottom: 24px;
+    width: 100%;
+    height: 32px;
+}
+
+.ssl-seal-wrap {
+    margin: 0 auto;
+    width: 132px;
+    height: 32px;
+}
+
+.ssl-seal-wrap {
+    margin: 0 auto;
+    width: 132px;
+    height: 32px;
+}
+
+.ssl-seal-wrap .placeholder {
+    display: table;
+    height: 100%;
+    width: 100%;
+    background-color: #f5f5f5;
+    border-top: #d3d3d3 solid thin;
+    border-bottom: #d3d3d3 solid thin;
+}
+
+.ssl-seal-wrap .placeholder p {
+    display:table-cell;
+    vertical-align: middle;
+    text-align: center;
+    color: #808080;
+}
+
+/*****************************************************************************/

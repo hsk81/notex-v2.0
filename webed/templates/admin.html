@@ -1,0 +1,40 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='ico/favicon.ico') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/admin.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/menu.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/icons-16.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/icons-32.css') }}" />
+{% endblock %}
+
+{% block body %}
+    <div id="content-wrap">
+        <div id="content">
+            <div class="title">ЩebEd</div>
+            <div class="sub-title">
+                <hr><div class="text">A browser based text editor</div>
+
+                <a class="icon-facebook-16 link-icon facebook"
+                   target="_blank" href="http://www.facebook.com">_</a>
+                <a class="icon-twitter_1-16 link-icon twitter"
+                   target="_blank" href="http://twitter.com">_</a>
+                <a class="icon-blogger-16 link-icon blogger"
+                   target="_blank" href="http://blogger.com">_</a>
+                <a class="icon-youtube-16 link-icon youtube"
+                   target="_blank" href="http://youtube.com">_</a>
+            </div>
+
+            <div class="footer-sticky">
+                {% include 'ssl-seal.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
