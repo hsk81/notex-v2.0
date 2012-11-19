@@ -11,7 +11,7 @@ from ..app import app
 
 class IndexView (AdminIndexView):
 
-    @expose('/')
+    @expose ('/')
     def index (self):
 
         return self.render ('admin.html', debug=app.debug)
