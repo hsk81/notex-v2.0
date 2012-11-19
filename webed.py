@@ -5,6 +5,8 @@
 
 from webed.app import app
 from webed.ext import db
+from webed.models import User
+from webed.util.linq import Q
 
 from flask.ext.script import Manager
 
@@ -29,6 +31,10 @@ def run (debug=False, config=None):
 def init ():
     """Init database tables"""
     db.create_all ()
+
+    user = User (u'admin', mail=u'admin@mail.net')
+    db.session.add (user)
+    db.session.commit ()
 
 @manager.command
 def drop ():

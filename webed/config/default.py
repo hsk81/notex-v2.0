@@ -23,6 +23,13 @@ class DefaultConfig:
     LOG_FILE = '../webed.log'
 
     ##
+    ## Debug Toolbar: Disables/enables the interception of redirection; since
+    ## it can be quite annoying it has been disabled.
+    ##
+
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+    ##
     ## Override secret key in production environment using value from the
     ## *production.py* file.
     ##
@@ -36,7 +43,6 @@ class DefaultConfig:
     ##
 
     LOADSKIP_LIMIT = 16
-
 
 ###############################################################################
 ###############################################################################

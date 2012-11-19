@@ -1,32 +1,20 @@
-#!bin/python
+__author__ = 'hsk81'
 
 ###############################################################################
 ###############################################################################
 
-from setuptools import setup
+from flask.ext.login import LoginManager
+from ..app import app
+from ..models.user import User
 
 ###############################################################################
 ###############################################################################
 
-setup (
-    name='webed',
-    version='0.1',
-    description='Browser based text editor',
-    author='Hasan Karahan',
-    author_email='hasan.karahan81@gmail.com',
-    packages=['webed'],
-    include_package_data=True,
-    zip_safe=False,
-    install_requires=[
-        'Flask',
-        'Flask-Script',
-        'Flask-SQLAlchemy',
-        'Flask-Admin',
-        'Flask-Login',
-        'Flask-DebugToolbar',
-        'ipython',
-    ]
-)
+login = LoginManager (); login.init_app (app)
+
+@login.user_loader
+def load_user (id):
+    return User.query.get (id)
 
 ###############################################################################
 ###############################################################################
