@@ -6,6 +6,7 @@ __author__ = 'hsk81'
 from flask.ext.login import current_user, login_user, logout_user
 from flask.ext.admin import Admin, AdminIndexView, expose
 from flask import redirect
+
 from ..app import app
 
 ###############################################################################
@@ -41,7 +42,7 @@ class IndexView (AdminIndexView):
 ###############################################################################
 ###############################################################################
 
-admin = Admin (app, name='WebEd', index_view=IndexView (name='Home'))
+admin = Admin (app, name='WebEd', index_view=IndexView (name='Admin'))
 
 ###############################################################################
 ###############################################################################
