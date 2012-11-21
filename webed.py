@@ -6,7 +6,6 @@
 from webed.app import app
 from webed.ext import db
 from webed.models import User
-from webed.util.linq import Q
 
 from flask.ext.script import Manager
 
@@ -44,7 +43,7 @@ def drop ():
 @manager.command
 def execute (source):
     """Execute source in application context"""
-    with app.app_context(): exec source
+    with app.app_context (): exec source
 
 ###############################################################################
 ###############################################################################
