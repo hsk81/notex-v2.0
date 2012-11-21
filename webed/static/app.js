@@ -1,6 +1,5 @@
-Ext.Loader.setPath ({
-    'Ext': '../static/lib/extjs/src'
-});
+Ext.Loader.setConfig ({enabled: true});
+Ext.Loader.setPath ({'Ext': '../static/lib/extjs/src'});
 
 Ext.application ({
     name: 'Webed',
