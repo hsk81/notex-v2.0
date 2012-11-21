@@ -9,7 +9,7 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from ..models import Set, Doc
+from ..models import Set, Doc, User
 from ..ext import db, logger
 from ..app import app
 from ..util import Q
@@ -62,6 +62,10 @@ def reset ():
 
     db.drop_all ()
     db.create_all ()
+
+    user = User (u'admin', mail=u'admin@mail.net')
+    db.session.add (user)
+    db.session.commit ()
 
 def clean ():
     logger.debug (request)
