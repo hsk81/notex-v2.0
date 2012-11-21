@@ -3,31 +3,15 @@
 ###############################################################################
 ###############################################################################
 
-from setuptools import setup
+from flup.server.fcgi import WSGIServer
+from webed.app import app
 
 ###############################################################################
 ###############################################################################
 
-setup (
-    name='webed',
-    version='0.1',
-    description='Browser based text editor',
-    author='Hasan Karahan',
-    author_email='hasan.karahan81@gmail.com',
-    packages=['webed'],
-    include_package_data=True,
-    zip_safe=False,
-    install_requires=[
-        'Flask',
-        'Flask-Script',
-        'Flask-SQLAlchemy',
-        'Flask-Admin',
-        'Flask-Login',
-        'Flask-DebugToolbar',
-        'ipython',
-        'flup'
-    ]
-)
+if __name__ == '__main__':
+
+    WSGIServer (app, bindAddress='/tmp/webed-fcgi.sock').run ()
 
 ###############################################################################
 ###############################################################################
