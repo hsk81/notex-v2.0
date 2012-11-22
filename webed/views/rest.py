@@ -15,8 +15,6 @@ from ..app import app
 from ..ext import db
 from ..util import Q
 
-import os.path
-
 ###############################################################################
 ###############################################################################
 
@@ -75,7 +73,7 @@ def node_create (docs=True, json=True):
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid, default=base)
+    root = Q (Set.query).one_or_default (base=base,uuid=root_uuid,default=base)
     assert root
 
     if uuid:
@@ -192,7 +190,7 @@ def doc_create (json=True):
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).one_or_default (base=base, uuid=root_uuid, default=base)
+    root = Q (Set.query).one_or_default (base=base,uuid=root_uuid,default=base)
     assert root
 
     if uuid:
