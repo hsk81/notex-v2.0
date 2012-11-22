@@ -270,7 +270,7 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     update_doc: function (doc) {
-        console.debug ('[SetTreeCtrl.update_doc]');
+        return this.update_set (doc);
     },
 
     delete_set: function () {
@@ -301,6 +301,6 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     delete_doc: function () {
-        console.debug ('[SetTreeCtrl.delete_doc]');
+        return this.delete_set ();
     }
 });
