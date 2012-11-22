@@ -289,7 +289,7 @@ def set2ext (set, docs=True):
             'size': 0,
             'results': results,
             'root_uuid': set.root.uuid if set.root else None,
-            'uuid': set.uuid,
+            'uuid': set.uuid
         }
 
     if set.sets.count () + set.docs.count () >= DefaultConfig.LOADSKIP_LIMIT:
@@ -321,7 +321,7 @@ def doc2ext (doc):
         'size': 0,
         'results': None,
         'root_uuid': doc.root.uuid,
-        'uuid': doc.uuid,
+        'uuid': doc.uuid
     }
 
 ###############################################################################

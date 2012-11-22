@@ -45,24 +45,30 @@ Ext.define ('Webed.controller.SetTree', {
     refresh: function () {
         var view = this.getSetTree ();
         assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var node = semo.getLastSelected ();
+        assert (node);
+        var path = node.getPath ('uuid', '/');
+        assert (path);
         var base = view.getRootNode ();
         assert (base);
         var base = base.removeAll (false);
         assert (base);
-
         var store = this.getSetsStore ();
         assert (store);
         var mask = view.setLoading (true, true);
         assert (mask);
 
         store.on ('load', function () {
-            if (mask) { mask.destroy (); }
+            if (mask) mask.destroy ();
+            view.expandPath (path, 'uuid', '/', function (success, node) {
+                if (success) semo.select (node);
+            }, this);
         }, this);
 
         var store = store.load ({node: base});
         assert (store);
-
-        this.select_base ();
     },
 
     select_base: function () {
@@ -105,7 +111,7 @@ Ext.define ('Webed.controller.SetTree', {
         $.extend (node, {
             expandable: true,
             leaf: false
-        })
+        });
 
         var root = get_root.call (this, root_uuid);
         assert (root);
@@ -119,6 +125,7 @@ Ext.define ('Webed.controller.SetTree', {
             assert (semo);
 
             semo.select (node);
+            this.refresh ();
         }, this);
 
         function get_root_uuid (set) {
@@ -218,6 +225,7 @@ Ext.define ('Webed.controller.SetTree', {
             assert (semo);
 
             semo.select (node);
+            this.refresh ();
         }, this);
 
         this.application.fireEvent ('refresh_docs');
@@ -271,8 +279,13 @@ Ext.define ('Webed.controller.SetTree', {
                 scope: this, success: function (rec, op) {
                     var base = view.getRootNode ();
                     assert (base);
+
                     semo.select (base);
-                    semo.select ([rec]);
+                    semo.select (rec);
+
+                    if (rec.isLeaf ()) {
+                        this.application.fireEvent ('refresh_docs');
+                    }
                 }
             });
 
@@ -281,7 +294,7 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     update_doc: function (doc) {
-        return this.update_set (doc);
+        this.update_set (doc);
     },
 
     delete_set: function () {
