@@ -286,16 +286,16 @@ def set2ext (set, docs=True):
     def to_ext (set, results):
 
         return {
-            'loaded': results is not None,
-            'root_uuid': set.root.uuid if set.root else None,
-            'results': results,
             'expandable': True,
             'expanded': False,
-            'uuid': set.uuid,
-            'name': set.name,
-            'mime': set.mime,
             'leaf': False,
+            'loaded': results is not None,
+            'mime': set.mime,
+            'name': set.name,
             'size': 0,
+            'results': results,
+            'root_uuid': set.root.uuid if set.root else None,
+            'uuid': set.uuid,
         }
 
     if set.sets.count () + set.docs.count () >= DefaultConfig.LOADSKIP_LIMIT:
@@ -313,19 +313,21 @@ def doc2ext (doc):
     assert doc
     assert doc.uuid
     assert doc.mime
+    assert doc.root
     assert doc.root.uuid
     assert doc.name
 
     return {
-        'name': doc.name,
-        'root_uuid': doc.root.uuid,
         'expandable': False,
         'expanded': False,
-        'uuid': doc.uuid,
-        'mime': doc.mime,
-        'loaded': True,
         'leaf': True,
-        'size': 0
+        'loaded': True,
+        'mime': doc.mime,
+        'name': doc.name,
+        'size': 0,
+        'results': None,
+        'root_uuid': doc.root.uuid,
+        'uuid': doc.uuid,
     }
 
 ###############################################################################
