@@ -54,6 +54,11 @@ Ext.define ('Webed.controller.SetTree', {
 
         var store = this.getSetsStore ();
         assert (store);
+        var mask = view.setLoading (true, true);
+        assert (mask);
+        store.on ('load', function () {
+            if (mask) { mask.destroy (); }
+        }, this);
         var store = store.load ({node: base});
         assert (store);
 
