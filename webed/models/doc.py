@@ -15,7 +15,6 @@ class Doc (db.Model):
     uuid = db.Column (db.String (36), unique=True)
     mime = db.Column (db.String (256))
     name = db.Column (db.Unicode (256))
-    ext = db.Column (db.Unicode (16))
 
     ##
     ## Set.subdocs = Q (Doc.query).all (base=set) for a set, which means that
@@ -35,20 +34,17 @@ class Doc (db.Model):
     root = db.relationship ('Set', primaryjoin="Doc.root_id==Set.id",
         backref=db.backref ('docs', lazy='dynamic', cascade='all'))
 
-    def __init__ (self, name, ext, root, uuid=None, mime=None):
+    def __init__ (self, name, root, uuid=None, mime=None):
 
         self.base = root.base if root and root.base else root
         self.mime = mime if mime else 'application/document'
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
-        self.ext = unicode (ext)
         self.root = root
 
     def __repr__ (self):
 
-        return u'<Doc %r>' % (self.name + u'.' + self.ext)
-
-    fullname = property (lambda self: '%s.%s' % (self.name, self.ext))
+        return u'<Doc %r>' % self.name
 
 ###############################################################################
 ###############################################################################

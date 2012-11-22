@@ -57,16 +57,16 @@ Ext.define ('Webed.controller.MainBar', {
     },
     addText: function (item, event, options) {
         this.application.fireEvent ('create_doc', {
-            name: 'options', ext: 'cfg', mime: 'text/plain'
+            name: 'options.cfg', mime: 'text/plain'
         });
     },
     rename: function (item, event, options) {
-        this.application.fireEvent ('update_node', {
-            name: 'renamed'
+        this.application.fireEvent ('update_set', {
+            name: 're-named'
         });
     },
     destroy: function (item, event, options) {
-        this.application.fireEvent ('destroy_node');
+        this.application.fireEvent ('delete_set');
     },
     importProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.importProject]');

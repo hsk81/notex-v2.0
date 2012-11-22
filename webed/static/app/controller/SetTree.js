@@ -19,25 +19,23 @@ Ext.define ('Webed.controller.SetTree', {
         this.application.on ({
             create_set: this.create_set, scope: this
         });
-
         this.application.on ({
             create_doc: this.create_doc, scope: this
         });
 
         this.application.on ({
-            update_node: this.update_node, scope: this
+            update_set: this.update_set, scope: this
+        });
+        this.application.on ({
+            update_doc: this.update_doc, scope: this
         });
 
         this.application.on ({
-            destroy_node: this.destroy_node, scope: this
+            delete_set: this.delete_set, scope: this
         });
-    },
-
-    update_node: function (node) {
-        var name = node.name;
-        assert (name);
-
-        console.debug ('[SetTreeCtrl.update-node]', node);
+        this.application.on ({
+            delete_doc: this.delete_doc, scope: this
+        });
     },
 
     settings: function () {
@@ -70,9 +68,10 @@ Ext.define ('Webed.controller.SetTree', {
         assert (view);
         var base = view.getRootNode ();
         assert (base);
-        var model = view.getSelectionModel ();
-        assert (model);
-        model.select (base);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        semo.select (base);
     },
 
     create_set: function (set) {
@@ -114,9 +113,10 @@ Ext.define ('Webed.controller.SetTree', {
         root.expand (false, function () {
             var view = this.getSetTree ();
             assert (view);
-            var model = view.getSelectionModel ();
-            assert (model);
-            model.select (node);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+
+            semo.select (node);
         }, this);
 
         function get_root_uuid (set) {
@@ -138,9 +138,9 @@ Ext.define ('Webed.controller.SetTree', {
                     break;
 
                 case 'application/folder':
-                    var model = view.getSelectionModel ();
-                    assert (model);
-                    var record = model.getLastSelected ();
+                    var semo = view.getSelectionModel ();
+                    assert (semo);
+                    var record = semo.getLastSelected ();
                     assert (record);
                     var expandable = record.get ('expandable');
                     if (expandable) {
@@ -180,8 +180,6 @@ Ext.define ('Webed.controller.SetTree', {
         assert (uuid);
         var name = doc.name || uuid;
         assert (name);
-        var ext = doc.ext || null;
-        assert (ext || !ext);
         var size = doc.size || 0;
         assert (size >= 0);
         var mime = doc.mime;
@@ -191,7 +189,6 @@ Ext.define ('Webed.controller.SetTree', {
             root_uuid: root_uuid,
             uuid: uuid,
             name: name,
-            ext: ext,
             size: size,
             mime: mime
         }
@@ -202,9 +199,7 @@ Ext.define ('Webed.controller.SetTree', {
         assert (model);
 
         $.extend (node, {
-            name: (ext != undefined)
-                ? Ext.String.format ('{0}.{1}', name, ext)
-                : name,
+            name: name,
             expandable: false,
             leaf: true
         });
@@ -217,9 +212,10 @@ Ext.define ('Webed.controller.SetTree', {
         root.expand (false, function () {
             var view = this.getSetTree ();
             assert (view);
-            var model = view.getSelectionModel ();
-            assert (model);
-            model.select (node);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+
+            semo.select (node);
         }, this);
 
         this.application.fireEvent ('refresh_docs');
@@ -229,9 +225,9 @@ Ext.define ('Webed.controller.SetTree', {
 
             var view = this.getSetTree ();
             assert (view);
-            var model = view.getSelectionModel ();
-            assert (model);
-            var record = model.getLastSelected ();
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            var record = semo.getLastSelected ();
             assert (record);
 
             var expandable = record.get ('expandable');
@@ -258,13 +254,32 @@ Ext.define ('Webed.controller.SetTree', {
         }
     },
 
-    destroy_node: function () {
+    update_set: function (set) {
         var view = this.getSetTree ();
         assert (view);
-        var model = view.getSelectionModel ();
-        assert (model);
+        var semo = view.getSelectionModel ();
+        assert (semo);
 
-        var record = model.getLastSelected ();
+        var record = semo.getLastSelected ();
+        if (record && set) {
+            var strings = record.set (set);
+            assert (strings || strings == null);
+            var model =  record.save ();
+            assert (model);
+        }
+    },
+
+    update_doc: function (doc) {
+        console.debug ('[SetTreeCtrl.update_doc]');
+    },
+
+    delete_set: function () {
+        var view = this.getSetTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        var record = semo.getLastSelected ();
         if (record) {
             var refresh_docs =
                 record.isLeaf () ||
@@ -283,5 +298,9 @@ Ext.define ('Webed.controller.SetTree', {
         }
 
         this.select_base ();
+    },
+
+    delete_doc: function () {
+        console.debug ('[SetTreeCtrl.delete_doc]');
     }
 });

@@ -15,6 +15,8 @@ from ..app import app
 from ..ext import db
 from ..util import Q
 
+import os.path
+
 ###############################################################################
 ###############################################################################
 
@@ -99,7 +101,7 @@ def node_read (docs=True, json=True):
     set = Q (base.subsets).one_or_default (uuid=uuid, default=base)
     assert set
 
-    doc2exts = map (lambda d: doc2ext (d, True), set.docs) if docs else []
+    doc2exts = map (lambda d: doc2ext (d), set.docs) if docs else []
     set2exts = map (lambda s: set2ext (s, docs=docs), set.sets)
 
     result = dict (success=True, results=set2exts + doc2exts)
@@ -107,7 +109,37 @@ def node_read (docs=True, json=True):
 
 def node_update (docs=True, json=True):
 
-    result = dict (success=True)
+    if not request.is_xhr:
+        request.json = request.form
+
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid
+    uuid = request.json.get ('uuid', None)
+    assert uuid
+    name = request.json.get ('name', None)
+    assert name
+    mime = request.json.get ('mime', None)
+    assert mime
+
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
+    set = Q (base.subsets).one_or_default (uuid=uuid)
+    if set:
+        if set.root and set.root.uuid != root_uuid:
+            set.root = Q (Set.query).one (uuid=root_uuid)
+            assert set.root
+
+        if set.name != name: set.name = name
+        if set.mime != mime: set.mime = mime
+
+        db.session.add (set)
+        db.session.commit ()
+
+        result = dict (success=True,
+            results=map (lambda s: set2ext (s, docs=docs), [set]))
+    else:
+        result = doc_update (json=False)
+
     return jsonify (result) if json else result
 
 def node_delete (docs=True, json=True):
@@ -117,20 +149,18 @@ def node_delete (docs=True, json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
+
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-
     set = Q (base.subsets).one_or_default (uuid=uuid)
     if set:
         db.session.delete (set)
         db.session.commit ()
-        result = dict (success=True, results=[])
 
-    elif docs:
-        result = doc_delete (json=False)
-
+        result = dict (success=True,
+            results=map (lambda s: set2ext (s, docs=docs), [set]))
     else:
-        result = dict (success=False, results=[])
+        result = doc_delete (json=False)
 
     return jsonify (result) if json else result
 
@@ -159,8 +189,6 @@ def doc_create (json=True):
     assert mime
     name = request.json.get ('name', None)
     assert name
-    ext = request.json.get ('ext', None)
-    assert ext or not ext
 
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
@@ -168,9 +196,9 @@ def doc_create (json=True):
     assert root
 
     if uuid:
-        doc = Doc (name, ext, root, mime=mime, uuid=uuid)
+        doc = Doc (name, root, mime=mime, uuid=uuid)
     else:
-        doc = Doc (name, ext, root, mime=mime)
+        doc = Doc (name, root, mime=mime)
 
     db.session.add (doc)
     db.session.commit ()
@@ -195,10 +223,34 @@ def doc_read (json=True):
 
 def doc_update (json=True):
 
-    uuid = request.args.get ('uuid', None)
-    assert uuid
+    if not request.is_xhr:
+        request.json = request.args
 
-    result = dict (success=True, uuid=uuid)
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid
+    uuid = request.json.get ('uuid', None)
+    assert uuid
+    mime = request.json.get ('mime', None)
+    assert mime
+    name = request.json.get ('name', None)
+    assert name
+
+    base = Q (Set.query).one (uuid=session['root_uuid'])
+    assert base
+    doc = Q (base.subdocs).one (uuid=uuid)
+    assert doc
+
+    if doc.root and doc.root.uuid != root_uuid:
+        doc.root = Q (Set.query).one (uuid=root_uuid)
+        assert doc.root
+
+    if mime and doc.mime != mime: doc.mime = mime
+    if name and doc.name != name: doc.name = name
+
+    db.session.add (doc)
+    db.session.commit ()
+
+    result = dict (success=True, results=map (doc2ext, [doc]))
     return jsonify (result) if json else result
 
 def doc_delete (json=True):
@@ -208,18 +260,16 @@ def doc_delete (json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
+
     base = Q (Set.query).one (uuid=session['root_uuid'])
     assert base
-
     doc = Q (base.subdocs).one_or_default (uuid=uuid)
-    if doc:
-        db.session.delete (doc)
-        db.session.commit ()
-        result = dict (success=True, results=[])
+    assert doc
 
-    else:
-        result = dict (success=False, results=[])
+    db.session.delete (doc)
+    db.session.commit ()
 
+    result = dict (success=True, results=map (doc2ext, [doc]))
     return jsonify (result) if json else result
 
 ###############################################################################
@@ -231,13 +281,13 @@ def set2ext (set, docs=True):
     assert set.uuid
     assert set.name
     assert set.mime
-    assert set.root.uuid
+    assert set.root.uuid if set.root else True
 
     def to_ext (set, results):
 
         return {
             'loaded': results is not None,
-            'root_uuid': set.root.uuid,
+            'root_uuid': set.root.uuid if set.root else None,
             'results': results,
             'expandable': True,
             'expanded': False,
@@ -253,28 +303,26 @@ def set2ext (set, docs=True):
         return to_ext (set, results=None)
 
     sets = map (lambda s: set2ext (s, docs=docs), set.sets)
-    results = map (lambda doc: doc2ext (doc, fullname=True), set.docs) + sets \
+    results = map (lambda doc: doc2ext (doc), set.docs) + sets \
         if docs else sets
 
     return to_ext (set, results=results)
 
-def doc2ext (doc, fullname=False):
+def doc2ext (doc):
 
     assert doc
-    assert doc.ext
     assert doc.uuid
     assert doc.mime
     assert doc.root.uuid
-    assert doc.fullname if fullname else doc.name
+    assert doc.name
 
     return {
-        'name': doc.fullname if fullname else doc.name,
+        'name': doc.name,
         'root_uuid': doc.root.uuid,
         'expandable': False,
         'expanded': False,
         'uuid': doc.uuid,
         'mime': doc.mime,
-        'ext': doc.ext,
         'loaded': True,
         'leaf': True,
         'size': 0

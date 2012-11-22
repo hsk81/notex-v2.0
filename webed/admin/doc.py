@@ -14,9 +14,9 @@ from webed.models import Doc
 
 class DocAdmin (ModelView):
 
-    list_columns = ('base', 'root', 'uuid', 'mime', 'name', 'ext')
-    searchable_columns = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
-    column_filters = (Doc.uuid, Doc.mime, Doc.name, Doc.ext)
+    list_columns = ('base', 'root', 'uuid', 'mime', 'name')
+    searchable_columns = (Doc.uuid, Doc.mime, Doc.name)
+    column_filters = (Doc.uuid, Doc.mime, Doc.name)
 
     def __init__ (self, session):
         super (DocAdmin, self).__init__ (Doc, session)

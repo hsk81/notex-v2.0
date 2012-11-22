@@ -15,7 +15,7 @@ class ModelsTestCase (BaseTestCase):
 
         set = Set ('root', root=None)
         sub = Set ('folder', root=set)
-        doc = Doc ('file', 'txt', root=sub)
+        doc = Doc ('file.txt', root=sub)
 
         return set, sub, doc
 

@@ -85,7 +85,7 @@ def init ():
     init_article (root=base)
     init_report (root=base)
 
-    doc = Doc ('author', 'txt', root=base, mime='text/plain')
+    doc = Doc ('author.txt', root=base, mime='text/plain')
     db.session.add (doc)
     db.session.commit ()
 
@@ -94,22 +94,22 @@ def init ():
 def init_article (root):
 
     set = Set ('Article', root, mime='application/project'); db.session.add (set)
-    doc = Doc ('options', 'cfg', set, mime='text/plain'); db.session.add (doc)
-    doc = Doc ('content', 'txt', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('options.cfg', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('content.txt', set, mime='text/plain'); db.session.add (doc)
 
     set = Set ('resources', set, mime='application/folder'); db.session.add (set)
-    doc = Doc ('wiki', 'png', set, mime='image/png'); db.session.add (doc)
-    doc = Doc ('time', 'jpg', set, mime='image/jpg'); db.session.add (doc)
+    doc = Doc ('wiki.png', set, mime='image/png'); db.session.add (doc)
+    doc = Doc ('time.jpg', set, mime='image/jpg'); db.session.add (doc)
 
 def init_report (root):
 
     set = Set ('Report', root, mime='application/project'); db.session.add (set)
-    doc = Doc ('options', 'cfg', set, mime='text/plain'); db.session.add (doc)
-    doc = Doc ('content', 'txt', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('options.cfg', set, mime='text/plain'); db.session.add (doc)
+    doc = Doc ('content.txt', set, mime='text/plain'); db.session.add (doc)
 
     set = Set ('resources', set, mime='application/folder'); db.session.add (set)
-    doc = Doc ('wiki', 'png', set, mime='image/png'); db.session.add (doc)
-    doc = Doc ('time', 'jpg', set, mime='image/png'); db.session.add (doc)
+    doc = Doc ('wiki.png', set, mime='image/png'); db.session.add (doc)
+    doc = Doc ('time.jpg', set, mime='image/png'); db.session.add (doc)
 
 ###############################################################################
 ###############################################################################
