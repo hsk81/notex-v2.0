@@ -54,9 +54,11 @@ Ext.define ('Webed.controller.SetTree', {
         assert (store);
         var mask = view.setLoading (true, true);
         assert (mask);
+
         store.on ('load', function () {
             if (mask) { mask.destroy (); }
         }, this);
+
         var store = store.load ({node: base});
         assert (store);
 
@@ -261,10 +263,19 @@ Ext.define ('Webed.controller.SetTree', {
         assert (semo);
 
         var record = semo.getLastSelected ();
-        if (record && set) {
+        if (record && record.parentNode && set) {
             var strings = record.set (set);
             assert (strings || strings == null);
-            var model =  record.save ();
+
+            var model =  record.save ({
+                scope: this, success: function (rec, op) {
+                    var base = view.getRootNode ();
+                    assert (base);
+                    semo.select (base);
+                    semo.select ([rec]);
+                }
+            });
+
             assert (model);
         }
     },

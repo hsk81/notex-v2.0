@@ -133,8 +133,7 @@ def node_update (docs=True, json=True):
         db.session.add (set)
         db.session.commit ()
 
-        result = dict (success=True,
-            results=map (lambda s: set2ext (s, docs=docs), [set]))
+        result = dict (success=True)
     else:
         result = doc_update (json=False)
 
@@ -155,8 +154,7 @@ def node_delete (docs=True, json=True):
         db.session.delete (set)
         db.session.commit ()
 
-        result = dict (success=True,
-            results=map (lambda s: set2ext (s, docs=docs), [set]))
+        result = dict (success=True)
     else:
         result = doc_delete (json=False)
 
@@ -248,7 +246,7 @@ def doc_update (json=True):
     db.session.add (doc)
     db.session.commit ()
 
-    result = dict (success=True, results=map (doc2ext, [doc]))
+    result = dict (success=True)
     return jsonify (result) if json else result
 
 def doc_delete (json=True):
@@ -267,7 +265,7 @@ def doc_delete (json=True):
     db.session.delete (doc)
     db.session.commit ()
 
-    result = dict (success=True, results=map (doc2ext, [doc]))
+    result = dict (success=True)
     return jsonify (result) if json else result
 
 ###############################################################################
