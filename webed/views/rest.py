@@ -130,7 +130,6 @@ def node_update (docs=True, json=True):
         if set.name != name: set.name = name
         if set.mime != mime: set.mime = mime
 
-        db.session.add (set)
         db.session.commit ()
 
         result = dict (success=True)
@@ -243,7 +242,6 @@ def doc_update (json=True):
     if mime and doc.mime != mime: doc.mime = mime
     if name and doc.name != name: doc.name = name
 
-    db.session.add (doc)
     db.session.commit ()
 
     result = dict (success=True)
