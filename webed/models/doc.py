@@ -37,7 +37,7 @@ class Doc (db.Model):
     def __init__ (self, name, root, uuid=None, mime=None):
 
         self.base = root.base if root and root.base else root
-        self.mime = mime if mime else 'application/document'
+        self.mime = mime if mime else 'application/doc'
         self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name)
         self.root = root
