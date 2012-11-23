@@ -65,7 +65,7 @@ Ext.define ('Webed.controller.SetTree', {
         var uuid = array.pop ();
         assert (uuid);
         var path = array.join ('/');
-        assert (path);
+        assert (path||!path);
 
         var store = store.load ({callback: function (recs, op, success) {
             if (mask) mask.destroy ();
