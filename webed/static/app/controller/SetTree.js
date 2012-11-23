@@ -60,14 +60,24 @@ Ext.define ('Webed.controller.SetTree', {
         var mask = view.setLoading (true, true);
         assert (mask);
 
-        store.on ('load', function () {
-            if (mask) mask.destroy ();
-            view.expandPath (path, 'uuid', '/', function (success, node) {
-                if (success) semo.select (node);
-            }, this);
-        }, this);
+        var array = path.split ('/');
+        assert (array);
+        var uuid = array.pop ();
+        assert (uuid);
+        var path = array.join ('/');
+        assert (path);
 
-        var store = store.load ({node: base});
+        var store = store.load ({callback: function (recs, op, success) {
+            if (mask) mask.destroy ();
+            if (success) {
+                view.expandPath (path, 'uuid', '/', function (success, node) {
+                    if (success) {
+                        var node = node.findChild ('uuid', uuid);
+                        assert (node); semo.select (node);
+                    }
+                }, this);
+            }
+        }, node: base, scope: this});
         assert (store);
     },
 
