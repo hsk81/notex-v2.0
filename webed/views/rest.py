@@ -106,7 +106,7 @@ def node_read (docs=True, json=True):
 def node_update (docs=True, json=True):
 
     if not request.is_xhr:
-        request.json = request.form
+        request.json = request.args
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid

@@ -59,6 +59,25 @@ class RestTestCase (BaseTestCase):
 
         return response, json
 
+    def test_set_update (self):
+
+        _, json = self.test_set_root ()
+
+        set = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'application/project') \
+            .first ()
+
+        self.assertIsNotNone (set['root_uuid'])
+        self.assertIsNotNone (set['uuid'])
+        self.assertIsNotNone (set['name'])
+        self.assertIsNotNone (set['mime'])
+
+        response = self.app.put ('/sets?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
+            (set['root_uuid'], set['uuid'], set['name'], set['mime']))
+        json = self.assert_ajax (response)
+
+        return response, json
+
     def test_set_delete (self):
 
         _, json = self.test_set_root ()
@@ -117,6 +136,25 @@ class RestTestCase (BaseTestCase):
 
         self.assertIsNotNone (doc['uuid'])
         response = self.app.get ('/docs?uuid=%s' % doc['uuid'])
+        json = self.assert_ajax (response)
+
+        return response, json
+
+    def test_doc_update (self):
+
+        _, json = self.test_doc_root ()
+
+        doc = Linq (json['results']) \
+            .filter (lambda el: el['mime'] == 'text/plain') \
+            .first ()
+
+        self.assertIsNotNone (doc['root_uuid'])
+        self.assertIsNotNone (doc['uuid'])
+        self.assertIsNotNone (doc['name'])
+        self.assertIsNotNone (doc['mime'])
+
+        response = self.app.put ('/docs?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
+            (doc['root_uuid'], doc['uuid'], doc['name'], doc['mime']))
         json = self.assert_ajax (response)
 
         return response, json
