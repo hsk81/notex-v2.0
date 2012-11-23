@@ -147,7 +147,10 @@ class RestTestCase (BaseTestCase):
 
         self.assertIsNotNone (json)
         self.assertTrue (json['success'])
-        self.assertIsNotNone (json['results'])
+
+        self.assertTrue ('results' in json or 'result' in json)
+        if 'results' in json: self.assertIsNotNone (json['results'])
+        if 'result' in json: self.assertIsNotNone (json['result'])
 
         return json
 
