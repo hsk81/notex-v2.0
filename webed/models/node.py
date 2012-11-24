@@ -21,6 +21,9 @@ class Node (db.Model):
         backref=db.backref ('nodes', cascade='all', lazy='dynamic',
             primaryjoin='Node.root_id==Node.id'))
 
+    meta_id = db.Column (db.Integer, db.ForeignKey ('meta.id'), nullable=True)
+    meta = db.relationship ('Meta', remote_side='Meta.id')
+
     def __init__ (self, root, **kwargs):
 
         self.meta = kwargs['meta'] if 'meta' in kwargs \
