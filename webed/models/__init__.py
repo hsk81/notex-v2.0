@@ -15,6 +15,23 @@ from ..ext import db
 ###############################################################################
 ###############################################################################
 
+class Meta (db.Model):
+
+    __tablename__ = 'meta'
+    id = db.Column (db.Integer, primary_key=True)
+    type = db.Column ('type', db.String (16))
+    __mapper_args__ = {'polymorphic_identity': 'meta', 'polymorphic_on': type}
+
+    uuid = db.Column (db.String (32), nullable=False, unique=True)
+    mime = db.Column (db.String (256), nullable=True)
+    name = db.Column (db.Unicode (256), nullable=True)
+
+    def __init__ (self, name=None, mime=None, uuid=None):
+
+        self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
+        self.name = unicode (name) if name else None
+        self.mime = mime if mime else None
+
 class Node (db.Model):
 
     __tablename__ = 'node'
@@ -22,25 +39,23 @@ class Node (db.Model):
     type = db.Column ('type', db.String (16))
     __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
-    uuid = db.Column (db.String (32), nullable=False, unique=True)
-    mime = db.Column (db.String (256), nullable=False)
-    name = db.Column (db.Unicode (256), nullable=True)
-
     root_id = db.Column (db.Integer, db.ForeignKey ('node.id'), nullable=True)
     root = db.relationship ('Node', remote_side='Node.id',
         backref=db.backref ('nodes', cascade='all', lazy='dynamic',
             primaryjoin='Node.root_id==Node.id'))
 
-    def __init__ (self, root, name=None, mime=None, uuid=None):
+    def __init__ (self, root, **kwargs):
 
-        self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
-        self.mime = mime if mime else 'application/node'
-        self.name = unicode (name) if name else None
+        self.meta = kwargs['meta'] if 'meta' in kwargs \
+            else Meta (**kwargs)
+        if self.meta and not self.meta.mime:
+            self.meta.mime = 'application/node'
+
         self.root = root
 
     def __repr__ (self):
 
-        return u'<Node %r>' % self.name
+        return u'<Node %r>' % self.id
 
 class Leaf (Node):
 
@@ -52,10 +67,14 @@ class Leaf (Node):
         backref=db.backref ('leafs', cascade='all', lazy='dynamic',
             primaryjoin='Leaf.root_id==Node.id'))
 
-    def __init__ (self, root, name=None, uuid=None, mime=None):
+    def __init__ (self, root, **kwargs):
 
-        super (Leaf, self).__init__ (root, name=name, uuid=uuid, mime=mime \
-            if mime else 'application/leaf')
+        self.meta = kwargs['meta'] if 'meta' in kwargs \
+            else Meta (**kwargs)
+        if self.meta and not self.meta.mime:
+            self.meta.mime = 'application/leaf'
+
+        super (Leaf, self).__init__ (root, **kwargs)
 
     def __repr__ (self):
 
