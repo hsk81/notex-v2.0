@@ -4,6 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from ..models import Set, Doc
+from ..models import Node, Leaf
 from base import BaseTestCase
 
 ###############################################################################
@@ -61,6 +62,48 @@ class ModelsTestCase (BaseTestCase):
         self.assert_models_basic (models)
         self.assert_models_relations (models)
         self.commit_models (models)
+
+###############################################################################
+###############################################################################
+
+class TreeTestCase (BaseTestCase):
+
+    def create_objects (self):
+
+        root = Node ('root', root=None)
+        node = Node ('node', root=root)
+        leaf = Leaf ('leaf', root=node)
+
+        return [root, node, leaf]
+
+    def commit_objects (self, objects):
+
+        self.db.session.add_all (objects)
+        self.db.session.commit ()
+
+    def test_basic (self):
+        root, node, leaf = self.create_objects ()
+        self.commit_objects ([root, node, leaf])
+
+        self.assertIsNone (root.root)
+        self.assertIs (node.root, root)
+        self.assertIs (leaf.root, node)
+
+    def test_node_relations (self):
+        root, node, leaf = self.create_objects ()
+        self.commit_objects ([root, node, leaf])
+
+        self.assertEqual (root.nodes.all (), [node])
+        self.assertEqual (node.nodes.all (), [leaf])
+        self.assertEqual (leaf.nodes.all (), [])
+
+    def test_leaf_relations (self):
+        root, node, leaf = self.create_objects ()
+        self.commit_objects ([root, node, leaf])
+
+        self.assertEqual (root.leafs.all (), [])
+        self.assertEqual (node.leafs.all (), [leaf])
+        self.assertEqual (leaf.leafs.all (), [])
 
 ###############################################################################
 ###############################################################################
