@@ -22,7 +22,7 @@ class Node (db.Model):
     type = db.Column ('type', db.String (16))
     __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
-    uuid = db.Column (db.String (36), nullable=False, unique=True)
+    uuid = db.Column (db.String (32), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=False)
     name = db.Column (db.Unicode (256), nullable=True)
 
@@ -33,7 +33,7 @@ class Node (db.Model):
 
     def __init__ (self, root, name=None, mime=None, uuid=None):
 
-        self.uuid = uuid if uuid else str (uuid_random ())
+        self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
         self.mime = mime if mime else 'application/node'
         self.name = unicode (name) if name else None
         self.root = root
