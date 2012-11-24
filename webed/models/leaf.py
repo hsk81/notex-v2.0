@@ -22,8 +22,8 @@ class Leaf (Node):
 
     def __init__ (self, root, **kwargs):
 
-        self.meta = kwargs['meta'] if 'meta' in kwargs\
-        else Meta (**kwargs)
+        self.meta = kwargs['meta'] if 'meta' in kwargs \
+            else Meta (**kwargs)
         if self.meta and not self.meta.mime:
             self.meta.mime = 'application/leaf'
 
