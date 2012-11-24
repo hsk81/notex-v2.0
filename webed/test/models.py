@@ -109,5 +109,19 @@ class TreeTestCase (BaseTestCase):
         self.assertEqual (node.leafs.all (), [leaf])
         self.assertEqual (leaf.leafs.all (), [])
 
+    def test_polymorphic (self):
+        root, meta, node, leaf = self.create_objects ()
+        self.commit_objects ([root, meta, node, leaf])
+
+        meta, node = root.nodes.all ()
+
+        self.assertEqual (type (meta), Leaf)
+        self.assertTrue (isinstance (meta, Node))
+        self.assertTrue (isinstance (meta, Leaf))
+
+        self.assertEqual (type (node), Node)
+        self.assertTrue (isinstance (node, Node))
+        self.assertFalse (isinstance (node, Leaf))
+
 ###############################################################################
 ###############################################################################
