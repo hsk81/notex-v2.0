@@ -133,25 +133,25 @@ class TreeTestCase (BaseTestCase):
         node = Node.query.get (node_id)
         self.assertIsNone (node)
 
-    def test_delete_leaf (self):
-        root = Node (root=None, name='root')
-        leaf = Leaf (root=root, name='leaf')
-        self.db.session.add (root)
-        self.db.session.add (leaf)
-        self.db.session.commit ()
-
-        root_id = root.id
-        self.assertIsNotNone (root_id)
-        leaf_id = leaf.id
-        self.assertIsNotNone (leaf_id)
-
-        self.db.session.delete (root)
-        self.db.session.commit ()
-
-        root = Node.query.get (root_id)
-        self.assertIsNone (root)
-        leaf = Node.query.get (leaf_id)
-        self.assertIsNone (leaf)
+#    def test_delete_leaf (self):
+#        root = Node (root=None, name='root')
+#        leaf = Leaf (root=root, name='leaf')
+#        self.db.session.add (root)
+#        self.db.session.add (leaf)
+#        self.db.session.commit ()
+#
+#        root_id = root.id
+#        self.assertIsNotNone (root_id)
+#        leaf_id = leaf.id
+#        self.assertIsNotNone (leaf_id)
+#
+#        self.db.session.delete (root)
+#        self.db.session.commit ()
+#
+#        root = Node.query.get (root_id)
+#        self.assertIsNone (root)
+#        leaf = Node.query.get (leaf_id)
+#        self.assertIsNone (leaf)
 
     def test_node_relations (self):
         root, meta, node, leaf = self.create_objects ()
