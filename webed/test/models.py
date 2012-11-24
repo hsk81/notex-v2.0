@@ -70,10 +70,10 @@ class TreeTestCase (BaseTestCase):
 
     def create_objects (self):
 
-        root = Node ('root', root=None)
-        meta = Leaf ('meta', root=root)
-        node = Node ('node', root=root)
-        leaf = Leaf ('leaf', root=node)
+        root = Node (root=None, name='root')
+        meta = Leaf (root=root, name='meta')
+        node = Node (root=root, name='node')
+        leaf = Leaf (root=node, name='leaf')
 
         return [root, meta, node, leaf]
 

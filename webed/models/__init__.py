@@ -31,11 +31,11 @@ class Node (db.Model):
         backref=db.backref ('nodes', cascade='all', lazy='dynamic',
             primaryjoin='Node.root_id==Node.id'))
 
-    def __init__ (self, name, root, uuid=None, mime=None):
+    def __init__ (self, root, name=None, mime=None, uuid=None):
 
         self.uuid = uuid if uuid else str (uuid_random ())
+        self.name = unicode (name if name else self.uuid)
         self.mime = mime if mime else 'application/node'
-        self.name = unicode (name)
         self.root = root
 
     def __repr__ (self):
@@ -52,9 +52,9 @@ class Leaf (Node):
         backref=db.backref ('leafs', cascade='all', lazy='dynamic',
             primaryjoin='Leaf.root_id==Node.id'))
 
-    def __init__ (self, name, root, uuid=None, mime=None):
+    def __init__ (self, root, name=None, uuid=None, mime=None):
 
-        super (Leaf, self).__init__ (name, root, uuid=uuid, mime=mime \
+        super (Leaf, self).__init__ (root, name=name, uuid=uuid, mime=mime \
             if mime else 'application/leaf')
 
     def __repr__ (self):
