@@ -20,7 +20,7 @@ class Node (db.Model):
     __tablename__ = 'node'
     id = db.Column (db.Integer, primary_key=True)
     type = db.Column ('type', db.String (64))
-    __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':type}
+    __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
     uuid = db.Column (db.String (36), unique=True)
     mime = db.Column (db.String (256))
@@ -46,7 +46,7 @@ class Leaf (Node):
 
     __tablename__ = 'leaf'
     id = db.Column (db.Integer, db.ForeignKey ('node.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity':'leaf'}
+    __mapper_args__ = {'polymorphic_identity': 'leaf'}
 
     node = db.relationship ('Node', remote_side='Node.id',
         backref=db.backref ('leafs', cascade='all', lazy='dynamic',

@@ -71,10 +71,11 @@ class TreeTestCase (BaseTestCase):
     def create_objects (self):
 
         root = Node ('root', root=None)
+        meta = Leaf ('meta', root=root)
         node = Node ('node', root=root)
         leaf = Leaf ('leaf', root=node)
 
-        return [root, node, leaf]
+        return [root, meta, node, leaf]
 
     def commit_objects (self, objects):
 
@@ -82,26 +83,29 @@ class TreeTestCase (BaseTestCase):
         self.db.session.commit ()
 
     def test_basic (self):
-        root, node, leaf = self.create_objects ()
-        self.commit_objects ([root, node, leaf])
+        root, meta, node, leaf = self.create_objects ()
+        self.commit_objects ([root, meta, node, leaf])
 
         self.assertIsNone (root.root)
+        self.assertIs (meta.root, root)
         self.assertIs (node.root, root)
         self.assertIs (leaf.root, node)
 
     def test_node_relations (self):
-        root, node, leaf = self.create_objects ()
-        self.commit_objects ([root, node, leaf])
+        root, meta, node, leaf = self.create_objects ()
+        self.commit_objects ([root, meta, node, leaf])
 
-        self.assertEqual (root.nodes.all (), [node])
+        self.assertEqual (root.nodes.all (), [meta, node])
+        self.assertEqual (meta.nodes.all (), [])
         self.assertEqual (node.nodes.all (), [leaf])
         self.assertEqual (leaf.nodes.all (), [])
 
     def test_leaf_relations (self):
-        root, node, leaf = self.create_objects ()
-        self.commit_objects ([root, node, leaf])
+        root, meta, node, leaf = self.create_objects ()
+        self.commit_objects ([root, meta, node, leaf])
 
-        self.assertEqual (root.leafs.all (), [])
+        self.assertEqual (root.leafs.all (), [meta])
+        self.assertEqual (meta.leafs.all (), [])
         self.assertEqual (node.leafs.all (), [leaf])
         self.assertEqual (leaf.leafs.all (), [])
 
