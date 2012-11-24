@@ -19,7 +19,7 @@ class Node (db.Model):
 
     __tablename__ = 'node'
     id = db.Column (db.Integer, primary_key=True)
-    type = db.Column ('type', db.String (64))
+    type = db.Column ('type', db.String (16))
     __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
     uuid = db.Column (db.String (36), nullable=False, unique=True)
