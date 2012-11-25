@@ -22,7 +22,7 @@ class Leaf (Node):
 
     def __repr__ (self):
 
-        return u'<Leaf %r>' % (self.name if self.name else self.leaf_id)
+        return u'<Leaf @ %r: %r>' % (self.id, self.name)
 
 ###############################################################################
 ###############################################################################

@@ -16,7 +16,7 @@ class NodeAdmin (ModelView):
 
     list_columns = ('base', 'root', 'uuid', 'mime', 'name')
     searchable_columns = (Node.uuid, Node.mime, Node.name)
-    column_filters = (Node.uuid, Node.mime, Node.name)
+    column_filters = (Node.uuid, Node.mime, Node.name, Node.type)
 
     def __init__ (self, session):
         super (NodeAdmin, self).__init__ (Node, session)
