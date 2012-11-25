@@ -48,8 +48,7 @@ def node_create (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Node.query).one_or_default (base=base, uuid=root_uuid,
-        default=base)
+    root = Q (base.subnodes).one_or_default (uuid=root_uuid, default=base)
     assert root
 
     if uuid:
@@ -100,7 +99,7 @@ def node_update (leafs=True, json=True):
     assert node
 
     if node.root and node.root.uuid != root_uuid:
-        node.root = Q (Node.query).one (uuid=root_uuid)
+        node.root = Q (base.subnodes).one (uuid=root_uuid)
         assert node.root
 
     if node.name != name: node.name = name
@@ -158,8 +157,7 @@ def leaf_create (json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Node.query).one_or_default (base=base, uuid=root_uuid,
-        default=base)
+    root = Q (base.subnodes).one_or_default (uuid=root_uuid, default=base)
     assert root
 
     if uuid:
@@ -208,7 +206,7 @@ def leaf_update (json=True):
     assert leaf
 
     if leaf.root and leaf.root.uuid != root_uuid:
-        leaf.root = Q (Node.query).one (uuid=root_uuid)
+        leaf.root = Q (base.subnodes).one (uuid=root_uuid)
         assert leaf.root
 
     if mime and leaf.mime != mime: leaf.mime = mime
