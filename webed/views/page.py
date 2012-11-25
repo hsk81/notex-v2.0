@@ -9,7 +9,7 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from ..models import Set, Doc, User
+from ..models import Node, Leaf, User
 from ..ext import db, logger
 from ..app import app
 from ..util import Q
@@ -71,45 +71,57 @@ def clean ():
     logger.debug (request)
 
     if 'root_uuid' in session:
-        base = Q (Set.query).one_or_default (uuid=session['root_uuid'])
+        base = Q (Node.query).one_or_default (uuid=session['root_uuid'])
         if base:
             db.session.delete (base)
             db.session.commit ()
 
 def init ():
 
-    base = Set ('root', root=None)
+    base = Node ('root', root=None)
     db.session.add (base)
     db.session.commit ()
 
     init_article (root=base)
     init_report (root=base)
 
-    doc = Doc ('author.txt', root=base, mime='text/plain')
-    db.session.add (doc)
+    leaf = Leaf ('author.txt', root=base, mime='text/plain')
+    db.session.add (leaf)
     db.session.commit ()
 
     session['root_uuid'] = base.uuid
 
 def init_article (root):
 
-    set = Set ('Article', root, mime='application/project'); db.session.add (set)
-    doc = Doc ('options.cfg', set, mime='text/plain'); db.session.add (doc)
-    doc = Doc ('content.txt', set, mime='text/plain'); db.session.add (doc)
+    node = Node ('Article', root, mime='application/project')
+    db.session.add (node)
+    leaf = Leaf ('options.cfg', node, mime='text/plain')
+    db.session.add (leaf)
+    leaf = Leaf ('content.txt', node, mime='text/plain')
+    db.session.add (leaf)
 
-    set = Set ('resources', set, mime='application/folder'); db.session.add (set)
-    doc = Doc ('wiki.png', set, mime='image/png'); db.session.add (doc)
-    doc = Doc ('time.jpg', set, mime='image/jpg'); db.session.add (doc)
+    node = Node ('resources', node, mime='application/folder')
+    db.session.add (node)
+    leaf = Leaf ('wiki.png', node, mime='image/png')
+    db.session.add (leaf)
+    leaf = Leaf ('time.jpg', node, mime='image/jpg')
+    db.session.add (leaf)
 
 def init_report (root):
 
-    set = Set ('Report', root, mime='application/project'); db.session.add (set)
-    doc = Doc ('options.cfg', set, mime='text/plain'); db.session.add (doc)
-    doc = Doc ('content.txt', set, mime='text/plain'); db.session.add (doc)
+    node = Node ('Report', root, mime='application/project')
+    db.session.add (node)
+    leaf = Leaf ('options.cfg', node, mime='text/plain')
+    db.session.add (leaf)
+    leaf = Leaf ('content.txt', node, mime='text/plain')
+    db.session.add (leaf)
 
-    set = Set ('resources', set, mime='application/folder'); db.session.add (set)
-    doc = Doc ('wiki.png', set, mime='image/png'); db.session.add (doc)
-    doc = Doc ('time.jpg', set, mime='image/png'); db.session.add (doc)
+    node = Node ('resources', node, mime='application/folder')
+    db.session.add (node)
+    leaf = Leaf ('wiki.png', node, mime='image/png')
+    db.session.add (leaf)
+    leaf = Leaf ('time.jpg', node, mime='image/png')
+    db.session.add (leaf)
 
 ###############################################################################
 ###############################################################################

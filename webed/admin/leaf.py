@@ -7,24 +7,24 @@ from flask.ext.admin.contrib.sqlamodel import ModelView
 from flask.ext.login import current_user
 
 from webed.ext import db, admin
-from webed.models import Doc
+from webed.models import Leaf
 
 ###############################################################################
 ###############################################################################
 
-class DocAdmin (ModelView):
+class LeafAdmin (ModelView):
 
     list_columns = ('base', 'root', 'uuid', 'mime', 'name')
-    searchable_columns = (Doc.uuid, Doc.mime, Doc.name)
-    column_filters = (Doc.uuid, Doc.mime, Doc.name)
+    searchable_columns = (Leaf.uuid, Leaf.mime, Leaf.name)
+    column_filters = (Leaf.uuid, Leaf.mime, Leaf.name)
 
     def __init__ (self, session):
-        super (DocAdmin, self).__init__ (Doc, session)
+        super (LeafAdmin, self).__init__ (Leaf, session)
 
     def is_accessible(self):
         return current_user.is_authenticated ()
 
-admin.add_view (DocAdmin (db.session))
+admin.add_view (LeafAdmin (db.session))
 
 ###############################################################################
 ###############################################################################

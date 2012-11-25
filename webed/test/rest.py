@@ -13,162 +13,162 @@ import json as JSON
 
 class RestTestCase (BaseTestCase):
 
-    def test_set_root (self):
+    def test_node_root (self):
 
         response = self.app.get ('/?silent=True')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
 
-        response = self.app.get ('/sets/root')
+        response = self.app.get ('/node/root')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_set_create (self):
+    def test_node_create (self):
 
-        _, json = self.test_set_root ()
+        _, json = self.test_node_root ()
 
-        set = Linq (json['results']) \
+        node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (set['uuid'])
-        response = self.app.post ('/sets', data=dict (
-            root_uuid=set['uuid'], mime='application/folder', name='folder'))
+        self.assertIsNotNone (node['uuid'])
+        response = self.app.post ('/node', data=dict (
+            root_uuid=node['uuid'], mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
-        response = self.app.post ('/sets', data=dict (
+        response = self.app.post ('/node', data=dict (
             root_uuid=None, mime='application/folder', name='folder'))
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_set_read (self):
+    def test_node_read (self):
 
-        _, json = self.test_set_root ()
+        _, json = self.test_node_root ()
 
-        set = Linq (json['results']) \
+        node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (set['uuid'])
-        response = self.app.get ('/sets?uuid=%s' % set['uuid'])
+        self.assertIsNotNone (node['uuid'])
+        response = self.app.get ('/node?uuid=%s' % node['uuid'])
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_set_update (self):
+    def test_node_update (self):
 
-        _, json = self.test_set_root ()
+        _, json = self.test_node_root ()
 
-        set = Linq (json['results']) \
+        node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (set['root_uuid'])
-        self.assertIsNotNone (set['uuid'])
-        self.assertIsNotNone (set['name'])
-        self.assertIsNotNone (set['mime'])
+        self.assertIsNotNone (node['root_uuid'])
+        self.assertIsNotNone (node['uuid'])
+        self.assertIsNotNone (node['name'])
+        self.assertIsNotNone (node['mime'])
 
-        response = self.app.put ('/sets?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
-            (set['root_uuid'], set['uuid'], set['name'], set['mime']))
+        response = self.app.put ('/node?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
+            (node['root_uuid'], node['uuid'], node['name'], node['mime']))
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_set_delete (self):
+    def test_node_delete (self):
 
-        _, json = self.test_set_root ()
+        _, json = self.test_node_root ()
 
-        set = Linq (json['results']) \
+        node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (set['uuid'])
-        response = self.app.delete ('/sets?uuid=%s' % set['uuid'])
+        self.assertIsNotNone (node['uuid'])
+        response = self.app.delete ('/node?uuid=%s' % node['uuid'])
         json = self.assert_ajax (response)
 
         return response, json
 
     ###########################################################################
 
-    def test_doc_root (self):
+    def test_leaf_root (self):
 
         response = self.app.get ('/?silent=True')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
 
-        response = self.app.get ('/docs')
+        response = self.app.get ('/leaf')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_doc_create (self):
+    def test_leaf_create (self):
 
-        _, json = self.test_set_root ()
+        _, json = self.test_node_root ()
 
-        set = Linq (json['results']) \
+        node = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (set['uuid'])
-        response = self.app.post ('/docs', data = dict (
-            root_uuid=set['uuid'], mime='text/plain', name='file', ext='txt'))
+        self.assertIsNotNone (node['uuid'])
+        response = self.app.post ('/leaf', data = dict (
+            root_uuid=node['uuid'], mime='text/plain', name='file', ext='txt'))
         json = self.assert_ajax (response)
 
-        response = self.app.post ('/docs', data = dict (
+        response = self.app.post ('/leaf', data = dict (
             root_uuid=None, mime='text/plain', name='file', ext='txt'))
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_doc_read (self):
+    def test_leaf_read (self):
 
-        _, json = self.test_doc_root ()
+        _, json = self.test_leaf_root ()
 
-        doc = Linq (json['results']) \
+        leaf = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (doc['uuid'])
-        response = self.app.get ('/docs?uuid=%s' % doc['uuid'])
+        self.assertIsNotNone (leaf['uuid'])
+        response = self.app.get ('/leaf?uuid=%s' % leaf['uuid'])
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_doc_update (self):
+    def test_leaf_update (self):
 
-        _, json = self.test_doc_root ()
+        _, json = self.test_leaf_root ()
 
-        doc = Linq (json['results']) \
+        leaf = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (doc['root_uuid'])
-        self.assertIsNotNone (doc['uuid'])
-        self.assertIsNotNone (doc['name'])
-        self.assertIsNotNone (doc['mime'])
+        self.assertIsNotNone (leaf['root_uuid'])
+        self.assertIsNotNone (leaf['uuid'])
+        self.assertIsNotNone (leaf['name'])
+        self.assertIsNotNone (leaf['mime'])
 
-        response = self.app.put ('/docs?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
-            (doc['root_uuid'], doc['uuid'], doc['name'], doc['mime']))
+        response = self.app.put ('/leaf?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
+            (leaf['root_uuid'], leaf['uuid'], leaf['name'], leaf['mime']))
         json = self.assert_ajax (response)
 
         return response, json
 
-    def test_doc_delete (self):
+    def test_leaf_delete (self):
 
-        _, json = self.test_doc_root ()
+        _, json = self.test_leaf_root ()
 
-        doc = Linq (json['results']) \
+        leaf = Linq (json['results']) \
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (doc['uuid'])
-        response = self.app.delete ('/docs?uuid=%s' % doc['uuid'])
+        self.assertIsNotNone (leaf['uuid'])
+        response = self.app.delete ('/leaf?uuid=%s' % leaf['uuid'])
         json = self.assert_ajax (response)
 
         return response, json

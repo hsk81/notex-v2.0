@@ -10,7 +10,7 @@ from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from ..config import DefaultConfig
-from ..models import Set, Doc
+from ..models import Node, Leaf
 from ..app import app
 from ..ext import db
 from ..util import Q
@@ -23,41 +23,16 @@ rest = Blueprint ('rest', __name__)
 ###############################################################################
 ###############################################################################
 
-class SetsApi (MethodView):
-
-    def post (self, json=True): return sets_create (json=json)
-    def get (self, json=True): return sets_read (json=json)
-    def put (self, json=True): return sets_update (json=json)
-    def delete (self, json=True): return sets_delete (json=json)
-
-rest.add_url_rule ('/sets', view_func=SetsApi.as_view ('sets'))
-
-def sets_create (json=True):
-    return node_create (docs=False, json=json)
-
-@rest.route ('/sets/root', methods=['GET'])
-def sets_read (json=True):
-    return node_read (docs=False, json=json)
-
-def sets_update (json=True):
-    return node_update (docs=False, json=json)
-
-def sets_delete (json=True):
-    return node_delete (docs=False, json=json)
-
-###############################################################################
-###############################################################################
-
 class NodeApi (MethodView):
 
-    def post (self, docs=True, json=True): return node_create (docs, json)
-    def get (self, docs=True, json=True): return node_read (docs, json)
-    def put (self, docs=True, json=True): return node_update (docs, json)
-    def delete (self, docs=True, json=True): return node_delete (docs, json)
+    def post (self, leafs=True, json=True): return node_create (leafs, json)
+    def get (self, leafs=True, json=True): return node_read (leafs, json)
+    def put (self, leafs=True, json=True): return node_update (leafs, json)
+    def delete (self, leafs=True, json=True): return node_delete (leafs, json)
 
 rest.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
-def node_create (docs=True, json=True):
+def node_create (leafs=True, json=True):
 
     if not request.is_xhr:
         request.json = request.form
@@ -71,39 +46,41 @@ def node_create (docs=True, json=True):
     name = request.json.get ('name', None)
     assert name
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).one_or_default (base=base,uuid=root_uuid,default=base)
+    root = Q (Node.query).one_or_default (base=base, uuid=root_uuid,
+        default=base)
     assert root
 
     if uuid:
-        set = Set (name, root, mime=mime, uuid=uuid)
+        node = Node (name, root, mime=mime, uuid=uuid)
     else:
-        set = Set (name, root, mime=mime)
+        node = Node (name, root, mime=mime)
 
-    db.session.add (set)
+    db.session.add (node)
     db.session.commit ()
 
-    result = dict (success=True, result=set2ext (set, docs=docs))
+    result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
 @rest.route ('/node/root', methods=['GET'])
-def node_read (docs=True, json=True):
+def node_read (leafs=True, json=True):
 
     uuid = request.args.get ('uuid', session['root_uuid'])
     assert uuid
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    set = Q (base.subsets).one_or_default (uuid=uuid, default=base)
-    assert set
+    node = Q (base.tree).one_or_default (uuid=uuid, default=base)
+    assert node
 
-    doc2exts = map (lambda d: doc2ext (d), set.docs) if docs else []
-    set2exts = map (lambda s: set2ext (s, docs=docs), set.sets)
+    leaf2exts = map (lambda l: leaf2ext (l), node.leafs) if leafs else []
+    node2exts = map (lambda n: node2ext (n, leafs=leafs),
+        node.nodes.filter_by (type='node'))
 
-    result = dict (success=True, results=set2exts + doc2exts)
+    result = dict (success=True, results=node2exts + leaf2exts)
     return jsonify (result) if json else result
 
-def node_update (docs=True, json=True):
+def node_update (leafs=True, json=True):
 
     if not request.is_xhr:
         request.json = request.args
@@ -117,26 +94,24 @@ def node_update (docs=True, json=True):
     mime = request.json.get ('mime', None)
     assert mime
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    set = Q (base.subsets).one_or_default (uuid=uuid)
-    if set:
-        if set.root and set.root.uuid != root_uuid:
-            set.root = Q (Set.query).one (uuid=root_uuid)
-            assert set.root
+    node = Q (base.tree).one_or_default (uuid=uuid)
+    assert node
 
-        if set.name != name: set.name = name
-        if set.mime != mime: set.mime = mime
+    if node.root and node.root.uuid != root_uuid:
+        node.root = Q (Node.query).one (uuid=root_uuid)
+        assert node.root
 
-        db.session.commit ()
+    if node.name != name: node.name = name
+    if node.mime != mime: node.mime = mime
 
-        result = dict (success=True, result=set2ext (set, docs=docs))
-    else:
-        result = doc_update (json=False)
+    db.session.commit ()
+    result = dict (success=True, result=node2ext (node, leafs=leafs))
 
     return jsonify (result) if json else result
 
-def node_delete (docs=True, json=True):
+def node_delete (leafs=True, json=True):
 
     if not request.is_xhr:
         request.json = request.args
@@ -144,32 +119,30 @@ def node_delete (docs=True, json=True):
     uuid = request.json.get ('uuid', None)
     assert uuid
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    set = Q (base.subsets).one_or_default (uuid=uuid)
-    if set:
-        db.session.delete (set)
-        db.session.commit ()
+    node = Q (base.tree).one_or_default (uuid=uuid)
+    assert node
 
-        result = dict (success=True, result=set2ext (set, docs=docs))
-    else:
-        result = doc_delete (json=False)
+    db.session.delete (node)
+    db.session.commit ()
 
+    result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-class DocsApi (MethodView):
+class LeafsApi (MethodView):
 
-    def post (self, json=True): return doc_create (json)
-    def get (self, json=True): return doc_read (json)
-    def put (self, json=True): return doc_update (json)
-    def delete (self, json=True): return doc_delete (json)
+    def post (self, json=True): return leaf_create (json)
+    def get (self, json=True): return leaf_read (json)
+    def put (self, json=True): return leaf_update (json)
+    def delete (self, json=True): return leaf_delete (json)
 
-rest.add_url_rule ('/docs', view_func=DocsApi.as_view ('docs'))
+rest.add_url_rule ('/leaf', view_func=LeafsApi.as_view ('leafs'))
 
-def doc_create (json=True):
+def leaf_create (json=True):
 
     if not request.is_xhr:
         request.json = request.form
@@ -183,38 +156,39 @@ def doc_create (json=True):
     name = request.json.get ('name', None)
     assert name
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    root = Q (Set.query).one_or_default (base=base,uuid=root_uuid,default=base)
+    root = Q (Node.query).one_or_default (base=base, uuid=root_uuid,
+        default=base)
     assert root
 
     if uuid:
-        doc = Doc (name, root, mime=mime, uuid=uuid)
+        leaf = Leaf (name, root, mime=mime, uuid=uuid)
     else:
-        doc = Doc (name, root, mime=mime)
+        leaf = Leaf (name, root, mime=mime)
 
-    db.session.add (doc)
+    db.session.add (leaf)
     db.session.commit ()
 
-    result = dict (success=True, result=doc2ext (doc))
+    result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
 
-def doc_read (json=True):
+def leaf_read (json=True):
 
     uuid = request.args.get ('uuid', None)
     assert uuid or not uuid
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
     if uuid:
-        docs = Q (base.subdocs).all (uuid=uuid)
+        leafs = Q (base.tree.filter_by (type='leaf')).all (uuid=uuid)
     else:
-        docs = Q (base.subdocs).all ()
+        leafs = Q (base.tree.filter_by (type='leaf')).all ()
 
-    result = dict (success=True, results=map (doc2ext, docs))
+    result = dict (success=True, results=map (leaf2ext, leafs))
     return jsonify (result) if json else result
 
-def doc_update (json=True):
+def leaf_update (json=True):
 
     if not request.is_xhr:
         request.json = request.args
@@ -228,24 +202,24 @@ def doc_update (json=True):
     name = request.json.get ('name', None)
     assert name
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    doc = Q (base.subdocs).one (uuid=uuid)
-    assert doc
+    leaf = Q (base.tree.filter_by (type='leaf')).one (uuid=uuid)
+    assert leaf
 
-    if doc.root and doc.root.uuid != root_uuid:
-        doc.root = Q (Set.query).one (uuid=root_uuid)
-        assert doc.root
+    if leaf.root and leaf.root.uuid != root_uuid:
+        leaf.root = Q (Node.query).one (uuid=root_uuid)
+        assert leaf.root
 
-    if mime and doc.mime != mime: doc.mime = mime
-    if name and doc.name != name: doc.name = name
+    if mime and leaf.mime != mime: leaf.mime = mime
+    if name and leaf.name != name: leaf.name = name
 
     db.session.commit ()
 
-    result = dict (success=True, result=doc2ext (doc))
+    result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
 
-def doc_delete (json=True):
+def leaf_delete (json=True):
 
     if not request.is_xhr:
         request.json = request.args
@@ -253,73 +227,74 @@ def doc_delete (json=True):
     uuid = request.json.get ('uuid', None)
     assert uuid
 
-    base = Q (Set.query).one (uuid=session['root_uuid'])
+    base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    doc = Q (base.subdocs).one_or_default (uuid=uuid)
-    assert doc
+    leaf = Q (base.tree.filter_by (type='leaf')).one_or_default (uuid=uuid)
+    assert leaf
 
-    db.session.delete (doc)
+    db.session.delete (leaf)
     db.session.commit ()
 
-    result = dict (success=True, result=doc2ext (doc))
+    result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def set2ext (set, docs=True):
+def node2ext (node, leafs=True):
 
-    assert set
-    assert set.uuid
-    assert set.name
-    assert set.mime
-    assert set.root.uuid if set.root else True
+    assert node
+    assert node.uuid
+    assert node.name
+    assert node.mime
+    assert node.root.uuid if node.root else True
 
-    def to_ext (set, results):
+    def to_ext (node, results):
 
         return {
             'expandable': True,
             'expanded': False,
             'leaf': False,
             'loaded': results is not None,
-            'mime': set.mime,
-            'name': set.name,
+            'mime': node.mime,
+            'name': node.name,
             'size': 0,
             'results': results,
-            'root_uuid': set.root.uuid if set.root else None,
-            'uuid': set.uuid
+            'root_uuid': node.root.uuid if node.root else None,
+            'uuid': node.uuid
         }
 
-    if set.sets.count () + set.docs.count () >= DefaultConfig.LOADSKIP_LIMIT:
+    if node.nodes.count () >= DefaultConfig.LOADSKIP_LIMIT:
 
-        return to_ext (set, results=None)
+        return to_ext (node, results=None)
 
-    sets = map (lambda s: set2ext (s, docs=docs), set.sets)
-    results = map (lambda doc: doc2ext (doc), set.docs) + sets \
-        if docs else sets
+    nodes = map (lambda n: node2ext (n, leafs=leafs),
+        node.nodes.filter_by (type='node'))
+    results = map (lambda l: leaf2ext (l), node.leafs) + nodes \
+        if leafs else nodes
 
-    return to_ext (set, results=results)
+    return to_ext (node, results=results)
 
-def doc2ext (doc):
+def leaf2ext (leaf):
 
-    assert doc
-    assert doc.uuid
-    assert doc.mime
-    assert doc.root
-    assert doc.root.uuid
-    assert doc.name
+    assert leaf
+    assert leaf.uuid
+    assert leaf.mime
+    assert leaf.root
+    assert leaf.root.uuid
+    assert leaf.name
 
     return {
         'expandable': False,
         'expanded': False,
         'leaf': True,
         'loaded': True,
-        'mime': doc.mime,
-        'name': doc.name,
+        'mime': leaf.mime,
+        'name': leaf.name,
         'size': 0,
         'results': None,
-        'root_uuid': doc.root.uuid,
-        'uuid': doc.uuid
+        'root_uuid': leaf.root.uuid,
+        'uuid': leaf.uuid
     }
 
 ###############################################################################
