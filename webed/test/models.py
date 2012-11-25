@@ -38,15 +38,15 @@ class ModelsTestCase (BaseTestCase):
         self.assertIs (node.root, base)
         self.assertIs (leaf.root, node)
 
-        self.assertEqual (base.tree.all (), [info, node, leaf])
+        self.assertEqual (base.subnodes.all (), [info, node, leaf])
         self.assertEqual (base.nodes.all (), [info, node])
         self.assertEqual (base.leafs.all (), [info])
 
-        self.assertEqual (node.tree.all (), [])
+        self.assertEqual (node.subnodes.all (), [])
         self.assertEqual (node.nodes.all (), [leaf])
         self.assertEqual (node.leafs.all (), [leaf])
 
-        self.assertEqual (leaf.tree.all (), [])
+        self.assertEqual (leaf.subnodes.all (), [])
         self.assertEqual (leaf.nodes.all (), [])
         self.assertEqual (leaf.leafs.all (), [])
 

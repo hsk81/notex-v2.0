@@ -70,12 +70,12 @@ def node_read (leafs=True, json=True):
     assert uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.tree).one_or_default (uuid=uuid, default=base)
+    node = Q (base.subnodes).one_or_default (uuid=uuid, default=base)
     assert node
 
     leaf2exts = map (lambda l: leaf2ext (l), node.leafs) if leafs else []
-    node2exts = map (lambda n: node2ext (n, leafs=leafs),
-        node.nodes.filter_by (type='node'))
+    node2exts = map (lambda n: node2ext (n, leafs=leafs), node.nodes
+        .filter_by (type='node'))
 
     result = dict (success=True, results=node2exts + leaf2exts)
     return jsonify (result) if json else result
@@ -96,7 +96,7 @@ def node_update (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.tree).one_or_default (uuid=uuid)
+    node = Q (base.subnodes).one_or_default (uuid=uuid)
     assert node
 
     if node.root and node.root.uuid != root_uuid:
@@ -121,7 +121,7 @@ def node_delete (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.tree).one_or_default (uuid=uuid)
+    node = Q (base.subnodes).one_or_default (uuid=uuid)
     assert node
 
     db.session.delete (node)
@@ -181,9 +181,9 @@ def leaf_read (json=True):
     assert base
 
     if uuid:
-        leafs = Q (base.tree.filter_by (type='leaf')).all (uuid=uuid)
+        leafs = Q (base.subleafs).all (uuid=uuid)
     else:
-        leafs = Q (base.tree.filter_by (type='leaf')).all ()
+        leafs = Q (base.subleafs).all ()
 
     result = dict (success=True, results=map (leaf2ext, leafs))
     return jsonify (result) if json else result
@@ -204,7 +204,7 @@ def leaf_update (json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    leaf = Q (base.tree.filter_by (type='leaf')).one (uuid=uuid)
+    leaf = Q (base.subleafs).one (uuid=uuid)
     assert leaf
 
     if leaf.root and leaf.root.uuid != root_uuid:
@@ -229,7 +229,7 @@ def leaf_delete (json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    leaf = Q (base.tree.filter_by (type='leaf')).one_or_default (uuid=uuid)
+    leaf = Q (base.subleafs).one_or_default (uuid=uuid)
     assert leaf
 
     db.session.delete (leaf)
@@ -268,12 +268,12 @@ def node2ext (node, leafs=True):
 
         return to_ext (node, results=None)
 
-    nodes = map (lambda n: node2ext (n, leafs=leafs),
-        node.nodes.filter_by (type='node'))
-    results = map (lambda l: leaf2ext (l), node.leafs) + nodes \
-        if leafs else nodes
+    ext_nodes = map (lambda n: node2ext (n, leafs=leafs), node.nodes
+        .filter_by (type='node'))
+    ext_leafs = map (lambda l: leaf2ext (l), node.leafs) \
+        if leafs else []
 
-    return to_ext (node, results=results)
+    return to_ext (node, results=ext_leafs + ext_nodes)
 
 def leaf2ext (leaf):
 
