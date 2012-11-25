@@ -7,7 +7,6 @@ from set import *
 from doc import *
 from user import *
 
-from meta import *
 from node import *
 from leaf import *
 

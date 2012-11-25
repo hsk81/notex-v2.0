@@ -3,7 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from meta import Meta
+from uuid import uuid4 as uuid_random
 from ..ext import db
 
 ###############################################################################
@@ -16,26 +16,37 @@ class Node (db.Model):
     type = db.Column ('type', db.String (16))
     __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
-    root_id = db.Column (db.Integer, db.ForeignKey ('node.id'), nullable=True)
-    root = db.relationship ('Node', remote_side='Node.id',
-        backref=db.backref ('nodes', cascade='all', lazy='dynamic',
-            primaryjoin='Node.root_id==Node.id'))
+    base_id = db.Column (db.Integer, db.ForeignKey (id))
+    root_id = db.Column (db.Integer, db.ForeignKey (id))
 
-    meta_id = db.Column (db.Integer, db.ForeignKey ('meta.id'), nullable=True)
-    meta = db.relationship ('Meta', remote_side='Meta.id')
+    tree = db.relationship ('Node',
+        cascade='all', lazy='dynamic',
+        primaryjoin='Node.base_id==Node.id',
+        backref=db.backref('base', remote_side=id))
+    nodes = db.relationship ('Node',
+        cascade='all', lazy='dynamic',
+        primaryjoin='Node.root_id==Node.id',
+        backref=db.backref('root', remote_side=id))
+    leafs = db.relationship ('Leaf',
+        cascade='all', lazy='dynamic',
+        primaryjoin='Leaf.root_id==Node.id')
 
-    def __init__ (self, root, **kwargs):
+    uuid = db.Column (db.String (32), nullable=False, unique=True)
+    mime = db.Column (db.String (256), nullable=True)
+    name = db.Column (db.Unicode (256), nullable=True)
 
-        self.meta = kwargs['meta'] if 'meta' in kwargs \
-            else Meta (**kwargs)
-        if self.meta and not self.meta.mime:
-            self.meta.mime = 'application/node'
+    def __init__ (self, name, root, mime=None, uuid=None):
 
+        self.base = root.base if root and root.base else root
         self.root = root
+
+        self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
+        self.name = unicode (name) if name is not None else None
+        self.mime = mime if mime else 'application/node'
 
     def __repr__ (self):
 
-        return u'<Node %r>' % (self.meta.name if self.meta else self.id)
+        return u'<Node %r>' % (self.name if self.name else self.id)
 
 ###############################################################################
 ###############################################################################
