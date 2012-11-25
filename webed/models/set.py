@@ -17,8 +17,8 @@ class Set (Node):
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
-        super (Set, self).__init__ (name, root, mime=mime if mime\
-        else 'application/set', uuid=uuid)
+        super (Set, self).__init__ (name, root, mime=mime if mime \
+            else 'application/set', uuid=uuid)
 
     def __repr__ (self):
 
