@@ -29,7 +29,9 @@ class Node (db.Model):
     leafs = db.relationship ('Leaf',
         cascade='all', lazy='dynamic',
         primaryjoin='Leaf.root_id==Node.id')
-    subleafs = property (lambda self: self.subnodes.filter_by (type='leaf'))
+    subleafs = db.relationship ('Leaf',
+        cascade='all', lazy='dynamic',
+        primaryjoin='Leaf.base_id==Node.id')
 
     uuid = db.Column (db.String (36), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=True)
