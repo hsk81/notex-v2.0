@@ -30,7 +30,7 @@ class Node (db.Model):
         cascade='all', lazy='dynamic',
         primaryjoin='Leaf.root_id==Node.id')
 
-    uuid = db.Column (db.String (32), nullable=False, unique=True)
+    uuid = db.Column (db.String (36), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=True)
     name = db.Column (db.Unicode (256), nullable=True)
 
@@ -39,8 +39,7 @@ class Node (db.Model):
         self.base = root.base if root and root.base else root
         self.root = root
 
-        if uuid and not isinstance (uuid, UUID): uuid = UUID (uuid)
-        self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
+        self.uuid = uuid if uuid else str (uuid_random ())
         self.name = unicode (name) if name is not None else None
         self.mime = mime if mime else 'application/node'
 
