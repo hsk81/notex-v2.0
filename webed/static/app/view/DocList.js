@@ -7,7 +7,7 @@ Ext.define ('Webed.view.DocList', {
         flex: 2,
         text: 'Name',
         xtype: 'templatecolumn',
-        tpl: '{name}.{ext}',
+        tpl: '{name}',
         sortable: true
     },{
         flex: 1,
