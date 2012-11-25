@@ -10,10 +10,10 @@ from ..ext import db
 ###############################################################################
 
 class Leaf (Node):
-
-    __tablename__ = 'leaf'
-    id = db.Column (db.Integer, db.ForeignKey ('node.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'leaf'}
+
+    leaf_id = db.Column (db.Integer, db.ForeignKey ('node.id'),
+        primary_key=True)
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
@@ -22,7 +22,7 @@ class Leaf (Node):
 
     def __repr__ (self):
 
-        return u'<Leaf %r>' % (self.name if self.name else self.id)
+        return u'<Leaf %r>' % (self.name if self.name else self.leaf_id)
 
 ###############################################################################
 ###############################################################################

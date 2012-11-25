@@ -3,18 +3,17 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from uuid import uuid4 as uuid_random
+from uuid import UUID, uuid4 as uuid_random
 from ..ext import db
 
 ###############################################################################
 ###############################################################################
 
 class Node (db.Model):
+    __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
 
-    __tablename__ = 'node'
     id = db.Column (db.Integer, primary_key=True)
     type = db.Column ('type', db.String (16))
-    __mapper_args__ = {'polymorphic_identity': 'node', 'polymorphic_on': type}
 
     base_id = db.Column (db.Integer, db.ForeignKey (id))
     root_id = db.Column (db.Integer, db.ForeignKey (id))
@@ -40,6 +39,7 @@ class Node (db.Model):
         self.base = root.base if root and root.base else root
         self.root = root
 
+        if uuid and not isinstance (uuid, UUID): uuid = UUID (uuid)
         self.uuid = uuid.hex if uuid else str (uuid_random ().hex)
         self.name = unicode (name) if name is not None else None
         self.mime = mime if mime else 'application/node'

@@ -48,19 +48,12 @@ class ModelsTestCase (BaseTestCase):
         self.assertEqual (sub.docs.all (), [doc])
         self.assertEqual (sub.subdocs.all (), [])
 
-    def test_models_after_commit (self):
+    def test_models (self):
 
         models = self.create_models ()
         self.commit_models (models)
         self.assert_models_basic (models)
         self.assert_models_relations (models)
-
-    def test_models_before_commit (self):
-
-        models = self.create_models ()
-        self.assert_models_basic (models)
-        self.assert_models_relations (models)
-        self.commit_models (models)
 
 ###############################################################################
 ###############################################################################
