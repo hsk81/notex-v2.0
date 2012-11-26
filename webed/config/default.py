@@ -37,12 +37,20 @@ class DefaultConfig:
     SECRET_KEY = '000000000000000000000000000000000000000='
 
     ##
-    ## If a set has more than LOADSKIP_LIMIT elements (sets plus docs), than
-    ## they are *not* preloaded. For LOADSKIP_LIMIT = 0, the elements of any
-    ## given set is loaded only on demand.
+    ## If a node has more than MAX_NODE_SIZE **immediate** sub-nodes (nodes and
+    ## leafs), then their sub-nodes are *not* preloaded. For MAX_NODE_SIZE = 0,
+    ## the sub-nodes of any given node is loaded only on demand.
     ##
 
-    LOADSKIP_LIMIT = 16
+    MAX_NODE_SIZE = 16
+
+    ##
+    ## If the height of a tree below a given node is larger than MAX_NODE_LEVEL
+    ## then the sub-nodes of the next layer are *not* preloaded. This means, if
+    ## MAX_NODE_LEVEL = 0, then the sub-nodes are only loaded on demand.
+    ##
+
+    MAX_NODE_LEVEL = 2
 
 ###############################################################################
 ###############################################################################

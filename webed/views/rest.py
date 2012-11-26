@@ -239,7 +239,7 @@ def leaf_delete (json=True):
 ###############################################################################
 ###############################################################################
 
-def node2ext (node, leafs=True):
+def node2ext (node, leafs=True, level=1):
 
     assert node
     assert node.uuid
@@ -262,12 +262,14 @@ def node2ext (node, leafs=True):
             'uuid': node.uuid
         }
 
-    if node.nodes.count () >= DefaultConfig.LOADSKIP_LIMIT:
-
+    if DefaultConfig.MAX_NODE_SIZE < node.nodes.count ():
         return to_ext (node, results=None)
 
-    ext_nodes = map (lambda n: node2ext (n, leafs=leafs), node.nodes
-        .filter_by (type='node'))
+    if DefaultConfig.MAX_NODE_LEVEL < level:
+        return to_ext (node, results=None)
+
+    ext_nodes = map (lambda n: node2ext (n, leafs=leafs, level=level+1),
+        node.nodes.filter_by (type='node'))
     ext_leafs = map (lambda l: leaf2ext (l), node.leafs) \
         if leafs else []
 
