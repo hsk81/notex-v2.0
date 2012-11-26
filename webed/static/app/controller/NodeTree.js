@@ -285,7 +285,7 @@ Ext.define ('Webed.controller.NodeTree', {
             var strings = record.set (node);
             assert (strings || strings == null);
 
-            var model =  record.save ({
+            var model = record.save ({
                 scope: this, success: function (rec, op) {
                     var base = view.getRootNode ();
                     assert (base);
