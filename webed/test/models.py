@@ -55,10 +55,25 @@ class ModelsTestCase (BaseTestCase):
         self.commit ([base, info, node, leaf])
 
         info, node = base.nodes.all ()
+        self.assertIsNotNone (info)
+        self.assertIsNotNone (node)
 
         self.assertEqual (type (info), Leaf)
         self.assertTrue (isinstance (info, Node))
         self.assertTrue (isinstance (info, Leaf))
+
+        self.assertEqual (type (node), Node)
+        self.assertTrue (isinstance (node, Node))
+        self.assertFalse (isinstance (node, Leaf))
+
+    def test_polymorphic_ex (self):
+
+        base, _, node, leaf = self.create ()
+        info = LeafEx ('info-ex', root=base)
+        self.commit ([base, info, node, leaf])
+
+        [node] = base.only_nodes.all ()
+        self.assertIsNotNone (node)
 
         self.assertEqual (type (node), Node)
         self.assertTrue (isinstance (node, Node))
