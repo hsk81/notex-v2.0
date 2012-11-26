@@ -1,10 +1,10 @@
-Ext.define ('Webed.model.Set', {
+Ext.define ('Webed.model.Leaf', {
     extend: 'Ext.data.Model',
     fields: ['root_uuid', 'uuid', 'name', 'size', 'mime'],
 
     proxy: {
         type: 'rest',
-        url: '/node',
+        url: '/leaf',
         reader: {
             type: 'json', root: 'results'
         }

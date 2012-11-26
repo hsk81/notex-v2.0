@@ -1,7 +1,7 @@
-Ext.define ('Webed.view.DocList', {
+Ext.define ('Webed.view.LeafList', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.doc-list',
-    store: 'Docs',
+    alias: 'widget.leaf-list',
+    store: 'Leafs',
 
     columns: [{
         flex: 2,

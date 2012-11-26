@@ -1,7 +1,7 @@
-Ext.define ('Webed.view.SetTree', {
+Ext.define ('Webed.view.NodeTree', {
     extend: 'Ext.tree.Panel',
-    alias: 'widget.set-tree',
-    store: Ext.create ('Webed.store.Sets'),
+    alias: 'widget.node-tree',
+    store: 'Nodes',
 
     useArrows: true,
     rootVisible: false,

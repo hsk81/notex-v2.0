@@ -4,8 +4,8 @@ Ext.define ('Webed.view.Viewport', {
 
     requires: [
         'Webed.view.MainBar',
-        'Webed.view.SetTree',
-        'Webed.view.DocList',
+        'Webed.view.NodeTree',
+        'Webed.view.LeafList',
         'Webed.view.ContentTabs',
         'Webed.view.StatusBar'
     ],
@@ -23,21 +23,21 @@ Ext.define ('Webed.view.Viewport', {
             tools: [{
                 type: 'refresh',
                 tooltip: '<p>Refresh</p>',
-                action: 'set-tree:refresh'
+                action: 'node-tree:refresh'
             },{
                 type: 'gear',
                 tooltip: '<p>Settings</p>',
-                action: 'set-tree:settings'
+                action: 'node-tree:settings'
             }],
 
             layout: 'border',
             items: [{
                 region: 'center',
-                xtype: 'set-tree',
+                xtype: 'node-tree',
                 flex: 1
             },{
                 region: 'south',
-                xtype: 'doc-list',
+                xtype: 'leaf-list',
                 title: 'Documents',
                 collapsible: true,
                 collapseMode: 'header',

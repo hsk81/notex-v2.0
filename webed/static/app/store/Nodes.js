@@ -1,7 +1,7 @@
-Ext.define ('Webed.store.Sets', {
+Ext.define ('Webed.store.Nodes', {
     extend: 'Ext.data.TreeStore',
-    requires: 'Webed.model.Set',
-    model: 'Webed.model.Set',
+    requires: 'Webed.model.Node',
+    model: 'Webed.model.Node',
 
     root: {
         uuid: '00000000-0000-0000-0000-000000000000',

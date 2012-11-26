@@ -46,27 +46,27 @@ Ext.define ('Webed.controller.MainBar', {
         this.addProject (item, event, options);
     },
     addProject: function (item, event, options) {
-        this.application.fireEvent ('create_set', {
+        this.application.fireEvent ('create_node', {
             name: 'Project', mime: 'application/project'
         });
     },
     addFolder: function (item, event, options) {
-        this.application.fireEvent ('create_set', {
+        this.application.fireEvent ('create_node', {
             name: 'folder', mime: 'application/folder'
         });
     },
     addText: function (item, event, options) {
-        this.application.fireEvent ('create_doc', {
+        this.application.fireEvent ('create_leaf', {
             name: 'options.cfg', mime: 'text/plain'
         });
     },
     rename: function (item, event, options) {
-        this.application.fireEvent ('update_set', {
+        this.application.fireEvent ('update_node', {
             name: 're-named'
         });
     },
     destroy: function (item, event, options) {
-        this.application.fireEvent ('delete_set');
+        this.application.fireEvent ('delete_node');
     },
     importProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.importProject]');

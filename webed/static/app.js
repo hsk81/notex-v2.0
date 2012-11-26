@@ -5,10 +5,10 @@ Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
 
-    models: ['Set', 'Doc', 'Set2Doc', 'Resource'],
-    stores: ['Sets', 'Docs', 'Set2Docs', 'Resources'],
+    models: ['Node', 'Leaf', 'Resource'],
+    stores: ['Nodes', 'Leafs', 'Resources'],
 
-    controllers: ['MainBar', 'SetTree', 'DocList', 'StatusBar'],
+    controllers: ['MainBar', 'NodeTree', 'LeafList', 'StatusBar'],
 
     paths: {
         'Webed': '../static/app'

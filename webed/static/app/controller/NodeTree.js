@@ -1,49 +1,49 @@
-Ext.define ('Webed.controller.SetTree', {
+Ext.define ('Webed.controller.NodeTree', {
     extend: 'Ext.app.Controller',
 
-    views: ['SetTree'],
-    models: ['Set'],
-    stores: ['Sets'],
+    views: ['NodeTree'],
+    models: ['Node'],
+    stores: ['Nodes'],
 
     refs: [{
-        selector: 'set-tree', ref: 'setTree'
+        selector: 'node-tree', ref: 'nodeTree'
     }],
 
     init: function () {
         this.control ({
-            'set-tree': { afterrender: this.select_base },
-            'tool[action=set-tree:refresh]': { click: this.refresh },
-            'tool[action=set-tree:settings]': { click: this.settings }
+            'node-tree': { afterrender: this.select_base },
+            'tool[action=node-tree:refresh]': { click: this.refresh },
+            'tool[action=node-tree:settings]': { click: this.settings }
         });
 
         this.application.on ({
-            create_set: this.create_set, scope: this
+            create_node: this.create_node, scope: this
         });
         this.application.on ({
-            create_doc: this.create_doc, scope: this
-        });
-
-        this.application.on ({
-            update_set: this.update_set, scope: this
-        });
-        this.application.on ({
-            update_doc: this.update_doc, scope: this
+            create_leaf: this.create_leaf, scope: this
         });
 
         this.application.on ({
-            delete_set: this.delete_set, scope: this
+            update_node: this.update_node, scope: this
         });
         this.application.on ({
-            delete_doc: this.delete_doc, scope: this
+            update_leaf: this.update_leaf, scope: this
+        });
+
+        this.application.on ({
+            delete_node: this.delete_node, scope: this
+        });
+        this.application.on ({
+            delete_leaf: this.delete_leaf, scope: this
         });
     },
 
     settings: function () {
-        console.debug ('[SetTreeCtrl.settings]');
+        console.debug ('[NodeTreeCtrl.settings]');
     },
 
     refresh: function () {
-        var view = this.getSetTree ();
+        var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
@@ -55,7 +55,7 @@ Ext.define ('Webed.controller.SetTree', {
         assert (base);
         var base = base.removeAll (false);
         assert (base);
-        var store = this.getSetsStore ();
+        var store = this.getNodesStore ();
         assert (store);
         var mask = view.setLoading (true, true);
         assert (mask);
@@ -82,7 +82,7 @@ Ext.define ('Webed.controller.SetTree', {
     },
 
     select_base: function () {
-        var view = this.getSetTree ();
+        var view = this.getNodeTree ();
         assert (view);
         var base = view.getRootNode ();
         assert (base);
@@ -92,17 +92,17 @@ Ext.define ('Webed.controller.SetTree', {
         semo.select (base);
     },
 
-    create_set: function (set) {
-        var root_uuid = get_root_uuid.call (this, set);
+    create_node: function (node) {
+        var root_uuid = get_root_uuid.call (this, node);
         assert (root_uuid);
 
-        var uuid = set.uuid || UUID.random ();
+        var uuid = node.uuid || UUID.random ();
         assert (uuid);
-        var name = set.name || uuid;
+        var name = node.name || uuid;
         assert (name);
-        var size = set.size || 0;
+        var size = node.size || 0;
         assert (size >= 0);
-        var mime = set.mime;
+        var mime = node.mime;
         assert (mime);
 
         var node = {
@@ -113,7 +113,7 @@ Ext.define ('Webed.controller.SetTree', {
             size: size
         }
 
-        var model = Ext.create ('Webed.model.Set', node);
+        var model = Ext.create ('Webed.model.Node', node);
         assert (model);
         var model = model.save ();
         assert (model);
@@ -129,7 +129,7 @@ Ext.define ('Webed.controller.SetTree', {
         assert (node);
 
         root.expand (false, function () {
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
             var semo = view.getSelectionModel ();
             assert (semo);
@@ -138,17 +138,17 @@ Ext.define ('Webed.controller.SetTree', {
             this.refresh ();
         }, this);
 
-        function get_root_uuid (set) {
-            if (set.root_uuid) return set.root_uuid;
+        function get_root_uuid (node) {
+            if (node.root_uuid) return node.root_uuid;
 
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
 
-            assert (set.mime in {
+            assert (node.mime in {
                 'application/project':1, 'application/folder':1
             });
 
-            switch (set.mime) {
+            switch (node.mime) {
                 case 'application/project':
                     var base = view.getRootNode ();
                     assert (base);
@@ -172,7 +172,7 @@ Ext.define ('Webed.controller.SetTree', {
 
                 default:
                     throw new AssertException (Ext.String.format (
-                        'no case for set.mime={0}', set.mime
+                        'no case for node.mime={0}', node.mime
                     ));
             }
 
@@ -180,7 +180,7 @@ Ext.define ('Webed.controller.SetTree', {
         }
 
         function get_root (root_uuid) {
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
             var base = view.getRootNode ();
             assert (base);
@@ -191,20 +191,20 @@ Ext.define ('Webed.controller.SetTree', {
         }
     },
 
-    create_doc: function (doc) {
-        var root_uuid = get_root_uuid.call (this, doc);
+    create_leaf: function (leaf) {
+        var root_uuid = get_root_uuid.call (this, leaf);
         assert (root_uuid);
 
-        var uuid = doc.uuid || UUID.random ();
+        var uuid = leaf.uuid || UUID.random ();
         assert (uuid);
-        var name = doc.name || uuid;
+        var name = leaf.name || uuid;
         assert (name);
-        var size = doc.size || 0;
+        var size = leaf.size || 0;
         assert (size >= 0);
-        var mime = doc.mime;
+        var mime = leaf.mime;
         assert (mime);
 
-        var node = {
+        var leaf = {
             root_uuid: root_uuid,
             uuid: uuid,
             name: name,
@@ -212,12 +212,12 @@ Ext.define ('Webed.controller.SetTree', {
             mime: mime
         }
 
-        var model = Ext.create ('Webed.model.Doc', node);
+        var model = Ext.create ('Webed.model.Leaf', leaf);
         assert (model);
         var model = model.save ();
         assert (model);
 
-        $.extend (node, {
+        $.extend (leaf, {
             name: name,
             expandable: false,
             leaf: true
@@ -225,25 +225,25 @@ Ext.define ('Webed.controller.SetTree', {
 
         var root = get_root.call (this, root_uuid);
         assert (root);
-        var node = root.appendChild (node);
-        assert (node);
+        var leaf = root.appendChild (leaf);
+        assert (leaf);
 
         root.expand (false, function () {
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
             var semo = view.getSelectionModel ();
             assert (semo);
 
-            semo.select (node);
+            semo.select (leaf);
             this.refresh ();
         }, this);
 
-        this.application.fireEvent ('refresh_docs');
+        this.application.fireEvent ('refresh_leafs');
 
-        function get_root_uuid (doc) {
-            if (doc.root_uuid) return doc.root_uuid;
+        function get_root_uuid (leaf) {
+            if (leaf.root_uuid) return leaf.root_uuid;
 
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
             var semo = view.getSelectionModel ();
             assert (semo);
@@ -263,7 +263,7 @@ Ext.define ('Webed.controller.SetTree', {
         }
 
         function get_root (root_uuid) {
-            var view = this.getSetTree ();
+            var view = this.getNodeTree ();
             assert (view);
             var base = view.getRootNode ();
             assert (base);
@@ -274,15 +274,15 @@ Ext.define ('Webed.controller.SetTree', {
         }
     },
 
-    update_set: function (set) {
-        var view = this.getSetTree ();
+    update_node: function (node) {
+        var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
 
         var record = semo.getLastSelected ();
-        if (record && record.parentNode && set) {
-            var strings = record.set (set);
+        if (record && record.parentNode && node) {
+            var strings = record.set (node);
             assert (strings || strings == null);
 
             var model =  record.save ({
@@ -294,7 +294,7 @@ Ext.define ('Webed.controller.SetTree', {
                     semo.select (rec);
 
                     if (rec.isLeaf ()) {
-                        this.application.fireEvent ('refresh_docs');
+                        this.application.fireEvent ('refresh_leafs');
                     }
                 }
             });
@@ -303,28 +303,27 @@ Ext.define ('Webed.controller.SetTree', {
         }
     },
 
-    update_doc: function (doc) {
-        this.update_set (doc);
+    update_leaf: function (leaf) {
+        this.update_node (leaf);
     },
 
-    delete_set: function () {
-        var view = this.getSetTree ();
+    delete_node: function () {
+        var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
 
         var record = semo.getLastSelected ();
         if (record) {
-            var refresh_docs =
-                record.isLeaf () ||
-                    record.isExpanded () && record.hasChildNodes () ||
-                    !record.isExpanded () && record.isExpandable ();
+            var refresh_leafs = record.isLeaf () ||
+                record.isExpanded () && record.hasChildNodes () ||
+                !record.isExpanded () && record.isExpandable ();
 
             record.destroy ({
                 scope: this, callback: function (rec, op) {
                     if (op.success) {
-                        if (refresh_docs) {
-                            this.application.fireEvent ('refresh_docs');
+                        if (refresh_leafs) {
+                            this.application.fireEvent ('refresh_leafs');
                         }
                     }
                 }
@@ -334,7 +333,7 @@ Ext.define ('Webed.controller.SetTree', {
         this.select_base ();
     },
 
-    delete_doc: function () {
-        return this.delete_set ();
+    delete_leaf: function () {
+        return this.delete_node ();
     }
 });
