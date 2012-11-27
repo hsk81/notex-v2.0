@@ -12,7 +12,7 @@ from ..ext import db
 
 class User (db.Model, UserMixin):
 
-    id = db.Column (db.Integer, primary_key=True)
+    id = db.Column (db.Integer, db.Sequence ('user_id_seq'), primary_key=True)
     uuid = db.Column (db.String (36), unique=True)
     name = db.Column (db.Unicode (256))
     mail = db.Column (db.Unicode (256), unique=True)

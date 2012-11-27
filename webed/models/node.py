@@ -12,7 +12,7 @@ from ..ext import db
 class Node (db.Model):
     __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
 
-    id = db.Column (db.Integer, primary_key=True)
+    id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
     type = db.Column ('type', db.String (16))
 
     base_id = db.Column (db.Integer, db.ForeignKey (id))
