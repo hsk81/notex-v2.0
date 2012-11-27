@@ -66,19 +66,6 @@ class ModelsTestCase (BaseTestCase):
         self.assertTrue (isinstance (node, Node))
         self.assertFalse (isinstance (node, Leaf))
 
-    def test_polymorphic_ex (self):
-
-        base, _, node, leaf = self.create ()
-        info = LeafEx ('info-ex', root=base)
-        self.commit ([base, info, node, leaf])
-
-        [node] = base.only_nodes.all ()
-        self.assertIsNotNone (node)
-
-        self.assertEqual (type (node), Node)
-        self.assertTrue (isinstance (node, Node))
-        self.assertFalse (isinstance (node, Leaf))
-
     def test_delete (self):
         base, info, node, leaf = self.create ()
 
@@ -95,6 +82,86 @@ class ModelsTestCase (BaseTestCase):
         self.assertIsNone (node)
         leaf = Leaf.query.get (leaf.id)
         self.assertIsNone (leaf)
+
+###############################################################################
+###############################################################################
+
+class NodeEx (Node):
+    __mapper_args__ = {'polymorphic_identity': 'node-ex'}
+
+    nodeex_id = db.Column (db.Integer, db.ForeignKey ('node.id'),
+        primary_key=True)
+
+    def __init__ (self, name, root, mime=None, uuid=None):
+
+        super (NodeEx, self).__init__ (name, root, mime=mime if mime \
+            else 'application/node-ex', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<NodeEx @ %r: %r>' % (self.id, self.name)
+
+class LeafEx (Leaf):
+    __mapper_args__ = {'polymorphic_identity': 'leaf-ex'}
+
+    leafex_id = db.Column (db.Integer, db.ForeignKey ('leaf.leaf_id'),
+        primary_key=True)
+
+    def __init__ (self, name, root, mime=None, uuid=None):
+
+        super (LeafEx, self).__init__ (name, root, mime=mime if mime \
+            else 'application/leaf-ex', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<LeafEx @ %r: %r>' % (self.id, self.name)
+
+###############################################################################
+###############################################################################
+
+class ExtendedModelsTestCase (BaseTestCase):
+
+    def test_polymorphic (self):
+
+        base = Node ('base', root=None)
+        self.db.session.add (base)
+
+        leaf = LeafEx ('leaf-l0', root=base)
+        self.db.session.add (leaf)
+        node = NodeEx ('node-l0', root=base)
+        self.db.session.add (node)
+
+        leaf = Leaf ('leaf-l1', root=node)
+        self.db.session.add (leaf)
+        node = Node ('node-l1', root=node)
+        self.db.session.add (node)
+
+        leaf = LeafEx ('leaf-l2', root=node)
+        self.db.session.add (leaf)
+        node = NodeEx ('node-l2', root=node)
+        self.db.session.add (node)
+
+        self.db.session.commit ()
+
+        [leaf] = base.leafs.all ()
+        self.assertEqual (type (leaf), LeafEx)
+        self.assertTrue (isinstance (leaf, Node))
+        self.assertTrue (isinstance (leaf, Leaf))
+
+        [node] = base.not_leafs.all ()
+        self.assertEqual (type (node), NodeEx)
+        self.assertTrue (isinstance (node, Node))
+        self.assertFalse (isinstance (node, Leaf))
+
+        [ll0, ll1, ll2] = base.subleafs.all ()
+        self.assertEqual (type (ll0), LeafEx)
+        self.assertEqual (type (ll1), Leaf)
+        self.assertEqual (type (ll2), LeafEx)
+
+        [nl0, nl1, nl2] = base.not_subleafs.all ()
+        self.assertEqual (type (nl0), NodeEx)
+        self.assertEqual (type (nl1), Node)
+        self.assertEqual (type (nl2), NodeEx)
 
 ###############################################################################
 ###############################################################################

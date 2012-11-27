@@ -24,20 +24,24 @@ class Leaf (Node):
 
         return u'<Leaf @ %r: %r>' % (self.id, self.name)
 
-class LeafEx (Leaf):
-    __mapper_args__ = {'polymorphic_identity': 'leafex'}
+###############################################################################
+###############################################################################
 
-    leafex_id = db.Column (db.Integer, db.ForeignKey ('leaf.leaf_id'),
-        primary_key=True)
+Node.leafs = db.relationship (Leaf,
+    cascade='all', lazy='dynamic',
+    primaryjoin=Node.id==Leaf.root_id)
 
-    def __init__ (self, name, root, mime=None, uuid=None):
+Node.subleafs = db.relationship (Leaf,
+    cascade='all', lazy='dynamic',
+    primaryjoin=Node.id==Leaf.base_id)
 
-        super (LeafEx, self).__init__ (name, root, mime=mime if mime \
-            else 'application/leaf-ex', uuid=uuid)
+Node.not_leafs = property (lambda self: self.nodes
+    .outerjoin (Leaf, Node.id==Leaf.leaf_id)
+    .filter (Leaf.id==None))
 
-    def __repr__ (self):
-
-        return u'<LeafEx @ %r: %r>' % (self.id, self.name)
+Node.not_subleafs = property (lambda self: self.subnodes
+    .outerjoin (Leaf, Node.id==Leaf.leaf_id)
+    .filter (Leaf.id==None))
 
 ###############################################################################
 ###############################################################################

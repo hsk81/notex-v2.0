@@ -73,8 +73,7 @@ def node_read (leafs=True, json=True):
     assert node
 
     leaf2exts = map (lambda l: leaf2ext (l), node.leafs) if leafs else []
-    node2exts = map (lambda n: node2ext (n, leafs=leafs), node.nodes
-        .filter_by (type='node'))
+    node2exts = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
 
     result = dict (success=True, results=node2exts + leaf2exts)
     return jsonify (result) if json else result
@@ -269,7 +268,7 @@ def node2ext (node, leafs=True, level=1):
         return to_ext (node, results=None)
 
     ext_nodes = map (lambda n: node2ext (n, leafs=leafs, level=level+1),
-        node.nodes.filter_by (type='node'))
+        node.not_leafs)
     ext_leafs = map (lambda l: leaf2ext (l), node.leafs) \
         if leafs else []
 
