@@ -15,15 +15,15 @@ class Node (db.Model):
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
     type = db.Column ('type', db.String (16))
 
-    base_id = db.Column (db.Integer, db.ForeignKey (id))
     root_id = db.Column (db.Integer, db.ForeignKey (id))
-
     nodes = db.relationship ('Node',
-        cascade='all', lazy='dynamic',
+        cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.root_id',
         backref=db.backref('root', remote_side=id))
+
+    base_id = db.Column (db.Integer, db.ForeignKey (id))
     subnodes = db.relationship ('Node',
-        cascade='all', lazy='dynamic',
+        cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref('base', remote_side=id))
 
