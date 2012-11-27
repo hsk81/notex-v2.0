@@ -27,12 +27,10 @@ class Leaf (Node):
 ###############################################################################
 ###############################################################################
 
-Node.leafs = db.relationship (Leaf,
-    cascade='all', lazy='dynamic',
+Node.leafs = db.relationship (Leaf, cascade='all', lazy='dynamic',
     primaryjoin=Node.id==Leaf.root_id)
 
-Node.subleafs = db.relationship (Leaf,
-    cascade='all', lazy='dynamic',
+Node.subleafs = db.relationship (Leaf, cascade='all', lazy='dynamic',
     primaryjoin=Node.id==Leaf.base_id)
 
 Node.not_leafs = property (lambda self: self.nodes
