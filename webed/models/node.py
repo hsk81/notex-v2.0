@@ -20,11 +20,11 @@ class Node (db.Model):
 
     nodes = db.relationship ('Node',
         cascade='all', lazy='dynamic',
-        primaryjoin='Node.root_id==Node.id',
+        primaryjoin='Node.id==Node.root_id',
         backref=db.backref('root', remote_side=id))
     subnodes = db.relationship ('Node',
         cascade='all', lazy='dynamic',
-        primaryjoin='Node.base_id==Node.id',
+        primaryjoin='Node.id==Node.base_id',
         backref=db.backref('base', remote_side=id))
 
     uuid = db.Column (db.String (36), nullable=False, unique=True)
