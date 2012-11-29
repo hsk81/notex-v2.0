@@ -25,7 +25,11 @@ page = Blueprint ('page', __name__)
 ###############################################################################
 
 @page.route ('/test/')
-def test (): return main (page='home', template='index_test.html')
+def test ():
+    return main (page='home', template='index_test.html')
+
+###############################################################################
+###############################################################################
 
 @page.route ('/home/')
 def home (): return main (page='home')
