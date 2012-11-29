@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title id='page-title'>WebEd Tests</title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='ico/favicon-test.ico') }}">
+    <link rel='stylesheet' type='text/css'
+          href='{{ url_for("static", filename="app-test/lib/jasmine-1.3.0/jasmine.css") }}' />
+</head>
+
+<body>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
+    {% if debug %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/extjs/ext-all-debug.js') }}"></script>
+    {% else %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/extjs/ext-all.js') }}"></script>
+    {% endif %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='app/assert.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='app/uuid.js') }}"></script>
+
+    <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test/lib/jasmine/jasmine.js") }}'></script>
+    <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test/lib/jasmine/jasmine-html.js") }}'></script>
+
+    <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test/spec/Init.spec.js") }}'></script>
+    <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test/spec/NodeTree.spec.js") }}'></script>
+    <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test.js") }}'></script>
+</body>
+</html>

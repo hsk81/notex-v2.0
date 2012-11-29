@@ -24,6 +24,9 @@ page = Blueprint ('page', __name__)
 ###############################################################################
 ###############################################################################
 
+@page.route ('/test/')
+def test (): return main (page='home', template='index_test.html')
+
 @page.route ('/home/')
 def home (): return main (page='home')
 @page.route ('/overview/')
@@ -36,7 +39,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-def main (page='home'):
+def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
     session['timestamp'] = datetime.now ()
@@ -55,7 +58,7 @@ def main (page='home'):
     if 'reset' in request.args: reset (); init ()
     if 'refresh' in request.args: clean (); init ()
 
-    return render_template ('index.html', page=page, debug=app.debug)
+    return render_template (template, page=page, debug=app.debug)
 
 def reset ():
     logger.debug (request)
