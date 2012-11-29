@@ -7,7 +7,6 @@ Ext.application ({
 
     models: ['Node', 'Leaf', 'Resource'],
     stores: ['Nodes', 'Leafs', 'Resources'],
-
     controllers: ['MainBar', 'NodeTree', 'LeafList', 'StatusBar'],
 
     paths: {
