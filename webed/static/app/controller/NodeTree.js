@@ -92,7 +92,7 @@ Ext.define ('Webed.controller.NodeTree', {
         semo.select (base);
     },
 
-    create_node: function (node) {
+    create_node: function (node, callback, scope) {
         var root_uuid = get_root_uuid.call (this, node);
         assert (root_uuid);
 
@@ -191,7 +191,7 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
-    create_leaf: function (leaf) {
+    create_leaf: function (leaf, callback, scope) {
         var root_uuid = get_root_uuid.call (this, leaf);
         assert (root_uuid);
 
