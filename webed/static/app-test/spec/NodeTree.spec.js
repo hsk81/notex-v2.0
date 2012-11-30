@@ -21,6 +21,14 @@ describe ('NodeTree', function () {
         view = null;
         store = null;
         controller = null;
+
+        var reset = null; Ext.Ajax.request ({
+            url: '?reset', callback: function (opt, success, xhr) {
+                reset = success;
+            }
+        });
+
+        waitsFor (function () { return reset; }, 'reset', 250);
     });
 
     it ('should load nodes', function () {
