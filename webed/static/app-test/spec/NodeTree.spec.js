@@ -168,6 +168,6 @@ describe ('NodeTree', function () {
         }
 
         runs (function () { destroy ('text/plain'); });
-        runs (function () { destroy ('image/jpeg'); });
+        runs (function () { destroy ('image/tiff'); });
     });
 });

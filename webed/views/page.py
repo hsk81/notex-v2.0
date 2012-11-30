@@ -94,6 +94,8 @@ def init ():
 
     leaf = Leaf ('author.txt', root=base, mime='text/plain')
     db.session.add (leaf)
+    leaf = Leaf ('about.tiff', root=base, mime='image/tiff')
+    db.session.add (leaf)
     db.session.commit ()
 
     session['root_uuid'] = base.uuid
