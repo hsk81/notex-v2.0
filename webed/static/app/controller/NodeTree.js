@@ -115,7 +115,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create ('Webed.model.Node', node);
         assert (model);
-        var model = model.save ();
+        var model = model.save (); // TODO: Invoke callback!
         assert (model);
 
         $.extend (node, {
@@ -214,7 +214,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create ('Webed.model.Leaf', leaf);
         assert (model);
-        var model = model.save ();
+        var model = model.save (); // TODO: Invoke callback!
         assert (model);
 
         $.extend (leaf, {
@@ -274,13 +274,13 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
-    update_node: function (node) {
+    update_node: function (node, callback, scope) {
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        var record = semo.getLastSelected ();
+        var record = semo.getLastSelected (); // TODO: select-by-uuid option!
         if (record && record.parentNode && node) {
             var strings = record.set (node);
             assert (strings || strings == null);
@@ -296,6 +296,10 @@ Ext.define ('Webed.controller.NodeTree', {
                     if (rec.isLeaf ()) {
                         this.application.fireEvent ('refresh_leafs');
                     }
+
+                    if (callback && callback.call) {
+                        callback.call (scope||this, rec, op);
+                    }
                 }
             });
 
@@ -303,17 +307,17 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
-    update_leaf: function (leaf) {
-        this.update_node (leaf);
+    update_leaf: function (leaf, callback, scope) {
+        this.update_node (leaf, callback, scope);
     },
 
-    delete_node: function (callback, scope) {
+    delete_node: function (node, callback, scope) {
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        var record = semo.getLastSelected ();
+        var record = semo.getLastSelected (); // TODO: select-by-uuid option!
         if (record) {
             var refresh_leafs = record.isLeaf () ||
                 record.isExpanded () && record.hasChildNodes () ||
@@ -337,7 +341,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.select_base ();
     },
 
-    delete_leaf: function (callback, scope) {
-        return this.delete_node (callback, scope);
+    delete_leaf: function (leaf, callback, scope) {
+        return this.delete_node (leaf, callback, scope);
     }
 });

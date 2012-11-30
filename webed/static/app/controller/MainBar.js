@@ -66,7 +66,7 @@ Ext.define ('Webed.controller.MainBar', {
         });
     },
     destroy: function (item, event, options) {
-        this.application.fireEvent ('delete_node');
+        this.application.fireEvent ('delete_node', {uuid: null});
     },
     importProject: function (item, event, options) {
         console.debug ('[MainBarCtrl.importProject]');

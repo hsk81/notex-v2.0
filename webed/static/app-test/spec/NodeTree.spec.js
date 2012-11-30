@@ -126,11 +126,13 @@ describe ('NodeTree', function () {
             var executed = null;
             semo.select (node);
 
-            window.app.fireEvent ('delete_node', function (rec, op) {
-                expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
-                expect (op.success).toBeTruthy ();
-                executed = { rec: rec, op: op }
-            });
+            window.app.fireEvent ('delete_node', {uuid: null},
+                function (rec, op) {
+                    expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
+                    expect (op.success).toBeTruthy ();
+                    executed = { rec: rec, op: op }
+                }
+            );
 
             waitsFor (function () {
                 return executed;
@@ -156,11 +158,13 @@ describe ('NodeTree', function () {
             var executed = null;
             semo.select (leaf);
 
-            window.app.fireEvent ('delete_leaf', function (rec, op) {
-                expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
-                expect (op.success).toBeTruthy ();
-                executed = { rec: rec, op: op }
-            });
+            window.app.fireEvent ('delete_leaf', {uuid: null},
+                function (rec, op) {
+                    expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
+                    expect (op.success).toBeTruthy ();
+                    executed = { rec: rec, op: op }
+                }
+            );
 
             waitsFor (function () {
                 return executed;
