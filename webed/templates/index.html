@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>WebEd</title>
@@ -25,7 +26,7 @@
             src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
     {% if debug %}
     <script type="text/javascript"
-            src="{{ url_for('static', filename='lib/extjs/ext-all-debug.js') }}"></script>
+            src="{{ url_for('static', filename='lib/extjs/ext-all-dev.js') }}"></script>
     {% else %}
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/extjs/ext-all.js') }}"></script>
