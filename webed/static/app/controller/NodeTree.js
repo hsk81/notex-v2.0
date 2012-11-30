@@ -115,7 +115,12 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create ('Webed.model.Node', node);
         assert (model);
-        var model = model.save (); // TODO: Invoke callback!
+        var model = model.save ({
+            scope: this, callback: function (rec, op) {
+                if (callback && callback.call)
+                    callback.call (scope||this, rec, op);
+            }
+        });
         assert (model);
 
         $.extend (node, {
@@ -214,7 +219,12 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create ('Webed.model.Leaf', leaf);
         assert (model);
-        var model = model.save (); // TODO: Invoke callback!
+        var model = model.save ({
+            scope: this, callback: function (rec, op) {
+                if (callback && callback.call)
+                    callback.call (scope||this, rec, op);
+            }
+        });
         assert (model);
 
         $.extend (leaf, {
@@ -293,13 +303,10 @@ Ext.define ('Webed.controller.NodeTree', {
                     semo.select (base);
                     semo.select (rec);
 
-                    if (rec.isLeaf ()) {
+                    if (rec.isLeaf ())
                         this.application.fireEvent ('refresh_leafs');
-                    }
-
-                    if (callback && callback.call) {
+                    if (callback && callback.call)
                         callback.call (scope||this, rec, op);
-                    }
                 }
             });
 
@@ -325,15 +332,10 @@ Ext.define ('Webed.controller.NodeTree', {
 
             record.destroy ({
                 scope: this, callback: function (rec, op) {
-                    if (op.success) {
-                        if (refresh_leafs) {
-                            this.application.fireEvent ('refresh_leafs');
-                        }
-                    }
-
-                    if (callback && callback.call) {
+                    if (op.success && refresh_leafs)
+                        this.application.fireEvent ('refresh_leafs');
+                    if (callback && callback.call)
                         callback.call (scope||this, rec, op);
-                    }
                 }
             });
         }
