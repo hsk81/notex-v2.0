@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title id='page-title'>WebEd Tests</title>
+    <title>WebEd Tests</title>
+
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='ico/favicon-test.ico') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/webed.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/menu.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/icons-16.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='lib/extjs/resources/css/ext-all.css') }}" />
+
     <link rel='stylesheet' type='text/css'
           href='{{ url_for("static", filename="app-test/lib/jasmine/jasmine.css") }}' />
 </head>
 
 <body>
+    <div id="content-wrap" style="display: none">
+        <div id="content">{% include 'page.html' %}</div>
+    </div>
+
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
-    {% if debug %}
     <script type="text/javascript"
-            src="{{ url_for('static', filename='lib/extjs/ext-all-debug.js') }}"></script>
-    {% else %}
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='lib/extjs/ext-all.js') }}"></script>
-    {% endif %}
+            src="{{ url_for('static', filename='lib/extjs/ext-dev.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
     <script type="text/javascript"
@@ -31,10 +42,10 @@
             src='{{ url_for("static", filename="app-test/lib/jasmine/jasmine-html.js") }}'></script>
 
     <script type='text/javascript'
+            src='{{ url_for("static", filename="app-test.js") }}'></script>
+    <script type='text/javascript'
             src='{{ url_for("static", filename="app-test/spec/Init.spec.js") }}'></script>
     <script type='text/javascript'
             src='{{ url_for("static", filename="app-test/spec/NodeTree.spec.js") }}'></script>
-    <script type='text/javascript'
-            src='{{ url_for("static", filename="app-test.js") }}'></script>
 </body>
 </html>
