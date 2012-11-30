@@ -61,9 +61,9 @@ Ext.define ('Webed.controller.MainBar', {
         }});
     },
     rename: function (item, event, options) {
-        this.application.fireEvent ('update_node', {
+        this.application.fireEvent ('update_node', {node: {
             name: 're-named'
-        });
+        }});
     },
     destroy: function (item, event, options) {
         this.application.fireEvent ('delete_node', {uuid: null});
