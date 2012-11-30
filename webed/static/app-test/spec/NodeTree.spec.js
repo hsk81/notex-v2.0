@@ -28,7 +28,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return reset; }, 'reset', 250);
+        waitsFor (function () { return reset; }, 'reset', 500);
     });
 
     it ('should load nodes', function () {
