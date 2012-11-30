@@ -51,7 +51,7 @@ describe ('NodeTree', function () {
                 uuid: UUID.random ()
             });
 
-            window.app.fireEvent ('create_node', node);
+            window.app.fireEvent ('create_node', {node: node});
             var base = view.getRootNode ();
             expect (base).toBeTruthy ();
 

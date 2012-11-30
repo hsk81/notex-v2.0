@@ -46,14 +46,14 @@ Ext.define ('Webed.controller.MainBar', {
         this.addProject (item, event, options);
     },
     addProject: function (item, event, options) {
-        this.application.fireEvent ('create_node', {
+        this.application.fireEvent ('create_node', {node: {
             name: 'Project', mime: 'application/project'
-        });
+        }});
     },
     addFolder: function (item, event, options) {
-        this.application.fireEvent ('create_node', {
+        this.application.fireEvent ('create_node', {node: {
             name: 'folder', mime: 'application/folder'
-        });
+        }});
     },
     addText: function (item, event, options) {
         this.application.fireEvent ('create_leaf', {

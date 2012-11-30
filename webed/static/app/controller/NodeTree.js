@@ -92,17 +92,19 @@ Ext.define ('Webed.controller.NodeTree', {
         semo.select (base);
     },
 
-    create_node: function (node, callback, scope) {
-        var root_uuid = get_root_uuid.call (this, node);
-        assert (root_uuid);
+    create_node: function (args) {
+        assert (args);
+        assert (args.node);
 
-        var uuid = node.uuid || UUID.random ();
+        var root_uuid = get_root_uuid.call (this, args.node);
+        assert (root_uuid);
+        var uuid = args.node.uuid || UUID.random ();
         assert (uuid);
-        var name = node.name || uuid;
+        var name = args.node.name || uuid;
         assert (name);
-        var size = node.size || 0;
+        var size = args.node.size || 0;
         assert (size >= 0);
-        var mime = node.mime;
+        var mime = args.node.mime;
         assert (mime);
 
         var node = {
@@ -117,8 +119,8 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (model);
         var model = model.save ({
             scope: this, callback: function (rec, op) {
-                if (callback && callback.call)
-                    callback.call (scope||this, rec, op);
+                if (args.callback && args.callback.call)
+                    args.callback.call (args.scope||this, rec, op);
             }
         });
         assert (model);
