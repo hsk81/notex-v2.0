@@ -198,17 +198,19 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
-    create_leaf: function (leaf, callback, scope) {
-        var root_uuid = get_root_uuid.call (this, leaf);
-        assert (root_uuid);
+    create_leaf: function (args) {
+        assert (args);
+        assert (args.leaf);
 
-        var uuid = leaf.uuid || UUID.random ();
+        var root_uuid = get_root_uuid.call (this, args.leaf);
+        assert (root_uuid);
+        var uuid = args.leaf.uuid || UUID.random ();
         assert (uuid);
-        var name = leaf.name || uuid;
+        var name = args.leaf.name || uuid;
         assert (name);
-        var size = leaf.size || 0;
+        var size = args.leaf.size || 0;
         assert (size >= 0);
-        var mime = leaf.mime;
+        var mime = args.leaf.mime;
         assert (mime);
 
         var leaf = {
@@ -223,8 +225,8 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (model);
         var model = model.save ({
             scope: this, callback: function (rec, op) {
-                if (callback && callback.call)
-                    callback.call (scope||this, rec, op);
+                if (args.callback && args.callback.call)
+                    args.callback.call (args.scope||this, rec, op);
             }
         });
         assert (model);

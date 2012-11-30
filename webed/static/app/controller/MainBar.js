@@ -56,9 +56,9 @@ Ext.define ('Webed.controller.MainBar', {
         }});
     },
     addText: function (item, event, options) {
-        this.application.fireEvent ('create_leaf', {
+        this.application.fireEvent ('create_leaf', {leaf: {
             name: 'options.cfg', mime: 'text/plain'
-        });
+        }});
     },
     rename: function (item, event, options) {
         this.application.fireEvent ('update_node', {
