@@ -307,7 +307,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.update_node (leaf);
     },
 
-    delete_node: function () {
+    delete_node: function (callback, scope) {
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
@@ -326,6 +326,10 @@ Ext.define ('Webed.controller.NodeTree', {
                             this.application.fireEvent ('refresh_leafs');
                         }
                     }
+
+                    if (callback && callback.call) {
+                        callback.call (scope||this, rec, op);
+                    }
                 }
             });
         }
@@ -333,7 +337,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.select_base ();
     },
 
-    delete_leaf: function () {
-        return this.delete_node ();
+    delete_leaf: function (callback, scope) {
+        return this.delete_node (callback, scope);
     }
 });

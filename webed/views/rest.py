@@ -120,12 +120,14 @@ def node_delete (leafs=True, json=True):
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
     node = Q (base.subnodes).one_or_default (uuid=uuid)
-    assert node
+    if node:
+        db.session.delete (node)
+        db.session.commit ()
 
-    db.session.delete (node)
-    db.session.commit ()
+        result = dict (success=True, result=node2ext (node, leafs=leafs))
+    else:
+        result = dict (success=True)
 
-    result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
 ###############################################################################
