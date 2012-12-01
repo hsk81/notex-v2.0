@@ -303,7 +303,7 @@ Ext.define ('Webed.controller.NodeTree', {
             assert (strings || strings == null);
 
             var model = record.save ({
-                scope: this, success: function (rec, op) {
+                scope: this, callback: function (rec, op) {
                     var base = view.getRootNode ();
                     assert (base);
 
@@ -323,15 +323,17 @@ Ext.define ('Webed.controller.NodeTree', {
 
     update_leaf: function (args) {
         assert (args);
-        assert (args.node);
-
-        args.leaf = args.node;
-        args.node = null;
+        assert (args.leaf);
+        args.node = args.leaf;
+        args.leaf = undefined;
 
         this.update_node (args);
     },
 
-    delete_node: function (node, callback, scope) {
+    delete_node: function (args) {
+        assert (args);
+        assert (args.node);
+
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
@@ -347,8 +349,8 @@ Ext.define ('Webed.controller.NodeTree', {
                 scope: this, callback: function (rec, op) {
                     if (op.success && refresh_leafs)
                         this.application.fireEvent ('refresh_leafs');
-                    if (callback && callback.call)
-                        callback.call (scope||this, rec, op);
+                    if (args.callback && args.callback.call)
+                        args.callback.call (args.scope||this, rec, op);
                 }
             });
         }
@@ -356,7 +358,12 @@ Ext.define ('Webed.controller.NodeTree', {
         this.select_base ();
     },
 
-    delete_leaf: function (leaf, callback, scope) {
-        return this.delete_node (leaf, callback, scope);
+    delete_leaf: function (args) {
+        assert (args);
+        assert (args.leaf);
+        args.node = args.leaf;
+        args.leaf = undefined;
+
+        return this.delete_node (args);
     }
 });

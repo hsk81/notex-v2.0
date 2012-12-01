@@ -88,7 +88,7 @@ def node_update (leafs=True, json=True):
     uuid = request.json.get ('uuid', None)
     assert uuid
     name = request.json.get ('name', None)
-    assert name
+    assert name is not None
     mime = request.json.get ('mime', None)
     assert mime
 
@@ -199,7 +199,7 @@ def leaf_update (json=True):
     mime = request.json.get ('mime', None)
     assert mime
     name = request.json.get ('name', None)
-    assert name
+    assert name is not None
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -244,7 +244,7 @@ def node2ext (node, leafs=True, level=1):
 
     assert node
     assert node.uuid
-    assert node.name
+    assert node.name is not None
     assert node.mime
     assert node.root.uuid if node.root else True
 
@@ -279,11 +279,11 @@ def node2ext (node, leafs=True, level=1):
 def leaf2ext (leaf):
 
     assert leaf
-    assert leaf.uuid
     assert leaf.mime
+    assert leaf.name is not None
     assert leaf.root
     assert leaf.root.uuid
-    assert leaf.name
+    assert leaf.uuid
 
     return {
         'expandable': False,
