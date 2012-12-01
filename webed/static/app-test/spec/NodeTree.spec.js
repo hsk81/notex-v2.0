@@ -26,7 +26,7 @@ describe ('NodeTree', function () {
 
         waitsFor (function () {
             return !store.isLoading ();
-        }, 'store to load', 500);
+        }, 'store to load', 750);
     });
 
     afterEach (function () {
@@ -42,7 +42,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return reset; }, 'reset', 500);
+        waitsFor (function () { return reset; }, 'reset', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return base.findChild ('uuid', uuid, true) != null;
-            }, '"' + node.mime + '"' + ' ' + 'node to be created', 500);
+            }, '"' + node.mime + '"' + ' ' + 'node to be created', 750);
 
             var semo = view.getSelectionModel ();
             expect (semo).toBeTruthy ();
@@ -97,7 +97,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return base.findChild ('uuid', uuid, true) != null;
-            }, '"' + leaf.mime + '"' + ' ' + 'leaf to be created', 500);
+            }, '"' + leaf.mime + '"' + ' ' + 'leaf to be created', 750);
 
             var semo = view.getSelectionModel ();
             expect (semo).toBeTruthy ();
@@ -117,18 +117,49 @@ describe ('NodeTree', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should read nodes (including leafs)', function () {
+    it ('should read nodes', function () {
 
-        store.on ('load', function (store, node, records, successful, opts) {
-            expect (successful).toBeTruthy ();
-            expect (records.length).toBeGreaterThan (1);
-        }, this);
+        function load (mime) {
+            store.on ('load',
+                function (store, node, records, successful, opts) {
+                    expect (successful).toBeTruthy ();
+                    expect (records.length).toBeGreaterThan (1);
+                    expect (node).toBeTruthy ();
+                    var node = node.findChild ('mime', mime, true);
+                    expect (node).toBeTruthy ();
+                }, this
+            );
 
-        store.load ();
+            store.load (); waitsFor (function () {
+                return !store.isLoading ();
+            }, 'store to read nodes', 750);
+        }
 
-        waitsFor (function () {
-            return !store.isLoading ();
-        }, 'store to read nodes (including leafs)', 500);
+        runs (function () { load ('application/project'); });
+        runs (function () { load ('application/folder'); });
+        runs (function () { load ('text/plain'); });
+    });
+
+    it ('should read leafs', function () {
+
+        function load (mime) {
+            store.on ('load',
+                function (store, node, records, successful, opts) {
+                    expect (successful).toBeTruthy ();
+                    expect (records.length).toBeGreaterThan (1);
+                    expect (node).toBeTruthy ();
+                    var node = node.findChild ('mime', mime, true);
+                    expect (node).toBeTruthy ();
+                }, this
+            );
+
+            store.load (); waitsFor (function () {
+                return !store.isLoading ();
+            }, 'store to read leafs', 750);
+        }
+
+        runs (function () { load ('text/plain'); });
+        runs (function () { load ('image/tiff'); });
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -161,7 +192,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'node to be updated', 500);
+            }, 'node to be updated', 750);
         }
 
         runs (function () { update ('application/project'); });
@@ -196,7 +227,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'leaf to be updated', 500);
+            }, 'leaf to be updated', 750);
         }
 
         runs (function () { update ('text/plain'); });
@@ -232,7 +263,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'node to be deleted', 500);
+            }, 'node to be deleted', 750);
         }
 
         runs (function () { destroy ('application/project'); });
@@ -266,7 +297,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'leaf to be deleted', 500);
+            }, 'leaf to be deleted', 750);
         }
 
         runs (function () { destroy ('text/plain'); });
