@@ -14,8 +14,10 @@ describe ('NodeTree', function () {
         Ext.DomHelper.append (Ext.getBody (),
             "<div id='test-area' style='display:none'/>");
 
-        if (!view) view = Ext.create ( 'Webed.view.NodeTree',
-            { renderTo: 'test-area' });
+        if (!view) view = Ext.create ( 'Webed.view.NodeTree', {
+            renderTo: 'test-area'
+        });
+
         expect (view).toBeTruthy ();
         if (!controller) controller = window.app.getController ('NodeTree');
         expect (controller).toBeTruthy ();
