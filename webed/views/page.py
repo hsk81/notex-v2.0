@@ -5,7 +5,6 @@ __author__ = 'hsk81'
 
 from flask.templating import render_template
 from flask.globals import request
-from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from datetime import datetime
