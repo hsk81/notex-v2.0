@@ -9,6 +9,9 @@ Ext.define ('Webed.controller.NodeTree', {
         selector: 'node-tree', ref: 'nodeTree'
     }],
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     init: function () {
         this.control ({
             'node-tree': { afterrender: this.select_base },
@@ -91,6 +94,9 @@ Ext.define ('Webed.controller.NodeTree', {
 
         semo.select (base);
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     create_node: function (args) {
         assert (args);
@@ -288,6 +294,9 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     update_node: function (args) {
         assert (args);
         assert (args.node);
@@ -297,8 +306,10 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        var record = semo.getLastSelected (); // TODO: select-by-uuid option!
-        if (record && record.parentNode) {
+        function callback (record) {
+            if (!record) return;
+            if (!record.parentNode) return;
+
             var strings = record.set (args.node);
             assert (strings || strings == null);
 
@@ -319,6 +330,16 @@ Ext.define ('Webed.controller.NodeTree', {
 
             assert (model);
         }
+
+        if (args.node.path) {
+            view.expandPath (args.node.path, 'uuid', '/',
+                function (success, node) { callback.call (
+                    this, (success) ? node : semo.getLastSelected ()
+                );}, this
+            );
+        } else {
+            callback.call (this, semo.getLastSelected ());
+        }
     },
 
     update_leaf: function (args) {
@@ -330,6 +351,9 @@ Ext.define ('Webed.controller.NodeTree', {
         this.update_node (args);
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     delete_node: function (args) {
         assert (args);
         assert (args.node);
@@ -339,8 +363,9 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        var record = semo.getLastSelected (); // TODO: select-by-uuid option!
-        if (record) {
+        function callback (record) {
+            if (!record) return;
+
             var refresh_leafs = record.isLeaf () ||
                 record.isExpanded () && record.hasChildNodes () ||
                 !record.isExpanded () && record.isExpandable ();
@@ -353,9 +378,19 @@ Ext.define ('Webed.controller.NodeTree', {
                         args.callback.call (args.scope||this, rec, op);
                 }
             });
+
+            this.select_base ();
         }
 
-        this.select_base ();
+        if (args.node.path) {
+            view.expandPath (args.node.path, 'uuid', '/',
+                function (success, node) { callback.call (
+                    this, (success) ? node : semo.getLastSelected ()
+                );}, this
+            );
+        } else {
+            callback.call (this, semo.getLastSelected ());
+        }
     },
 
     delete_leaf: function (args) {
@@ -366,4 +401,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         return this.delete_node (args);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 });

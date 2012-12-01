@@ -149,7 +149,7 @@ describe ('NodeTree', function () {
             semo.select (node);
 
             window.app.fireEvent ('update_node', {
-                node: { name: '' }, // TODO - uuid: node.get ('uuid')
+                node: { name: '', path: node.getPath ('uuid', '/') },
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -184,7 +184,7 @@ describe ('NodeTree', function () {
             semo.select (leaf);
 
             window.app.fireEvent ('update_leaf', {
-                leaf: { name: '' }, // TODO - uuid: node.get ('uuid')
+                leaf: { name: '', path: leaf.getPath ('uuid', '/') },
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -221,7 +221,7 @@ describe ('NodeTree', function () {
             semo.select (node);
 
             window.app.fireEvent ('delete_node', {
-                node: { uuid: undefined }, // TODO!?
+                node: { path: node.getPath ('uuid', '/') },
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -255,7 +255,7 @@ describe ('NodeTree', function () {
             semo.select (leaf);
 
             window.app.fireEvent ('delete_leaf', {
-                leaf: { uuid: undefined }, // TODO!?
+                leaf: { path: leaf.getPath ('uuid', '/') },
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
