@@ -5,6 +5,7 @@ __author__ = 'hsk81'
 
 from flask.templating import render_template
 from flask.globals import request
+from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from datetime import datetime
@@ -65,7 +66,6 @@ def main (page='home', template='index.html'):
     return render_template (template, page=page, debug=app.debug)
 
 def reset ():
-    logger.debug (request)
 
     db.drop_all ()
     db.create_all ()
@@ -75,7 +75,6 @@ def reset ():
     db.session.commit ()
 
 def clean ():
-    logger.debug (request)
 
     if 'root_uuid' in session:
         base = Q (Node.query).one_or_default (uuid=session['root_uuid'])
