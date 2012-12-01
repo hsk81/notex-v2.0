@@ -21,6 +21,12 @@ describe ('NodeTree', function () {
         expect (controller).toBeTruthy ();
         if (!store) store = controller.getStore ('Nodes');
         expect (store).toBeTruthy ();
+
+        store.load ();
+
+        waitsFor (function () {
+            return !store.isLoading ();
+        }, 'store to load', 500);
     });
 
     afterEach (function () {
@@ -30,7 +36,7 @@ describe ('NodeTree', function () {
         controller = null;
 
         var reset = null; Ext.Ajax.request ({
-            url: '?reset', callback: function (opt, success, xhr) {
+            url: '/reset/', callback: function (opt, success, xhr) {
                 expect (success).toBeTruthy ();
                 reset = success;
             }
@@ -55,7 +61,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return base.findChild ('uuid', uuid, true) != null;
-            }, node.mime + ' ' + 'node to be created', 250);
+            }, '"' + node.mime + '"' + ' ' + 'node to be created', 500);
 
             var semo = view.getSelectionModel ();
             expect (semo).toBeTruthy ();
@@ -91,7 +97,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return base.findChild ('uuid', uuid, true) != null;
-            }, '"' + leaf.mime + '"' + ' ' + 'leaf to be created', 250);
+            }, '"' + leaf.mime + '"' + ' ' + 'leaf to be created', 500);
 
             var semo = view.getSelectionModel ();
             expect (semo).toBeTruthy ();
@@ -122,7 +128,7 @@ describe ('NodeTree', function () {
 
         waitsFor (function () {
             return !store.isLoading ();
-        }, 'store to read nodes (including leafs)', 250);
+        }, 'store to read nodes (including leafs)', 500);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -155,12 +161,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'node to be updated', 250);
-
-            var record = semo.getLastSelected ();
-            expect (record).toBeTruthy ();
-            var uuid = record.get ('uuid');
-            expect (uuid).toEqual (node.get ('uuid'));
+            }, 'node to be updated', 500);
         }
 
         runs (function () { update ('application/project'); });
@@ -182,8 +183,8 @@ describe ('NodeTree', function () {
             var executed = null;
             semo.select (leaf);
 
-            window.app.fireEvent ('update_node', {
-                node: { name: '' }, // TODO - uuid: node.get ('uuid')
+            window.app.fireEvent ('update_leaf', {
+                leaf: { name: '' }, // TODO - uuid: node.get ('uuid')
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -195,12 +196,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'leaf to be updated', 250);
-
-            var record = semo.getLastSelected ();
-            expect (record).toBeTruthy ();
-            var uuid = record.get ('uuid');
-            expect (uuid).toEqual (leaf.get ('uuid'));
+            }, 'leaf to be updated', 500);
         }
 
         runs (function () { update ('text/plain'); });
@@ -236,10 +232,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'node to be deleted', 250);
-
-            var record = semo.getLastSelected ();
-            expect (record).toBeFalsy ();
+            }, 'node to be deleted', 500);
         }
 
         runs (function () { destroy ('application/project'); });
@@ -273,10 +266,7 @@ describe ('NodeTree', function () {
 
             waitsFor (function () {
                 return executed;
-            }, 'leaf to be deleted', 250);
-
-            var record = semo.getLastSelected ();
-            expect (record).toBeFalsy ();
+            }, 'leaf to be deleted', 500);
         }
 
         runs (function () { destroy ('text/plain'); });

@@ -5,6 +5,7 @@ __author__ = 'hsk81'
 
 from flask.templating import render_template
 from flask.globals import request
+from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from datetime import datetime
@@ -59,12 +60,22 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
-    if 'reset' in request.args: reset (); init ()
-    if 'refresh' in request.args: clean (); init ()
+    if 'reset' in request.args: db_reset (); init ()
+    if 'refresh' in request.args: db_clean (); init ()
 
     return render_template (template, page=page, debug=app.debug)
 
+@page.route ('/reset/')
 def reset ():
+    db_reset (); init ();
+    return jsonify (dict (success=True))
+
+@page.route ('/refresh/')
+def refresh ():
+    db_clean (); init ();
+    return jsonify (dict (success=True))
+
+def db_reset ():
 
     db.drop_all ()
     db.create_all ()
@@ -73,7 +84,7 @@ def reset ():
     db.session.add (user)
     db.session.commit ()
 
-def clean ():
+def db_clean ():
 
     if 'root_uuid' in session:
         base = Q (Node.query).one_or_default (uuid=session['root_uuid'])
