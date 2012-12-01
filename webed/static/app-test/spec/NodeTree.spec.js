@@ -14,8 +14,8 @@ describe ('NodeTree', function () {
         Ext.DomHelper.append (Ext.getBody (),
             "<div id='test-area' style='display:none'/>");
 
-        if (!view) view = Ext.create ('Webed.view.NodeTree', {
-            renderTo: 'test-area' });
+        if (!view) view = Ext.create ( 'Webed.view.NodeTree',
+            { renderTo: 'test-area' });
         expect (view).toBeTruthy ();
         if (!controller) controller = window.app.getController ('NodeTree');
         expect (controller).toBeTruthy ();
@@ -36,7 +36,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return reset; }, 'reset', 750);
+        waitsFor (function () { return reset; }, 'reset', 500);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ describe ('NodeTree', function () {
             name: 'node', mime: 'application/folder'
         })});
         //runs (function () { create ({
-        //  name: 'node', mime: '*/*' // TODO: Should work!?
+        //  name: 'node', mime: '*/*' // TODO: It should pass!?
         //})});
     });
 
@@ -112,6 +112,7 @@ describe ('NodeTree', function () {
     ///////////////////////////////////////////////////////////////////////////
 
     it ('should read nodes (including leafs)', function () {
+
         store.on ('load', function (store, node, records, successful, opts) {
             expect (successful).toBeTruthy ();
             expect (records.length).toBeGreaterThan (1);
@@ -142,7 +143,7 @@ describe ('NodeTree', function () {
             semo.select (node);
 
             window.app.fireEvent ('update_node', {
-                node: { name: '' /*, uuid: node.get ('uuid') // TODO! */ },
+                node: { name: '' }, // TODO - uuid: node.get ('uuid')
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -155,6 +156,11 @@ describe ('NodeTree', function () {
             waitsFor (function () {
                 return executed;
             }, 'node to be updated', 250);
+
+            var record = semo.getLastSelected ();
+            expect (record).toBeTruthy ();
+            var uuid = record.get ('uuid');
+            expect (uuid).toEqual (node.get ('uuid'));
         }
 
         runs (function () { update ('application/project'); });
@@ -177,7 +183,7 @@ describe ('NodeTree', function () {
             semo.select (leaf);
 
             window.app.fireEvent ('update_node', {
-                node: { name: '' /*, uuid: leaf.get ('uuid') //TODO!? */ },
+                node: { name: '' }, // TODO - uuid: node.get ('uuid')
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -190,6 +196,11 @@ describe ('NodeTree', function () {
             waitsFor (function () {
                 return executed;
             }, 'leaf to be updated', 250);
+
+            var record = semo.getLastSelected ();
+            expect (record).toBeTruthy ();
+            var uuid = record.get ('uuid');
+            expect (uuid).toEqual (leaf.get ('uuid'));
         }
 
         runs (function () { update ('text/plain'); });
@@ -226,6 +237,9 @@ describe ('NodeTree', function () {
             waitsFor (function () {
                 return executed;
             }, 'node to be deleted', 250);
+
+            var record = semo.getLastSelected ();
+            expect (record).toBeFalsy ();
         }
 
         runs (function () { destroy ('application/project'); });
@@ -260,6 +274,9 @@ describe ('NodeTree', function () {
             waitsFor (function () {
                 return executed;
             }, 'leaf to be deleted', 250);
+
+            var record = semo.getLastSelected ();
+            expect (record).toBeFalsy ();
         }
 
         runs (function () { destroy ('text/plain'); });
