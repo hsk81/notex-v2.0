@@ -225,7 +225,7 @@ describe ('NodeTree', function () {
             semo.select (node);
 
             window.app.fireEvent ('delete_node', {
-                node: { uuid: undefined /* TODO!? */ },
+                node: { uuid: undefined }, // TODO!?
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
@@ -262,7 +262,7 @@ describe ('NodeTree', function () {
             semo.select (leaf);
 
             window.app.fireEvent ('delete_leaf', {
-                leaf: { uuid: undefined /* TODO!? */ },
+                leaf: { uuid: undefined }, // TODO!?
                 scope: this, callback: function (rec, op) {
                     expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
                     expect (rec.get ('mime')).toEqual (mime);
