@@ -109,6 +109,10 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args);
         assert (args.node);
 
+        args.opts = $.extend ({model_name: 'Webed.model.Node', node_props: {
+            expandable: true, leaf: false
+        }}, args.opts);
+
         var node = {
             mime: args.node.mime,
             name: args.node.name || '',
@@ -123,7 +127,7 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (node.size >= 0);
         assert (node.uuid);
 
-        var model = Ext.create ('Webed.model.Node', node);
+        var model = Ext.create (args.opts.model_name, node);
         assert (model);
         var model = model.save ({ scope: this, callback: function (rec, op) {
             if (args.callback && args.callback.call)
@@ -131,10 +135,7 @@ Ext.define ('Webed.controller.NodeTree', {
         }});
         assert (model);
 
-        $.extend (node, {
-            expandable: true,
-            leaf: false
-        });
+        $.extend (node, args.opts.node_props);
 
         var root = this.get_root (node.root_uuid);
         assert (root);
@@ -154,48 +155,14 @@ Ext.define ('Webed.controller.NodeTree', {
     create_leaf: function (args) {
         assert (args);
         assert (args.leaf);
+        args.node = args.leaf;
+        args.leaf = undefined;
 
-        var leaf = {
-            mime: args.leaf.mime,
-            name: args.leaf.name || '',
-            root_uuid: this.get_root_uuid (args.leaf),
-            size: args.leaf.size || 0,
-            uuid: args.leaf.uuid || UUID.random ()
-        }
+        args.opts = $.extend ({model_name: 'Webed.model.Leaf', node_props: {
+            expandable: false, leaf: true
+        }}, args.opts);
 
-        assert (leaf.mime);
-        assert (leaf.name);
-        assert (leaf.root_uuid);
-        assert (leaf.size >= 0);
-        assert (leaf.uuid);
-
-        var model = Ext.create ('Webed.model.Leaf', leaf);
-        assert (model);
-        var model = model.save ({ scope: this, callback: function (rec, op) {
-            if (args.callback && args.callback.call)
-                args.callback.call (args.scope||this, rec, op);
-        }});
-        assert (model);
-
-        $.extend (leaf, {
-            expandable: false,
-            leaf: true
-        });
-
-        var root = this.get_root (leaf.root_uuid);
-        assert (root);
-        var leaf = root.appendChild (leaf);
-        assert (leaf);
-
-        root.expand (false, function () {
-            var view = this.getNodeTree ();
-            assert (view);
-            var semo = view.getSelectionModel ();
-            assert (semo);
-            semo.select (leaf);
-            this.refresh ();
-        }, this);
-
+        this.create_node (args);
         this.application.fireEvent ('refresh_leafs');
     },
 
