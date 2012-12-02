@@ -163,37 +163,18 @@ Ext.define ('Webed.controller.NodeTree', {
 
             var view = this.getNodeTree ();
             assert (view);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            var record = semo.getLastSelected ();
+            assert (record);
 
-            assert (node.mime in {
-                'application/project':1, 'application/folder':1
-            });
-
-            switch (node.mime) {
-                case 'application/project':
-                    var base = view.getRootNode ();
-                    assert (base);
-                    var root_uuid = base.get ('uuid');
-                    assert (root_uuid);
-                    break;
-
-                case 'application/folder':
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
-                    var record = semo.getLastSelected ();
-                    assert (record);
-                    var expandable = record.get ('expandable');
-                    if (expandable) {
-                        var root_uuid = record.get ('uuid');
-                        assert (root_uuid);
-                    } else {
-                        var root_uuid = record.parentNode.get ('uuid');
-                        assert (root_uuid);
-                    } break;
-
-                default:
-                    throw new AssertException (Ext.String.format (
-                        'no case for node.mime={0}', node.mime
-                    ));
+            var expandable = record.get ('expandable');
+            if (expandable) {
+                var root_uuid = record.get ('uuid');
+                assert (root_uuid);
+            } else {
+                var root_uuid = record.parentNode.get ('uuid');
+                assert (root_uuid);
             }
 
             return root_uuid;

@@ -47,7 +47,8 @@ Ext.define ('Webed.controller.MainBar', {
     },
     addProject: function (item, event, options) {
         this.application.fireEvent ('create_node', {node: {
-            name: 'Project', mime: 'application/project'
+            name: 'Project', mime: 'application/project',
+            root_uuid: '00000000-0000-0000-0000-000000000000'
         }});
     },
     addFolder: function (item, event, options) {

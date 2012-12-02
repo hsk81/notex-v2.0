@@ -76,14 +76,15 @@ describe ('NodeTree', function () {
         }
 
         runs (function () { create ({
-            name: 'node', mime: 'application/project'
+            name: 'node', mime: 'application/project',
+            root_uuid: '00000000-0000-0000-0000-000000000000'
         })});
         runs (function () { create ({
             name: 'node', mime: 'application/folder'
         })});
-        //runs (function () { create ({
-        //  name: 'node', mime: '*/*' // TODO: It should pass!?
-        //})});
+        runs (function () { create ({
+          name: 'node', mime: '*/*'
+        })});
     });
 
     it ('should create a leaf', function () {
