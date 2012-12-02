@@ -109,24 +109,19 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args);
         assert (args.node);
 
-        var root_uuid = this.get_root_uuid (args.node);
-        assert (root_uuid);
-        var uuid = args.node.uuid || UUID.random ();
-        assert (uuid);
-        var name = args.node.name || '';
-        assert (name);
-        var size = args.node.size || 0;
-        assert (size >= 0);
-        var mime = args.node.mime;
-        assert (mime);
-
         var node = {
-            root_uuid: root_uuid,
-            uuid: uuid,
-            mime: mime,
-            name: name,
-            size: size
+            mime: args.node.mime,
+            name: args.node.name || '',
+            root_uuid: this.get_root_uuid (args.node),
+            size: args.node.size || 0,
+            uuid: args.node.uuid || UUID.random ()
         }
+
+        assert (node.mime);
+        assert (node.name);
+        assert (node.root_uuid);
+        assert (node.size >= 0);
+        assert (node.uuid);
 
         var model = Ext.create ('Webed.model.Node', node);
         assert (model);
@@ -141,7 +136,7 @@ Ext.define ('Webed.controller.NodeTree', {
             leaf: false
         });
 
-        var root = this.get_root (root_uuid);
+        var root = this.get_root (node.root_uuid);
         assert (root);
         var node = root.appendChild (node);
         assert (node);
@@ -160,24 +155,19 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args);
         assert (args.leaf);
 
-        var root_uuid = this.get_root_uuid (args.leaf);
-        assert (root_uuid);
-        var uuid = args.leaf.uuid || UUID.random ();
-        assert (uuid);
-        var name = args.leaf.name || '';
-        assert (name);
-        var size = args.leaf.size || 0;
-        assert (size >= 0);
-        var mime = args.leaf.mime;
-        assert (mime);
-
         var leaf = {
-            root_uuid: root_uuid,
-            uuid: uuid,
-            name: name,
-            size: size,
-            mime: mime
+            mime: args.leaf.mime,
+            name: args.leaf.name || '',
+            root_uuid: this.get_root_uuid (args.leaf),
+            size: args.leaf.size || 0,
+            uuid: args.leaf.uuid || UUID.random ()
         }
+
+        assert (leaf.mime);
+        assert (leaf.name);
+        assert (leaf.root_uuid);
+        assert (leaf.size >= 0);
+        assert (leaf.uuid);
 
         var model = Ext.create ('Webed.model.Leaf', leaf);
         assert (model);
@@ -188,12 +178,11 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (model);
 
         $.extend (leaf, {
-            name: name,
             expandable: false,
             leaf: true
         });
 
-        var root = this.get_root (root_uuid);
+        var root = this.get_root (leaf.root_uuid);
         assert (root);
         var leaf = root.appendChild (leaf);
         assert (leaf);
