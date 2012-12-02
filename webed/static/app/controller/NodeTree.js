@@ -109,10 +109,6 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args);
         assert (args.node);
 
-        args.opts = $.extend ({model_name: 'Webed.model.Node', node_props: {
-            expandable: true, leaf: false
-        }}, args.opts);
-
         var node = {
             mime: args.node.mime,
             name: args.node.name || '',
@@ -126,6 +122,13 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (node.root_uuid);
         assert (node.size >= 0);
         assert (node.uuid);
+
+        args.opts = $.extend ({model_name: 'Webed.model.Node', node_props: {
+            expandable: true, leaf: false
+        }}, args.opts);
+
+        assert (args.opts.model_name);
+        assert (args.opts.node_props);
 
         var model = Ext.create (args.opts.model_name, node);
         assert (model);
