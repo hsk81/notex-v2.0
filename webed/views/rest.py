@@ -44,7 +44,7 @@ def node_create (leafs=True, json=True):
     mime = request.json.get ('mime', None)
     assert mime
     name = request.json.get ('name', None)
-    assert name
+    assert name is not None
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -154,7 +154,7 @@ def leaf_create (json=True):
     mime = request.json.get ('mime', None)
     assert mime
     name = request.json.get ('name', None)
-    assert name
+    assert name is not None
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
