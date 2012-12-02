@@ -116,7 +116,7 @@ Ext.define ('Webed.controller.NodeTree', {
         var node = {
             mime: args.node.mime,
             name: args.node.name || '',
-            root_uuid: this.get_root_uuid (args.node),
+            root_uuid: get_root_uuid.call (this, args.node),
             size: args.node.size || 0,
             uuid: args.node.uuid || UUID.random ()
         }
@@ -137,7 +137,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         $.extend (node, args.opts.node_props);
 
-        var root = this.get_root (node.root_uuid);
+        var root = get_root.call (this, node.root_uuid);
         assert (root);
         var node = root.appendChild (node);
         assert (node);
@@ -150,6 +150,39 @@ Ext.define ('Webed.controller.NodeTree', {
             semo.select (node);
             this.refresh ();
         }, this);
+
+        function get_root_uuid (node) {
+            if (node.root_uuid) return node.root_uuid;
+
+            var view = this.getNodeTree ();
+            assert (view);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            var record = semo.getLastSelected ();
+            assert (record);
+
+            var expandable = record.get ('expandable');
+            if (expandable) {
+                var root_uuid = record.get ('uuid');
+                assert (root_uuid);
+            } else {
+                var root_uuid = record.parentNode.get ('uuid');
+                assert (root_uuid);
+            }
+
+            return root_uuid;
+        }
+
+        function get_root (root_uuid) {
+            var view = this.getNodeTree ();
+            assert (view);
+            var base = view.getRootNode ();
+            assert (base);
+
+            return (root_uuid != base.get ('uuid'))
+                ? base.findChild ('uuid', root_uuid, true)
+                : base;
+        }
     },
 
     create_leaf: function (args) {
@@ -164,41 +197,6 @@ Ext.define ('Webed.controller.NodeTree', {
 
         this.create_node (args);
         this.application.fireEvent ('refresh_leafs');
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    get_root_uuid: function (node) {
-        if (node.root_uuid) return node.root_uuid;
-
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var record = semo.getLastSelected ();
-        assert (record);
-
-        var expandable = record.get ('expandable');
-        if (expandable) {
-            var root_uuid = record.get ('uuid');
-            assert (root_uuid);
-        } else {
-            var root_uuid = record.parentNode.get ('uuid');
-            assert (root_uuid);
-        }
-
-        return root_uuid;
-    },
-
-    get_root: function (root_uuid) {
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-
-        return (root_uuid != base.get ('uuid'))
-            ? base.findChild ('uuid', root_uuid, true)
-            : base;
     },
 
     ///////////////////////////////////////////////////////////////////////////
