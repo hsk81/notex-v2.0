@@ -60,8 +60,10 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
-    if 'reset' in request.args: db_reset (); init ()
-    if 'refresh' in request.args: db_refresh (); init ()
+    if 'reset' in request.args and app.debug:
+        db_reset (); init ()
+    if 'refresh' in request.args:
+        db_refresh (); init ()
 
     return render_template (template, page=page, debug=app.debug)
 
@@ -70,8 +72,14 @@ def main (page='home', template='index.html'):
 
 @page.route ('/reset/')
 def reset ():
-    db_reset (); init ();
-    return jsonify (dict (success=True))
+
+    if app.debug or app.testing:
+        db_reset (); init ();
+        result = dict (success=True)
+    else:
+        result = dict (success=False)
+
+    return jsonify (result)
 
 @page.route ('/refresh/')
 def refresh ():
@@ -82,10 +90,6 @@ def refresh ():
 ###############################################################################
 
 def db_reset ():
-    assert app.debug is not None
-    if not app.debug: return
-    assert app.testing is not None
-    if not app.testing: return
 
     db.drop_all ()
     db.create_all ()
