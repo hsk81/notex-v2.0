@@ -199,8 +199,9 @@ Ext.define ('Webed.controller.MainBar', {
         message.confirm ({
             title: 'Delete',
             msg: Ext.String.format (
-                'Are you sure, do you want to delete <i>{0}</i>?',
-                node.get ('name')
+                'Are you sure, do you want to delete <i>{0}</i>?', node.get (
+                    'name'
+                )
             ),
             scope: this, fn: function (button) {
                 if (button != 'yes') return;
