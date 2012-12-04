@@ -114,7 +114,7 @@ Ext.define ('Webed.controller.NodeTree', {
         }
 
         assert (node.mime);
-        assert (node.name);
+        assert (node.name || node.name == '');
         assert (node.root_uuid);
         assert (node.size >= 0);
         assert (node.uuid);

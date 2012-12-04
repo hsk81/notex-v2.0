@@ -65,9 +65,10 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addProject: function (item, event, options) {
-        Ext.MessageBox.prompt (
-            'Add Project', 'Enter a name:', function (button, text) {
-                if (button != 'ok') return;
+        message.prompt ({
+            title: 'Add Project', msg: 'Enter a name:', value: 'Project',
+            scope: this, callback: function (button, text) {
+                if (button != 'ok' || !text) return;
 
                 function callback (rec, op) {
                     if (op.success) return;
@@ -86,14 +87,15 @@ Ext.define ('Webed.controller.MainBar', {
                         name: text
                     }
                 });
-            }, this
-        );
+            }
+        });
     },
 
     addFolder: function (item, event, options) {
-        Ext.MessageBox.prompt (
-            'Add Folder', 'Enter a name:', function (button, text) {
-                if (button != 'ok') return;
+        message.prompt ({
+            title: 'Add Folder', msg: 'Enter a name:', value: 'folder',
+            scope: this, callback: function (button, text) {
+                if (button != 'ok' || !text) return;
 
                 function callback (rec, op) {
                     if (op.success) return;
@@ -111,14 +113,15 @@ Ext.define ('Webed.controller.MainBar', {
                         name: text
                     }
                 });
-            }, this
-        );
+            }
+        });
     },
 
     addText: function (item, event, options) {
-        Ext.MessageBox.prompt (
-            'Add Text', 'Enter a name:', function (button, text) {
-                if (button != 'ok') return;
+        message.prompt ({
+            title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
+            scope: this, callback: function (button, text) {
+                if (button != 'ok' || !text) return;
 
                 function callback (rec, op) {
                     if (op.success) return;
@@ -136,8 +139,8 @@ Ext.define ('Webed.controller.MainBar', {
                         name: text
                     }
                 });
-            }, this
-        );
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -156,7 +159,8 @@ Ext.define ('Webed.controller.MainBar', {
         if (uuid == '00000000-0000-0000-0000-000000000000')
             return;
 
-        message.prompt ({ title: 'Rename', value: node.get ('name'),
+        message.prompt ({
+            title: 'Rename', value: node.get ('name'),
             scope: this, fn: function (button, text) {
                 if (button != 'ok' || text == node.get ('name'))
                     return;
