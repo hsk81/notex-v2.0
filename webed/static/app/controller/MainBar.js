@@ -153,13 +153,13 @@ Ext.define ('Webed.controller.MainBar', {
         var uuid = node.get ('uuid');
         assert (uuid);
 
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
+        if (uuid == '00000000-0000-0000-0000-000000000000')
             return;
-        }
 
         message.prompt ({ title: 'Rename', value: node.get ('name'),
             scope: this, fn: function (button, text) {
-                if (button != 'ok') return;
+                if (button != 'ok' || text == node.get ('name'))
+                    return;
 
                 function callback (rec, op) {
                     if (op.success) return;
@@ -193,9 +193,8 @@ Ext.define ('Webed.controller.MainBar', {
         var uuid = node.get ('uuid');
         assert (uuid);
 
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
+        if (uuid == '00000000-0000-0000-0000-000000000000')
             return;
-        }
 
         message.confirm ({
             title: 'Delete',
