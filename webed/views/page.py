@@ -82,9 +82,10 @@ def refresh ():
 ###############################################################################
 
 def db_reset ():
-
-    if not app.debug or app.testing:
-        return
+    assert app.debug is not None
+    if not app.debug: return
+    assert app.testing is not None
+    if not app.testing: return
 
     db.drop_all ()
     db.create_all ()
