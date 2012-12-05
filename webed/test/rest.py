@@ -181,9 +181,9 @@ class RestTestCase (BaseTestCase):
         response = self.app.post ('/property', data=dict (
             node_uuid=node['uuid'],
             type='StringProperty',
-            mime='text/plain',
-            name='description',
-            data='...'))
+            mime='application/null',
+            name='flag',
+            data=None))
 
         prop = self.assert_ajax_with_result (response)
         self.assert_prop (prop)
@@ -278,7 +278,7 @@ class RestTestCase (BaseTestCase):
         self.assertIsNotNone (prop['type'])
         self.assertIsNotNone (prop['mime'])
         self.assertIsNotNone (prop['name'])
-        self.assertIsNotNone (prop['data'])
+        self.assertIsNotNone (prop['data'] or not prop['data'])
 
 ###############################################################################
 ###############################################################################

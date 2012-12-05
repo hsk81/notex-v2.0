@@ -30,7 +30,7 @@ class Property (db.Model):
         primaryjoin='Node.id==Property.base_id')
 
     uuid = db.Column (db.String (36), nullable=False, unique=True)
-    mime = db.Column (db.String (256), nullable=True)
+    mime = db.Column (db.String (256), nullable=False)
     name = db.Column (db.String (256), nullable=False)
 
     def __init__ (self, name, node, mime=None, uuid=None):

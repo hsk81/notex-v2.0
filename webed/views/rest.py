@@ -266,7 +266,7 @@ def property_create (json=True):
     name = request.json.get ('name', None)
     assert name
     data = request.json.get ('data', None)
-    assert data
+    assert data or not data
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -315,7 +315,7 @@ def property_update (json=True):
     name = request.json.get ('name', None)
     assert name
     data = request.json.get ('data', None)
-    assert data
+    assert data or not data
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -424,7 +424,7 @@ def prop2ext (prop):
     assert prop.type
     assert prop.mime
     assert prop.name
-    assert prop.data
+    assert prop.data or not prop.data
 
     return {
         'node_uuid': prop.node.uuid,
