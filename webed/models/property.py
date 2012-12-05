@@ -42,8 +42,6 @@ class Property (db.Model):
         self.mime = mime if mime else 'application/property'
         self.name = name
 
-        self.data = None ## no persistence
-
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
 ###############################################################################
