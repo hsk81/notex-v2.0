@@ -197,8 +197,9 @@ Ext.define ('Webed.controller.MainBar', {
         var uuid = node.get ('uuid');
         assert (uuid);
 
-        if (uuid == '00000000-0000-0000-0000-000000000000')
+        if (uuid == '00000000-0000-0000-0000-000000000000') {
             return;
+        }
 
         message.confirm ({
             title: 'Delete',
