@@ -12,7 +12,7 @@ from ..ext import db
 
 class Property (db.Model):
     __mapper_args__ = {
-        'polymorphic_identity':'property', 'polymorphic_on':'type'
+        'polymorphic_identity':'Property', 'polymorphic_on':'type'
     }
 
     id = db.Column (db.Integer, db.Sequence ('property_id_seq'),
@@ -49,7 +49,7 @@ class Property (db.Model):
 ###############################################################################
 
 class StringProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'string-property'}
+    __mapper_args__ = {'polymorphic_identity': 'StringProperty'}
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'), db.ForeignKey ('property.id'),
@@ -68,7 +68,7 @@ class StringProperty (Property):
 ###############################################################################
 
 class TextProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'text-property'}
+    __mapper_args__ = {'polymorphic_identity': 'TextProperty'}
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('text_property_id_seq'), db.ForeignKey ('property.id'),
@@ -87,7 +87,7 @@ class TextProperty (Property):
 ###############################################################################
 
 class LargeBinaryProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'large-binary-property'}
+    __mapper_args__ = {'polymorphic_identity': 'LargeBinaryProperty'}
 
     large_binary_property_id = db.Column (db.Integer,
         db.Sequence ('large_binary_property_id_seq'),

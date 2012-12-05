@@ -180,7 +180,7 @@ class RestTestCase (BaseTestCase):
 
         response = self.app.post ('/property', data=dict (
             node_uuid=node['uuid'],
-            type='string-property',
+            type='StringProperty',
             mime='text/plain',
             name='description',
             data='...'))

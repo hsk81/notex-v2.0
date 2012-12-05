@@ -15,6 +15,8 @@ from ..app import app
 from ..ext import db
 from ..util import Q
 
+import sys
+
 ###############################################################################
 ###############################################################################
 
@@ -271,18 +273,10 @@ def property_create (json=True):
     node = Q (base.subnodes).one_or_default (uuid=node_uuid)
     assert node
 
-    ##
-    ## TODO: Generic approach for (type => property class) lookup!
-    ##
-
-    if type == 'string-property':
-        prop = StringProperty (name, data, node, mime=mime, uuid=uuid)
-    elif type == 'text-property':
-        prop = TextProperty (name, data, node, mime=mime, uuid=uuid)
-    elif type == 'large-binary-property':
-        prop = LargeBinaryProperty (name, data, node, mime=mime, uuid=uuid)
-    else:
-        prop = Property (name, node, mime=mime, uuid=uuid)
+    Type = getattr (sys.modules[__name__], type)
+    assert issubclass (Type, Property)
+    assert Type.mro ().pop (0) is not Property
+    prop = Type (name, data, node, mime=mime, uuid=uuid)
 
     db.session.add (prop)
     db.session.commit ()

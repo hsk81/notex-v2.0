@@ -181,7 +181,7 @@ class PropertyTestCase (BaseTestCase):
 
         self.assertIsNotNone (prop)
         self.assertEqual (prop.name, 'property')
-        self.assertEqual (prop.type, 'property')
+        self.assertEqual (prop.type, 'Property')
         self.assertEqual (prop.node, node)
 
     def test_string_property (self):
@@ -200,7 +200,7 @@ class PropertyTestCase (BaseTestCase):
         self.assertTrue (isinstance (prop, StringProperty))
 
         self.assertEqual (prop.name, 'string')
-        self.assertEqual (prop.type, 'string-property')
+        self.assertEqual (prop.type, 'StringProperty')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
@@ -221,7 +221,7 @@ class PropertyTestCase (BaseTestCase):
         self.assertTrue (isinstance (prop, TextProperty))
 
         self.assertEqual (prop.name, 'text')
-        self.assertEqual (prop.type, 'text-property')
+        self.assertEqual (prop.type, 'TextProperty')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
@@ -242,7 +242,7 @@ class PropertyTestCase (BaseTestCase):
         self.assertTrue (isinstance (prop, LargeBinaryProperty))
 
         self.assertEqual (prop.name, 'large-binary')
-        self.assertEqual (prop.type, 'large-binary-property')
+        self.assertEqual (prop.type, 'LargeBinaryProperty')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), str)
