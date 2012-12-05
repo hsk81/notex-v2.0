@@ -271,6 +271,10 @@ def property_create (json=True):
     node = Q (base.subnodes).one_or_default (uuid=node_uuid)
     assert node
 
+    ##
+    ## TODO: Generic approach for (type => property class) lookup!
+    ##
+
     if type == 'string-property':
         prop = StringProperty (name, data, node, mime=mime, uuid=uuid)
     elif type == 'text-property':
