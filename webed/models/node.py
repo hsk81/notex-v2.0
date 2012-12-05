@@ -19,13 +19,13 @@ class Node (db.Model):
     nodes = db.relationship ('Node',
         cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.root_id',
-        backref=db.backref('root', remote_side=id))
+        backref=db.backref ('root', remote_side=id))
 
     base_id = db.Column (db.Integer, db.ForeignKey (id))
     subnodes = db.relationship ('Node',
         cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.base_id',
-        backref=db.backref('base', remote_side=id))
+        backref=db.backref ('base', remote_side=id))
 
     uuid = db.Column (db.String (36), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=True)

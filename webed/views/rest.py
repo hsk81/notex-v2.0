@@ -10,7 +10,7 @@ from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from ..config import DefaultConfig
-from ..models import Node, Leaf
+from ..models import *
 from ..app import app
 from ..ext import db
 from ..util import Q
@@ -225,7 +225,6 @@ def leaf_delete (json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
-
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
     leaf = Q (base.subleafs).one_or_default (uuid=uuid)
@@ -236,6 +235,111 @@ def leaf_delete (json=True):
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
+
+###############################################################################
+###############################################################################
+
+class PropertyApi (MethodView):
+
+    def post (self, json=True): return property_create (json)
+    def get (self, json=True): return property_read (json)
+    def put (self, json=True): return property_update (json)
+    def delete (self, json=True): return property_delete (json)
+
+rest.add_url_rule ('/property', view_func=PropertyApi.as_view ('properties'))
+
+def property_create (json=True):
+
+    if not request.is_xhr:
+        request.json = request.form
+
+    node_uuid = request.json.get ('node_uuid', None)
+    assert node_uuid
+    uuid = request.json.get ('uuid', None)
+    assert uuid or not uuid
+    type = request.json.get ('type', None)
+    assert type
+    mime = request.json.get ('mime', None)
+    assert mime
+    name = request.json.get ('name', None)
+    assert name
+    data = request.json.get ('data', None)
+    assert data
+
+    base = Q (Node.query).one (uuid=session['root_uuid'])
+    assert base
+    node = Q (base.subnodes).one_or_default (uuid=node_uuid)
+    assert node
+
+    if type == 'string-property':
+        prop = StringProperty (name, data, node, mime=mime, uuid=uuid)
+    elif type == 'text-property':
+        prop = TextProperty (name, data, node, mime=mime, uuid=uuid)
+    elif type == 'large-binary-property':
+        prop = LargeBinaryProperty (name, data, node, mime=mime, uuid=uuid)
+    else:
+        prop = Property (name, node, mime=mime, uuid=uuid)
+
+    db.session.add (prop)
+    db.session.commit ()
+
+    result = dict (success=True, result=prop2ext (prop))
+    return jsonify (result) if json else result
+
+def property_read (json=True):
+
+    uuid = request.args.get ('uuid', None)
+    assert uuid or not uuid
+    base = Q (Node.query).one (uuid=session['root_uuid'])
+    assert base
+
+    if uuid:
+        props = Q (base.subprops).all (uuid=uuid)
+    else:
+        props = Q (base.subprops).all ()
+
+    result = dict (success=True, results=map (prop2ext, props))
+    return jsonify (result) if json else result
+
+def property_update (json=True):
+
+    if not request.is_xhr:
+        request.json = request.args
+
+    node_uuid = request.json.get ('node_uuid', None)
+    assert node_uuid
+    uuid = request.json.get ('uuid', None)
+    assert uuid
+    type = request.json.get ('type', None)
+    assert type
+    mime = request.json.get ('mime', None)
+    assert mime
+    name = request.json.get ('name', None)
+    assert name
+    data = request.json.get ('data', None)
+    assert data
+
+    base = Q (Node.query).one (uuid=session['root_uuid'])
+    assert base
+    prop = Q (base.subprops).one (uuid=uuid)
+    assert prop
+
+    if prop.node and prop.node.uuid != node_uuid:
+        prop.node = Q (base.subnodes).one (uuid=node_uuid)
+        assert prop.node
+
+    if type and prop.type != type: pass ## ignore!
+    if mime and prop.mime != mime: prop.mime = mime
+    if name and prop.name != name: prop.name = name
+    if data and prop.data != data: prop.name = data
+
+    db.session.commit ()
+
+    result = dict (success=True, result=prop2ext (prop))
+    return jsonify (result) if json else result
+
+def property_delete (json=True):
+    pass
 
 ###############################################################################
 ###############################################################################
@@ -296,6 +400,25 @@ def leaf2ext (leaf):
         'results': None,
         'root_uuid': leaf.root.uuid,
         'uuid': leaf.uuid
+    }
+
+def prop2ext (prop):
+
+    assert prop
+    assert prop.node and prop.node.uuid
+    assert prop.uuid
+    assert prop.type
+    assert prop.mime
+    assert prop.name
+    assert prop.data or prop.data is None
+
+    return {
+        'node_uuid': prop.node.uuid,
+        'uuid': prop.uuid,
+        'type': prop.type,
+        'mime': prop.mime,
+        'name': prop.name,
+        'data': prop.data
     }
 
 ###############################################################################

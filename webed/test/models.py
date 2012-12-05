@@ -165,3 +165,87 @@ class ExtendedModelsTestCase (BaseTestCase):
 
 ###############################################################################
 ###############################################################################
+
+class PropertyTestCase (BaseTestCase):
+
+    def test_property (self):
+
+        node = Node ('node', root=None)
+        self.db.session.add (node)
+
+        prop = Property ('property', node=node)
+        self.db.session.add (prop)
+        self.db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertIsNotNone (prop)
+        self.assertEqual (prop.name, 'property')
+        self.assertEqual (prop.type, 'property')
+        self.assertEqual (prop.node, node)
+
+    def test_string_property (self):
+
+        node = Node ('node', root=None)
+        self.db.session.add (node)
+
+        prop = StringProperty ('string', data=u'...', node=node)
+        self.db.session.add (prop)
+        self.db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertEqual (type (prop), StringProperty)
+        self.assertTrue (isinstance (prop, Property))
+        self.assertTrue (isinstance (prop, StringProperty))
+
+        self.assertEqual (prop.name, 'string')
+        self.assertEqual (prop.type, 'string-property')
+        self.assertEqual (prop.node, node)
+        self.assertEqual (prop.data, u'...')
+        self.assertEqual (type (prop.data), unicode)
+
+    def test_text_property (self):
+
+        node = Node ('node', root=None)
+        self.db.session.add (node)
+
+        prop = TextProperty ('text', data=u'...', node=node)
+        self.db.session.add (prop)
+        self.db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertEqual (type (prop), TextProperty)
+        self.assertTrue (isinstance (prop, Property))
+        self.assertTrue (isinstance (prop, TextProperty))
+
+        self.assertEqual (prop.name, 'text')
+        self.assertEqual (prop.type, 'text-property')
+        self.assertEqual (prop.node, node)
+        self.assertEqual (prop.data, u'...')
+        self.assertEqual (type (prop.data), unicode)
+
+    def test_large_binary_property (self):
+
+        node = Node ('node', root=None)
+        self.db.session.add (node)
+
+        prop = LargeBinaryProperty ('large-binary', data=u'...', node=node)
+        self.db.session.add (prop)
+        self.db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertEqual (type (prop), LargeBinaryProperty)
+        self.assertTrue (isinstance (prop, Property))
+        self.assertTrue (isinstance (prop, LargeBinaryProperty))
+
+        self.assertEqual (prop.name, 'large-binary')
+        self.assertEqual (prop.type, 'large-binary-property')
+        self.assertEqual (prop.node, node)
+        self.assertEqual (prop.data, u'...')
+        self.assertEqual (type (prop.data), str)
+
+###############################################################################
+###############################################################################

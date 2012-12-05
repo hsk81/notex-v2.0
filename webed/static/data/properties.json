@@ -1,0 +1,26 @@
+{
+    "results": [{
+        "node_uuid": "8ce74e75-185b-445d-ba70-fb39275efb93",
+        "uuid": "b6a68a81-9c7b-4106-8c43-617bcb2e975e",
+        "type": "string-property",
+        "mime": "text/plain",
+        "name": "description",
+        "data": "..."
+    },{
+        "node_uuid": "8ce74e75-185b-445d-ba70-fb39275efb93",
+        "uuid": "b6a68a81-9c7b-4106-8c43-617bcb2e975e",
+        "type": "text-property",
+        "mime": "text/plain",
+        "name": "text",
+        "data": "..."
+    },{
+        "node_uuid": "8ce74e75-185b-445d-ba70-fb39275efb93",
+        "uuid": "ea20c1e5-b6c0-4327-914b-bfc0f0cd8681",
+        "type": "large-binary-property",
+        "mime": "image/jpg",
+        "name": "image",
+        "data": "..."
+    }],
+
+    "success": true
+}

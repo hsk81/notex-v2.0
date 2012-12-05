@@ -1,10 +1,10 @@
-Ext.define ('Webed.model.Resource', {
+Ext.define ('Webed.model.Property', {
     extend: 'Ext.data.Model',
-    fields: ['uuid', 'mime', 'data'],
+    fields: ['node_uuid', 'uuid', 'type', 'mime', 'name', 'data'],
 
     proxy: {
         type: 'ajax',
-        url: '/static/data/resources.json',
+        url: '/static/data/properties.json',
         reader: {
             type: 'json',
             root: 'results'
