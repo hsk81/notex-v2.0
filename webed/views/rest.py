@@ -266,7 +266,7 @@ def property_create (json=True):
     name = request.json.get ('name', None)
     assert name
     data = request.json.get ('data', None)
-    assert data
+    assert data or data is None
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -275,8 +275,11 @@ def property_create (json=True):
 
     Type = getattr (sys.modules[__name__], type)
     assert issubclass (Type, Property)
-    assert Type.mro ().pop (0) is not Property
-    prop = Type (name, data, node, mime=mime, uuid=uuid)
+
+    if Type.mro ().pop (0) is Property:
+        prop = Type (name, node, mime=mime, uuid=uuid)
+    else:
+        prop = Type (name, data, node, mime=mime, uuid=uuid)
 
     db.session.add (prop)
     db.session.commit ()
