@@ -7,7 +7,7 @@ from webed.app import app
 from webed.ext import db
 from webed.models import User
 
-from flask.ext.script import Manager
+from flask.ext.script import Manager, Command, Option
 
 ###############################################################################
 ###############################################################################
@@ -26,24 +26,46 @@ def run (debug=False, config=None):
 
     app.run (debug=debug)
 
-@manager.command
-def init ():
-    """Init database tables"""
-    db.create_all ()
-
-    user = User (u'admin', mail=u'admin@mail.net')
-    db.session.add (user)
-    db.session.commit ()
-
-@manager.command
-def drop ():
-    """Drops database tables"""
-    db.drop_all ()
+###############################################################################
 
 @manager.command
 def execute (source):
     """Execute source in application context"""
     with app.app_context (): exec source
+
+###############################################################################
+
+class DbInit (Command):
+    """Init database tables (with a default admin)"""
+
+    def get_options (self):
+
+        return [
+            Option ('-n', '--name', dest='name', default=u'admin'),
+            Option ('-m', '--mail', dest='mail', default=u'admin@mail.net'),
+        ]
+
+    def run (self, name, mail):
+        db.create_all ()
+
+        assert name
+        assert mail
+        user = User (name=name, mail=mail)
+
+        db.session.add (user)
+        db.session.commit ()
+
+manager.add_command ('db-init', DbInit ())
+
+###############################################################################
+
+class DbDrop (Command):
+    """Drops database tables"""
+
+    def run (self):
+        db.drop_all ()
+
+manager.add_command ('db-drop', DbDrop ())
 
 ###############################################################################
 ###############################################################################

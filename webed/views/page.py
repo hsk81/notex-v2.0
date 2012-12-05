@@ -56,14 +56,11 @@ def main (page='home', template='index.html'):
         session_id = None
 
     if not request.args.get ('silent', False):
-
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
-    if 'reset' in request.args and app.debug:
-        db_reset (); init ()
-    if 'refresh' in request.args:
-        db_refresh (); init ()
+    if 'reset' in request.args: reset (json=False)
+    if 'refresh' in request.args: refresh (json=False)
 
     return render_template (template, page=page, debug=app.debug)
 
@@ -71,30 +68,37 @@ def main (page='home', template='index.html'):
 ###############################################################################
 
 @page.route ('/reset/')
-def reset ():
+def reset (json=True):
 
     if app.debug or app.testing:
-        db_reset (); init ();
+        name = request.args['name'] if 'name' in request.args else None
+        mail = request.args['mail'] if 'mail' in request.args else None
+        db_reset (name, mail); init ()
         result = dict (success=True)
     else:
         result = dict (success=False)
 
-    return jsonify (result)
+    return jsonify (result) if json else result
 
 @page.route ('/refresh/')
-def refresh ():
+def refresh (json=True):
+
     db_refresh (); init ();
-    return jsonify (dict (success=True))
+    result = dict (success=True)
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def db_reset ():
+def db_reset (name=None, mail=None):
 
     db.drop_all ()
     db.create_all ()
 
-    user = User (u'admin', mail=u'admin@mail.net')
+    user = User (
+        name=name if name else u'admin',
+        mail=mail if mail else u'admin@mail.net')
+
     db.session.add (user)
     db.session.commit ()
 
