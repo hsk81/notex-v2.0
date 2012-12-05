@@ -37,16 +37,17 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assert_node (node)
+
         response = self.app.post ('/node', data=dict (
             root_uuid=node['uuid'], mime='application/folder', name='folder'))
-        _ = self.assert_ajax_with_result (response)
+        node = self.assert_ajax_with_result (response)
+        self.assert_node (node)
 
         response = self.app.post ('/node', data=dict (
             root_uuid=None, mime='application/folder', name='folder'))
-        _ = self.assert_ajax_with_result (response)
-
-        return response
+        node = self.assert_ajax_with_result (response)
+        self.assert_node (node)
 
     def test_node_read (self):
 
@@ -55,11 +56,11 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
-        response = self.app.get ('/node?uuid=%s' % node['uuid'])
-        _ = self.assert_ajax_with_results (response)
+        self.assert_node (node)
 
-        return response
+        response = self.app.get ('/node?uuid=%s' % node['uuid'])
+        nodes = self.assert_ajax_with_results (response)
+        map (self.assert_node, nodes)
 
     def test_node_update (self):
 
@@ -72,9 +73,8 @@ class RestTestCase (BaseTestCase):
 
         response = self.app.put ('/node?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
             (node['root_uuid'], node['uuid'], node['name'], node['mime']))
-        _ = self.assert_ajax_with_result (response)
-
-        return response
+        node = self.assert_ajax_with_result (response)
+        self.assert_node (node)
 
     def test_node_delete (self):
 
@@ -83,20 +83,11 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assert_node (node)
+
         response = self.app.delete ('/node?uuid=%s' % node['uuid'])
-        _ = self.assert_ajax_with_result (response)
-
-        return response
-
-    ###########################################################################
-
-    def assert_node (self, node):
-
-        self.assertIsNotNone (node['root_uuid'])
-        self.assertIsNotNone (node['uuid'])
-        self.assertIsNotNone (node['name'])
-        self.assertIsNotNone (node['mime'])
+        node = self.assert_ajax_with_result (response)
+        self.assert_node (node)
 
     ###########################################################################
     # LeafApi
@@ -122,16 +113,17 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'application/project') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assert_node (node)
+
         response = self.app.post ('/leaf', data = dict (
             root_uuid=node['uuid'], mime='text/plain', name='file', ext='txt'))
-        _ = self.assert_ajax_with_result (response)
+        leaf = self.assert_ajax_with_result (response)
+        self.assert_leaf (leaf)
 
         response = self.app.post ('/leaf', data = dict (
             root_uuid=None, mime='text/plain', name='file', ext='txt'))
-        _ = self.assert_ajax_with_result (response)
-
-        return response
+        leaf = self.assert_ajax_with_result (response)
+        self.assert_leaf (leaf)
 
     def test_leaf_read (self):
 
@@ -140,11 +132,11 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (leaf['uuid'])
-        response = self.app.get ('/leaf?uuid=%s' % leaf['uuid'])
-        _ = self.assert_ajax_with_results (response)
+        self.assert_leaf (leaf)
 
-        return response
+        response = self.app.get ('/leaf?uuid=%s' % leaf['uuid'])
+        leafs = self.assert_ajax_with_results (response)
+        map (self.assert_leaf, leafs)
 
     def test_leaf_update (self):
 
@@ -157,9 +149,8 @@ class RestTestCase (BaseTestCase):
 
         response = self.app.put ('/leaf?root_uuid=%s&uuid=%s&name=%s&mime=%s' %
             (leaf['root_uuid'], leaf['uuid'], leaf['name'], leaf['mime']))
-        _ = self.assert_ajax_with_result (response)
-
-        return response
+        leaf = self.assert_ajax_with_result (response)
+        self.assert_leaf (leaf)
 
     def test_leaf_delete (self):
 
@@ -168,20 +159,11 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (leaf['uuid'])
+        self.assert_leaf (leaf)
+
         response = self.app.delete ('/leaf?uuid=%s' % leaf['uuid'])
-        _ = self.assert_ajax_with_result (response)
-
-        return response
-
-    ###########################################################################
-
-    def assert_leaf (self, leaf):
-
-        self.assertIsNotNone (leaf['root_uuid'])
-        self.assertIsNotNone (leaf['uuid'])
-        self.assertIsNotNone (leaf['name'])
-        self.assertIsNotNone (leaf['mime'])
+        leaf = self.assert_ajax_with_result (response)
+        self.assert_leaf (leaf)
 
     ###########################################################################
     # PropertyApi
@@ -194,7 +176,7 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assert_node (node)
 
         response = self.app.post ('/property', data=dict (
             node_uuid=node['uuid'],
@@ -215,12 +197,11 @@ class RestTestCase (BaseTestCase):
             .filter (lambda el: el['mime'] == 'text/plain') \
             .first ()
 
-        self.assertIsNotNone (node['uuid'])
+        self.assert_node (node)
+
         response = self.app.get ('/node?uuid=%s' % node['uuid'])
         props = self.assert_ajax_with_results (response)
         map (self.assert_prop, props)
-
-        return response, props
 
     def test_property_update (self):
 
@@ -229,31 +210,20 @@ class RestTestCase (BaseTestCase):
 
         response = self.app.put (
             '/property?node_uuid=%s&uuid=%s&type=%s&mime=%s&name=%s&data=%s' % (
-                prop['node_uuid'],
-                prop['uuid'],
-                prop['type'],
-                prop['mime'],
-                prop['name'],
-                prop['data']))
+                prop['node_uuid'], prop['uuid'], prop['type'], prop['mime'],
+                prop['name'], prop['data']))
 
         prop = self.assert_ajax_with_result (response)
         self.assert_prop (prop)
 
-        return response, prop
-
     def test_property_delete (self):
-        pass
 
-    ###########################################################################
+        _, prop = self.test_property_create ()
+        self.assert_prop (prop)
 
-    def assert_prop (self, prop):
-
-        self.assertIsNotNone (prop['node_uuid'])
-        self.assertIsNotNone (prop['uuid'])
-        self.assertIsNotNone (prop['type'])
-        self.assertIsNotNone (prop['mime'])
-        self.assertIsNotNone (prop['name'])
-        self.assertIsNotNone (prop['data'])
+        response = self.app.delete ('/property?uuid=%s' % prop['uuid'])
+        prop = self.assert_ajax_with_result (response)
+        self.assert_prop (prop)
 
     ###########################################################################
     # Helpers
@@ -284,6 +254,31 @@ class RestTestCase (BaseTestCase):
         self.assertIsNotNone (json['results'])
 
         return json['results']
+
+    ###########################################################################
+
+    def assert_node (self, node):
+
+        self.assertIsNotNone (node['root_uuid'])
+        self.assertIsNotNone (node['uuid'])
+        self.assertIsNotNone (node['name'])
+        self.assertIsNotNone (node['mime'])
+
+    def assert_leaf (self, leaf):
+
+        self.assertIsNotNone (leaf['root_uuid'])
+        self.assertIsNotNone (leaf['uuid'])
+        self.assertIsNotNone (leaf['name'])
+        self.assertIsNotNone (leaf['mime'])
+
+    def assert_prop (self, prop):
+
+        self.assertIsNotNone (prop['node_uuid'])
+        self.assertIsNotNone (prop['uuid'])
+        self.assertIsNotNone (prop['type'])
+        self.assertIsNotNone (prop['mime'])
+        self.assertIsNotNone (prop['name'])
+        self.assertIsNotNone (prop['data'])
 
 ###############################################################################
 ###############################################################################

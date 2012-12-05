@@ -339,7 +339,22 @@ def property_update (json=True):
     return jsonify (result) if json else result
 
 def property_delete (json=True):
-    pass
+
+    if not request.is_xhr:
+        request.json = request.args
+
+    uuid = request.json.get ('uuid', None)
+    assert uuid
+    base = Q (Node.query).one (uuid=session['root_uuid'])
+    assert base
+    prop = Q (base.subprops).one_or_default (uuid=uuid)
+    assert prop
+
+    db.session.delete (prop)
+    db.session.commit ()
+
+    result = dict (success=True, result=prop2ext (prop))
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
@@ -405,6 +420,7 @@ def leaf2ext (leaf):
 def prop2ext (prop):
 
     assert prop
+    assert prop.node
     assert prop.node and prop.node.uuid
     assert prop.uuid
     assert prop.type
