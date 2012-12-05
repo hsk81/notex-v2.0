@@ -9,15 +9,15 @@ Ext.require ('Ext.grid.column.Number');
 
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
-Ext.require ('Webed.store.Resources');
+Ext.require ('Webed.store.Properties');
 Ext.require ('Webed.view.Viewport');
 
 Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
 
-    models: ['Node', 'Leaf', 'Resource'],
-    stores: ['Nodes', 'Leafs', 'Resources'],
+    models: ['Node', 'Leaf', 'Property'],
+    stores: ['Nodes', 'Leafs', 'Properties'],
     controllers: ['MainBar', 'NodeTree', 'LeafList', 'StatusBar'],
 
     paths: {

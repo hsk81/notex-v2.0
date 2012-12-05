@@ -10,14 +10,14 @@ Ext.require ('Ext.grid.column.Number');
 
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
-Ext.require ('Webed.store.Resources');
+Ext.require ('Webed.store.Properties');
 
 Ext.onReady (function() {
     window.app = Ext.create ('Ext.app.Application', {
         name: 'Webed',
 
-        models: ['Node', 'Leaf', 'Resource'],
-        stores: ['Nodes', 'Leafs', 'Resources'],
+        models: ['Node', 'Leaf', 'Property'],
+        stores: ['Nodes', 'Leafs', 'Properties'],
         controllers: ['MainBar', 'NodeTree', 'LeafList', 'StatusBar'],
 
         paths: {
