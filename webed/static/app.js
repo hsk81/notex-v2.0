@@ -18,7 +18,10 @@ Ext.application ({
 
     models: ['Node', 'Leaf', 'Property'],
     stores: ['Nodes', 'Leafs', 'Properties'],
-    controllers: ['MainBar', 'NodeTree', 'LeafList', 'StatusBar'],
+
+    controllers: [
+        'MainBar', 'NodeTree', 'LeafList', 'ContentTabs', 'StatusBar'
+    ],
 
     paths: {
         'Webed': '../static/app'

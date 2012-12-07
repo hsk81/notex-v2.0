@@ -4,7 +4,6 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    views: ['NodeTree'],
     models: ['Node'],
     stores: ['Nodes'],
 
@@ -17,9 +16,12 @@ Ext.define ('Webed.controller.NodeTree', {
 
     init: function () {
         this.control ({
-            'node-tree': { afterrender: this.select_base },
             'tool[action=node-tree:refresh]': { click: this.refresh },
-            'tool[action=node-tree:settings]': { click: this.settings }
+            'tool[action=node-tree:settings]': { click: this.settings },
+            'node-tree': {
+                afterrender: this.select_base,
+                itemclick: this.itemclick
+            }
         });
 
         this.application.on ({
@@ -42,10 +44,64 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.on ({
             delete_leaf: this.delete_leaf, scope: this
         });
+
+        this.application.on ({
+            nodeclick: this.sync_selection, scope: this
+        });
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    itemclick: function (view, record, item, index, e, eOpts) {
+        this.application.fireEvent ('nodeclick', this, {
+            record: record
+        });
+    },
+
+    sync_selection: function (source, args) {
+        if (source == this) return;
+
+        assert (args);
+        var record = args.record;
+        assert (record);
+
+        var view = this.getNodeTree ();
+        assert (view);
+        var base = view.getRootNode ();
+        assert (base);
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var path = record.get ('path');
+        assert (path);
+
+        var temp = []
+        for (var idx in path) temp[idx] = path[idx]; // TODO: 'clone' function?
+        var path = temp;
+
+        // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
+        path[0] = base.get ('uuid');
+        // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
+        path.unshift (''); path.pop ();
+        // ['','00..00','bb..bb''] => /00..00/bb..bb
+        var path = path.join ('/');
+        assert (path);
+
+        view.expandPath (path, 'uuid', '/', function (success, node) {
+            if (success) {
+                var semo = view.getSelectionModel ();
+                assert (semo);
+                var node = node.findChild ('uuid', uuid, true);
+                assert (node); semo.select (node);
+            }
+        }, this);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     settings: function () {
-        console.debug ('[NodeTreeCtrl.settings]');
+        console.debug ('[NodeTree.settings]');
     },
 
     refresh: function () {
@@ -86,6 +142,9 @@ Ext.define ('Webed.controller.NodeTree', {
         }, node: base, scope: this});
         assert (store);
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     select_base: function () {
         var view = this.getNodeTree ();

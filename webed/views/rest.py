@@ -377,7 +377,8 @@ def node2ext (node, leafs=True, level=1):
             'size': 0,
             'results': results,
             'root_uuid': node.root.uuid if node.root else None,
-            'uuid': node.uuid
+            'uuid': node.uuid,
+            'path': node.path
         }
 
     if DefaultConfig.MAX_NODE_SIZE < node.nodes.count ():
@@ -412,7 +413,8 @@ def leaf2ext (leaf):
         'size': 0,
         'results': None,
         'root_uuid': leaf.root.uuid,
-        'uuid': leaf.uuid
+        'uuid': leaf.uuid,
+        'path': leaf.path
     }
 
 def prop2ext (prop):

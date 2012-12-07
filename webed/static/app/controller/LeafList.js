@@ -1,7 +1,9 @@
 Ext.define ('Webed.controller.LeafList', {
     extend: 'Ext.app.Controller',
 
-    views: ['LeafList'],
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     models: ['Leaf'],
     stores: ['Leafs'],
 
@@ -9,19 +11,30 @@ Ext.define ('Webed.controller.LeafList', {
         selector: 'leaf-list', ref: 'leafList'
     }],
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     init: function () {
         this.control ({
             'leaf-list tool[action=refresh]': { click: this.refresh },
-            'leaf-list tool[action=settings]': { click: this.settings }
+            'leaf-list tool[action=settings]': { click: this.settings },
+            'leaf-list': { itemclick: this.itemclick }
         });
 
         this.application.on ({
             refresh_leafs: this.refresh, scope: this
         });
+
+        this.application.on ({
+            nodeclick: this.sync_selection, scope: this
+        });
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     settings: function () {
-        console.debug ('[LeafListCtrl.settings]');
+        console.debug ('[LeafList.settings]');
     },
 
     refresh: function () {
@@ -29,5 +42,55 @@ Ext.define ('Webed.controller.LeafList', {
         assert (store);
         var store = store.load ();
         assert (store);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    itemclick: function (view, record, item, index, e, eOpts) {
+        this.application.fireEvent ('nodeclick', this, {
+            record: record
+        });
+    },
+
+    sync_selection: function (source, args) {
+        if (source == this) return;
+
+        assert (args);
+        var record = args.record;
+        assert (record);
+
+        if (record.isExpandable && record.isExpandable ()) {
+            return;
+        }
+
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var view = this.getLeafList ();
+        assert (view);
+        var store = this.getLeafsStore ();
+        assert (store);
+
+        var index = store.findBy (function (rec) {
+            return rec.get ('uuid') == uuid;
+        }, this);
+
+        if (index >= 0) {
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            var records = semo.getSelection ();
+            assert (records);
+
+            var records = records.filter (function (rec) {
+                return rec.get ('uuid') == uuid;
+            }, this);
+
+            if (records.length == 0) {
+                semo.select (index);
+            }
+        }
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 });
