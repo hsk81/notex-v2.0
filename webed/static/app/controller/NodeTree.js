@@ -78,8 +78,8 @@ Ext.define ('Webed.controller.NodeTree', {
 
     sync_selection: function (source, args) {
         if (source == this) return;
-        assert (args);
 
+        assert (args);
         var record = args.record;
         assert (record);
         var uuid = record.get ('uuid');
