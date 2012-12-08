@@ -13,3 +13,6 @@
 [submodule "webed/static/app-test/lib/jasmine.git"]
 	path = webed/static/app-test/lib/jasmine.git
 	url = https://github.com/hsk81/jasmin-standalone.git
+[submodule "webed/static/lib/codemirror.git"]
+	path = webed/static/lib/codemirror.git
+	url = https://github.com/hsk81/CodeMirror.git
