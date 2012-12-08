@@ -20,7 +20,7 @@ Ext.define ('Webed.controller.NodeTree', {
             'tool[action=node-tree:settings]': { click: this.settings },
             'node-tree': {
                 afterrender: this.select_base,
-                itemclick: this.itemclick
+                select: this.select
             }
         });
 
@@ -46,15 +46,15 @@ Ext.define ('Webed.controller.NodeTree', {
         });
 
         this.application.on ({
-            nodeclick: this.sync_selection, scope: this
+            nodeselect: this.sync_selection, scope: this
         });
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    itemclick: function (view, record, item, index, e, eOpts) {
-        this.application.fireEvent ('nodeclick', this, {
+    select: function (view, record, index, eOpts) {
+        this.application.fireEvent ('nodeselect', this, {
             record: record
         });
     },

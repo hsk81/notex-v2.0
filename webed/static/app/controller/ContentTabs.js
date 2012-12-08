@@ -24,7 +24,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         });
 
         this.application.on ({
-            nodeclick: this.add_text_tab, scope: this
+            nodeselect: this.add_text_tab, scope: this
         });
     },
 
@@ -54,7 +54,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (newCard);
         assert (newCard.record);
 
-        this.application.fireEvent ('nodeclick', this, {
+        this.application.fireEvent ('nodeselect', this, {
             record: newCard.record
         });
     },
@@ -76,9 +76,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var base = tree.getRootNode ();
         assert (base);
         var node = base.findChild ('uuid', uuid, true);
-        assert (node);
-
-        if (node.isLeaf () == false) {
+        if (!node || node.isLeaf () == false) {
             return;
         }
 

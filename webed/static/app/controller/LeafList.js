@@ -18,7 +18,7 @@ Ext.define ('Webed.controller.LeafList', {
         this.control ({
             'leaf-list tool[action=refresh]': { click: this.refresh },
             'leaf-list tool[action=settings]': { click: this.settings },
-            'leaf-list': { itemclick: this.itemclick }
+            'leaf-list': { select: this.select }
         });
 
         this.application.on ({
@@ -26,7 +26,7 @@ Ext.define ('Webed.controller.LeafList', {
         });
 
         this.application.on ({
-            nodeclick: this.sync_selection, scope: this
+            nodeselect: this.sync_selection, scope: this
         });
     },
 
@@ -47,8 +47,8 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    itemclick: function (view, record, item, index, e, eOpts) {
-        this.application.fireEvent ('nodeclick', this, {
+    select: function (view, record, index, eOpts) {
+        this.application.fireEvent ('nodeselect', this, {
             record: record
         });
     },
