@@ -2,6 +2,11 @@ Ext.define ('Webed.view.MainBar', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.main-bar',
 
+    requires: [
+        'Ext.button.Split',
+        'Ext.container.ButtonGroup'
+    ],
+
     items: [{
 
         xtype: 'buttongroup',

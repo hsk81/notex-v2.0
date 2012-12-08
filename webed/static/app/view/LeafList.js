@@ -3,6 +3,11 @@ Ext.define ('Webed.view.LeafList', {
     alias: 'widget.leaf-list',
     store: 'Leafs',
 
+    requires: [
+        'Ext.grid.column.Number',
+        'Ext.grid.column.Template'
+    ],
+
     columns: [{
         flex: 2,
         text: 'Name',

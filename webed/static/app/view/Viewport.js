@@ -3,6 +3,7 @@ Ext.define ('Webed.view.Viewport', {
     layout: 'fit',
 
     requires: [
+        'Ext.layout.container.Border',
         'Webed.view.MainBar',
         'Webed.view.NodeTree',
         'Webed.view.LeafList',

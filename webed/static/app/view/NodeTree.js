@@ -3,6 +3,11 @@ Ext.define ('Webed.view.NodeTree', {
     alias: 'widget.node-tree',
     store: 'Nodes',
 
+    requires: [
+        'Ext.grid.column.Number',
+        'Ext.grid.column.Template'
+    ],
+
     useArrows: true,
     rootVisible: false,
     hideHeaders: false,
