@@ -15,15 +15,42 @@ Ext.define ('Webed.controller.ContentTabs', {
 
     init: function () {
         this.control ({
-            'content-tabs' : { tabchange: this.tabchange }
+            'content-tabs' : {
+                render: this.render,
+                tabchange: this.tabchange,
+                beforeadd: this.beforeadd,
+                remove: this.remove
+            }
         });
 
         this.application.on ({
-            nodeclick: this.add_tab, scope: this
+            nodeclick: this.add_text_tab, scope: this
         });
     },
 
-    tabchange: function (tabPanel, newCard, oldCard, eOpts) {
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    render: function (view, eOpts) {
+        var wrap = Ext.fly ('content-wrap');
+        assert (wrap); wrap.destroy ();
+    },
+
+    beforeadd: function (view, component, index) {
+        if (view.items.length == 0) {
+            var wrap = Ext.fly ('page-wrap');
+            assert (wrap); wrap.setDisplayed (false);
+        }
+    },
+
+    remove: function (view, component) {
+        if (view.items.length == 0) {
+            var wrap = Ext.fly ('page-wrap');
+            assert (wrap); wrap.setDisplayed (true);
+        }
+    },
+
+    tabchange: function (view, newCard, oldCard, eOpts) {
         assert (newCard);
         assert (newCard.record);
 
@@ -32,7 +59,10 @@ Ext.define ('Webed.controller.ContentTabs', {
         });
     },
 
-    add_tab: function (source, args) {
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    add_text_tab: function (source, args) {
         if (source == this) return;
 
         assert (args);
@@ -48,7 +78,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var node = base.findChild ('uuid', uuid, true);
         assert (node);
 
-        if (node.isExpandable ()) {
+        if (node.isLeaf () == false) {
             return;
         }
 
@@ -69,7 +99,13 @@ Ext.define ('Webed.controller.ContentTabs', {
             record: record,
             title: name,
             closable: true,
-            iconCls: iconCls
+            iconCls: iconCls,
+            layout: 'fit',
+
+            items: [{
+                xtype: 'textarea',
+                value: '...'
+            }]
         });
 
         assert (tab);
