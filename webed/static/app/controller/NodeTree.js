@@ -20,6 +20,7 @@ Ext.define ('Webed.controller.NodeTree', {
             'tool[action=node-tree:settings]': { click: this.settings },
             'node-tree': {
                 afterrender: this.select_base,
+                itemclick: this.itemclick,
                 select: this.select
             }
         });
@@ -52,6 +53,22 @@ Ext.define ('Webed.controller.NodeTree', {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+
+    itemclick: function (view, record, item, index, e, eOpts) {
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var node = semo.getLastSelected ();
+        assert (node);
+
+        var lhs_uuid = node.get ('uuid');
+        assert (lhs_uuid);
+        var rhs_uuid = record.get ('uuid');
+        assert (rhs_uuid);
+
+        if (lhs_uuid == rhs_uuid) {
+            this.select (view, record, index, eOpts);
+        }
+    },
 
     select: function (view, record, index, eOpts) {
         this.application.fireEvent ('nodeselect', this, {

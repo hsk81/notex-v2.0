@@ -7,7 +7,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     refs: [{
         selector: 'content-tabs', ref: 'contentTabs'
     },{
-        selector: 'node-tree', ref: 'nodeTree'
+        selector: 'node-tree', ref: 'nodeTree' // TODO: Eliminate!?
     }],
 
     ///////////////////////////////////////////////////////////////////////////

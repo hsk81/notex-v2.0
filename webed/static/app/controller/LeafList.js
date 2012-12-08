@@ -18,7 +18,10 @@ Ext.define ('Webed.controller.LeafList', {
         this.control ({
             'leaf-list tool[action=refresh]': { click: this.refresh },
             'leaf-list tool[action=settings]': { click: this.settings },
-            'leaf-list': { select: this.select }
+            'leaf-list': {
+                itemclick: this.itemclick,
+                select: this.select
+            }
         });
 
         this.application.on ({
@@ -46,6 +49,22 @@ Ext.define ('Webed.controller.LeafList', {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+
+    itemclick: function (view, record, item, index, e, eOpts) {
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var node = semo.getLastSelected ();
+        assert (node);
+
+        var lhs_uuid = node.get ('uuid');
+        assert (lhs_uuid);
+        var rhs_uuid = record.get ('uuid');
+        assert (rhs_uuid);
+
+        if (lhs_uuid == rhs_uuid) {
+            this.select (view, record, index, eOpts);
+        }
+    },
 
     select: function (view, record, index, eOpts) {
         this.application.fireEvent ('nodeselect', this, {
