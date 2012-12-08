@@ -95,7 +95,7 @@ Ext.define ('Webed.controller.NodeTree', {
         view.expandPath (path, 'uuid', '/', function (success, node) {
             if (success) {
                 var node = node.findChild ('uuid', uuid, true);
-                assert (node); semo.select (node);
+                if (node) semo.select (node);
             }
         }, this);
     },
