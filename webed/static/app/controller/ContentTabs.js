@@ -24,7 +24,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         });
 
         this.application.on ({
-            nodeselect: this.add_text_tab, scope: this
+            nodeselect: this.add_tab, scope: this
         });
     },
 
@@ -62,12 +62,27 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    add_text_tab: function (source, args) {
+    add_tab: function (source, args) {
         if (source == this) return;
 
         assert (args);
         var record = args.record;
         assert (record);
+
+        var mime = record.get ('mime');
+        if (mime) {
+            switch (mime) {
+                case 'text/plain':
+                    this.add_text_tab (record);
+                    break;
+
+                default:
+                    console.debug ('[ContentTabs.add_tab] nop for', mime);
+            }
+        }
+    },
+
+    add_text_tab: function (record) {
 
         var uuid = record.get ('uuid');
         assert (uuid);
