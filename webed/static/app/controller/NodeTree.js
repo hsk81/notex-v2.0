@@ -61,26 +61,31 @@ Ext.define ('Webed.controller.NodeTree', {
 
     sync_selection: function (source, args) {
         if (source == this) return;
-
         assert (args);
+
         var record = args.record;
         assert (record);
+        var uuid = record.get ('uuid');
+        assert (uuid);
 
         var view = this.getNodeTree ();
         assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-        var uuid = record.get ('uuid');
-        assert (uuid);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var node = semo.getLastSelected ();
+        if (node && node.get ('uuid') == uuid) {
+            return;
+        }
+
         var path = record.get ('path');
         assert (path);
+        var path = Ext.clone (path);
+        assert (path);
 
-        var temp = []
-        for (var idx in path) temp[idx] = path[idx]; // TODO: 'clone' function?
-        var path = temp;
-
+        var base = view.getRootNode ();
+        assert (base);
         // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
-        path[0] = base.get ('uuid');
+        path[0] = base.get ('uuid'); assert (path[0])
         // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
         path.unshift (''); path.pop ();
         // ['','00..00','bb..bb''] => /00..00/bb..bb
@@ -89,8 +94,6 @@ Ext.define ('Webed.controller.NodeTree', {
 
         view.expandPath (path, 'uuid', '/', function (success, node) {
             if (success) {
-                var semo = view.getSelectionModel ();
-                assert (semo);
                 var node = node.findChild ('uuid', uuid, true);
                 assert (node); semo.select (node);
             }

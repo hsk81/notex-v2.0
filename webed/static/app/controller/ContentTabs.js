@@ -73,7 +73,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         });
 
         assert (tab);
-        view.setActiveTab (tab); // TODO: Suppress 'tabchange' (double events)!
+        view.setActiveTab (tab);
     }
 
     ///////////////////////////////////////////////////////////////////////////
