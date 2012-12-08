@@ -1,4 +1,6 @@
 describe ('NodeTree', function () {
+    Ext.require ('Webed.view.NodeTree');
+    Ext.require ('Webed.controller.NodeTree');
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -20,7 +22,7 @@ describe ('NodeTree', function () {
 
         expect (view).toBeTruthy ();
         if (!controller) controller = window.app.getController ('NodeTree');
-        expect (controller).toBeTruthy ();
+        expect (controller).toBeTruthy (); controller.init ();
         if (!store) store = controller.getStore ('Nodes');
         expect (store).toBeTruthy ();
 
