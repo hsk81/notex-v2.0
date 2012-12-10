@@ -176,15 +176,25 @@ def leaf_create (json=True):
 
 def leaf_read (json=True):
 
-    uuid = request.args.get ('uuid', None)
-    assert uuid or not uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
-    if uuid:
-        leafs = Q (base.subleafs).all (uuid=uuid)
+    root_uuid = request.args.get ('root_uuid', None)
+    if not root_uuid:
+        query = base.subleafs
     else:
-        leafs = Q (base.subleafs).all ()
+        query = base.subleafs.join (Node, Leaf.root) \
+            .filter (Node.uuid==root_uuid).back ()
+
+    kwargs = {}
+    uuid = request.args.get ('uuid', None)
+    if uuid: kwargs['uuid'] = uuid
+    mime = request.args.get ('mime', None)
+    if mime: kwargs['mime'] = mime
+    name = request.args.get ('name', None)
+    if name: kwargs['name'] = name
+
+    leafs = Q (query).all (**kwargs)
 
     result = dict (success=True, results=map (leaf2ext, leafs))
     return jsonify (result) if json else result

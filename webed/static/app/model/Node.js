@@ -1,6 +1,6 @@
 Ext.define ('Webed.model.Node', {
     extend: 'Ext.data.Model',
-    fields: ['path', 'root_uuid', 'uuid', 'name', 'size', 'mime'],
+    fields: ['path', 'root_uuid', 'uuid', 'name', 'mime', 'size'],
 
     proxy: {
         type: 'rest',
