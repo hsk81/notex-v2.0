@@ -115,13 +115,13 @@ Ext.define ('Webed.controller.ContentTabs', {
                         store.load ({
                             params: { node_uuid: uuid, name: 'data' },
                             callback: function (records, op, success) {
-                                assert (success);
-                                assert (records);
-                                assert (records.length > 0);
-                                var data = records[0].get ('data');
-                                assert (data);
 
-                                ta.setValue (data);
+                                if (success && records && records.length > 0) {
+                                    var data = records[0].get ('data');
+                                    assert (data || data == '');
+                                    ta.setValue (data);
+                                }
+
                                 ta.el.unmask ();
                             }, scope: this, synchronous: false
                         });
