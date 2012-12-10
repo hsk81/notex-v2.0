@@ -3,11 +3,10 @@ Ext.define ('Webed.model.Property', {
     fields: ['node_uuid', 'uuid', 'type', 'mime', 'name', 'data'],
 
     proxy: {
-        type: 'ajax',
-        url: '/static/data/properties.json',
+        type: 'rest',
+        url: '/property',
         reader: {
-            type: 'json',
-            root: 'results'
+            type: 'json', root: 'results'
         }
     }
 });

@@ -4,6 +4,9 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    models: ['Property'],
+    stores: ['Properties'],
+
     refs: [{
         selector: 'content-tabs', ref: 'contentTabs'
     }],
@@ -87,6 +90,8 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var view = this.getContentTabs ();
         assert (view);
+        var store = this.getPropertiesStore ();
+        assert (store);
 
         var tab = this.get_tab (uuid);
         var tab = tab ? tab : view.add ({
@@ -98,7 +103,36 @@ Ext.define ('Webed.controller.ContentTabs', {
 
             items: [{
                 xtype: 'textarea',
-                value: '...'
+                listeners: {
+                    beforerender: function (ta, eOpts) {
+
+                        //
+                        // TODO: Try webthread, since for large data UI blocks!
+                        //
+
+                        store.load ({
+                            params: { node_uuid: uuid, name: 'data' },
+                            callback: function (records, op, success) {
+                                assert (success);
+                                assert (records);
+                                assert (records.length > 0);
+                                var data = records[0].get ('data');
+                                assert (data);
+
+                                ta.setValue (data);
+                                ta.el.unmask ();
+                            }, scope: this, synchronous: false
+                        });
+                    },
+
+                    afterrender: function (ta, eOpts) {
+                        if (!ta.getValue ()) {
+                            setTimeout (function() {
+                                ta.el.mask ('Loading...');
+                            }, 25);
+                        }
+                    }
+                }
             }]
         });
 

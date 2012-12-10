@@ -10,8 +10,8 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from ..models import Node, Leaf, User
-from ..ext import db, logger
+from ..models import *
+from ..ext import db
 from ..app import app
 from ..util import Q
 
@@ -121,10 +121,15 @@ def init ():
 
     leaf = Leaf ('author.txt', root=base, mime='text/plain')
     db.session.add (leaf)
+    prop = TextProperty ('data', u'.'*125000, leaf, mime='text/plain')
+    db.session.add (prop)
+
     leaf = Leaf ('about.tiff', root=base, mime='image/tiff')
     db.session.add (leaf)
-    db.session.commit ()
+    prop = LargeBinaryProperty ('data', '...', leaf, mime='image/tiff')
+    db.session.add (prop)
 
+    db.session.commit ()
     session['root_uuid'] = base.uuid
 
 def init_article (root):

@@ -12,7 +12,7 @@ from flask import Blueprint, session
 from ..config import DefaultConfig
 from ..models import *
 from ..app import app
-from ..ext import db
+from ..ext import db, logger
 from ..util import Q
 
 import sys
@@ -286,15 +286,31 @@ def property_create (json=True):
 
 def property_read (json=True):
 
-    uuid = request.args.get ('uuid', None)
-    assert uuid or not uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
-    if uuid:
-        props = Q (base.subprops).all (uuid=uuid)
+    node_uuid = request.args.get ('node_uuid', None)
+    if not node_uuid:
+        query = base.subprops
     else:
-        props = Q (base.subprops).all ()
+        query = base.subprops \
+            .join (Node, Property.node) \
+            .filter (Node.uuid==node_uuid) \
+            .back ()
+
+    kwargs = {}
+    uuid = request.args.get ('uuid', None)
+    if uuid: kwargs['uuid'] = uuid
+    type = request.args.get ('type', None)
+    if type: kwargs['type'] = type
+    mime = request.args.get ('mime', None)
+    if mime: kwargs['mime'] = mime
+    name = request.args.get ('name', None)
+    if name: kwargs['name'] = name
+    data = request.args.get ('data', None)
+    if data: kwargs['data'] = data
+
+    props = Q (query).all (**kwargs)
 
     result = dict (success=True, results=map (prop2ext, props))
     return jsonify (result) if json else result

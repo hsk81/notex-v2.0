@@ -3,5 +3,5 @@ Ext.define('Webed.store.Properties', {
     requires: 'Webed.model.Property',
     model: 'Webed.model.Property',
 
-    autoLoad: true
+    autoLoad: false
 });
