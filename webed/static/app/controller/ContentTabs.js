@@ -6,8 +6,6 @@ Ext.define ('Webed.controller.ContentTabs', {
 
     refs: [{
         selector: 'content-tabs', ref: 'contentTabs'
-    },{
-        selector: 'node-tree', ref: 'nodeTree' // TODO: Eliminate!?
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -68,36 +66,34 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (args);
         var record = args.record;
         assert (record);
-
         var mime = record.get ('mime');
-        if (mime) {
-            switch (mime) {
-                case 'text/plain':
-                    this.add_text_tab (record);
-                    break;
+        assert (mime);
 
-                default:
-                    console.debug ('[ContentTabs.add_tab] nop for', mime);
-            }
+        switch (mime) {
+            case 'application/root':
+                break;
+
+            case 'text/plain':
+                this.add_text_tab (record);
+                break;
+
+            default:
+                console.debug ('[ContentTabs.add_tab] nop for', mime);
         }
     },
 
     add_text_tab: function (record) {
+        assert (record);
 
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var tree = this.getNodeTree ();
-        assert (tree);
-        var base = tree.getRootNode ();
-        assert (base);
-        var node = base.findChild ('uuid', uuid, true);
-        if (!node || node.isLeaf () == false) {
+        if (record.isLeaf && !record.isLeaf ()) {
             return;
         }
 
-        var name = node.get ('name');
-        assert (name);
-        var iconCls = node.get ('iconCls');
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var name = record.get ('name');
+        assert (record);
+        var iconCls = record.get ('iconCls');
         assert (iconCls);
         var view = this.getContentTabs ();
         assert (view);

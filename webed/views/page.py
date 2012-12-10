@@ -112,7 +112,7 @@ def db_refresh ():
 
 def init ():
 
-    base = Node ('root', root=None)
+    base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
     db.session.commit ()
 
