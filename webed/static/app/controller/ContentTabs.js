@@ -87,13 +87,9 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var view = this.getContentTabs ();
         assert (view);
-        var tabs = view.queryBy (function (el) {
-            return (el.record && el.record.get ('uuid') == uuid)
-                ? true : false;
-        }, this);
 
-        assert (tabs);
-        var tab = (tabs.length > 0) ? tabs[0] : view.add ({
+        var tab = this.get_tab (uuid);
+        var tab = tab ? tab : view.add ({
             record: record,
             title: name,
             closable: true,
@@ -122,13 +118,9 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var view = this.getContentTabs ();
         assert (view);
-        var tabs = view.queryBy (function (el) {
-            return (el.record && el.record.get ('uuid') == uuid)
-                ? true : false;
-        }, this);
 
-        assert (tabs);
-        var tab = (tabs.length > 0) ? tabs[0] : view.add ({
+        var tab = this.get_tab (uuid);
+        var tab = tab ? tab : view.add ({
             record: record,
             title: name,
             closable: true,
@@ -142,6 +134,20 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         assert (tab);
         view.setActiveTab (tab);
+    },
+
+    get_tab: function (uuid) {
+        assert (uuid);
+        var view = this.getContentTabs ();
+        assert (view);
+
+        var tabs = view.queryBy (function (el) {
+            return (el.record && el.record.get ('uuid') == uuid)
+                ? true : false;
+        }, this);
+
+        assert (tabs);
+        return (tabs.length > 0) ? tabs[0] : null;
     }
 
     ///////////////////////////////////////////////////////////////////////////
