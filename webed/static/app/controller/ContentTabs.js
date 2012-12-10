@@ -107,7 +107,9 @@ Ext.define ('Webed.controller.ContentTabs', {
                     beforerender: function (ta, eOpts) {
 
                         //
-                        // TODO: Try webthread, since for large data UI blocks!
+                        // TODO: Try webthread, since for large data UI blocks;
+                        //       but only if it keeps blocking with CodeMirror,
+                        //       since it seems to be a TextArea issue.
                         //
 
                         store.load ({
