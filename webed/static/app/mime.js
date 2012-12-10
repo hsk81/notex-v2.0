@@ -10,7 +10,7 @@ var MIME = function () {
     }
 
     $.each (tmp, function (key, value) {
-        map['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*') + '\$'] = value;
+        map['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
     });
 
     function to_icon (mime, suffix) {
