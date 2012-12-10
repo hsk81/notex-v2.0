@@ -293,10 +293,8 @@ def property_read (json=True):
     if not node_uuid:
         query = base.subprops
     else:
-        query = base.subprops \
-            .join (Node, Property.node) \
-            .filter (Node.uuid==node_uuid) \
-            .back ()
+        query = base.subprops.join (Node, Property.node) \
+            .filter (Node.uuid==node_uuid).back ()
 
     kwargs = {}
     uuid = request.args.get ('uuid', None)
