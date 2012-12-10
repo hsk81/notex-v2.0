@@ -69,35 +69,24 @@ Ext.define ('Webed.controller.ContentTabs', {
         var mime = record.get ('mime');
         assert (mime);
 
-        switch (mime) {
-            case 'application/root':
-                break;
-
-            case 'text/plain':
-                this.add_text_tab (record);
-                break;
-
-            default:
-                console.debug ('[ContentTabs.add_tab] nop for', mime);
-        }
+        if (MIME.is_root (mime)) {} // ignore (called on init)
+        else if (MIME.is_text (mime)) this.add_text_tab (record);
+        else if (MIME.is_image (mime)) this.add_image_tab (record);
+        else console.debug ('[ContentTabs.add_tab] nop for', mime);
     },
 
     add_text_tab: function (record) {
         assert (record);
 
-        if (record.isLeaf && !record.isLeaf ()) {
-            return;
-        }
-
         var uuid = record.get ('uuid');
         assert (uuid);
         var name = record.get ('name');
-        assert (record);
+        assert (name);
         var iconCls = record.get ('iconCls');
         assert (iconCls);
+
         var view = this.getContentTabs ();
         assert (view);
-
         var tabs = view.queryBy (function (el) {
             return (el.record && el.record.get ('uuid') == uuid)
                 ? true : false;
@@ -114,6 +103,40 @@ Ext.define ('Webed.controller.ContentTabs', {
             items: [{
                 xtype: 'textarea',
                 value: '...'
+            }]
+        });
+
+        assert (tab);
+        view.setActiveTab (tab);
+    },
+
+    add_image_tab: function (record) {
+        assert (record);
+
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var name = record.get ('name');
+        assert (name);
+        var iconCls = record.get ('iconCls');
+        assert (iconCls);
+
+        var view = this.getContentTabs ();
+        assert (view);
+        var tabs = view.queryBy (function (el) {
+            return (el.record && el.record.get ('uuid') == uuid)
+                ? true : false;
+        }, this);
+
+        assert (tabs);
+        var tab = (tabs.length > 0) ? tabs[0] : view.add ({
+            record: record,
+            title: name,
+            closable: true,
+            iconCls: iconCls,
+            layout: 'fit',
+
+            items: [{
+                //TODO: Image viewer!
             }]
         });
 
