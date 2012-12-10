@@ -42,6 +42,10 @@ class Property (db.Model):
         self.mime = mime if mime else 'application/property'
         self.name = name
 
+    def __repr__ (self):
+
+        return u'<Property@%r: %r>' % (self.id, self.name)
+
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
 ###############################################################################
@@ -58,6 +62,10 @@ class StringProperty (Property):
         super (StringProperty, self).__init__ (name, node,
             mime=mime if mime else 'text/plain', uuid=uuid)
         self.data = data
+
+    def __repr__ (self):
+
+        return u'<StringProperty@%r: %r>' % (self.id, self.name)
 
     data = db.Column (db.String)
 
@@ -78,6 +86,10 @@ class TextProperty (Property):
             if mime else 'text/plain', uuid=uuid)
         self.data = data
 
+    def __repr__ (self):
+
+        return u'<TextProperty@%r: %r>' % (self.id, self.name)
+
     data = db.Column (db.Text)
 
 ###############################################################################
@@ -96,6 +108,10 @@ class LargeBinaryProperty (Property):
         super (LargeBinaryProperty, self).__init__ (name, node, mime=mime \
             if mime else 'application/octet-stream', uuid=uuid)
         self.data = data
+
+    def __repr__ (self):
+
+        return u'<LargeBinaryProperty@%r: %r>' % (self.id, self.name)
 
     data = db.Column (db.LargeBinary)
 

@@ -42,7 +42,7 @@ class Node (db.Model):
 
     def __repr__ (self):
 
-        return u'<Node @ %r: %r>' % (self.id, self.name)
+        return u'<Node@%r: %r>' % (self.id, self.name)
 
     def get_path (self):
 
