@@ -50,7 +50,22 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     saveDocument: function (item, event, options) {
-        console.debug ('[MainBar.saveDocument]');
+        function callback (records, op) {
+            if (op.success) return;
+
+            assert (records);
+            assert (records.length > 0); // TODO
+
+            message.error ({ msg: Ext.String.format (
+                message.UPDATE_ERROR, rec.get ('name')
+            )});
+
+            console.error ('[MainBar.saveDocument]', record, op);
+        }
+
+        this.application.fireEvent ('save_document', this, {
+            scope: this, callback: callback
+        });
     },
 
     openDocument: function (item, event, options) {
