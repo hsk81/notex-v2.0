@@ -88,8 +88,9 @@ def node_read (leafs=True, json=True):
         node_query = base.not_subleafs
         leaf_query = base.subleafs
     else:
-        node_query = Q (Node.query).one (uuid=root_uuid).not_leafs
-        leaf_query = Q (Node.query).one (uuid=root_uuid).leafs
+        root = Q (Node.query).one (uuid=root_uuid)
+        node_query = root.not_leafs
+        leaf_query = root.leafs
 
     nodes = Q (node_query).all (**kwargs)
     node2exts = map (lambda n: node2ext (n, leafs=leafs), nodes)
@@ -198,13 +199,6 @@ def leaf_read (json=True):
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
-    root_uuid = request.args.get ('root_uuid', None)
-    if not root_uuid:
-        query = base.subleafs
-    else:
-        query = base.subleafs.join (Node, Leaf.root) \
-            .filter (Node.uuid==root_uuid).back ()
-
     kwargs = {}
     uuid = request.args.get ('uuid', None)
     if uuid: kwargs['uuid'] = uuid
@@ -213,10 +207,17 @@ def leaf_read (json=True):
     name = request.args.get ('name', None)
     if name: kwargs['name'] = name
 
+    root_uuid = request.args.get ('root_uuid', None)
+    if not root_uuid:
+        query = base.subleafs
+    else:
+        query = base.subleafs.join (Node, Leaf.root) \
+            .filter (Node.uuid==root_uuid).back ()
+
     leafs = Q (query).all (**kwargs)
     leaf2exts = map (leaf2ext, leafs)
-    result = dict (success=True, results=leaf2exts)
 
+    result = dict (success=True, results=leaf2exts)
     return jsonify (result) if json else result
 
 def leaf_update (json=True):
@@ -319,13 +320,6 @@ def property_read (json=True):
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
-    node_uuid = request.args.get ('node_uuid', None)
-    if not node_uuid:
-        query = base.subprops
-    else:
-        query = base.subprops.join (Node, Property.node) \
-            .filter (Node.uuid==node_uuid).back ()
-
     kwargs = {}
     uuid = request.args.get ('uuid', None)
     if uuid: kwargs['uuid'] = uuid
@@ -337,6 +331,13 @@ def property_read (json=True):
     if name: kwargs['name'] = name
     data = request.args.get ('data', None)
     if data: kwargs['data'] = data
+
+    node_uuid = request.args.get ('node_uuid', None)
+    if not node_uuid:
+        query = base.subprops
+    else:
+        query = base.subprops.join (Node, Property.node) \
+            .filter (Node.uuid==node_uuid).back ()
 
     props = Q (query).all (**kwargs)
 
