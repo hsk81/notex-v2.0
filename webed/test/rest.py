@@ -199,7 +199,7 @@ class RestTestCase (BaseTestCase):
 
         self.assert_node (node)
 
-        response = self.app.get ('/node?uuid=%s' % node['uuid'])
+        response = self.app.get ('/property?node_uuid=%s' % node['uuid'])
         props = self.assert_ajax_with_results (response)
         map (self.assert_prop, props)
 

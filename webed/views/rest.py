@@ -67,15 +67,34 @@ def node_create (leafs=True, json=True):
 @rest.route ('/node/root', methods=['GET'])
 def node_read (leafs=True, json=True):
 
-    uuid = request.args.get ('uuid', session['root_uuid'])
-    assert uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subnodes).one_or_default (uuid=uuid, default=base)
-    assert node
 
-    leaf2exts = map (lambda l: leaf2ext (l), node.leafs) if leafs else []
-    node2exts = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
+    kwargs = {}
+    uuid = request.args.get ('uuid', None)
+    if uuid: kwargs['uuid'] = uuid
+    mime = request.args.get ('mime', None)
+    if mime: kwargs['mime'] = mime
+    name = request.args.get ('name', None)
+    if name: kwargs['name'] = name
+
+    if uuid != '00000000-0000-0000-0000-000000000000':
+        root_uuid = request.args.get ('root_uuid', None)
+    else:
+        root_uuid = request.args.get ('root_uuid', base.uuid)
+        del kwargs['uuid']
+
+    if not root_uuid:
+        node_query = base.not_subleafs
+        leaf_query = base.subleafs
+    else:
+        node_query = Q (Node.query).one (uuid=root_uuid).not_leafs
+        leaf_query = Q (Node.query).one (uuid=root_uuid).leafs
+
+    nodes = Q (node_query).all (**kwargs)
+    node2exts = map (lambda n: node2ext (n, leafs=leafs), nodes)
+    leafs = Q (leaf_query).all (**kwargs)
+    leaf2exts = map (lambda l: leaf2ext (l), leafs)
 
     result = dict (success=True, results=node2exts + leaf2exts)
     return jsonify (result) if json else result
@@ -195,8 +214,9 @@ def leaf_read (json=True):
     if name: kwargs['name'] = name
 
     leafs = Q (query).all (**kwargs)
+    leaf2exts = map (leaf2ext, leafs)
+    result = dict (success=True, results=leaf2exts)
 
-    result = dict (success=True, results=map (leaf2ext, leafs))
     return jsonify (result) if json else result
 
 def leaf_update (json=True):
