@@ -116,25 +116,44 @@ Ext.define ('Webed.controller.ContentTabs', {
                         //       since it seems to be a TextArea issue.
                         //
 
-                        //
-                        // TODO: Check first if property is loaded (see save)!
-                        //
+                        function do_read (record) {
+                            assert (record);
+                            var data = record.get ('data');
+                            assert (data || data == '');
+                            ta.setValue (data);
 
-                        store.load ({
-                            params: { node_uuid: uuid, name: 'data' },
-                            callback: function (records, op, success) {
+                            if (callback && callback.call) {
+                                callback.call (scope||this, [record]);
+                            }
 
-                                if (success && records && records.length > 0) {
-                                    var data = records[0].get ('data');
-                                    assert (data || data == '');
-                                    ta.setValue (data);
-                                }
+                            if (ta.el) ta.el.unmask ();
+                        }
 
-                                if (callback && callback.call)
-                                    callback.call (scope||this, records, op);
-                                ta.el.unmask ();
-                            }, scope: this, synchronous: false
+                        function on_load (records, op, success) {
+                            if (success && records && records.length > 0) {
+                                do_read (records[0]);
+                            }
+
+                            if (callback && callback.call) {
+                                callback.call (scope||this, records, op);
+                            }
+
+                            if (ta.el) ta.el.unmask ();
+                        }
+
+                        var index = store.findBy (function (rec, id) {
+                            return rec.get ('node_uuid') == uuid
+                                && rec.get ('name') == 'data';
                         });
+
+                        if (index >= 0) {
+                            do_read (store.getAt (index));
+                        } else {
+                            store.load ({
+                                params: { node_uuid: uuid, name: 'data' },
+                                callback: on_load, scope: this
+                            });
+                        }
                     },
 
                     afterrender: function (ta, eOpts) {
@@ -207,15 +226,17 @@ Ext.define ('Webed.controller.ContentTabs', {
         var data = ta.getValue ();
         assert (data);
 
-        function do_save (property) {
-            assert (property);
+        function do_save (record) {
+            assert (record);
 
-            property.set ('data', data);
-            property.save ({
+            record.set ('data', data);
+            record.save ({
                 scope: this, callback: function (rec, op) {
-                    if (callback && callback.call)
+                    if (callback && callback.call) {
                         callback.call (scope||this, [rec], op);
-                    ta.el.unmask ();
+                    }
+
+                    if (ta.el) ta.el.unmask ();
                 }
             });
         }
@@ -223,12 +244,13 @@ Ext.define ('Webed.controller.ContentTabs', {
         function on_load (records, op, success) {
             if (success && records && records.length > 0) {
                 do_save (records[0]);
-            } else {
-                if (callback && callback.call)
-                    callback.call (scope||this, records, op);
             }
 
-            ta.el.unmask ();
+            if (callback && callback.call) {
+                callback.call (scope||this, records, op);
+            }
+
+            if (ta.el) ta.el.unmask ();
         }
 
         var store = this.getPropertiesStore ();
