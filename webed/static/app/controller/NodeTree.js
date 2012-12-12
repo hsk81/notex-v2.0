@@ -47,7 +47,7 @@ Ext.define ('Webed.controller.NodeTree', {
         });
 
         this.application.on ({
-            nodeselect: this.sync_selection, scope: this
+            sync_selection: this.sync_selection, scope: this
         });
     },
 
@@ -71,7 +71,10 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     select: function (view, record, index, eOpts) {
-        this.application.fireEvent ('nodeselect', this, {
+        this.application.fireEvent ('sync_selection', this, {
+            record: record
+        });
+        this.application.fireEvent ('create_tab', this, {
             record: record
         });
     },
@@ -120,9 +123,26 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    select_base: function () {
+        var view = this.getNodeTree ();
+        assert (view);
+        var base = view.getRootNode ();
+        assert (base);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        semo.select (base);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     settings: function () {
         console.debug ('[NodeTree.settings]');
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     refresh: function () {
         var view = this.getNodeTree ();
@@ -161,20 +181,6 @@ Ext.define ('Webed.controller.NodeTree', {
             }
         }, node: base, scope: this});
         assert (store);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    select_base: function () {
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-
-        semo.select (base);
     },
 
     ///////////////////////////////////////////////////////////////////////////

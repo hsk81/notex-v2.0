@@ -25,7 +25,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         });
 
         this.application.on ({
-            nodeselect: this.create_tab, scope: this
+            create_tab: this.create_tab, scope: this
         });
 
         this.application.on ({
@@ -59,7 +59,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (newCard);
         assert (newCard.record);
 
-        this.application.fireEvent ('nodeselect', this, {
+        this.application.fireEvent ('sync_selection', this, {
             record: newCard.record
         });
     },

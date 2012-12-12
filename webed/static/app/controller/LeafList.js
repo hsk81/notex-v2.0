@@ -29,7 +29,7 @@ Ext.define ('Webed.controller.LeafList', {
         });
 
         this.application.on ({
-            nodeselect: this.sync_selection, scope: this
+            sync_selection: this.sync_selection, scope: this
         });
     },
 
@@ -67,7 +67,10 @@ Ext.define ('Webed.controller.LeafList', {
     },
 
     select: function (view, record, index, eOpts) {
-        this.application.fireEvent ('nodeselect', this, {
+        this.application.fireEvent ('sync_selection', this, {
+            record: record
+        });
+        this.application.fireEvent ('create_tab', this, {
             record: record
         });
     },
