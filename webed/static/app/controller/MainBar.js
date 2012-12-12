@@ -54,11 +54,15 @@ Ext.define ('Webed.controller.MainBar', {
             if (op.success) return;
 
             assert (records);
-            assert (records.length > 0); // TODO!
-
-            message.error ({ msg: Ext.String.format (
-                message.UPDATE_ERROR, records[0].get ('name')
-            )});
+            if (records.length > 0) {
+                message.error ({ msg: Ext.String.format (
+                    message.UPDATE_ERROR, records[0].get ('name')
+                )});
+            } else {
+                message.error ({ msg: Ext.String.format (
+                    message.UPDATE_ERROR, null
+                )});
+            }
 
             console.error ('[MainBar.saveDocument]', records, op);
         }
