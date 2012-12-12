@@ -76,11 +76,13 @@ Ext.define ('Webed.controller.ContentTabs', {
         var mime = record.get ('mime');
         assert (mime);
 
-        if (MIME.is_text (mime)) this.create_text_tab (record);
-        else if (MIME.is_image (mime)) this.create_image_tab (record);
+        if (MIME.is_text (mime))
+            this.create_text_tab (record, args.callback, args.scope);
+        else if (MIME.is_image (mime))
+            this.create_image_tab (record, args.callback, args.scope);
     },
 
-    create_text_tab: function (record) {
+    create_text_tab: function (record, callback, scope) {
         assert (record);
 
         var uuid = record.get ('uuid');
@@ -95,7 +97,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var store = this.getPropertiesStore ();
         assert (store);
 
-        var tab = this.get_tab (uuid);
+        var tab = this.get_tab (uuid, view);
         var tab = tab ? tab : view.add ({
             record: record,
             title: name,
@@ -128,6 +130,8 @@ Ext.define ('Webed.controller.ContentTabs', {
                                     ta.setValue (data);
                                 }
 
+                                if (callback && callback.call)
+                                    callback.call (scope||this, records, op);
                                 ta.el.unmask ();
                             }, scope: this, synchronous: false
                         });
@@ -148,42 +152,14 @@ Ext.define ('Webed.controller.ContentTabs', {
         view.setActiveTab (tab);
     },
 
-    create_image_tab: function (record) {
-        assert (record);
-
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var name = record.get ('name');
-        assert (name);
-        var iconCls = record.get ('iconCls');
-        assert (iconCls);
-
-        var view = this.getContentTabs ();
-        assert (view);
-
-        var tab = this.get_tab (uuid);
-        var tab = tab ? tab : view.add ({
-            record: record,
-            title: name,
-            closable: true,
-            iconCls: iconCls,
-            layout: 'fit',
-
-            items: [{
-                //TODO: Image viewer!
-            }]
-        });
-
-        assert (tab);
-        view.setActiveTab (tab);
+    create_image_tab: function (record, callback, scope) {
+        //TODO: Image viewer!
     },
 
     ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
-    get_tab: function (uuid) {
+    get_tab: function (uuid, view) {
         assert (uuid);
-        var view = this.getContentTabs ();
         assert (view);
 
         var tabs = view.queryBy (function (el) {
@@ -200,6 +176,7 @@ Ext.define ('Webed.controller.ContentTabs', {
 
     update_tab: function (source, args) {
         if (source == this) return;
+        var args = $.extend ({}, args);
 
         var view = this.getContentTabs();
         assert (view);
@@ -211,26 +188,21 @@ Ext.define ('Webed.controller.ContentTabs', {
         var mime = record.get ('mime');
         assert (mime);
 
-        if (MIME.is_text (mime)) this.update_text_tab (source, args);
-        else if (MIME.is_image (mime)) this.update_image_tab (source, args);
+        if (MIME.is_text (mime))
+            this.update_text_tab (tab, args.callback, args.scope);
+        else if (MIME.is_image (mime))
+            this.update_image_tab (tab, args.callback, args.scope);
     },
 
-    update_text_tab: function (source, args) {
-        if (source == this) return;
-
-        var view = this.getContentTabs();
-        assert (view);
-        var tab = view.getActiveTab ();
-        if (!tab) return;
-
-        var node = tab.record;
-        assert (node);
-        var uuid = node.get ('uuid');
+    update_text_tab: function (tab, callback, scope) {
+        assert (tab);
+        var record = tab.record;
+        assert (record);
+        var uuid = record.get ('uuid');
         assert (uuid);
 
         var store = this.getPropertiesStore ();
         assert (store);
-
         var index = store.findBy (function (rec, id) {
             return rec.get ('node_uuid') == uuid
                 && rec.get ('name') == 'data';
@@ -248,8 +220,8 @@ Ext.define ('Webed.controller.ContentTabs', {
             property.set ('data', data);
             property.save ({
                 scope: this, callback: function (rec, op) {
-                    if (args && args.callback && args.callback.call)
-                        args.callback.call (args.scope||this, [rec], op);
+                    if (callback && callback.call)
+                        callback.call (scope||this, [rec], op);
                     ta.el.unmask ();
                 }
             });
@@ -259,8 +231,8 @@ Ext.define ('Webed.controller.ContentTabs', {
             if (success && records && records.length > 0) {
                 do_save (records[0]);
             } else {
-                if (args && args.callback && args.callback.call)
-                    args.callback.call (args.scope||this, records, op);
+                if (callback && callback.call)
+                    callback.call (scope||this, records, op);
             }
 
             ta.el.unmask ();
@@ -276,8 +248,8 @@ Ext.define ('Webed.controller.ContentTabs', {
         }
     },
 
-    update_image_tab: function (source, args) {
-        if (source == this) return;
+    update_image_tab: function (tab, callback, scope) {
+        // TODO!
     }
 
     ///////////////////////////////////////////////////////////////////////////
