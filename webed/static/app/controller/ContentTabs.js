@@ -4,9 +4,6 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    models: ['Property'],
-    stores: ['Properties'],
-
     refs: [{
         selector: 'content-tabs', ref: 'contentTabs'
     }],
@@ -94,8 +91,8 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var view = this.getContentTabs ();
         assert (view);
-        var store = this.getPropertiesStore ();
-        assert (store);
+        var app = this.application;
+        assert (app);
 
         var tab = this.get_tab (uuid, view);
         var tab = tab ? tab : view.add ({
@@ -122,38 +119,24 @@ Ext.define ('Webed.controller.ContentTabs', {
                             assert (data || data == '');
                             ta.setValue (data);
 
-                            if (callback && callback.call) {
+                            if (callback && callback.call)
                                 callback.call (scope||this, [record]);
-                            }
-
                             if (ta.el) ta.el.unmask ();
                         }
 
                         function on_load (records, op, success) {
-                            if (success && records && records.length > 0) {
+                            if (success && records && records.length > 0)
                                 do_read (records[0]);
-                            }
-
-                            if (callback && callback.call) {
+                            if (callback && callback.call)
                                 callback.call (scope||this, records, op);
-                            }
-
                             if (ta.el) ta.el.unmask ();
                         }
 
-                        var index = store.findBy (function (rec, id) {
-                            return rec.get ('node_uuid') == uuid
-                                && rec.get ('name') == 'data';
+                        app.fireEvent ('read_property', this, {
+                            do_read: do_read, on_load: on_load, property: {
+                                node_uuid: uuid, name: 'data'
+                            }
                         });
-
-                        if (index >= 0) {
-                            do_read (store.getAt (index));
-                        } else {
-                            store.load ({
-                                params: { node_uuid: uuid, name: 'data' },
-                                callback: on_load, scope: this
-                            });
-                        }
                     },
 
                     afterrender: function (ta, eOpts) {
@@ -232,42 +215,26 @@ Ext.define ('Webed.controller.ContentTabs', {
             record.set ('data', data);
             record.save ({
                 scope: this, callback: function (rec, op) {
-                    if (callback && callback.call) {
+                    if (callback && callback.call)
                         callback.call (scope||this, [rec], op);
-                    }
-
                     if (ta.el) ta.el.unmask ();
                 }
             });
         }
 
         function on_load (records, op, success) {
-            if (success && records && records.length > 0) {
+            if (success && records && records.length > 0)
                 do_save (records[0]);
-            }
-
-            if (callback && callback.call) {
+            if (callback && callback.call)
                 callback.call (scope||this, records, op);
-            }
-
             if (ta.el) ta.el.unmask ();
         }
 
-        var store = this.getPropertiesStore ();
-        assert (store);
-        var index = store.findBy (function (rec, id) {
-            return rec.get ('node_uuid') == uuid
-                && rec.get ('name') == 'data';
+        this.application.fireEvent ('update_property', this, {
+            do_save: do_save, on_load: on_load, property: {
+                node_uuid: uuid, name: 'data'
+            }
         });
-
-        if (index >= 0) {
-            do_save (store.getAt (index));
-        } else {
-            store.load ({
-                params: { node_uuid: uuid, name: 'data' },
-                callback: on_load, scope: this
-            });
-        }
     },
 
     update_image_tab: function (tab, callback, scope) {

@@ -18,7 +18,12 @@ Ext.application ({
     stores: ['Nodes', 'Leafs', 'Properties'],
 
     controllers: [
-        'MainBar', 'NodeTree', 'LeafList', 'ContentTabs', 'StatusBar'
+        'MainBar',
+        'NodeTree',
+        'LeafList',
+        'PropertyGrid',
+        'ContentTabs',
+        'StatusBar'
     ],
 
     paths: {
