@@ -155,7 +155,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     create_image_tab: function (record, callback, scope) {
-        //TODO: Image viewer!
+        //TODO!
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     update_image_tab: function (tab, callback, scope) {
-        // TODO!
+        //TODO!
     }
 
     ///////////////////////////////////////////////////////////////////////////
