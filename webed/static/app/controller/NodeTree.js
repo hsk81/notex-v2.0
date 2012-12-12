@@ -66,7 +66,9 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (rhs_uuid);
 
         if (lhs_uuid == rhs_uuid) {
-            this.select (view, record, index, eOpts);
+            this.application.fireEvent ('create_tab', this, {
+                record: record
+            });
         }
     },
 
@@ -210,16 +212,11 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create (args.opts.model_name, node);
         assert (model);
+        var store = this.getNodesStore ();
+        assert (store);
 
         var model = model.save ({ scope: this, callback: function (rec, op) {
-            ///////////////////////////////////////////////////////////////////
-            var mime = rec.get ('mime');
-            assert (mime);
-            var icon = MIME.to_icon (mime, '-16');
-            assert (icon);
-
-            rec.set ('iconCls', icon);
-            ///////////////////////////////////////////////////////////////////
+            store.decorate (rec); // ensure *all* settings are set!
             if (args.callback && args.callback.call) {
                 args.callback.call (args.scope||this, rec, op);
             }

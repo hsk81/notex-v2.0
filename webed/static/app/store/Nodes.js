@@ -13,13 +13,7 @@ Ext.define ('Webed.store.Nodes', {
 
     listeners: {
         append: function (root, node, index, options) {
-
-            var mime = node.get ('mime');
-            assert (mime);
-            var icon = MIME.to_icon (mime, '-16');
-            assert (icon);
-
-            node.set ('iconCls', icon);
+            this.decorate (node);
         },
 
         beforeload: function (store, operation, options) {
@@ -27,5 +21,14 @@ Ext.define ('Webed.store.Nodes', {
             assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
         }
+    },
+
+    decorate: function (node) {
+        var mime = node.get ('mime');
+        assert (mime);
+        var icon = MIME.to_icon (mime, '-16');
+        assert (icon);
+
+        node.set ('iconCls', icon);
     }
 });

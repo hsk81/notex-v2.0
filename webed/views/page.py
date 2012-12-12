@@ -121,12 +121,12 @@ def init ():
 
     leaf = Leaf ('author.txt', root=base, mime='text/plain')
     db.session.add (leaf)
-    prop = TextProperty ('data', u'.'*125000, leaf, mime='text/plain')
+    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
     db.session.add (prop)
 
     leaf = Leaf ('about.tiff', root=base, mime='image/tiff')
     db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '...', leaf, mime='image/tiff')
+    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/tiff')
     db.session.add (prop)
 
     db.session.commit ()
