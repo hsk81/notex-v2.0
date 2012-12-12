@@ -201,13 +201,6 @@ Ext.define ('Webed.controller.ContentTabs', {
         var uuid = record.get ('uuid');
         assert (uuid);
 
-        var store = this.getPropertiesStore ();
-        assert (store);
-        var index = store.findBy (function (rec, id) {
-            return rec.get ('node_uuid') == uuid
-                && rec.get ('name') == 'data';
-        });
-
         var ta = tab.child ('textarea');
         assert (ta);
         ta.el.mask ('Saving...');
@@ -237,6 +230,13 @@ Ext.define ('Webed.controller.ContentTabs', {
 
             ta.el.unmask ();
         }
+
+        var store = this.getPropertiesStore ();
+        assert (store);
+        var index = store.findBy (function (rec, id) {
+            return rec.get ('node_uuid') == uuid
+                && rec.get ('name') == 'data';
+        });
 
         if (index >= 0) {
             do_save (store.getAt (index));
