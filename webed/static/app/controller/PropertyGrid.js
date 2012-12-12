@@ -12,6 +12,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
 
     init: function () {
         this.application.on ({
+            create_property: this.create_property, scope: this
+        });
+
+        this.application.on ({
             read_property: this.read_property, scope: this
         });
 
@@ -22,6 +26,30 @@ Ext.define ('Webed.controller.PropertyGrid', {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+
+    create_property: function (source, args) {
+        if (source == this) return;
+
+        assert (args);
+        assert (args.property);
+        assert (args.property.node_uuid);
+        assert (args.property.uuid||true);
+        assert (args.property.type);
+        assert (args.property.mime);
+        assert (args.property.name);
+        assert (args.property.data||true);
+
+        var model = Ext.create ('Webed.model.Property', args.property);
+        assert (model);
+
+        var model = model.save ({ scope: this, callback: function (rec, op) {
+            if (args.callback && args.callback.call) {
+                args.callback.call (args.scope||this, rec, op);
+            }
+        }});
+
+        assert (model);
+    },
 
     read_property: function (source, args) {
         if (source == this) return;

@@ -74,9 +74,6 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('sync_selection', this, {
             record: record
         });
-        this.application.fireEvent ('create_tab', this, {
-            record: record
-        });
     },
 
     sync_selection: function (source, args) {
@@ -213,12 +210,22 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create (args.opts.model_name, node);
         assert (model);
-        var model = model.save ({ scope: this, callback: function (rec, op) {
-            if (args.callback && args.callback.call)
-                args.callback.call (args.scope||this, rec, op);
-        }});
-        assert (model);
 
+        var model = model.save ({ scope: this, callback: function (rec, op) {
+            ///////////////////////////////////////////////////////////////////
+            var mime = rec.get ('mime');
+            assert (mime);
+            var icon = MIME.to_icon (mime, '-16');
+            assert (icon);
+
+            rec.set ('iconCls', icon);
+            ///////////////////////////////////////////////////////////////////
+            if (args.callback && args.callback.call) {
+                args.callback.call (args.scope||this, rec, op);
+            }
+        }});
+
+        assert (model);
         $.extend (node, args.opts.node_props);
 
         var root = get_root.call (this, node.root_uuid);

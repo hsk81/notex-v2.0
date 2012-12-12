@@ -142,22 +142,46 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
-                function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({ msg: Ext.String.format (
-                        message.CREATE_ERROR, text
-                    )});
-
-                    console.error ('[MainBar.addText]', rec, op);
-                }
-
                 this.application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, leaf: {
                         mime: 'text/plain',
                         name: text
                     }
                 });
+
+                function callback (leaf, op) {
+                    if (leaf && op.success) {
+                        this.application.fireEvent ('create_property', this, {
+                            scope: this, callback: callback, property: {
+                                node_uuid: leaf.get ('uuid'),
+                                name: 'data',
+                                data: '....',
+                                mime: 'text/plain',
+                                type: 'TextProperty'
+                            }
+                        });
+
+                        function callback (prop, op) {
+                            if (prop && op.success) {
+                                this.application.fireEvent ('create_tab', this,
+                                    { record: leaf }
+                                );
+                            } else {
+                                error (prop, op);
+                            }
+                        }
+                    } else {
+                        error (leaf, op);
+                    }
+                }
+
+                function error (rec, op) {
+                    message.error ({ msg: Ext.String.format (
+                        message.CREATE_ERROR, text
+                    )});
+
+                    console.error ('[MainBar.addText]', rec, op);
+                }
             }
         });
     },
