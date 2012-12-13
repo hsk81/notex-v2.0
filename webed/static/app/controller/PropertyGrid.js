@@ -22,6 +22,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         this.application.on ({
             update_property: this.update_property, scope: this
         });
+
+        this.application.on ({
+            delete_property: this.update_property, scope: this
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -57,10 +61,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         assert (args);
         var property = args.property;
         assert (property);
-        var do_read = args.do_read;
-        assert (do_read);
-        var on_load = args.on_load;
-        assert (on_load);
+        var callback = args.callback;
+        assert (callback);
+        var scope = args.scope||this;
+        assert (scope);
 
         var store = this.getPropertiesStore ();
         assert (store);
@@ -72,10 +76,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         });
 
         if (index >= 0) {
-            do_read (store.getAt (index));
+            callback.call (scope, [store.getAt (index)], null, true);
         } else {
             store.load ({
-                params: property, callback: on_load, scope: this
+                scope: scope, callback: callback, params: property
             });
         }
     },
@@ -102,6 +106,35 @@ Ext.define ('Webed.controller.PropertyGrid', {
 
         if (index >= 0) {
             do_save (store.getAt (index));
+        } else {
+            store.load ({
+                params: property, callback: on_load, scope: this
+            });
+        }
+    },
+
+    delete_property: function (source, args) {
+        if (source == this) return;
+
+        assert (args);
+        var property = args.property;
+        assert (property);
+        var do_delete = args.do_delete;
+        assert (do_delete);
+        var on_load = args.on_load;
+        assert (on_load);
+
+        var store = this.getPropertiesStore ();
+        assert (store);
+
+        var index = store.findBy (function (rec, id) {
+            return and (property, function (key, value) {
+                return rec.get (key) == value
+            });
+        });
+
+        if (index >= 0) {
+            do_delete (store.getAt (index));
         } else {
             store.load ({
                 params: property, callback: on_load, scope: this

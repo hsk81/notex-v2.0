@@ -105,35 +105,28 @@ Ext.define ('Webed.controller.ContentTabs', {
             items: [{
                 xtype: 'textarea',
                 listeners: {
-                    beforerender: function (ta, eOpts) {
+                    beforerender: function (ta, eOpts) { // TODO: Web Threads?
 
-                        //
-                        // TODO: Try webthread, since for large data UI blocks;
-                        //       but only if it keeps blocking with CodeMirror,
-                        //       since it seems to be a TextArea issue.
-                        //
+                        function do_read (records, op, success) {
 
-                        function do_read (record) {
-                            assert (record);
-                            var data = record.get ('data');
-                            assert (data || data == '');
-                            ta.setValue (data);
+                            if (success) {
+                                assert (records);
+                                assert (records.length > 0);
 
-                            if (callback && callback.call)
-                                callback.call (scope||this, [record]);
-                            if (ta.el) ta.el.unmask ();
-                        }
+                                var data = records[0].get ('data');
+                                assert (data || data == '');
+                                ta.setValue (data);
+                            }
 
-                        function on_load (records, op, success) {
-                            if (success && records && records.length > 0)
-                                do_read (records[0]);
-                            if (callback && callback.call)
-                                callback.call (scope||this, records, op);
+                            if (callback && callback.call) {
+                                callback.call (scope||this, records);
+                            }
+
                             if (ta.el) ta.el.unmask ();
                         }
 
                         app.fireEvent ('read_property', this, {
-                            do_read: do_read, on_load: on_load, property: {
+                            callback: do_read, scope: scope||this, property: {
                                 node_uuid: uuid, name: 'data'
                             }
                         });
