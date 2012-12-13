@@ -107,29 +107,28 @@ Ext.define ('Webed.controller.ContentTabs', {
                 listeners: {
                     beforerender: function (ta, eOpts) { // TODO: Web Threads?
 
-                        function do_read (records, op, success) {
-
-                            if (success) {
-                                assert (records);
-                                assert (records.length > 0);
-
-                                var data = records[0].get ('data');
-                                assert (data || data == '');
-                                ta.setValue (data);
-                            }
-
-                            if (callback && callback.call) {
-                                callback.call (scope||this, records);
-                            }
-
-                            if (ta.el) ta.el.unmask ();
-                        }
-
                         app.fireEvent ('read_property', this, {
                             callback: do_read, scope: scope||this, property: {
                                 node_uuid: uuid, name: 'data'
                             }
                         });
+
+                        function do_read (props, op, success) {
+
+                            if (success) {
+                                assert (props);
+                                assert (props.length > 0);
+                                var data = props[0].get ('data');
+                                assert (data || data == '');
+                                ta.setValue (data);
+                            }
+
+                            if (callback && callback.call) {
+                                callback.call (scope||this, props, op, success);
+                            }
+
+                            if (ta.el) ta.el.unmask ();
+                        }
                     },
 
                     afterrender: function (ta, eOpts) {
@@ -202,32 +201,31 @@ Ext.define ('Webed.controller.ContentTabs', {
         var data = ta.getValue ();
         assert (data);
 
-        function do_save (record) {
-            assert (record);
-
-            record.set ('data', data);
-            record.save ({
-                scope: this, callback: function (rec, op) {
-                    if (callback && callback.call)
-                        callback.call (scope||this, [rec], op);
-                    if (ta.el) ta.el.unmask ();
-                }
-            });
-        }
-
-        function on_load (records, op, success) {
-            if (success && records && records.length > 0)
-                do_save (records[0]);
-            if (callback && callback.call)
-                callback.call (scope||this, records, op);
-            if (ta.el) ta.el.unmask ();
-        }
-
         this.application.fireEvent ('update_property', this, {
-            do_save: do_save, on_load: on_load, property: {
+            callback: do_save, scope: scope||this, property: {
                 node_uuid: uuid, name: 'data'
             }
         });
+
+        function do_save (props, op, success) {
+            if (success) {
+                assert (props);
+                assert (props.length > 0);
+
+                props[0].set ('data', data);
+                props[0].save ({
+                    scope: scope||this, callback: function (prop, op) {
+                        if (callback && callback.call)
+                            callback.call (scope||this, [prop], op, op.success);
+                        if (ta.el) ta.el.unmask ();
+                    }
+                });
+            } else {
+                if (callback && callback.call)
+                    callback.call (scope||this, props, op, success);
+                if (ta.el) ta.el.unmask ();
+            }
+        }
     },
 
     update_image_tab: function (tab, callback, scope) {

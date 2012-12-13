@@ -50,21 +50,16 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     saveDocument: function (item, event, options) {
-        function callback (records, op) {
-            if (op.success) return;
+        function callback (records, op, success) {
+            if (success) return;
 
             assert (records);
-            if (records.length > 0) {
-                message.error ({ msg: Ext.String.format (
-                    message.UPDATE_ERROR, records[0].get ('name')
-                )});
-            } else {
-                message.error ({ msg: Ext.String.format (
-                    message.UPDATE_ERROR, null
-                )});
-            }
+            message.error ({ msg: Ext.String.format (
+                message.UPDATE_ERROR, (records.length > 0)
+                    ? records[0].get ('name') : null
+            )});
 
-            console.error ('[MainBar.saveDocument]', records, op);
+            console.error ('[MainBar.saveDocument]', records, op, success);
         }
 
         this.application.fireEvent ('update_tab', this, {

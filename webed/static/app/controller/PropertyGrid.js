@@ -24,7 +24,7 @@ Ext.define ('Webed.controller.PropertyGrid', {
         });
 
         this.application.on ({
-            delete_property: this.update_property, scope: this
+            delete_property: this.delete_property, scope: this
         });
     },
 
@@ -90,10 +90,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         assert (args);
         var property = args.property;
         assert (property);
-        var do_save = args.do_save;
-        assert (do_save);
-        var on_load = args.on_load;
-        assert (on_load);
+        var callback = args.callback;
+        assert (callback);
+        var scope = args.scope||this;
+        assert (scope);
 
         var store = this.getPropertiesStore ();
         assert (store);
@@ -105,10 +105,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         });
 
         if (index >= 0) {
-            do_save (store.getAt (index));
+            callback.call (scope, [store.getAt (index)], null, true);
         } else {
             store.load ({
-                params: property, callback: on_load, scope: this
+                scope: scope, callback: callback, params: property
             });
         }
     },
@@ -119,10 +119,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         assert (args);
         var property = args.property;
         assert (property);
-        var do_delete = args.do_delete;
-        assert (do_delete);
-        var on_load = args.on_load;
-        assert (on_load);
+        var callback = args.callback;
+        assert (callback);
+        var scope = args.scope||this;
+        assert (scope);
 
         var store = this.getPropertiesStore ();
         assert (store);
@@ -134,10 +134,10 @@ Ext.define ('Webed.controller.PropertyGrid', {
         });
 
         if (index >= 0) {
-            do_delete (store.getAt (index));
+            callback.call (scope, [store.getAt (index)], null, true);
         } else {
             store.load ({
-                params: property, callback: on_load, scope: this
+                scope: scope, callback: callback, params: property
             });
         }
     }
