@@ -71,16 +71,16 @@ describe ('PropertyGrid', function () {
                 }
             });
 
-            function on_set (prop, op) {
-                expect (prop).toBeTruthy ();
+            function on_set (props, op) {
+                expect (props).toBeTruthy ();
+                expect (props.length).toEqual (1);
+                expect (props[0].get ('node_uuid')).toEqual (uuid);
+                expect (props[0].get ('name')).toEqual ('flag');
+                expect (props[0].get ('data')).toEqual ('....');
+                expect (props[0].get ('mime')).toEqual ('plain/text');
+                expect (props[0].get ('type')).toEqual ('StringProperty');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-
-                expect (prop.get ('node_uuid')).toEqual (uuid);
-                expect (prop.get ('name')).toEqual ('flag');
-                expect (prop.get ('data')).toEqual ('....');
-                expect (prop.get ('mime')).toEqual ('plain/text');
-                expect (prop.get ('type')).toEqual ('StringProperty');
             }
         }});
 

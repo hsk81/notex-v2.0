@@ -39,9 +39,9 @@ Ext.define ('Webed.controller.PropertyGrid', {
         assert (model);
 
         var model = model.save ({
-            scope: args.scope||this, callback: function (rec, op) {
+            scope: args.scope||this, callback: function (prop, op) {
                 if (args.callback && args.callback.call) {
-                    args.callback.call (args.scope||this, rec, op);
+                    args.callback.call (args.scope||this, [prop], op);
                 }
             }
         });

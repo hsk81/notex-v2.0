@@ -155,13 +155,13 @@ Ext.define ('Webed.controller.MainBar', {
                             }
                         });
 
-                        function on_set (prop, op) {
-                            if (prop && op.success) {
+                        function on_set (props, op) {
+                            if (props && props.length > 0 && op.success) {
                                 this.application.fireEvent ('create_tab', this,
                                     { record: leaf }
                                 );
                             } else {
-                                error (prop, op);
+                                error (props, op);
                             }
                         }
                     } else {
