@@ -107,15 +107,16 @@ Ext.define ('Webed.controller.ContentTabs', {
                 listeners: {
                     beforerender: function (ta, eOpts) { // TODO: Web Threads?
 
-                        app.fireEvent ('read_property', this, {
-                            callback: do_read, scope: scope||this, property: {
+                        app.fireEvent ('get_property', this, {
+                            callback: on_get, scope: scope||this, property: {
                                 node_uuid: uuid, name: 'data'
                             }
                         });
 
-                        function do_read (props, op, success) {
+                        function on_get (props, op) {
+                            assert (op);
 
-                            if (success) {
+                            if (op.success) {
                                 assert (props);
                                 assert (props.length > 0);
                                 var data = props[0].get ('data');
@@ -124,7 +125,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                             }
 
                             if (callback && callback.call) {
-                                callback.call (scope||this, props, op, success);
+                                callback.call (scope||this, props, op);
                             }
 
                             if (ta.el) ta.el.unmask ();
@@ -201,14 +202,16 @@ Ext.define ('Webed.controller.ContentTabs', {
         var data = ta.getValue ();
         assert (data);
 
-        this.application.fireEvent ('update_property', this, {
-            callback: do_save, scope: scope||this, property: {
+        this.application.fireEvent ('get_property', this, {
+            callback: on_get, scope: scope||this, property: {
                 node_uuid: uuid, name: 'data'
             }
         });
 
-        function do_save (props, op, success) {
-            if (success) {
+        function on_get (props, op) {
+            assert (op);
+
+            if (op.success) {
                 assert (props);
                 assert (props.length > 0);
 
@@ -216,13 +219,13 @@ Ext.define ('Webed.controller.ContentTabs', {
                 props[0].save ({
                     scope: scope||this, callback: function (prop, op) {
                         if (callback && callback.call)
-                            callback.call (scope||this, [prop], op, op.success);
+                            callback.call (scope||this, [prop], op);
                         if (ta.el) ta.el.unmask ();
                     }
                 });
             } else {
                 if (callback && callback.call)
-                    callback.call (scope||this, props, op, success);
+                    callback.call (scope||this, props, op);
                 if (ta.el) ta.el.unmask ();
             }
         }

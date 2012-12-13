@@ -50,21 +50,20 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     saveDocument: function (item, event, options) {
-        function callback (records, op, success) {
-            if (success) return;
+        this.application.fireEvent ('update_tab', this, {
+            scope: this, callback: callback
+        });
 
-            assert (records);
+        function callback (records, op) {
+            if (op.success) return;
+
             message.error ({ msg: Ext.String.format (
                 message.UPDATE_ERROR, (records.length > 0)
                     ? records[0].get ('name') : null
             )});
 
-            console.error ('[MainBar.saveDocument]', records, op, success);
+            console.error ('[MainBar.saveDocument]', records, op);
         }
-
-        this.application.fireEvent ('update_tab', this, {
-            scope: this, callback: callback
-        });
     },
 
     openDocument: function (item, event, options) {
@@ -146,8 +145,8 @@ Ext.define ('Webed.controller.MainBar', {
 
                 function callback (leaf, op) {
                     if (leaf && op.success) {
-                        this.application.fireEvent ('create_property', this, {
-                            scope: this, callback: callback, property: {
+                        this.application.fireEvent ('set_property', this, {
+                            scope: this, callback: on_set, property: {
                                 node_uuid: leaf.get ('uuid'),
                                 name: 'data',
                                 data: '....',
@@ -156,7 +155,7 @@ Ext.define ('Webed.controller.MainBar', {
                             }
                         });
 
-                        function callback (prop, op) {
+                        function on_set (prop, op) {
                             if (prop && op.success) {
                                 this.application.fireEvent ('create_tab', this,
                                     { record: leaf }

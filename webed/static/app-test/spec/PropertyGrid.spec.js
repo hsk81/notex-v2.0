@@ -49,7 +49,7 @@ describe ('PropertyGrid', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should create a property', function () {
+    it ('should set a property', function () {
 
         expect (nodes).toBeTruthy ();
         nodes.load ({scope: this, callback: function (records, op, success) {
@@ -62,8 +62,8 @@ describe ('PropertyGrid', function () {
             expect (uuid).toBeTruthy ();
 
             expect (window.app).toBeTruthy ();
-            window.app.fireEvent ('create_property', this, {
-                scope: this, callback: callback, property: {
+            window.app.fireEvent ('set_property', this, {
+                scope: this, callback: on_set, property: {
                     node_uuid: uuid,
                     name: 'flag',
                     data: '{key: value}',
@@ -72,7 +72,7 @@ describe ('PropertyGrid', function () {
                 }
             });
 
-            function callback (rec, op) {
+            function on_set (rec, op) {
                 expect (rec).toBeTruthy ();
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
