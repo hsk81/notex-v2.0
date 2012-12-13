@@ -56,32 +56,66 @@ describe ('PropertyGrid', function () {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
-            var record = records[0];
-            expect (record).toBeTruthy ();
-            var uuid = record.get ('uuid');
+            var node = records[0];
+            expect (node).toBeTruthy ();
+            var uuid = node.get ('uuid');
             expect (uuid).toBeTruthy ();
 
-            expect (window.app).toBeTruthy ();
             window.app.fireEvent ('set_property', this, {
                 scope: this, callback: on_set, property: {
                     node_uuid: uuid,
                     name: 'flag',
-                    data: '{key: value}',
-                    mime: 'application/json',
+                    data: '....',
+                    mime: 'plain/text',
                     type: 'StringProperty'
                 }
             });
 
-            function on_set (rec, op) {
-                expect (rec).toBeTruthy ();
+            function on_set (prop, op) {
+                expect (prop).toBeTruthy ();
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
 
-                expect (rec.get ('node_uuid')).toEqual (uuid);
-                expect (rec.get ('name')).toEqual ('flag');
-                expect (rec.get ('data')).toEqual ('{key: value}');
-                expect (rec.get ('mime')).toEqual ('application/json');
-                expect (rec.get ('type')).toEqual ('StringProperty');
+                expect (prop.get ('node_uuid')).toEqual (uuid);
+                expect (prop.get ('name')).toEqual ('flag');
+                expect (prop.get ('data')).toEqual ('....');
+                expect (prop.get ('mime')).toEqual ('plain/text');
+                expect (prop.get ('type')).toEqual ('StringProperty');
+            }
+        }});
+
+        waitsFor (function () {
+            return !nodes.isLoading ();
+        }, 'nodes store to load', 750);
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    it ('should get a property', function () {
+
+        expect (nodes).toBeTruthy ();
+        nodes.load ({scope: this, callback: function (records, op, success) {
+            expect (records).toBeTruthy ();
+            expect (records.length).toBeGreaterThan (0);
+
+            var node = records[0];
+            expect (node).toBeTruthy ();
+            var uuid = node.get ('uuid');
+            expect (uuid).toBeTruthy ();
+
+            window.app.fireEvent ('get_property', this, {
+                scope: this, callback: on_get, property: {
+                    node_uuid: uuid,
+                    name: 'data'
+                }
+            });
+
+            function on_get (props, op) {
+                expect (props).toBeTruthy ();
+                expect (props.length).toEqual (0);
+                expect (op).toBeTruthy ();
+                expect (op.success).toBeTruthy ();
             }
         }});
 
