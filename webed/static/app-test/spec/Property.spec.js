@@ -125,7 +125,6 @@ describe ('PropertyController', function () {
                 expect (prop.get ('data')).toEqual ('....');
                 expect (prop.get ('mime')).toEqual ('plain/text');
                 expect (prop.get ('type')).toEqual ('StringProperty');
-
                 var prop = props[1];
                 expect (prop).toBeTruthy ();
                 expect (prop).toBeTruthy ();
@@ -137,12 +136,14 @@ describe ('PropertyController', function () {
 
                 expect (ops).toBeTruthy ();
                 expect (ops.length).toEqual (2);
+
                 var op = ops[0];
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
                 var op = ops[1];
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
+
                 lock.pop ();
             }
         }});
