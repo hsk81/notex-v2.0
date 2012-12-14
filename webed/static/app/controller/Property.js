@@ -16,6 +16,10 @@ Ext.define ('Webed.controller.Property', {
         });
 
         this.application.on ({
+            set_properties: this.set_properties, scope: this
+        });
+
+        this.application.on ({
             get_property: this.get_property, scope: this
         });
 
@@ -45,12 +49,40 @@ Ext.define ('Webed.controller.Property', {
         var model = model.save ({
             scope: args.scope||this, callback: function (prop, op) {
                 if (args.callback && args.callback.call) {
-                    args.callback.call (args.scope||this, [prop], op);
+                    args.callback.call (args.scope||this, prop, op);
                 }
             }
         });
 
         assert (model);
+    },
+
+    set_properties: function (source, args) {
+        if (source == this) return;
+
+        assert (args);
+        var properties = args.properties;
+        assert (properties);
+        assert (properties.length >= 0);
+        var callback = args.callback;
+        assert (callback);
+        var scope = args.scope||this;
+        assert (scope);
+
+        var props = [], ops = [];
+        for (var index in properties) {
+            var property = properties[index];
+            assert (property);
+
+            this.set_property (source, {
+                property:property, scope:scope, callback:function (prop, op) {
+                    props.push (prop); ops.push (op);
+                    if (props.length == properties.length) {
+                        callback.call (scope, props, ops);
+                    }
+                }
+            });
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
