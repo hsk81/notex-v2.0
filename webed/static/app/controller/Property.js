@@ -70,10 +70,17 @@ Ext.define ('Webed.controller.Property', {
         });
 
         if (index >= 0) {
-            callback.call (scope, [store.getAt (index)], {success: true});
+            callback.call (scope, store.getAt (index), {success: true});
         } else {
             store.load ({
-                scope: scope, callback: callback, params: property
+                params: property, scope: scope, callback: function (recs, op) {
+                    if (recs && recs.length > 0) {
+                        assert (recs.length == 1);
+                        callback.call (scope, recs[0], op);
+                    } else {
+                        callback.call (scope, null, op);
+                    }
+                }
             });
         }
     }

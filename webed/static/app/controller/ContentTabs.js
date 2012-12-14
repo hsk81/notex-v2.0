@@ -113,19 +113,18 @@ Ext.define ('Webed.controller.ContentTabs', {
                             }
                         });
 
-                        function on_get (props, op) {
+                        function on_get (prop, op) {
                             assert (op);
 
                             if (op.success) {
-                                assert (props);
-                                assert (props.length > 0);
-                                var data = props[0].get ('data');
+                                assert (prop);
+                                var data = prop.get ('data');
                                 assert (data || data == '');
                                 ta.setValue (data);
                             }
 
                             if (callback && callback.call) {
-                                callback.call (scope||this, props, op);
+                                callback.call (scope||this, [prop], op);
                             }
 
                             if (ta.el) ta.el.unmask ();
@@ -208,15 +207,13 @@ Ext.define ('Webed.controller.ContentTabs', {
             }
         });
 
-        function on_get (props, op) {
+        function on_get (prop, op) {
             assert (op);
 
             if (op.success) {
-                assert (props);
-                assert (props.length > 0);
-
-                props[0].set ('data', data);
-                props[0].save ({
+                assert (prop);
+                prop.set ('data', data);
+                prop.save ({
                     scope: scope||this, callback: function (prop, op) {
                         if (callback && callback.call)
                             callback.call (scope||this, [prop], op);
@@ -225,7 +222,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                 });
             } else {
                 if (callback && callback.call)
-                    callback.call (scope||this, props, op);
+                    callback.call (scope||this, [prop], op);
                 if (ta.el) ta.el.unmask ();
             }
         }
