@@ -118,6 +118,38 @@ describe ('Property controller', function () {
         }, 'nodes store to load', 750);
     });
 
+    it ('should get properties', function () {
+
+        expect (nodes).toBeTruthy ();
+        nodes.load ({scope: this, callback: function (records, op, success) {
+            expect (records).toBeTruthy ();
+            expect (records.length).toBeGreaterThan (0);
+
+            var node = records[0];
+            expect (node).toBeTruthy ();
+            var uuid = node.get ('uuid');
+            expect (uuid).toBeTruthy ();
+
+            window.app.fireEvent ('get_properties', this, {
+                scope: this, callback: on_get, property: {
+                    node_uuid: uuid,
+                    name: 'data'
+                }
+            });
+
+            function on_get (props, op) {
+                expect (props).toBeTruthy ();
+                expect (props.length).toEqual (0);
+                expect (op).toBeTruthy ();
+                expect (op.success).toBeTruthy ();
+            }
+        }});
+
+        waitsFor (function () {
+            return !nodes.isLoading ();
+        }, 'nodes store to load', 750);
+    });
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 });
