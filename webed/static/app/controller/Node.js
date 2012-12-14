@@ -65,7 +65,7 @@ Ext.define ('Webed.controller.Node', {
         var recs = [], ops = [];
         for (var index in args.nodes) {
             this.set_node (source, {
-                scope: scope, callback: function (rec, op) {
+                scope: args.scope||this, callback: function (rec, op) {
                     recs.push (rec); ops.push (op);
                     if (recs.length == args.nodes.length) {
                         args.callback.call (args.scope||this, recs, ops);

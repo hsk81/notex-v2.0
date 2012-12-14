@@ -65,7 +65,7 @@ Ext.define ('Webed.controller.Leaf', {
         var recs = [], ops = [];
         for (var index in args.leafs) {
             this.set_leaf (source, {
-                scope: scope, callback: function (rec, op) {
+                scope: args.scope||this, callback: function (rec, op) {
                     recs.push (rec); ops.push (op);
                     if (recs.length == args.leafs.length) {
                         args.callback.call (args.scope||this, recs, ops);
