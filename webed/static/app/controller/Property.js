@@ -16,15 +16,7 @@ Ext.define ('Webed.controller.Property', {
         });
 
         this.application.on ({
-            set_properties: this.set_properties, scope: this
-        });
-
-        this.application.on ({
             get_property: this.get_property, scope: this
-        });
-
-        this.application.on ({
-            get_properties: this.get_properties, scope: this
         });
     },
 
@@ -36,71 +28,35 @@ Ext.define ('Webed.controller.Property', {
 
         assert (args);
         assert (args.property);
-        assert (args.property.node_uuid);
-        assert (args.property.uuid||true);
-        assert (args.property.type);
-        assert (args.property.mime);
-        assert (args.property.name);
-        assert (args.property.data||true);
+        assert (args.property.length >= 0);
 
-        var model = Ext.create ('Webed.model.Property', args.property);
-        assert (model);
+        for (var index in args.property) {
+            var property = args.property[index];
 
-        var model = model.save ({
-            scope: args.scope||this, callback: function (prop, op) {
-                if (args.callback && args.callback.call) {
-                    args.callback.call (args.scope||this, prop, op);
-                }
-            }
-        });
+            assert (property);
+            assert (property.node_uuid);
+            assert (property.uuid||true);
+            assert (property.type);
+            assert (property.mime);
+            assert (property.name);
+            assert (property.data||true);
 
-        assert (model);
-    },
+            var model = Ext.create ('Webed.model.Property', property);
+            assert (model);
 
-    set_properties: function (source, args) {
-
-        assert (args);
-        assert (args.properties && args.properties.length >= 0);
-        assert (args.callback);
-        assert (args.scope||this);
-
-        var recs = [], ops = [];
-        for (var index in args.properties) {
-            this.set_property (source, {
-                scope: args.scope||this, callback: function (rec, op) {
-                    recs.push (rec); ops.push (op);
-                    if (recs.length == args.properties.length) {
-                        args.callback.call (args.scope||this, recs, ops);
+            var model = model.save ({
+                scope: args.scope||this, callback: function (prop, op) {
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, prop, op, index);
                     }
-                }, property: args.properties[index]
+                }
             });
+
+            assert (model);
         }
     },
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     get_property: function (source, args) {
-        if (source == this) return;
-
-        assert (args);
-        assert (args.property);
-        assert (args.callback);
-        assert (args.scope||this);
-
-        this.get_properties (source, {
-            scope: args.scope||this, callback: function (recs, op) {
-                if (recs && recs.length > 0) {
-                    assert (recs.length == 1);
-                    args.callback.call (args.scope||this, recs[0], op);
-                } else {
-                    args.callback.call (args.scope||this, null, op);
-                }
-            }, property: args.property
-        });
-    },
-
-    get_properties: function (source, args) {
 
         assert (args);
         assert (args.property);
@@ -110,16 +66,14 @@ Ext.define ('Webed.controller.Property', {
         var store = this.getPropertiesStore ();
         assert (store);
 
-        var index = store.findBy (function (rec, id) {
+        var records = store.queryBy (function (rec, id) {
             return and (args.property, function (key, value) {
                 return rec.get (key) == value
             });
         });
 
-        if (index >= 0) {
-            args.callback.call (args.scope||this, [store.getAt (index)], {
-                success: true
-            });
+        if (records.length >= 0) {
+            args.callback.call (args.scope||this, records, {success: true});
         } else {
             store.load ({
                 params: args.property,
