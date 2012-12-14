@@ -58,29 +58,21 @@ Ext.define ('Webed.controller.Property', {
     },
 
     set_properties: function (source, args) {
-        if (source == this) return;
 
         assert (args);
-        var properties = args.properties;
-        assert (properties);
-        assert (properties.length >= 0);
-        var callback = args.callback;
-        assert (callback);
-        var scope = args.scope||this;
-        assert (scope);
+        assert (args.properties && args.properties.length >= 0);
+        assert (args.callback);
+        assert (args.scope||this);
 
-        var props = [], ops = [];
-        for (var index in properties) {
-            var property = properties[index];
-            assert (property);
-
+        var properties = [], ops = [];
+        for (var index in args.properties) {
             this.set_property (source, {
-                property:property, scope:scope, callback:function (prop, op) {
-                    props.push (prop); ops.push (op);
-                    if (props.length == properties.length) {
-                        callback.call (scope, props, ops);
+                scope: args.scope||this, callback: function (prop, op) {
+                    properties.push (prop); ops.push (op);
+                    if (properties.length == args.properties.length) {
+                        args.callback.call (args.scope||this, properties, ops);
                     }
-                }
+                }, property: args.properties[index]
             });
         }
     },
@@ -92,50 +84,47 @@ Ext.define ('Webed.controller.Property', {
         if (source == this) return;
 
         assert (args);
-        var property = args.property;
-        assert (property);
-        var callback = args.callback;
-        assert (callback);
-        var scope = args.scope||this;
-        assert (scope);
+        assert (args.property);
+        assert (args.callback);
+        assert (args.scope||this);
 
         this.get_properties (source, {
-            property: property, scope: scope, callback: function (recs, op) {
+            scope: args.scope||this, callback: function (recs, op) {
                 if (recs && recs.length > 0) {
                     assert (recs.length == 1);
-                    callback.call (scope, recs[0], op);
+                    args.callback.call (args.scope||this, recs[0], op);
                 } else {
-                    callback.call (scope, undefined, op);
+                    args.callback.call (args.scope||this, null, op);
                 }
-            }
+            }, property: args.property
         });
     },
 
     get_properties: function (source, args) {
-        if (source == this) return;
 
         assert (args);
-        var property = args.property;
-        assert (property);
-        var callback = args.callback;
-        assert (callback);
-        var scope = args.scope||this;
-        assert (scope);
+        assert (args.property);
+        assert (args.callback);
+        assert (args.scope||this);
 
         var store = this.getPropertiesStore ();
         assert (store);
 
         var index = store.findBy (function (rec, id) {
-            return and (property, function (key, value) {
+            return and (args.property, function (key, value) {
                 return rec.get (key) == value
             });
         });
 
         if (index >= 0) {
-            callback.call (scope, [store.getAt (index)], {success: true});
+            args.callback.call (args.scope||this, [store.getAt (index)], {
+                success: true
+            });
         } else {
             store.load ({
-                params: property, scope: scope, callback: callback
+                params: args.property,
+                callback: args.callback,
+                scope: args.scope||this
             });
         }
     }
