@@ -64,13 +64,13 @@ Ext.define ('Webed.controller.Property', {
         assert (args.callback);
         assert (args.scope||this);
 
-        var properties = [], ops = [];
+        var recs = [], ops = [];
         for (var index in args.properties) {
             this.set_property (source, {
-                scope: args.scope||this, callback: function (prop, op) {
-                    properties.push (prop); ops.push (op);
-                    if (properties.length == args.properties.length) {
-                        args.callback.call (args.scope||this, properties, ops);
+                scope: args.scope||this, callback: function (rec, op) {
+                    recs.push (rec); ops.push (op);
+                    if (recs.length == args.properties.length) {
+                        args.callback.call (args.scope||this, recs, ops);
                     }
                 }, property: args.properties[index]
             });
