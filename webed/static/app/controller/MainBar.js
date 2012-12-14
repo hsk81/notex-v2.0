@@ -146,13 +146,13 @@ Ext.define ('Webed.controller.MainBar', {
                 function callback (leaf, op) {
                     if (leaf && op.success) {
                         this.application.fireEvent ('set_property', this, {
-                            scope: this, callback: on_set, property: {
+                            scope: this, callback: on_set, property: [{
                                 node_uuid: leaf.get ('uuid'),
                                 name: 'data',
                                 data: '....',
                                 mime: 'text/plain',
                                 type: 'TextProperty'
-                            }
+                            }]
                         });
 
                         function on_set (prop, op) {

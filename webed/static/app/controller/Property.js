@@ -57,29 +57,40 @@ Ext.define ('Webed.controller.Property', {
     },
 
     get_property: function (source, args) {
+        if (source == this) return;
 
         assert (args);
         assert (args.property);
+        assert (args.property.length >= 0);
         assert (args.callback);
-        assert (args.scope||this);
 
-        var store = this.getPropertiesStore ();
-        assert (store);
+        for (var index in args.property) {
+            var property = args.property[index];
+            assert (property);
+            var store = this.getPropertiesStore ();
+            assert (store);
 
-        var records = store.queryBy (function (rec, id) {
-            return and (args.property, function (key, value) {
-                return rec.get (key) == value
+            var records = store.queryBy (function (rec, id) {
+                return and (property, function (key, value) {
+                    return rec.get (key) == value
+                });
             });
-        });
 
-        if (records.length >= 0) {
-            args.callback.call (args.scope||this, records, {success: true});
-        } else {
-            store.load ({
-                params: args.property,
-                callback: args.callback,
-                scope: args.scope||this
-            });
+            if (records.getCount () > 0) {
+                var recs = []; records.each (function (rec) {
+                    recs.push (rec);
+                });
+
+                args.callback.call (args.scope||this, recs, {
+                    success: true
+                }, index);
+            } else {
+                store.load ({
+                    scope: args.scope||this, callback: function (recs, op) {
+                        args.callback.call (args.scope||this, recs, op, index);
+                    }, params: property
+                });
+            }
         }
     }
 

@@ -20,9 +20,7 @@ Ext.application ({
     controllers: [
         'Property',
         'PropertyGrid',
-        'Node',
         'NodeTree',
-        'Leaf',
         'LeafList',
         'MainBar',
         'ContentTabs',

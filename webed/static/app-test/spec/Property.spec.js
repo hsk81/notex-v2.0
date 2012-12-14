@@ -109,18 +109,21 @@ describe ('PropertyController', function () {
             expect (uuid).toBeTruthy ();
 
             window.app.fireEvent ('get_property', this, {
-                scope: this, callback: on_get, property: {
+                scope: this, callback: on_get, property: [{
                     node_uuid: uuid,
                     name: 'data'
-                }
+                },{
+                    node_uuid: uuid,
+                    name: 'data'
+                }]
             });
 
-            function on_get (props, op) {
+            function on_get (props, op, index) {
                 expect (props).toBeTruthy ();
                 expect (props.length).toEqual (0);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                lock.pop ();
+                if (index > 0) lock.pop ();
             }
         }});
 
