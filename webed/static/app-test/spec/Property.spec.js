@@ -1,5 +1,5 @@
-describe ('PropertyGrid', function () {
-    Ext.require ('Webed.controller.PropertyGrid');
+describe ('Property controller', function () {
+    Ext.require ('Webed.controller.Property');
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -10,14 +10,9 @@ describe ('PropertyGrid', function () {
     ///////////////////////////////////////////////////////////////////////////
 
     beforeEach (function () {
-        if (Ext.get ('test-area'))
-            Ext.removeNode (Ext.get ('test-area').dom);
-        Ext.DomHelper.append (Ext.getBody (),
-            "<div id='test-area' style='display:none'/>");
-
         if (!tree) tree = window.app.getController ('NodeTree');
         expect (tree).toBeTruthy (); tree.init ();
-        if (!grid) grid = window.app.getController ('PropertyGrid');
+        if (!grid) grid = window.app.getController ('Property');
         expect (grid).toBeTruthy (); grid.init ();
 
         if (!nodes) nodes = window.app.getStore ('Nodes');

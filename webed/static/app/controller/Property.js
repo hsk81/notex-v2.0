@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.PropertyGrid', {
+Ext.define ('Webed.controller.Property', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////
