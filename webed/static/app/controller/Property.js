@@ -53,6 +53,9 @@ Ext.define ('Webed.controller.Property', {
         assert (model);
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     get_property: function (source, args) {
         if (source == this) return;
 
@@ -64,29 +67,16 @@ Ext.define ('Webed.controller.Property', {
         var scope = args.scope||this;
         assert (scope);
 
-        var store = this.getPropertiesStore ();
-        assert (store);
-
-        var index = store.findBy (function (rec, id) {
-            return and (property, function (key, value) {
-                return rec.get (key) == value
-            });
-        });
-
-        if (index >= 0) {
-            callback.call (scope, store.getAt (index), {success: true});
-        } else {
-            store.load ({
-                params: property, scope: scope, callback: function (recs, op) {
-                    if (recs && recs.length > 0) {
-                        assert (recs.length == 1);
-                        callback.call (scope, recs[0], op);
-                    } else {
-                        callback.call (scope, null, op);
-                    }
+        this.get_properties (source, {
+            property: property, scope: scope, callback: function (recs, op) {
+                if (recs && recs.length > 0) {
+                    assert (recs.length == 1);
+                    callback.call (scope, recs[0], op);
+                } else {
+                    callback.call (scope, undefined, op);
                 }
-            });
-        }
+            }
+        });
     },
 
     get_properties: function (source, args) {
@@ -117,6 +107,7 @@ Ext.define ('Webed.controller.Property', {
             });
         }
     }
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 });

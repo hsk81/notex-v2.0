@@ -107,7 +107,7 @@ describe ('Property controller', function () {
             });
 
             function on_get (prop, op) {
-                expect (prop).toBeNull ();
+                expect (prop).toBeUndefined ();
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
             }
