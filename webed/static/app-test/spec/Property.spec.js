@@ -81,10 +81,8 @@ describe ('PropertyController', function () {
                 expect (prop.get ('data')).toEqual ('....');
                 expect (prop.get ('mime')).toEqual ('plain/text');
                 expect (prop.get ('type')).toEqual ('StringProperty');
-
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-
                 if (index > 0) lock.pop ();
             }
         }});
