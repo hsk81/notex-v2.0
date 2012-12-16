@@ -203,27 +203,22 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (node.size >= 0);
         assert (node.uuid);
 
-        args.opts = $.extend ({model_name: 'Webed.model.Node', node_props: {
-            expandable: true, leaf: false
-        }}, args.opts);
+        this.application.fireEvent ('set_node', this, {
+            node: [node], scope: this, callback: function (rec, op) {
+                if (rec) {
+                    var store = this.getNodesStore ();
+                    assert (store); store.decorate (rec);
+                }
 
-        assert (args.opts.model_name);
-        assert (args.opts.node_props);
-
-        var model = Ext.create (args.opts.model_name, node);
-        assert (model);
-        var store = this.getNodesStore ();
-        assert (store);
-
-        var model = model.save ({ scope: this, callback: function (rec, op) {
-            store.decorate (rec); // ensure *all* settings are set!
-            if (args.callback && args.callback.call) {
-                args.callback.call (args.scope||this, rec, op);
+                if (args.callback && args.callback.call) {
+                    args.callback.call (args.scope||this, rec, op);
+                }
             }
-        }});
+        });
 
-        assert (model);
-        $.extend (node, args.opts.node_props);
+        $.extend (node, {
+            expandable: true, leaf: false
+        });
 
         var root = get_root.call (this, node.root_uuid);
         assert (root);
@@ -276,14 +271,86 @@ Ext.define ('Webed.controller.NodeTree', {
     create_leaf: function (args) {
         assert (args);
         assert (args.leaf);
-        args.node = args.leaf;
-        args.leaf = undefined;
 
-        args.opts = $.extend ({model_name: 'Webed.model.Leaf', node_props: {
+        var leaf = {
+            mime: args.leaf.mime,
+            name: args.leaf.name || '',
+            root_uuid: get_root_uuid.call (this, args.leaf),
+            size: args.leaf.size || 0,
+            uuid: args.leaf.uuid || UUID.random ()
+        }
+
+        assert (leaf.mime);
+        assert (leaf.name || leaf.name == '');
+        assert (leaf.root_uuid);
+        assert (leaf.size >= 0);
+        assert (leaf.uuid);
+
+        this.application.fireEvent ('set_leaf', this, {
+            leaf: [leaf], scope: this, callback: function (rec, op) {
+                if (rec) {
+                    var store = this.getNodesStore ();
+                    assert (store); store.decorate (rec);
+                }
+
+                if (args.callback && args.callback.call) {
+                    args.callback.call (args.scope||this, rec, op);
+                }
+            }
+        });
+
+        $.extend (leaf, {
             expandable: false, leaf: true
-        }}, args.opts);
+        });
 
-        this.create_node (args);
+        var root = get_root.call (this, leaf.root_uuid);
+        assert (root);
+        var leaf = root.appendChild (leaf);
+        assert (leaf);
+
+        root.expand (false, function () {
+            var view = this.getNodeTree ();
+            assert (view);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            semo.select (leaf);
+            this.refresh ();
+        }, this);
+
+        function get_root_uuid (leaf) {
+            if (leaf.root_uuid) return leaf.root_uuid;
+
+            var view = this.getNodeTree ();
+            assert (view);
+            var semo = view.getSelectionModel ();
+            assert (semo);
+            var record = semo.getLastSelected ();
+            assert (record);
+
+            var expandable = record.get ('expandable');
+            if (expandable) {
+                var root_uuid = record.get ('uuid');
+                assert (root_uuid);
+            } else {
+                var root_uuid = record.parentNode.get ('uuid');
+                assert (root_uuid);
+            }
+
+            return root_uuid;
+        }
+
+        function get_root (root_uuid) {
+            var view = this.getNodeTree ();
+            assert (view);
+            var base = view.getRootNode ();
+            assert (base);
+
+            return (root_uuid != base.get ('uuid'))
+                ? base.findChild ('uuid', root_uuid, true)
+                : base;
+        }
+
+        ///////////////////////////////////////////////////////////////////////
         this.application.fireEvent ('refresh_leafs');
     },
 
