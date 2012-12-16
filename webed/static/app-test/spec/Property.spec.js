@@ -39,7 +39,7 @@ describe ('PropertyController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should set a property', function () {
+    it ('should set properties', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
 
@@ -77,7 +77,7 @@ describe ('PropertyController', function () {
                 expect (prop.get ('type')).toEqual ('StringProperty');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index > 0) lock.pop ();
+                if (index==1) lock.pop ();
             }
         }});
 
@@ -87,7 +87,7 @@ describe ('PropertyController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should get a property', function () {
+    it ('should get properties', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
 
@@ -115,7 +115,7 @@ describe ('PropertyController', function () {
                 expect (props.length).toEqual (0);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index > 0) lock.pop ();
+                if (index==1) lock.pop ();
             }
         }});
 

@@ -39,7 +39,7 @@ describe ('NodeController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should set a node', function () {
+    it ('should set nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
 
@@ -71,7 +71,7 @@ describe ('NodeController', function () {
                 expect (node.get ('mime')).toEqual ('plain/text');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index+1>=2) lock.pop ();
+                if (index==1) lock.pop ();
             }
         }});
 
@@ -81,7 +81,7 @@ describe ('NodeController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    it ('should get a node', function () {
+    it ('should get nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
 
@@ -110,7 +110,7 @@ describe ('NodeController', function () {
                 expect (nodes[index].get ('root_uuid')).toEqual (uuid);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index+1>=nodes.length) lock.pop ();
+                if (index==1) lock.pop ();
             }
         }});
 
