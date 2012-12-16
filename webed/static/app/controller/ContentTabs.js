@@ -117,9 +117,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                             assert (props);
                             assert (op);
 
-                            if (op.success) {
-                                assert (props.length > 0);
-                                assert (props[0]);
+                            if (op.success && props.length > 0 && props[0]) {
                                 var data = props[0].get ('data');
                                 assert (data || data == '');
                                 ta.setValue (data);
@@ -213,9 +211,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             assert (props);
             assert (op);
 
-            if (op.success) {
-                assert (props.length > 0);
-                assert (props[0]);
+            if (op.success && props.length > 0 && props[0]) {
                 props[0].set ('data', data);
                 props[0].save ({
                     scope: scope||this, callback: function (prop, op) {
