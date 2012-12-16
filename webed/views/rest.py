@@ -211,8 +211,8 @@ def leaf_read (json=True):
     if not root_uuid:
         query = base.subleafs
     else:
-        query = base.subleafs.join (Node, Leaf.root) \
-            .filter (Node.uuid==root_uuid).back ()
+        root = Q (Node.query).one (uuid=root_uuid)
+        query = root.leafs
 
     leafs = Q (query).all (**kwargs)
     leaf2exts = map (leaf2ext, leafs)
