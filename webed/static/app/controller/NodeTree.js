@@ -187,122 +187,126 @@ Ext.define ('Webed.controller.NodeTree', {
 
     create_node: function (args) {
         assert (args && args.node);
-        var node = this.init_node (args.node);
-        this.verify_node (node);
 
-        this.application.fireEvent ('set_node', this, {
-            node: [node], scope: this, callback: function (rec, op) {
-                if (rec) {
-                    var store = this.getNodesStore ();
-                    assert (store); store.decorate (rec);
-                }
-
-                if (args.callback && args.callback.call) {
-                    args.callback.call (args.scope||this, rec, op);
-                }
-            }
-        });
-
-        $.extend (node, {
-            expandable: true, leaf: false
-        });
-
-        this.append_node (node);
-    },
-
-    create_leaf: function (args) {
-        assert (args && args.leaf);
-        var leaf = this.init_node (args.leaf);
-        this.verify_node (leaf);
-
-        this.application.fireEvent ('set_leaf', this, {
-            leaf: [leaf], scope: this, callback: function (rec, op) {
-                if (rec) {
-                    var store = this.getNodesStore ();
-                    assert (store); store.decorate (rec);
-                }
-
-                if (args.callback && args.callback.call) {
-                    args.callback.call (args.scope||this, rec, op);
-                }
-            }
-        });
-
-        $.extend (leaf, {
-            expandable: false, leaf: true
-        });
-
-        this.append_node (leaf);
-        this.application.fireEvent ('refresh_leafs');
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    init_node: function (node) {
-        return {
-            mime: node.mime,
-            name: node.name,
-            root_uuid: this.get_root_uuid (node),
-            size: node.size || 0,
-            uuid: node.uuid || UUID.random ()
+        var node = {
+            mime: args.node.mime,
+            name: args.node.name,
+            root_uuid: get_root_uuid.call (this, args.node),
+            size: args.node.size || 0,
+            uuid: args.node.uuid || UUID.random ()
         }
-    },
 
-    verify_node: function (node) {
         assert (node.mime);
         assert (node.name);
         assert (node.root_uuid);
         assert (node.size >= 0);
         assert (node.uuid);
-    },
 
-    get_root_uuid: function  (node) {
-        if (node.root_uuid) return node.root_uuid;
-
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var record = semo.getLastSelected ();
-        assert (record);
-
-        var expandable = record.get ('expandable');
-        if (expandable) {
-            var root_uuid = record.get ('uuid');
-            assert (root_uuid);
+        if (args.creator && args.creator.call) {
+            args.creator.call (this, node);
         } else {
-            var root_uuid = record.parentNode.get ('uuid');
-            assert (root_uuid);
+            this.application.fireEvent ('set_node', this, {
+                node: [node], scope: this, callback: function (rec,op) {
+                    if (rec) {
+                        var store = this.getNodesStore ();
+                        assert (store); store.decorate (rec);
+                    }
+
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, rec, op);
+                    }
+                }
+            });
+
+            $.extend (node, {
+                expandable: true, leaf: false
+            });
         }
 
-        return root_uuid;
-    },
+        append_node.call (this, node);
 
-    get_root: function (root_uuid) {
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
+        ///////////////////////////////////////////////////////////////////////
 
-        return (root_uuid != base.get ('uuid'))
-            ? base.findChild ('uuid', root_uuid, true)
-            : base;
-    },
+        function get_root_uuid (node) {
+            if (node.root_uuid) return node.root_uuid;
 
-    append_node: function (node) {
-        var root = this.get_root (node.root_uuid);
-        assert (root);
-        var node = root.appendChild (node);
-        assert (node);
-
-        root.expand (false, function () {
             var view = this.getNodeTree ();
             assert (view);
             var semo = view.getSelectionModel ();
             assert (semo);
-            semo.select (node);
-            this.refresh ();
-        }, this);
+            var record = semo.getLastSelected ();
+            assert (record);
+
+            var expandable = record.get ('expandable');
+            if (expandable) {
+                var root_uuid = record.get ('uuid');
+                assert (root_uuid);
+            } else {
+                var root_uuid = record.parentNode.get ('uuid');
+                assert (root_uuid);
+            }
+
+            return root_uuid;
+        }
+
+        function get_root (root_uuid) {
+            var view = this.getNodeTree ();
+            assert (view);
+            var base = view.getRootNode ();
+            assert (base);
+
+            return (root_uuid != base.get ('uuid'))
+                ? base.findChild ('uuid', root_uuid, true)
+                : base;
+        }
+
+        function append_node (node) {
+            var root = get_root.call (this, node.root_uuid);
+            assert (root);
+            var node = root.appendChild (node);
+            assert (node);
+
+            root.expand (false, function () {
+                var view = this.getNodeTree ();
+                assert (view);
+                var semo = view.getSelectionModel ();
+                assert (semo);
+                semo.select (node);
+                this.refresh ();
+            }, this);
+        }
+    },
+
+    create_leaf: function (args) {
+        assert (args && args.leaf);
+
+        $.extend (args, {
+            creator: function (leaf) {
+                this.application.fireEvent ('set_leaf', this, {
+                    leaf: [leaf], scope: this, callback: function (rec,op) {
+                        if (rec) {
+                            var store = this.getNodesStore ();
+                            assert (store); store.decorate (rec);
+                        }
+
+                        if (args.callback && args.callback.call) {
+                            args.callback.call (args.scope||this, rec, op);
+                        }
+                    }
+                });
+
+                $.extend (leaf, {
+                    expandable: false, leaf: true
+                });
+
+                this.application.fireEvent ('refresh_leafs');
+            }
+        });
+
+        args.node = args.leaf;
+        args.leaf = null;
+
+        this.create_node (args);
     },
 
     ///////////////////////////////////////////////////////////////////////////
