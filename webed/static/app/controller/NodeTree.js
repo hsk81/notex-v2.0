@@ -206,7 +206,7 @@ Ext.define ('Webed.controller.NodeTree', {
             args.creator.call (this, node);
         } else {
             this.application.fireEvent ('set_node', this, {
-                node: [node], scope: this, callback: function (rec,op) {
+                node: [node], scope: this, callback: function (rec, op) {
                     this.on_create (args, rec, op);
                 }
             });
