@@ -6,11 +6,11 @@ describe ('NodeController', function () {
 
     var controller = null, lock = function () {
         var list = []; return {
+            init: function (ls) { list = ls||[]; },
             empty: function () { return list.length == 0; },
-            push: function (el) { list.push (el); },
-            pop: function () { return list.pop (); },
             clear: function () { list = []; },
-            init: function () { list = [true]; }
+            push: function (el) { list.push (el); },
+            pop: function () { return list.pop (); }
         }
     }();
 
@@ -20,20 +20,18 @@ describe ('NodeController', function () {
     beforeEach (function () {
         if (!controller) controller = window.app.getController ('Node');
         expect (controller).toBeTruthy (); controller.init ();
-        lock.init (); // ensures that callback expectations are met!
     });
 
     afterEach (function () {
         controller = null;
 
-        var reset = null; Ext.Ajax.request ({
+        lock.init ([true]); Ext.Ajax.request ({
             url: '/reset/', callback: function (opt, success, xhr) {
-                expect (success).toBeTruthy ();
-                reset = success;
+                expect (success).toBeTruthy (); lock.pop ();
             }
         });
 
-        waitsFor (function () { return reset; }, 'reset', 500);
+        waitsFor (function () { return lock.empty (); }, 'reset', 500);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -42,6 +40,8 @@ describe ('NodeController', function () {
     it ('should set nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+
+        lock.init ([true, true]); // ensure callback verification!
 
         nodes.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
@@ -71,7 +71,7 @@ describe ('NodeController', function () {
                 expect (node.get ('mime')).toEqual ('plain/text');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index==1) lock.pop ();
+                lock.pop ();
             }
         }});
 
@@ -84,6 +84,8 @@ describe ('NodeController', function () {
     it ('should get nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+
+        lock.init ([true, true]); // ensure callback verification!
 
         nodes.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
@@ -110,7 +112,7 @@ describe ('NodeController', function () {
                 expect (nodes[index].get ('root_uuid')).toEqual (uuid);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index==1) lock.pop ();
+                lock.pop ();
             }
         }});
 
