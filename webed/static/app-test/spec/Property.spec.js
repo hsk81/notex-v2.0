@@ -6,11 +6,11 @@ describe ('PropertyController', function () {
 
     var controller = null, lock = function () {
         var list = []; return {
+            init: function (ls) { list = ls||[]; },
             empty: function () { return list.length == 0; },
-            push: function (el) { list.push (el); },
-            pop: function () { return list.pop (); },
             clear: function () { list = []; },
-            init: function () { list = [true]; }
+            push: function (el) { list.push (el); },
+            pop: function () { return list.pop (); }
         }
     }();
 
@@ -20,20 +20,18 @@ describe ('PropertyController', function () {
     beforeEach (function () {
         if (!controller) controller = window.app.getController ('Property');
         expect (controller).toBeTruthy (); controller.init ();
-        lock.init (); // ensures that callback expectations are met!
     });
 
     afterEach (function () {
         controller = null;
 
-        var reset = null; Ext.Ajax.request ({
+        lock.init ([true]); Ext.Ajax.request ({
             url: '/reset/', callback: function (opt, success, xhr) {
-                expect (success).toBeTruthy ();
-                reset = success;
+                expect (success).toBeTruthy (); lock.pop ();
             }
         });
 
-        waitsFor (function () { return reset; }, 'reset', 500);
+        waitsFor (function () { return lock.empty (); }, 'reset', 500);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -42,6 +40,8 @@ describe ('PropertyController', function () {
     it ('should set properties', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+
+        lock.init ([true, true]); // ensure callback verification!
 
         nodes.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
@@ -77,7 +77,7 @@ describe ('PropertyController', function () {
                 expect (prop.get ('type')).toEqual ('StringProperty');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index==1) lock.pop ();
+                lock.pop ();
             }
         }});
 
@@ -90,6 +90,8 @@ describe ('PropertyController', function () {
     it ('should get properties', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+
+        lock.init ([true, true]); // ensure callback verification!
 
         nodes.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
@@ -115,7 +117,7 @@ describe ('PropertyController', function () {
                 expect (props.length).toEqual (0);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
-                if (index==1) lock.pop ();
+                lock.pop ();
             }
         }});
 
