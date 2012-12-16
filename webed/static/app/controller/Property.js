@@ -45,9 +45,9 @@ Ext.define ('Webed.controller.Property', {
             assert (model);
 
             var model = model.save ({
-                scope: args.scope||this, callback: function (prop, op) {
+                scope: args.scope||this, callback: function (rec, op) {
                     if (args.callback && args.callback.call) {
-                        args.callback.call (args.scope||this, prop, op, index);
+                        args.callback.call (args.scope||this, rec, op, index);
                     }
                 }
             });
