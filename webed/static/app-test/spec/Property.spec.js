@@ -4,7 +4,7 @@ describe ('PropertyController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var lock = function () {
+    var controller = null, lock = function () {
         var list = []; return {
             empty: function () { return list.length == 0; },
             push: function (el) { list.push (el); },
@@ -14,23 +14,17 @@ describe ('PropertyController', function () {
         }
     }();
 
-    var tree = null, controller = null;
-
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     beforeEach (function () {
         if (!controller) controller = window.app.getController ('Property');
         expect (controller).toBeTruthy (); controller.init ();
-        if (!tree) tree = window.app.getController ('NodeTree');
-        expect (tree).toBeTruthy (); tree.init ();
-
         lock.init (); // ensures that callback expectations are met!
     });
 
     afterEach (function () {
         controller = null;
-        tree = null;
 
         var reset = null; Ext.Ajax.request ({
             url: '/reset/', callback: function (opt, success, xhr) {

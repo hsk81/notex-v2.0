@@ -4,7 +4,7 @@ describe ('NodeController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var lock = function () {
+    var controller = null, lock = function () {
         var list = []; return {
             empty: function () { return list.length == 0; },
             push: function (el) { list.push (el); },
@@ -13,8 +13,6 @@ describe ('NodeController', function () {
             init: function () { list = [true]; }
         }
     }();
-
-    var controller = null;
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -27,7 +25,6 @@ describe ('NodeController', function () {
 
     afterEach (function () {
         controller = null;
-        lock.clear ();
 
         var reset = null; Ext.Ajax.request ({
             url: '/reset/', callback: function (opt, success, xhr) {
