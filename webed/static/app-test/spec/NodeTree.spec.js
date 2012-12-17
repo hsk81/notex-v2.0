@@ -86,10 +86,12 @@ describe ('NodeTree', function () {
             root_uuid: '00000000-0000-0000-0000-000000000000'
         })});
         runs (function () { create ({
-            name: 'node', mime: 'application/folder'
+            name: 'node', mime: 'application/folder',
+            root_uuid: '00000000-0000-0000-0000-000000000000'
         })});
         runs (function () { create ({
-            name: 'node', mime: '*/*'
+            name: 'node', mime: '*/*',
+            root_uuid: '00000000-0000-0000-0000-000000000000'
         })});
     });
 
@@ -118,9 +120,12 @@ describe ('NodeTree', function () {
             expect (mime).toEqual (leaf.mime);
         }
 
-        runs (function () { create ({ name: 'leaf', mime: 'text/plain' })});
-        runs (function () { create ({ name: 'leaf', mime: 'image/jpeg' })});
-        runs (function () { create ({ name: 'leaf', mime: '*/*' })});
+        runs (function () { create ({ name: 'leaf', mime: 'text/plain',
+            root_uuid: '00000000-0000-0000-0000-000000000000' })});
+        runs (function () { create ({ name: 'leaf', mime: 'image/jpeg',
+            root_uuid: '00000000-0000-0000-0000-000000000000' })});
+        runs (function () { create ({ name: 'leaf', mime: '*/*',
+            root_uuid: '00000000-0000-0000-0000-000000000000' })});
     });
 
     ///////////////////////////////////////////////////////////////////////////
