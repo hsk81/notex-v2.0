@@ -72,6 +72,17 @@ Ext.define ('Webed.controller.NodeTree', {
         }
     },
 
+    select_base: function () {
+        var view = this.getNodeTree ();
+        assert (view);
+        var base = view.getRootNode ();
+        assert (base);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        semo.select (base);
+    },
+
     select: function (view, record, index, eOpts) {
         this.application.fireEvent ('sync_selection', this, {
             record: record
@@ -117,20 +128,6 @@ Ext.define ('Webed.controller.NodeTree', {
                 if (node) semo.select (node);
             }
         }, this);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    select_base: function () {
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-
-        semo.select (base);
     },
 
     ///////////////////////////////////////////////////////////////////////////
