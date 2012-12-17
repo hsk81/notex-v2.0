@@ -8,6 +8,15 @@ Ext.define ('Webed.controller.MainBar', {
         selector: 'node-tree', ref: 'nodeTree'
     }],
 
+    selection: function () {
+        var view = this.getNodeTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        return semo.getLastSelected ();
+    },
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -105,6 +114,11 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addFolder: function (item, event, options) {
+        var node = this.selection ();
+        assert (node);
+        var uuid = node.get ('uuid');
+        assert (uuid);
+
         message.prompt ({
             title: 'Add Folder', msg: 'Enter a name:', value: 'folder',
             scope: this, callback: function (button, text) {
@@ -122,6 +136,7 @@ Ext.define ('Webed.controller.MainBar', {
 
                 this.application.fireEvent ('create_node', {
                     scope: this, callback: callback, with: {
+                        root_uuid: uuid,
                         mime: 'application/folder',
                         name: text
                     }
@@ -131,6 +146,11 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addText: function (item, event, options) {
+        var node = this.selection ();
+        assert (node);
+        var uuid = node.get ('uuid');
+        assert (uuid);
+
         message.prompt ({
             title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
             scope: this, callback: function (button, text) {
@@ -138,6 +158,7 @@ Ext.define ('Webed.controller.MainBar', {
 
                 this.application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, with: {
+                        root_uuid: uuid,
                         mime: 'text/plain',
                         name: text
                     }
@@ -184,11 +205,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     rename: function (item, event, options) {
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var node = semo.getLastSelected ();
+        var node = this.selection ();
         assert (node);
         var uuid = node.get ('uuid');
         assert (uuid);
@@ -227,11 +244,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     destroy: function (item, event, options) {
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var node = semo.getLastSelected ();
+        var node = this.selection ();
         assert (node);
         var uuid = node.get ('uuid');
         assert (uuid);
