@@ -318,6 +318,17 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
+
+        if (args.node.path) {
+            view.expandPath (args.node.path, 'uuid', '/',
+                function (success, node) { callback.call (
+                    this, (success) ? node : semo.getLastSelected ()
+                );}, this
+            );
+        } else {
+            callback.call (this, semo.getLastSelected ());
+        }
+
         function callback (record) {
             if (!record) return;
             if (!record.parentNode) return;
@@ -355,16 +366,6 @@ Ext.define ('Webed.controller.NodeTree', {
             });
 
             assert (model);
-        }
-
-        if (args.node.path) {
-            view.expandPath (args.node.path, 'uuid', '/',
-                function (success, node) { callback.call (
-                    this, (success) ? node : semo.getLastSelected ()
-                );}, this
-            );
-        } else {
-            callback.call (this, semo.getLastSelected ());
         }
     },
 
