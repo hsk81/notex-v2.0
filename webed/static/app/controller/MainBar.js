@@ -261,9 +261,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, for: {
-                        uuid: uuid
-                    }
+                    scope: this, callback: callback, for: {uuid: uuid}
                 });
             }
         });
