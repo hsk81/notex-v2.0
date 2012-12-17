@@ -69,6 +69,10 @@ Ext.define ('Webed.controller.Node', {
             var node = args.node[index];
             assert (node);
 
+            //
+            // TODO: Implement query since `store.load` has filter effect!
+            //
+
             store.load ({
                 scope: args.scope||this, callback: function (recs, op) {
                     args.callback.call (args.scope||this, recs, op, index);
