@@ -200,8 +200,9 @@ Ext.define ('Webed.controller.MainBar', {
         message.prompt ({
             title: 'Rename', value: node.get ('name'),
             scope: this, fn: function (button, text) {
-                if (button != 'ok' || text == node.get ('name') || text == '')
+                if (button!='ok' || text==node.get ('name') || text=='') {
                     return;
+                }
 
                 function callback (rec, op) {
                     if (op.success) return;
