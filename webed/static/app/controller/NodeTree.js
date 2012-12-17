@@ -292,12 +292,6 @@ Ext.define ('Webed.controller.NodeTree', {
 
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
-                    var view = this.getNodeTree ();
-                    assert (view);
-                    var base = view.getRootNode ();
-                    assert (base);
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
 
                     if (rec.isLeaf ()) {
                         this.application.fireEvent ('refresh_leafs', {
@@ -308,6 +302,13 @@ Ext.define ('Webed.controller.NodeTree', {
                     }
 
                     function callback () {
+                        var view = this.getNodeTree ();
+                        assert (view);
+                        var base = view.getRootNode ();
+                        assert (base);
+                        var semo = view.getSelectionModel ();
+                        assert (semo);
+
                         semo.select (base);
                         semo.select (rec);
 
