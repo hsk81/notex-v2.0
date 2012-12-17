@@ -97,7 +97,7 @@ Ext.define ('Webed.controller.NodeTree', {
         }
 
         var path = record.get ('path');
-        assert (path);
+        if (!path) return;
         var path = Ext.clone (path);
         assert (path);
 
@@ -265,7 +265,8 @@ Ext.define ('Webed.controller.NodeTree', {
                 var semo = view.getSelectionModel ();
                 assert (semo);
                 semo.select (node);
-                this.refresh ();
+
+                this.refresh (); // avoids 'complications' w.r.t. ExtJS
             }, this);
         }
     },
