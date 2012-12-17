@@ -381,15 +381,15 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        if (args.node.path) {
-            view.expandPath (args.node.path, 'uuid', '/',
-                function (success, node) { callback.call (
-                    this, (success) ? node : semo.getLastSelected ()
-                );}, this
-            );
-        } else {
-            callback.call (this, semo.getLastSelected ());
-        }
+        this.application.fireEvent ('get_node', this, {
+            node: [args.node], scope:this, callback: function (recs, op) {
+                if (op&&op.success && recs&&recs.length > 0) {
+                    recs.each (function (rec) { callback.call (this, rec); });
+                } else {
+                    callback.call (this, semo.getLastSelected ());
+                }
+            }
+        });
 
         function callback (record) {
             if (!record) return;
