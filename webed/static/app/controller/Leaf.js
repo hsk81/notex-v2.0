@@ -68,23 +68,11 @@ Ext.define ('Webed.controller.Leaf', {
             var store = this.getLeafsStore ();
             assert (store);
 
-            var recs = store.queryBy (function (rec, id) {
-                return and (args.leaf, function (key, value) {
-                    return rec.get (key) == value
-                });
+            store.load ({
+                scope: args.scope||this, callback: function (recs, op) {
+                    args.callback.call (args.scope||this, recs, op, index);
+                }, params: leaf
             });
-
-            if (recs && recs.length > 0) {
-                args.callback.call (args.scope||this, recs, {
-                    success: true
-                });
-            } else { // TODO: Store.load filters at the same time; undo!
-                store.load ({
-                    scope: args.scope||this, callback: function (recs, op) {
-                        args.callback.call (args.scope||this, recs, op, index);
-                    }, params: leaf
-                });
-            }
        }
     }
 
