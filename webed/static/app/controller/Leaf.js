@@ -62,15 +62,19 @@ Ext.define ('Webed.controller.Leaf', {
         assert (args.leaf.length >= 0);
         assert (args.callback);
 
+        var store = this.getLeafsStore ();
+        assert (store);
+
+        store.clearOnLoad = (args.skip_clear != undefined);
+
         for (var index in args.leaf) {
             var leaf = args.leaf[index];
             assert (leaf);
-            var store = this.getLeafsStore ();
-            assert (store);
 
             store.load ({
                 scope: args.scope||this, callback: function (recs, op) {
                     args.callback.call (args.scope||this, recs, op, index);
+                    if (index+1==args.leaf.length) store.clearOnLoad = true;
                 }, params: leaf
             });
        }

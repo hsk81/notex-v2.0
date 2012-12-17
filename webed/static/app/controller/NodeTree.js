@@ -312,7 +312,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
     update_node: function (args) {
         assert (args);
-        assert (args.from);
+        assert (args.for);
         assert (args.to);
 
         var view = this.getNodeTree ();
@@ -320,23 +320,15 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        if (args.from.path) {
-            view.expandPath (args.from.path.join ('/'), 'uuid', '/',
-                function (success, node) { callback.call (
-                    this, (success) ? node : semo.getLastSelected ()
-                );}, this
-            );
-        } else {
-            this.application.fireEvent ('get_node', this, {
-                node: [args.from], scope:this, callback: function (recs, op) {
-                    if (op&&op.success && recs&&recs.length > 0) {
-                        callback.call (this, recs[0]);
-                    } else {
-                        callback.call (this, semo.getLastSelected ());
-                    }
+        this.application.fireEvent ('get_node', this, {
+            node: [args.for], scope:this, callback: function (recs, op) {
+                if (op&&op.success && recs&&recs.length > 0) {
+                    recs.each (function (rec) { callback.call (this, rec); });
+                } else {
+                    callback.call (this, semo.getLastSelected ());
                 }
-            });
-        }
+            }
+        });
 
         function callback (record) {
             if (!record) return;

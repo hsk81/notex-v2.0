@@ -192,8 +192,6 @@ Ext.define ('Webed.controller.MainBar', {
         assert (node);
         var uuid = node.get ('uuid');
         assert (uuid);
-        var path = node.get ('path');
-        assert (path);
 
         if (uuid == '00000000-0000-0000-0000-000000000000') {
             return;
@@ -206,21 +204,21 @@ Ext.define ('Webed.controller.MainBar', {
                     return;
                 }
 
-                function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({ msg: Ext.String.format (
-                        message.UPDATE_ERROR, node.get ('name')
-                    )});
-
-                    console.error ('[MainBar.rename]', rec, op);
-                }
-
                 this.application.fireEvent ('update_node', {
-                    scope: this, callback: callback, from: {path: path}, to: {
+                    scope: this, callback: callback, for: {uuid: uuid}, to: {
                         name: text
                     }
                 });
+
+                function callback (rec, op) {
+                    if (!op.success) {
+                        message.error ({ msg: Ext.String.format (
+                            message.UPDATE_ERROR, node.get ('name')
+                        )});
+
+                        console.error ('[MainBar.rename]', rec, op);
+                    }
+                }
             }
         });
     },
