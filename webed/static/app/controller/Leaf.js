@@ -78,7 +78,7 @@ Ext.define ('Webed.controller.Leaf', {
                 args.callback.call (args.scope||this, recs, {
                     success: true
                 });
-            } else {
+            } else { // TODO: Store.load filters at the same time; undo!
                 store.load ({
                     scope: args.scope||this, callback: function (recs, op) {
                         args.callback.call (args.scope||this, recs, op, index);
