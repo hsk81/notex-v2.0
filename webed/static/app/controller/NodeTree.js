@@ -315,7 +315,7 @@ Ext.define ('Webed.controller.NodeTree', {
                             args.callback.call (args.scope||this, rec, op);
                         }
 
-                        this.refresh (); // undo get_node's filter
+                        this.refresh (); // UGLY: Undoes get_node's filter!
                     }
                 }
             });
@@ -357,7 +357,7 @@ Ext.define ('Webed.controller.NodeTree', {
                     if (args.callback && args.callback.call)
                         args.callback.call (args.scope||this, rec, op);
 
-                    this.refresh (); // undo get_node's filter
+                    this.refresh (); // UGLY: Undoes get_node's filter!
                 }
             });
 
