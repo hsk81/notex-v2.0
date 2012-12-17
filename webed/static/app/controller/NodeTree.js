@@ -319,7 +319,6 @@ Ext.define ('Webed.controller.NodeTree', {
         var semo = view.getSelectionModel ();
         assert (semo);
 
-
         if (args.node.path) {
             view.expandPath (args.node.path, 'uuid', '/',
                 function (success, node) { callback.call (
