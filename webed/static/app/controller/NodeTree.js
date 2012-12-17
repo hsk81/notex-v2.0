@@ -150,8 +150,6 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (semo);
         var node = semo.getLastSelected ();
         assert (node);
-        var path = node.getPath ('uuid', '/');
-        assert (path);
         var base = view.getRootNode ();
         assert (base);
         var base = base.removeAll (false);
@@ -161,6 +159,8 @@ Ext.define ('Webed.controller.NodeTree', {
         var mask = view.setLoading (true, true);
         assert (mask);
 
+        var path = node.getPath ('uuid', '/');
+        assert (path);
         var array = path.split ('/');
         assert (array);
         var uuid = array.pop ();

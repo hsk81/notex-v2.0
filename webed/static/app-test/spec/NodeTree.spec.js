@@ -1,11 +1,12 @@
 describe ('NodeTree', function () {
     Ext.require ('Webed.view.NodeTree');
+    Ext.require ('Webed.controller.Node');
     Ext.require ('Webed.controller.NodeTree');
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var view = null, controller = null, store = null;
+    var view = null, tree_ctrl = null, store = null, node_ctrl = null;
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -21,9 +22,11 @@ describe ('NodeTree', function () {
         });
 
         expect (view).toBeTruthy ();
-        if (!controller) controller = window.app.getController ('NodeTree');
-        expect (controller).toBeTruthy (); controller.init ();
-        if (!store) store = controller.getStore ('Nodes');
+        if (!node_ctrl) node_ctrl = window.app.getController ('Node');
+        expect (node_ctrl).toBeTruthy (); node_ctrl.init ();
+        if (!tree_ctrl) tree_ctrl = window.app.getController ('NodeTree');
+        expect (tree_ctrl).toBeTruthy (); tree_ctrl.init ();
+        if (!store) store = tree_ctrl.getStore ('Nodes');
         expect (store).toBeTruthy ();
 
         store.load ();
@@ -37,7 +40,8 @@ describe ('NodeTree', function () {
         view.destroy ();
         view = null;
         store = null;
-        controller = null;
+        tree_ctrl = null;
+        node_ctrl = null;
 
         var reset = null; Ext.Ajax.request ({
             url: '/reset/', callback: function (opt, success, xhr) {
@@ -85,7 +89,7 @@ describe ('NodeTree', function () {
             name: 'node', mime: 'application/folder'
         })});
         runs (function () { create ({
-          name: 'node', mime: '*/*'
+            name: 'node', mime: '*/*'
         })});
     });
 
