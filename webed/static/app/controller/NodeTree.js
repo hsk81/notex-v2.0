@@ -330,13 +330,27 @@ Ext.define ('Webed.controller.NodeTree', {
                     var base = view.getRootNode ();
                     assert (base);
 
-                    semo.select (base);
-                    semo.select (rec);
+                    if (rec.isLeaf ()) {
+                        this.application.fireEvent ('refresh_leafs', {
+                            scope:this, callback: function () {
+                                semo.select (base);
+                                semo.select (rec);
 
-                    if (rec.isLeaf ())
-                        this.application.fireEvent ('refresh_leafs');
-                    if (args.callback && args.callback.call)
-                        args.callback.call (args.scope||this, rec, op);
+                                if (args.callback && args.callback.call) {
+                                    args.callback.call (
+                                        args.scope||this, rec, op
+                                    );
+                                }
+                            }
+                        });
+                    } else {
+                        semo.select (base);
+                        semo.select (rec);
+
+                        if (args.callback && args.callback.call) {
+                            args.callback.call (args.scope||this, rec, op);
+                        }
+                    }
                 }
             });
 
