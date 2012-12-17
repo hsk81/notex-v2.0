@@ -159,23 +159,16 @@ Ext.define ('Webed.controller.NodeTree', {
         var mask = view.setLoading (true, true);
         assert (mask);
 
-        var path = node.getPath ('uuid', '/');
+        var path = base.getPath ('uuid', '/');
         assert (path);
-        var array = path.split ('/');
-        assert (array);
-        var uuid = array.pop ();
-        assert (uuid);
-        var path = array.join ('/');
-        assert (path||!path);
+        var path = path + node.getPath ('uuid', '/');
+        assert (path);
 
         var store = store.load ({callback: function (recs, op, success) {
             if (mask) mask.destroy ();
             if (success) {
                 view.expandPath (path, 'uuid', '/', function (success, node) {
-                    if (success) {
-                        var node = node.findChild ('uuid', uuid);
-                        assert (node); semo.select (node);
-                    }
+                    assert (success); semo.select (node);
                 }, this);
             }
         }, node: base, scope: this});
