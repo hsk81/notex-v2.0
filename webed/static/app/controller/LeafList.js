@@ -40,11 +40,21 @@ Ext.define ('Webed.controller.LeafList', {
         console.debug ('[LeafList.settings]');
     },
 
-    refresh: function () {
+    refresh: function (args) {
         var store = this.getLeafsStore ();
         assert (store);
-        var store = store.load ();
-        assert (store);
+
+        if (args) {
+            store.load ({
+                scope: args.scope||this, callback: function (recs, op) {
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, recs, op);
+                    }
+                }
+            });
+        } else {
+            store.load ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
