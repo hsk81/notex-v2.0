@@ -303,6 +303,8 @@ Ext.define ('Webed.controller.NodeTree', {
                     assert (view);
                     var base = view.getRootNode ();
                     assert (base);
+                    var semo = view.getSelectionModel ();
+                    assert (semo);
 
                     if (rec.isLeaf ()) {
                         this.application.fireEvent ('refresh_leafs', {
@@ -313,9 +315,6 @@ Ext.define ('Webed.controller.NodeTree', {
                     }
 
                     function callback () {
-                        var semo = view.getSelectionModel ();
-                        assert (semo);
-
                         semo.select (base);
                         semo.select (rec);
 
