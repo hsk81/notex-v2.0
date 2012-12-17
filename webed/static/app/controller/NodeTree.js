@@ -312,28 +312,37 @@ Ext.define ('Webed.controller.NodeTree', {
 
     update_node: function (args) {
         assert (args);
-        assert (args.node);
+        assert (args.from);
+        assert (args.to);
 
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
         assert (semo);
 
-        if (args.node.path) {
-            view.expandPath (args.node.path, 'uuid', '/',
+        if (args.from.path) {
+            view.expandPath (args.from.path.join ('/'), 'uuid', '/',
                 function (success, node) { callback.call (
                     this, (success) ? node : semo.getLastSelected ()
                 );}, this
             );
         } else {
-            callback.call (this, semo.getLastSelected ());
+            this.application.fireEvent ('get_node', this, {
+                node: [args.from], scope:this, callback: function (recs, op) {
+                    if (op&&op.success && recs&&recs.length > 0) {
+                        callback.call (this, recs[0]);
+                    } else {
+                        callback.call (this, semo.getLastSelected ());
+                    }
+                }
+            });
         }
 
         function callback (record) {
             if (!record) return;
             if (!record.parentNode) return;
 
-            var strings = record.set (args.node);
+            var strings = record.set (args.to);
             assert (strings || strings == null);
 
             var model = record.save ({
@@ -365,11 +374,6 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     update_leaf: function (args) {
-        assert (args);
-        assert (args.leaf);
-        args.node = args.leaf;
-        args.leaf = undefined;
-
         this.update_node (args);
     },
 

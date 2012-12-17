@@ -68,6 +68,10 @@ Ext.define ('Webed.controller.Node', {
             var store = this.getNodesStore ();
             assert (store);
 
+            //
+            // TODO: store.load applies also a filter; undo!
+            //
+
             store.load ({
                 scope: args.scope||this, callback: function (recs, op) {
                     args.callback.call (args.scope||this, recs, op, index);

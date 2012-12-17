@@ -192,6 +192,8 @@ Ext.define ('Webed.controller.MainBar', {
         assert (node);
         var uuid = node.get ('uuid');
         assert (uuid);
+        var path = node.get ('path');
+        assert (path);
 
         if (uuid == '00000000-0000-0000-0000-000000000000') {
             return;
@@ -215,8 +217,8 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('update_node', {
-                    scope: this, callback: callback, node: {
-                        uuid: uuid, name: text
+                    scope: this, callback: callback, from: {path: path}, to: {
+                        name: text
                     }
                 });
             }
