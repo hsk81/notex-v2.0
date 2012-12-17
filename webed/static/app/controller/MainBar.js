@@ -114,10 +114,11 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addFolder: function (item, event, options) {
-        var node = this.selection ();
-        assert (node);
-        var uuid = node.get ('uuid');
-        assert (uuid);
+        var root = this.selection ();
+        assert (root);
+        var root_uuid = root.get ('expandable')
+            ? root.get ('uuid') : root.parentNode.get ('uuid');
+        assert (root_uuid);
 
         message.prompt ({
             title: 'Add Folder', msg: 'Enter a name:', value: 'folder',
@@ -136,7 +137,7 @@ Ext.define ('Webed.controller.MainBar', {
 
                 this.application.fireEvent ('create_node', {
                     scope: this, callback: callback, with: {
-                        root_uuid: uuid,
+                        root_uuid: root_uuid,
                         mime: 'application/folder',
                         name: text
                     }
@@ -146,10 +147,11 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addText: function (item, event, options) {
-        var node = this.selection ();
-        assert (node);
-        var uuid = node.get ('uuid');
-        assert (uuid);
+        var root = this.selection ();
+        assert (root);
+        var root_uuid = root.get ('expandable')
+            ? root.get ('uuid') : root.parentNode.get ('uuid');
+        assert (root_uuid);
 
         message.prompt ({
             title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
@@ -158,7 +160,7 @@ Ext.define ('Webed.controller.MainBar', {
 
                 this.application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, with: {
-                        root_uuid: uuid,
+                        root_uuid: root_uuid,
                         mime: 'text/plain',
                         name: text
                     }
