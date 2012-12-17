@@ -168,7 +168,7 @@ Ext.define ('Webed.controller.NodeTree', {
             if (mask) mask.destroy ();
             if (success) {
                 view.expandPath (path, 'uuid', '/', function (success, node) {
-                    assert (success); semo.select (node);
+                    if (success && node) semo.select (node);
                 }, this);
             }
         }, node: base, scope: this});
@@ -343,18 +343,13 @@ Ext.define ('Webed.controller.NodeTree', {
 
                     if (rec.isLeaf ()) {
                         this.application.fireEvent ('refresh_leafs', {
-                            scope:this, callback: function () {
-                                semo.select (base);
-                                semo.select (rec);
-
-                                if (args.callback && args.callback.call) {
-                                    args.callback.call (
-                                        args.scope||this, rec, op
-                                    );
-                                }
-                            }
+                            scope:this, callback: callback
                         });
                     } else {
+                        callback.call (this);
+                    }
+
+                    function callback () {
                         semo.select (base);
                         semo.select (rec);
 
