@@ -207,7 +207,14 @@ Ext.define ('Webed.controller.NodeTree', {
         } else {
             this.application.fireEvent ('set_node', this, {
                 node: [node], scope: this, callback: function (rec, op) {
-                    this.on_create (args, rec, op);
+                    if (rec) {
+                        var store = this.getNodesStore ();
+                        assert (store); store.decorate (rec);
+                    }
+
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, rec, op);
+                    }
                 }
             });
 
@@ -277,15 +284,22 @@ Ext.define ('Webed.controller.NodeTree', {
             creator: function (leaf) {
                 this.application.fireEvent ('set_leaf', this, {
                     leaf: [leaf], scope: this, callback: function (rec, op) {
-                        this.on_create (args, rec, op);
+                        if (rec) {
+                            var store = this.getNodesStore ();
+                            assert (store); store.decorate (rec);
+                        }
+
+                        if (args.callback && args.callback.call) {
+                            args.callback.call (args.scope||this, rec, op);
+                        }
+
+                        this.application.fireEvent ('refresh_leafs');
                     }
                 });
 
                 $.extend (leaf, {
                     expandable: false, leaf: true
                 });
-
-                this.application.fireEvent ('refresh_leafs');
             }
         });
 
@@ -293,20 +307,6 @@ Ext.define ('Webed.controller.NodeTree', {
         args.leaf = null;
 
         this.create_node (args);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    on_create: function (args, rec, op) {
-
-        if (rec) {
-            var store = this.getNodesStore ();
-            assert (store); store.decorate (rec);
-        }
-
-        if (args.callback && args.callback.call) {
-            args.callback.call (args.scope||this, rec, op);
-        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
