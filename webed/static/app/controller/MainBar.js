@@ -94,7 +94,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, node: {
+                    scope: this, callback: callback, with: {
                         root_uuid: '00000000-0000-0000-0000-000000000000',
                         mime: 'application/project',
                         name: text
@@ -121,7 +121,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, node: {
+                    scope: this, callback: callback, with: {
                         mime: 'application/folder',
                         name: text
                     }
@@ -137,7 +137,7 @@ Ext.define ('Webed.controller.MainBar', {
                 if (button != 'ok' || !text) return;
 
                 this.application.fireEvent ('create_leaf', {
-                    scope: this, callback: callback, leaf: {
+                    scope: this, callback: callback, with: {
                         mime: 'text/plain',
                         name: text
                     }
@@ -261,7 +261,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, node: {
+                    scope: this, callback: callback, for: {
                         uuid: uuid
                     }
                 });

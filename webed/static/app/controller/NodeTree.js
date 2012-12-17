@@ -179,14 +179,14 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     create_node: function (args) {
-        assert (args && args.node);
+        assert (args && args.with);
 
         var node = {
-            mime: args.node.mime,
-            name: args.node.name,
-            root_uuid: get_root_uuid.call (this, args.node),
-            size: args.node.size || 0,
-            uuid: args.node.uuid || UUID.random ()
+            mime: args.with.mime,
+            name: args.with.name,
+            root_uuid: get_root_uuid.call (this, args.with),
+            size: args.with.size || 0,
+            uuid: args.with.uuid || UUID.random ()
         }
 
         assert (node.mime);
@@ -211,9 +211,7 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            $.extend (node, {
-                expandable: true, leaf: false
-            });
+            $.extend (node, {expandable: true, leaf: false});
         }
 
         append_node.call (this, node);
@@ -272,39 +270,29 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     create_leaf: function (args) {
-        assert (args && args.leaf);
 
-        $.extend (args, {
-            creator: function (leaf) {
-                this.application.fireEvent ('set_leaf', this, {
-                    leaf: [leaf], scope: this, callback: function (rec, op) {
-                        this.application.fireEvent ('refresh_leafs', {
-                            scope: this, callback: function () {
-                                if (rec) {
-                                    var store = this.getNodesStore ();
-                                    assert (store); store.decorate (rec);
-                                }
-
-                                if (args.callback && args.callback.call) {
-                                    args.callback.call (
-                                        args.scope||this, rec, op
-                                    );
-                                }
+        function creator (leaf) {
+            this.application.fireEvent ('set_leaf', this, {
+                leaf: [leaf], scope: this, callback: function (rec, op) {
+                    this.application.fireEvent ('refresh_leafs', {
+                        scope: this, callback: function () {
+                            if (rec) {
+                                var store = this.getNodesStore ();
+                                assert (store); store.decorate (rec);
                             }
-                        });
-                    }
-                });
 
-                $.extend (leaf, {
-                    expandable: false, leaf: true
-                });
-            }
-        });
+                            if (args.callback && args.callback.call) {
+                                args.callback.call (args.scope||this, rec, op);
+                            }
+                        }
+                    });
+                }
+            });
 
-        args.node = args.leaf;
-        args.leaf = null;
+            $.extend (leaf, {expandable: false, leaf: true});
+        }
 
-        this.create_node (args);
+        this.create_node ($.extend (args, {creator: creator}));
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -323,7 +311,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('get_node', this, {
             node: [args.for], scope:this, callback: function (recs, op) {
                 if (op&&op.success && recs&&recs.length > 0) {
-                    recs.each (function (rec) { callback.call (this, rec); });
+                    recs.each (callback);
                 } else {
                     callback.call (this, semo.getLastSelected ());
                 }
@@ -374,7 +362,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
     delete_node: function (args) {
         assert (args);
-        assert (args.node);
+        assert (args.for);
 
         var view = this.getNodeTree ();
         assert (view);
@@ -382,9 +370,9 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (semo);
 
         this.application.fireEvent ('get_node', this, {
-            node: [args.node], scope:this, callback: function (recs, op) {
+            node: [args.for], scope:this, callback: function (recs, op) {
                 if (op&&op.success && recs&&recs.length > 0) {
-                    recs.each (function (rec) { callback.call (this, rec); });
+                    recs.each (callback);
                 } else {
                     callback.call (this, semo.getLastSelected ());
                 }
@@ -412,11 +400,6 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     delete_leaf: function (args) {
-        assert (args);
-        assert (args.leaf);
-        args.node = args.leaf;
-        args.leaf = undefined;
-
         return this.delete_node (args);
     }
 
