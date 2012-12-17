@@ -67,8 +67,6 @@ Ext.define ('Webed.controller.Property', {
         var store = this.getPropertiesStore ();
         assert (store);
 
-        store.clearOnLoad = (args.skip_clear != undefined);
-
         for (var index in args.property) {
             var property = args.property[index];
             assert (property);
@@ -76,7 +74,6 @@ Ext.define ('Webed.controller.Property', {
             store.load ({
                 scope: args.scope||this, callback: function (recs, op) {
                     args.callback.call (args.scope||this, recs, op, index);
-                    if (index+1==args.property.length) store.clearOnLoad = true;
                 }, params: property
             });
         }

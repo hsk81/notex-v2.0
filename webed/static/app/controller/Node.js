@@ -65,8 +65,6 @@ Ext.define ('Webed.controller.Node', {
         var store = this.getNodesStore ();
         assert (store);
 
-        store.clearOnLoad = (args.skip_clear != undefined);
-
         for (var index in args.node) {
             var node = args.node[index];
             assert (node);
@@ -74,7 +72,6 @@ Ext.define ('Webed.controller.Node', {
             store.load ({
                 scope: args.scope||this, callback: function (recs, op) {
                     args.callback.call (args.scope||this, recs, op, index);
-                    if (index+1==args.node.length) store.clearOnLoad = true;
                 }, params: node
             });
         }

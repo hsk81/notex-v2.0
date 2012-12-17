@@ -278,13 +278,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('get_node', this, {
             node: [args.for], scope:this, callback: function (recs, op) {
                 if (op&&op.success && recs&&recs.length > 0) {
-                    recs.each (callback);
-                } else { // TODO: remove!
-                    var view = this.getNodeTree ();
-                    assert (view);
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
-                    callback.call (this, semo.getLastSelected ());
+                    for (var idx in recs) callback.call (this, recs[idx]);
                 }
             }
         });
@@ -320,6 +314,8 @@ Ext.define ('Webed.controller.NodeTree', {
                         if (args.callback && args.callback.call) {
                             args.callback.call (args.scope||this, rec, op);
                         }
+
+                        this.refresh (); // undo get_node's filter
                     }
                 }
             });
@@ -342,13 +338,7 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('get_node', this, {
             node: [args.for], scope:this, callback: function (recs, op) {
                 if (op&&op.success && recs&&recs.length > 0) {
-                    recs.each (callback);
-                } else { // TODO: remove!
-                    var view = this.getNodeTree ();
-                    assert (view);
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
-                    callback.call (this, semo.getLastSelected ());
+                    for (var idx in recs) callback.call (this, recs[idx]);
                 }
             }
         });
@@ -366,6 +356,8 @@ Ext.define ('Webed.controller.NodeTree', {
                         this.application.fireEvent ('refresh_leafs');
                     if (args.callback && args.callback.call)
                         args.callback.call (args.scope||this, rec, op);
+
+                    this.refresh (); // undo get_node's filter
                 }
             });
 
