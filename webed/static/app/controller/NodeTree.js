@@ -291,7 +291,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         function callback (record) {
             if (!record) return;
-            if (!record.parentNode) return;
+            if (!record.parentNode) return; // TODO: Why?
 
             var strings = record.set (args.to);
             assert (strings || strings == null);
