@@ -316,7 +316,13 @@ Ext.define ('Webed.controller.NodeTree', {
                             args.callback.call (args.scope||this, rec, op);
                         }
 
-                        this.refresh (); // UGLY: Undoes get_node's filter!
+                        //
+                        // TODO: Un-does get_node's filter, since node store
+                        //       has a remove-all on `store.load` integrated.
+                        //       Fix `get_node` and remove `refresh`!
+                        //
+
+                        this.refresh (); // TODO: remove!
                     }
                 }
             });
@@ -358,7 +364,13 @@ Ext.define ('Webed.controller.NodeTree', {
                     if (args.callback && args.callback.call)
                         args.callback.call (args.scope||this, rec, op);
 
-                    this.refresh (); // UGLY: Undoes get_node's filter!
+                    //
+                    // TODO: Un-does get_node's filter, since node store has
+                    //       a remove-all on `store.load` integrated. Fix
+                    //       `get_node` and remove `refresh`!
+                    //
+
+                    this.refresh (); // TODO: remove!
                 }
             });
 
