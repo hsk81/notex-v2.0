@@ -66,16 +66,18 @@ Ext.define ('Webed.controller.Leaf', {
         var store = this.getLeafsStore ();
         assert (store);
 
-        for (var index in args.leaf) {
-            var leaf = args.leaf[index];
-            assert (leaf);
+        Ext.Array.each (args.leaf, function (object, index) {
+            var recs = store.queryBy (function (leaf, id) {
 
-            store.load ({
-                scope: args.scope||this, callback: function (recs) {
-                    args.callback.call (args.scope||this, recs, index);
-                }, params: leaf
+                Ext.Object.each (object, function (key, value) {
+                    if (leaf.get (key) != value) { id = null; return false; }
+                });
+
+                return (id != null);
             });
-       }
+
+            args.callback.call (args.scope||this, recs.items, index);
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////

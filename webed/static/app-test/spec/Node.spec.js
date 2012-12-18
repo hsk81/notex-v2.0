@@ -107,8 +107,7 @@ describe ('NodeController', function () {
             function on_get (nodes, index) {
                 expect (nodes).toBeTruthy ();
                 expect (nodes.length).toBeGreaterThan (0);
-                expect (nodes.length).toBeGreaterThan (index);
-                expect (nodes[index]).toBeTruthy ();
+                expect (nodes[index]).not.toBeUndefined ();
                 expect (nodes[index].get ('root_uuid')).toEqual (uuid);
                 lock.pop ();
             }

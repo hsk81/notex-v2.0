@@ -82,34 +82,28 @@ describe ('LeafController', function () {
     ///////////////////////////////////////////////////////////////////////////
 
     it ('should get leafs', function () {
-        var nodes = window.app.getStore ('Nodes');
-        expect (nodes).toBeTruthy ();
+        var leafs = window.app.getStore ('Leafs');
+        expect (leafs).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
 
-        nodes.load ({scope: this, callback: function (records, op, success) {
+        leafs.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
-            var root = records[0];
-            expect (root).toBeTruthy ();
-            var uuid = root.get ('uuid');
-            expect (uuid).toBeTruthy ();
-
             window.app.fireEvent ('get_leaf', this, {
                 scope: this, callback: on_get, leaf: [{
-                    root_uuid: uuid
+                    mime: 'text/plain'
                 },{
-                    root_uuid: uuid
+                    mime: 'text/plain'
                 }]
             });
 
             function on_get (leafs, index) {
                 expect (leafs).toBeTruthy ();
                 expect (leafs.length).toBeGreaterThan (0);
-                expect (leafs.length).toBeGreaterThan (index);
-                expect (leafs[index]).toBeTruthy ();
-                expect (leafs[index].get ('root_uuid')).toEqual (uuid);
+                expect (leafs[index]).not.toBeUndefined ();
+                expect (leafs[index].get ('mime')).toEqual ('text/plain');
                 lock.pop ();
             }
         }});
