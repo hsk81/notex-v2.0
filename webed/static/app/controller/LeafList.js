@@ -77,12 +77,8 @@ Ext.define ('Webed.controller.LeafList', {
     },
 
     select: function (view, record, index, eOpts) {
-        this.application.fireEvent ('sync_selection', this, {
-            record: record
-        });
-        this.application.fireEvent ('create_tab', this, {
-            record: record
-        });
+        this.application.fireEvent ('sync_selection', this, {record: record});
+        this.application.fireEvent ('create_tab', this, {record: record});
     },
 
     sync_selection: function (source, args) {
