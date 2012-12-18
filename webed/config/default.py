@@ -50,7 +50,7 @@ class DefaultConfig:
     ## MAX_NODE_LEVEL = 0, then the sub-nodes are only loaded on demand.
     ##
 
-    MAX_NODE_LEVEL = 0
+    MAX_NODE_LEVEL = 2
 
 ###############################################################################
 ###############################################################################
