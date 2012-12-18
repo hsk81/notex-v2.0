@@ -92,12 +92,17 @@ def node_read (leafs=True, json=True):
         node_query = root.not_leafs
         leaf_query = root.leafs
 
-    nodes = Q (node_query).all (**kwargs)
-    node2exts = map (lambda n: node2ext (n, leafs=leafs), nodes)
-    leafs = Q (leaf_query).all (**kwargs)
-    leaf2exts = map (lambda l: leaf2ext (l), leafs)
+    if 'uuid' in kwargs:
+        node = Q (node_query).one (**kwargs)
+        rhs = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
+        lhs = map (lambda l: leaf2ext (l), node.leafs)
+    else:
+        nodes = Q (node_query).all (**kwargs)
+        lhs = map (lambda n: node2ext (n, leafs=leafs), nodes)
+        leafs = Q (leaf_query).all (**kwargs)
+        rhs = map (lambda l: leaf2ext (l), leafs)
 
-    result = dict (success=True, results=node2exts + leaf2exts)
+    result = dict (success=True, results=lhs + rhs)
     return jsonify (result) if json else result
 
 def node_update (leafs=True, json=True):
