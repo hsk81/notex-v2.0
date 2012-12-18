@@ -275,13 +275,17 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args.for);
         assert (args.to);
 
-        this.application.fireEvent ('get_node', this, {
-            node: [args.for], scope:this, callback: function (recs) {
-                if (recs && recs.length > 0) {
-                    for (var idx in recs) callback.call (this, recs[idx]);
+        if (args.for instanceof Webed.model.Node) {
+            callback.call (this, args.for);
+        } else {
+            this.application.fireEvent ('get_node', this, {
+                node: [args.for], scope:this, callback: function (recs) {
+                    if (recs && recs.length > 0) {
+                        for (var idx in recs) callback.call (this, recs[idx]);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         function callback (record) {
             if (!record) return;
@@ -334,13 +338,17 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args);
         assert (args.for);
 
-        this.application.fireEvent ('get_node', this, {
-            node: [args.for], scope:this, callback: function (recs) {
-                if (recs && recs.length > 0) {
-                    for (var idx in recs) callback.call (this, recs[idx]);
+        if (args.for instanceof Webed.model.Node) {
+            callback.call (this, args.for);
+        } else {
+            this.application.fireEvent ('get_node', this, {
+                node: [args.for], scope:this, callback: function (recs) {
+                    if (recs && recs.length > 0) {
+                        for (var idx in recs) callback.call (this, recs[idx]);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         function callback (record) {
             if (!record) return;

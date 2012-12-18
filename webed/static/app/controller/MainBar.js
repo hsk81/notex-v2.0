@@ -209,10 +209,8 @@ Ext.define ('Webed.controller.MainBar', {
     rename: function (item, event, options) {
         var node = this.selection ();
         assert (node);
-        var uuid = node.get ('uuid');
-        assert (uuid);
 
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
+        if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
             return;
         }
 
@@ -224,7 +222,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('update_node', {
-                    scope: this, callback: callback, for: {uuid: uuid}, to: {
+                    scope: this, callback: callback, for: node, to: {
                         name: text
                     }
                 });
@@ -248,10 +246,8 @@ Ext.define ('Webed.controller.MainBar', {
     destroy: function (item, event, options) {
         var node = this.selection ();
         assert (node);
-        var uuid = node.get ('uuid');
-        assert (uuid);
 
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
+        if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
             return;
         }
 
@@ -276,7 +272,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 this.application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, for: {uuid: uuid}
+                    scope: this, callback: callback, for: node
                 });
             }
         });
