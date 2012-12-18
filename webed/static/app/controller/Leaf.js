@@ -87,7 +87,7 @@ Ext.define ('Webed.controller.Leaf', {
                 store.load ({
                     scope: args.scope||this, callback: function (recs) {
                         args.callback.call (args.scope||this, recs, index);
-                    }, params: args.property[index], addRecords: true
+                    }, params: args.leaf[index], addRecords: true
                 });
             }
         });

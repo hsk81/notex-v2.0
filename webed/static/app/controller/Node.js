@@ -81,7 +81,15 @@ Ext.define ('Webed.controller.Node', {
         });
 
         Ext.Array.each (array, function (recs, index) {
-            args.callback.call (args.scope||this, recs, index);
+            if (recs.length > 0) {
+                args.callback.call (args.scope||this, recs, index);
+            } else {
+                store.load ({
+                    scope: args.scope||this, callback: function (recs) {
+                        args.callback.call (args.scope||this, recs, index);
+                    }, params: args.node[index], addRecords: true
+                });
+            }
         });
     }
 
