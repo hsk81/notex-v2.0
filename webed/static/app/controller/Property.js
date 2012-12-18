@@ -89,7 +89,7 @@ Ext.define ('Webed.controller.Property', {
 
                 //
                 // TODO: `store.load` clears all other entries inside the store
-                //       even if `!store.clearOnLoad`; investigate and if no
+                //       even if `!store.clearOnLoad`; investigate, and if no
                 //       proper solution is found, just leave it as it is which
                 //       means there will be some unnecessary get requests.
                 //
