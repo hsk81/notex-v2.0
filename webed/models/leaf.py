@@ -35,11 +35,13 @@ Node.subleafs = db.relationship (Leaf, cascade='all, delete-orphan',
 
 Node.not_leafs = property (lambda self: self.nodes
     .outerjoin (Leaf, Node.id==Leaf.leaf_id)
-    .filter_by (leaf_id=None))
+    .filter_by (leaf_id=None)
+    .back ())
 
 Node.not_subleafs = property (lambda self: self.subnodes
     .outerjoin (Leaf, Node.id==Leaf.leaf_id)
-    .filter_by (leaf_id=None))
+    .filter_by (leaf_id=None)
+    .back ())
 
 ###############################################################################
 ###############################################################################
