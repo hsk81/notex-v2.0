@@ -63,27 +63,40 @@ Ext.define ('Webed.controller.Property', {
         assert (args.property);
         assert (args.property.length >= 0);
         assert (args.callback);
+        assert (args.callback.call);
 
         var store = this.getPropertiesStore ();
         assert (store);
 
-        var array = Ext.Array.map (args.property, function () {
-            return [];
-        });
-
-        store.queryBy (function (prop) {
-            Ext.Array.each (args.property, function (object, index) {
-                Ext.Object.each (object, function (key, value) {
-                    if (prop.get (key) != value) { index = -1; return false; }
-                });
-
-                if (index >= 0) array[index].push (prop);
+        if (store.autoLoad) {
+            var array = Ext.Array.map (args.property, function () {
+                return [];
             });
-        });
 
-        Ext.Array.each (array, function (recs, index) {
-            args.callback.call (args.scope||this, recs, index);
-        });
+            store.queryBy (function (prop) {
+                Ext.Array.each (args.property, function (object, index) {
+                    Ext.Object.each (object, function (key, value) {
+                        if (prop.get (key) != value) {
+                            index = -1; return false;
+                        }
+                    });
+
+                    if (index >= 0) array[index].push (prop);
+                });
+            });
+
+            Ext.Array.each (array, function (recs, index) {
+                args.callback.call (args.scope||this, recs, index);
+            });
+        } else {
+            Ext.Array.each (args.property, function (object, index) {
+                store.load ({
+                    scope: args.scope||this, callback: function (recs) {
+                        args.callback.call (args.scope||this, recs, index);
+                    }, params: object
+                });
+            });
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

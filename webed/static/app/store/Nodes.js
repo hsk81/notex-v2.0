@@ -30,5 +30,7 @@ Ext.define ('Webed.store.Nodes', {
         assert (icon);
 
         node.set ('iconCls', icon);
-    }
+    },
+
+    autoLoad: true
 });
