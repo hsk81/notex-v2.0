@@ -276,8 +276,8 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args.to);
 
         this.application.fireEvent ('get_node', this, {
-            node: [args.for], scope:this, callback: function (recs, op) {
-                if (op&&op.success && recs&&recs.length > 0) {
+            node: [args.for], scope:this, callback: function (recs) {
+                if (recs && recs.length > 0) {
                     for (var idx in recs) callback.call (this, recs[idx]);
                 }
             }
@@ -293,14 +293,6 @@ Ext.define ('Webed.controller.NodeTree', {
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
 
-                    if (rec.isLeaf ()) {
-                        this.application.fireEvent ('refresh_leafs', {
-                            scope:this, callback: callback
-                        });
-                    } else {
-                        callback.call (this);
-                    }
-
                     function callback () {
                         var view = this.getNodeTree ();
                         assert (view);
@@ -315,14 +307,14 @@ Ext.define ('Webed.controller.NodeTree', {
                         if (args.callback && args.callback.call) {
                             args.callback.call (args.scope||this, rec, op);
                         }
+                    }
 
-                        //
-                        // TODO: Un-does get_node's filter, since node store
-                        //       has a remove-all on `store.load` integrated.
-                        //       Fix `get_node` and remove `refresh`!
-                        //
-
-                        this.refresh (); // TODO: remove!
+                    if (rec.isLeaf ()) {
+                        this.application.fireEvent ('refresh_leafs', {
+                            scope:this, callback: callback
+                        });
+                    } else {
+                        callback.call (this);
                     }
                 }
             });
@@ -343,8 +335,8 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args.for);
 
         this.application.fireEvent ('get_node', this, {
-            node: [args.for], scope:this, callback: function (recs, op) {
-                if (op&&op.success && recs&&recs.length > 0) {
+            node: [args.for], scope:this, callback: function (recs) {
+                if (recs && recs.length > 0) {
                     for (var idx in recs) callback.call (this, recs[idx]);
                 }
             }
@@ -363,14 +355,6 @@ Ext.define ('Webed.controller.NodeTree', {
                         this.application.fireEvent ('refresh_leafs');
                     if (args.callback && args.callback.call)
                         args.callback.call (args.scope||this, rec, op);
-
-                    //
-                    // TODO: Un-does get_node's filter, since node store has
-                    //       a remove-all on `store.load` integrated. Fix
-                    //       `get_node` and remove `refresh`!
-                    //
-
-                    this.refresh (); // TODO: remove!
                 }
             });
 

@@ -61,24 +61,30 @@ Ext.define ('Webed.controller.Node', {
         assert (args.node);
         assert (args.node.length >= 0);
         assert (args.callback);
+        assert (args.callback.call);
 
         var store = this.getNodesStore ();
         assert (store);
+        var root = store.getRootNode ();
+        assert (root);
 
-        for (var index in args.node) {
-            var node = args.node[index];
-            assert (node);
+        var array = Ext.Array.map (args.node, function () {
+            return [];
+        });
 
-            //
-            // TODO: Implement query since `store.load` has filter effect!
-            //
+        root.cascadeBy (function (node) {
+            Ext.Array.each (args.node, function (object, index) {
+                Ext.Object.each (object, function (key, value) {
+                    if (node.get (key) != value) { index = -1; return false; }
+                });
 
-            store.load ({
-                scope: args.scope||this, callback: function (recs, op) {
-                    args.callback.call (args.scope||this, recs, op, index);
-                }, params: node
+                if (index >= 0) array[index].push (node);
             });
-        }
+        });
+
+        Ext.Array.each (array, function (recs, index) {
+            args.callback.call (args.scope||this, recs, index);
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////

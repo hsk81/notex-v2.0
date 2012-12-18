@@ -104,14 +104,12 @@ describe ('NodeController', function () {
                 }]
             });
 
-            function on_get (nodes, op, index) {
+            function on_get (nodes, index) {
                 expect (nodes).toBeTruthy ();
                 expect (nodes.length).toBeGreaterThan (0);
                 expect (nodes.length).toBeGreaterThan (index);
                 expect (nodes[index]).toBeTruthy ();
                 expect (nodes[index].get ('root_uuid')).toEqual (uuid);
-                expect (op).toBeTruthy ();
-                expect (op.success).toBeTruthy ();
                 lock.pop ();
             }
         }});
