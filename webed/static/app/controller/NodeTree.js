@@ -297,6 +297,14 @@ Ext.define ('Webed.controller.NodeTree', {
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
 
+                    if (rec.isLeaf ()) {
+                        this.application.fireEvent ('refresh_leafs', {
+                            scope:this, callback: callback
+                        });
+                    } else {
+                        callback.call (this);
+                    }
+
                     function callback () {
                         var view = this.getNodeTree ();
                         assert (view);
@@ -311,14 +319,6 @@ Ext.define ('Webed.controller.NodeTree', {
                         if (args.callback && args.callback.call) {
                             args.callback.call (args.scope||this, rec, op);
                         }
-                    }
-
-                    if (rec.isLeaf ()) {
-                        this.application.fireEvent ('refresh_leafs', {
-                            scope:this, callback: callback
-                        });
-                    } else {
-                        callback.call (this);
                     }
                 }
             });
