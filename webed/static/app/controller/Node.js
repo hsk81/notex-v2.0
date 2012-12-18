@@ -65,14 +65,12 @@ Ext.define ('Webed.controller.Node', {
 
         var store = this.getNodesStore ();
         assert (store);
-        var root = store.getRootNode ();
-        assert (root);
 
         var array = Ext.Array.map (args.node, function () {
             return [];
         });
 
-        root.cascadeBy (function (node) {
+        store.getRootNode ().cascadeBy (function (node) {
             Ext.Array.each (args.node, function (object, index) {
                 Ext.Object.each (object, function (key, value) {
                     if (node.get (key) != value) { index = -1; return false; }
