@@ -97,7 +97,7 @@ describe ('NodeController', function () {
             expect (uuid).toBeTruthy ();
 
             window.app.fireEvent ('get_node', this, {
-                skip_clear: true, scope: this, callback: on_get, node: [{
+                scope: this, callback: on_get, node: [{
                     root_uuid: uuid
                 },{
                     root_uuid: uuid

@@ -104,14 +104,12 @@ describe ('LeafController', function () {
                 }]
             });
 
-            function on_get (leafs, op, index) {
+            function on_get (leafs, index) {
                 expect (leafs).toBeTruthy ();
                 expect (leafs.length).toBeGreaterThan (0);
                 expect (leafs.length).toBeGreaterThan (index);
                 expect (leafs[index]).toBeTruthy ();
                 expect (leafs[index].get ('root_uuid')).toEqual (uuid);
-                expect (op).toBeTruthy ();
-                expect (op.success).toBeTruthy ();
                 lock.pop ();
             }
         }});

@@ -61,6 +61,7 @@ Ext.define ('Webed.controller.Leaf', {
         assert (args.leaf);
         assert (args.leaf.length >= 0);
         assert (args.callback);
+        assert (args.callback.call);
 
         var store = this.getLeafsStore ();
         assert (store);
@@ -70,8 +71,8 @@ Ext.define ('Webed.controller.Leaf', {
             assert (leaf);
 
             store.load ({
-                scope: args.scope||this, callback: function (recs, op) {
-                    args.callback.call (args.scope||this, recs, op, index);
+                scope: args.scope||this, callback: function (recs) {
+                    args.callback.call (args.scope||this, recs, index);
                 }, params: leaf
             });
        }
