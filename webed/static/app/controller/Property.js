@@ -68,12 +68,38 @@ Ext.define ('Webed.controller.Property', {
         var store = this.getPropertiesStore ();
         assert (store);
 
-        Ext.Array.each (args.property, function (object, index) {
-            store.load ({
-                scope: args.scope||this, callback: function (recs) {
-                    args.callback.call (args.scope||this, recs, index);
-                }, params: object
+        var array = Ext.Array.map (args.property, function () {
+            return [];
+        });
+
+        store.queryBy (function (prop) {
+            Ext.Array.each (args.property, function (object, index) {
+                Ext.Object.each (object, function (key, value) {
+                    if (prop.get (key) != value) { index = -1; return false; }
+                });
+
+                if (index >= 0) array[index].push (prop);
             });
+        });
+
+        Ext.Array.each (array, function (recs, index) {
+            if (recs.length > 0) {
+                args.callback.call (args.scope||this, recs, index);
+            } else {
+
+                //
+                // TODO: `store.load` clears all other entries inside the store
+                //       even if `!store.clearOnLoad`; investigate and if no
+                //       proper solution is found, just leave it as it is which
+                //       means there will be some unnecessary get requests.
+                //
+
+                store.load ({
+                    scope: args.scope||this, callback: function (recs) {
+                        args.callback.call (args.scope||this, recs, index);
+                    }, params: args.property[index]
+                });
+            }
         });
     }
 
