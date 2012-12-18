@@ -68,35 +68,13 @@ Ext.define ('Webed.controller.Property', {
         var store = this.getPropertiesStore ();
         assert (store);
 
-        if (store.autoLoad) {
-            var array = Ext.Array.map (args.property, function () {
-                return [];
+        Ext.Array.each (args.property, function (object, index) {
+            store.load ({
+                scope: args.scope||this, callback: function (recs) {
+                    args.callback.call (args.scope||this, recs, index);
+                }, params: object
             });
-
-            store.queryBy (function (prop) {
-                Ext.Array.each (args.property, function (object, index) {
-                    Ext.Object.each (object, function (key, value) {
-                        if (prop.get (key) != value) {
-                            index = -1; return false;
-                        }
-                    });
-
-                    if (index >= 0) array[index].push (prop);
-                });
-            });
-
-            Ext.Array.each (array, function (recs, index) {
-                args.callback.call (args.scope||this, recs, index);
-            });
-        } else {
-            Ext.Array.each (args.property, function (object, index) {
-                store.load ({
-                    scope: args.scope||this, callback: function (recs) {
-                        args.callback.call (args.scope||this, recs, index);
-                    }, params: object
-                });
-            });
-        }
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////
