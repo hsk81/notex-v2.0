@@ -87,7 +87,7 @@ describe ('NodeController', function () {
 
         lock.init ([true, true]); // ensure callback verification!
 
-        nodes.load ({scope: this, callback: function (records, op, success) {
+        nodes.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 

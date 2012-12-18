@@ -88,35 +88,28 @@ describe ('PropertyController', function () {
     ///////////////////////////////////////////////////////////////////////////
 
     it ('should get properties', function () {
-        var nodes = window.app.getStore ('Nodes');
-        expect (nodes).toBeTruthy ();
+        var properties = window.app.getStore ('Properties');
+        expect (properties).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
 
-        nodes.load ({scope: this, callback: function (records, op, success) {
+        properties.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
-            var node = records[0];
-            expect (node).toBeTruthy ();
-            var uuid = node.get ('uuid');
-            expect (uuid).toBeTruthy ();
-
             window.app.fireEvent ('get_property', this, {
                 scope: this, callback: on_get, property: [{
-                    node_uuid: uuid,
-                    name: 'data'
+                    mime: 'text/plain'
                 },{
-                    node_uuid: uuid,
-                    name: 'data'
+                    mime: 'text/plain'
                 }]
             });
 
-            function on_get (props, op, index) {
+            function on_get (props, index) {
                 expect (props).toBeTruthy ();
-                expect (props.length).toEqual (0);
-                expect (op).toBeTruthy ();
-                expect (op.success).toBeTruthy ();
+                expect (props.length).toBeGreaterThan (0);
+                expect (props[index]).not.toBeUndefined ();
+                expect (props[index].get ('mime')).toEqual ('text/plain');
                 lock.pop ();
             }
         }});

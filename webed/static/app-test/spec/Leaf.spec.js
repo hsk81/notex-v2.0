@@ -87,7 +87,7 @@ describe ('LeafController', function () {
 
         lock.init ([true, true]); // ensure callback verification!
 
-        leafs.load ({scope: this, callback: function (records, op, success) {
+        leafs.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
