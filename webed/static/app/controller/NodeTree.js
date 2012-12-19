@@ -246,18 +246,14 @@ Ext.define ('Webed.controller.NodeTree', {
         function creator (leaf) {
             this.application.fireEvent ('set_leaf', this, {
                 leaf: [leaf], scope: this, callback: function (rec, op) {
-                    this.application.fireEvent ('refresh_leafs', {
-                        scope: this, callback: function () {
-                            if (rec) {
-                                var store = this.getNodesStore ();
-                                assert (store); store.decorate (rec);
-                            }
+                    if (rec) {
+                        var store = this.getNodesStore ();
+                        assert (store); store.decorate (rec);
+                    }
 
-                            if (args.callback && args.callback.call) {
-                                args.callback.call (args.scope||this, rec, op);
-                            }
-                        }
-                    });
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, rec, op);
+                    }
                 }
             });
 
@@ -297,28 +293,18 @@ Ext.define ('Webed.controller.NodeTree', {
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
 
-                    if (rec.isLeaf ()) {
-                        this.application.fireEvent ('refresh_leafs', {
-                            scope:this, callback: callback
-                        });
-                    } else {
-                        callback.call (this);
-                    }
+                    var view = this.getNodeTree ();
+                    assert (view);
+                    var base = view.getRootNode ();
+                    assert (base);
+                    var semo = view.getSelectionModel ();
+                    assert (semo);
 
-                    function callback () {
-                        var view = this.getNodeTree ();
-                        assert (view);
-                        var base = view.getRootNode ();
-                        assert (base);
-                        var semo = view.getSelectionModel ();
-                        assert (semo);
+                    semo.select (base);
+                    semo.select (rec);
 
-                        semo.select (base);
-                        semo.select (rec);
-
-                        if (args.callback && args.callback.call) {
-                            args.callback.call (args.scope||this, rec, op);
-                        }
+                    if (args.callback && args.callback.call) {
+                        args.callback.call (args.scope||this, rec, op);
                     }
                 }
             });
@@ -353,14 +339,8 @@ Ext.define ('Webed.controller.NodeTree', {
         function callback (record) {
             if (!record) return;
 
-            var refresh_leafs = record.isLeaf () ||
-                record.isExpanded () && record.hasChildNodes () ||
-                !record.isExpanded () && record.isExpandable ();
-
             record.destroy ({
                 scope: this, callback: function (rec, op) {
-                    if (op.success && refresh_leafs)
-                        this.application.fireEvent ('refresh_leafs');
                     if (args.callback && args.callback.call)
                         args.callback.call (args.scope||this, rec, op);
                 }
