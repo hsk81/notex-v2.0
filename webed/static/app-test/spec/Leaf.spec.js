@@ -4,15 +4,7 @@ describe ('LeafController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var controller = null, lock = function () {
-        var list = []; return {
-            init: function (ls) { list = ls||[]; },
-            empty: function () { return list.length == 0; },
-            clear: function () { list = []; },
-            push: function (el) { list.push (el); },
-            pop: function () { return list.pop (); }
-        }
-    }();
+    var controller = null, lock = create_lock ();
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////

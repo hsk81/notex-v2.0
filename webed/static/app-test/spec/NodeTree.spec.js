@@ -7,19 +7,8 @@ describe ('NodeTree', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var lock = function () {
-        var list = []; return {
-            init: function (ls) { list = ls||[]; },
-            empty: function () { return list.length == 0; },
-            clear: function () { list = []; },
-            push: function (el) { list.push (el); },
-            pop: function () { return list.pop (); }
-        }
-    }();
-
-    var view = null, tree_ctrl = null;
-    var node_store = null, leaf_store = null;
-    var node_ctrl = null, leaf_ctrl = null;
+    var tree_ctrl = null, node_ctrl = null, leaf_ctrl = null;
+    var view = null, node_store = null, lock = create_lock ();
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -64,7 +53,6 @@ describe ('NodeTree', function () {
         view = null;
         tree_ctrl = null;
         node_store = null;
-        leaf_store = null;
         node_ctrl = null;
         leaf_ctrl = null;
 
