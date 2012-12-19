@@ -87,7 +87,7 @@ Ext.define ('Webed.controller.Node', {
                 store.load ({
                     scope: args.scope||this, callback: function (recs) {
                         args.callback.call (args.scope||this, recs, index);
-                    }, params: args.node[index], addRecords: true
+                    }, params: $.extend ({include:true}, args.node[index])
                 });
             }
         });
