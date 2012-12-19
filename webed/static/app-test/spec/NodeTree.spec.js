@@ -274,16 +274,13 @@ describe ('NodeTree', function () {
 
             lock.init ([true]); window.app.fireEvent ('delete_node', {
                 scope: this, callback: function (rec, op) {
-                    expect (rec).toBeTruthy ();
-                    expect (rec.get ('uuid')).toEqual (node.get ('uuid'));
-                    expect (rec.get ('mime')).toEqual (mime);
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
                 }, for: node
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 1250);
         }
 
         runs (function () { destroy ('application/project'); });
@@ -303,16 +300,13 @@ describe ('NodeTree', function () {
 
             lock.init ([true]); window.app.fireEvent ('delete_leaf', {
                 scope: this, callback: function (rec, op) {
-                    expect (rec).toBeTruthy ();
-                    expect (rec.get ('uuid')).toEqual (leaf.get ('uuid'));
-                    expect (rec.get ('mime')).toEqual (mime);
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
                 }, for: leaf
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 1250);
         }
 
         runs (function () { destroy ('text/plain'); });
