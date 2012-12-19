@@ -20,6 +20,10 @@ Ext.define ('Webed.store.Nodes', {
             var uuid = operation.node.get ('uuid');
             assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
+
+            if (operation.params.exclude == undefined) {
+                operation.params.exclude = true;
+            }
         }
     },
 

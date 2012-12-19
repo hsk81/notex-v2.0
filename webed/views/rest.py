@@ -16,6 +16,7 @@ from ..ext import db, logger
 from ..util import Q
 
 import sys
+import json as JSON
 
 ###############################################################################
 ###############################################################################
@@ -92,7 +93,7 @@ def node_read (leafs=True, json=True):
         node_query = base.not_subleafs
         leaf_query = base.subleafs
 
-    if 'uuid' in kwargs and not request.args.get ('include', False):
+    if 'uuid' in kwargs and JSON.loads (request.args.get ('exclude', 'false')):
         node = Q (node_query).one (**kwargs)
         rhs = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
         lhs = map (lambda l: leaf2ext (l), node.leafs)
