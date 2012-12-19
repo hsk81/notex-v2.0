@@ -55,7 +55,7 @@ class DbInit (Command):
         db.session.add (user)
         db.session.commit ()
 
-manager.add_command ('db-init', DbInit ())
+manager.add_command ('init-db', DbInit ())
 
 ###############################################################################
 
@@ -65,7 +65,7 @@ class DbDrop (Command):
     def run (self):
         db.drop_all ()
 
-manager.add_command ('db-drop', DbDrop ())
+manager.add_command ('drop-db', DbDrop ())
 
 ###############################################################################
 ###############################################################################
