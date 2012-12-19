@@ -92,6 +92,14 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
+                this.application.fireEvent ('create_node', {
+                    scope: this, callback: callback, with: {
+                        root_uuid: '00000000-0000-0000-0000-000000000000',
+                        mime: 'application/project',
+                        name: text
+                    }
+                });
+
                 function callback (rec, op) {
                     if (op.success) return;
 
@@ -101,14 +109,6 @@ Ext.define ('Webed.controller.MainBar', {
 
                     console.error ('[MainBar.addProject]', rec, op);
                 }
-
-                this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, with: {
-                        root_uuid: '00000000-0000-0000-0000-000000000000',
-                        mime: 'application/project',
-                        name: text
-                    }
-                });
             }
         });
     },
@@ -125,6 +125,14 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
+                this.application.fireEvent ('create_node', {
+                    scope: this, callback: callback, with: {
+                        root_uuid: root_uuid,
+                        mime: 'application/folder',
+                        name: text
+                    }
+                });
+
                 function callback (rec, op) {
                     if (op.success) return;
 
@@ -134,14 +142,6 @@ Ext.define ('Webed.controller.MainBar', {
 
                     console.error ('[MainBar.addFolder]', rec, op);
                 }
-
-                this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, with: {
-                        root_uuid: root_uuid,
-                        mime: 'application/folder',
-                        name: text
-                    }
-                });
             }
         });
     },
@@ -259,6 +259,10 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, fn: function (button) {
                 if (button != 'yes') return;
 
+                this.application.fireEvent ('delete_node', {
+                    scope: this, callback: callback, for: node
+                });
+
                 function callback (rec, op) {
                     if (op.success) return;
 
@@ -268,10 +272,6 @@ Ext.define ('Webed.controller.MainBar', {
 
                     console.error ('[MainBar.destroy]', rec, op);
                 }
-
-                this.application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, for: node
-                });
             }
         });
     },
