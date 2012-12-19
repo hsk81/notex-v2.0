@@ -9,7 +9,6 @@ from flask.helpers import jsonify
 
 from flask import Blueprint, session
 
-from ..config import DefaultConfig
 from ..models import *
 from ..app import app
 from ..ext import db, logger
@@ -435,10 +434,10 @@ def node2ext (node, leafs=True, level=1):
             'path': node.path
         }
 
-    if DefaultConfig.MAX_NODE_SIZE < node.nodes.count ():
+    if app.config['MAX_NODE_SIZE'] < node.nodes.count ():
         return to_ext (node, results=None)
 
-    if DefaultConfig.MAX_NODE_LEVEL < level:
+    if app.config['MAX_NODE_LEVEL'] < level:
         return to_ext (node, results=None)
 
     ext_nodes = map (lambda n: node2ext (n, leafs=leafs, level=level+1),
