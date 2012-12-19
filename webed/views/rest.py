@@ -84,13 +84,13 @@ def node_read (leafs=True, json=True):
         root_uuid = request.args.get ('root_uuid', base.uuid)
         del kwargs['uuid']
 
-    if not root_uuid:
-        node_query = base.not_subleafs
-        leaf_query = base.subleafs
-    else:
+    if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
         node_query = root.not_leafs
         leaf_query = root.leafs
+    else:
+        node_query = base.not_subleafs
+        leaf_query = base.subleafs
 
     if 'uuid' in kwargs:
         node = Q (node_query).one (**kwargs)
