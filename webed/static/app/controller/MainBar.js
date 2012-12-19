@@ -180,9 +180,8 @@ Ext.define ('Webed.controller.MainBar', {
 
                         function on_set (prop, op) {
                             if (op.success && prop) {
-                                this.application.fireEvent (
-                                    'create_tab', this, { record: leaf }
-                                );
+                                this.application.fireEvent ('create_tab',
+                                    this, { record: leaf });
                             } else {
                                 error (prop, op);
                             }
