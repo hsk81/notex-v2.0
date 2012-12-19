@@ -98,17 +98,17 @@ describe ('NodeController', function () {
 
             window.app.fireEvent ('get_node', this, {
                 scope: this, callback: on_get, node: [{
-                    root_uuid: uuid
+                    uuid: uuid
                 },{
-                    root_uuid: uuid
+                    uuid: uuid
                 }]
             });
 
             function on_get (nodes, index) {
                 expect (nodes).toBeTruthy ();
                 expect (nodes.length).toBeGreaterThan (0);
-                expect (nodes[index]).not.toBeUndefined ();
-                expect (nodes[index].get ('root_uuid')).toEqual (uuid);
+                expect (nodes[0]).not.toBeUndefined ();
+                expect (nodes[0].get ('uuid')).toEqual (uuid);
                 lock.pop ();
             }
         }});

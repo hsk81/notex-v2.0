@@ -108,8 +108,8 @@ describe ('PropertyController', function () {
             function on_get (props, index) {
                 expect (props).toBeTruthy ();
                 expect (props.length).toBeGreaterThan (0);
-                expect (props[index]).not.toBeUndefined ();
-                expect (props[index].get ('mime')).toEqual ('text/plain');
+                expect (props[0]).not.toBeUndefined ();
+                expect (props[0].get ('mime')).toEqual ('text/plain');
                 lock.pop ();
             }
         }});

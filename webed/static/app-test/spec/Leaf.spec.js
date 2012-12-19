@@ -102,8 +102,8 @@ describe ('LeafController', function () {
             function on_get (leafs, index) {
                 expect (leafs).toBeTruthy ();
                 expect (leafs.length).toBeGreaterThan (0);
-                expect (leafs[index]).not.toBeUndefined ();
-                expect (leafs[index].get ('mime')).toEqual ('text/plain');
+                expect (leafs[0]).not.toBeUndefined ();
+                expect (leafs[0].get ('mime')).toEqual ('text/plain');
                 lock.pop ();
             }
         }});
