@@ -79,6 +79,9 @@ def node_read (leafs=True, json=True):
     name = request.args.get ('name', None)
     if name: kwargs['name'] = name
 
+    omit_top = request.args.get ('omit_top', False)
+    if omit_top: omit_top = JSON.loads (omit_top)
+
     if uuid != '00000000-0000-0000-0000-000000000000':
         root_uuid = request.args.get ('root_uuid', None)
     else:
@@ -93,7 +96,7 @@ def node_read (leafs=True, json=True):
         node_query = base.not_subleafs
         leaf_query = base.subleafs
 
-    if 'uuid' in kwargs and JSON.loads (request.args.get ('exclude', 'false')):
+    if 'uuid' in kwargs and omit_top:
         node = Q (node_query).one (**kwargs)
         rhs = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
         lhs = map (lambda l: leaf2ext (l), node.leafs)
