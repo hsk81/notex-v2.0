@@ -63,6 +63,7 @@ describe ('LeafController', function () {
                 expect (leaf.get ('mime')).toEqual ('plain/text');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});
@@ -96,6 +97,7 @@ describe ('LeafController', function () {
                 expect (leafs.length).toBeGreaterThan (0);
                 expect (leafs[0]).not.toBeUndefined ();
                 expect (leafs[0].get ('mime')).toEqual ('text/plain');
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});

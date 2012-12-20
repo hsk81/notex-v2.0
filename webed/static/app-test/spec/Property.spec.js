@@ -70,6 +70,7 @@ describe ('PropertyController', function () {
                 expect (prop.get ('type')).toEqual ('StringProperty');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});
@@ -104,6 +105,7 @@ describe ('PropertyController', function () {
                 expect (props[0]).not.toBeUndefined ();
                 expect (props[0].get ('name')).toEqual ('data');
                 expect (props[0].get ('size')).toBeGreaterThan (-1);
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});

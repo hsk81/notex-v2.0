@@ -63,6 +63,7 @@ describe ('NodeController', function () {
                 expect (node.get ('mime')).toEqual ('plain/text');
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});
@@ -101,6 +102,7 @@ describe ('NodeController', function () {
                 expect (nodes.length).toBeGreaterThan (0);
                 expect (nodes[0]).not.toBeUndefined ();
                 expect (nodes[0].get ('uuid')).toEqual (uuid);
+                expect (index).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});
