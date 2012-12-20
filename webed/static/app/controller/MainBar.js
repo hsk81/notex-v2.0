@@ -64,14 +64,9 @@ Ext.define ('Webed.controller.MainBar', {
         });
 
         function callback (records, op) {
-            if (op.success) return;
-
-            message.error ({msg: Ext.String.format (
-                message.UPDATE_ERROR, (records.length > 0)
-                    ? records[0].get ('name') : null
-            )});
-
-            console.error ('[MainBar.saveDocument]', records, op);
+            if (!op.success) {
+                console.error ('[MainBar.saveDocument]', records, op);
+            }
         }
     },
 
@@ -101,13 +96,9 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({msg: Ext.String.format (
-                        message.CREATE_ERROR, text
-                    )});
-
-                    console.error ('[MainBar.addProject]', rec, op);
+                    if (!op.success) {
+                        console.error ('[MainBar.addProject]', rec, op);
+                    }
                 }
             }
         });
@@ -134,13 +125,9 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({msg: Ext.String.format (
-                        message.CREATE_ERROR, text
-                    )});
-
-                    console.error ('[MainBar.addFolder]', rec, op);
+                    if (!op.success) {
+                        console.error ('[MainBar.addFolder]', rec, op);
+                    }
                 }
             }
         });
@@ -180,8 +167,9 @@ Ext.define ('Webed.controller.MainBar', {
 
                         function on_set (prop, op) {
                             if (op.success && prop) {
-                                this.application.fireEvent ('create_tab',
-                                    this, { record: leaf });
+                                this.application.fireEvent (
+                                    'create_tab', this, {record: leaf}
+                                );
                             } else {
                                 error (prop, op);
                             }
@@ -192,10 +180,6 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 function error (rec, op) {
-                    message.error ({msg: Ext.String.format (
-                        message.CREATE_ERROR, text
-                    )});
-
                     console.error ('[MainBar.addText]', rec, op);
                 }
             }
@@ -227,13 +211,9 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({msg: Ext.String.format (
-                        message.UPDATE_ERROR, node.get ('name')
-                    )});
-
-                    console.error ('[MainBar.rename]', rec, op);
+                    if (!op.success) {
+                        console.error ('[MainBar.rename]', rec, op);
+                    }
                 }
             }
         });
@@ -252,9 +232,12 @@ Ext.define ('Webed.controller.MainBar', {
 
         message.confirm ({
             title: 'Delete',
+
             msg: Ext.String.format (
                 'Are you sure, do you want to delete <i>{0}</i>?',
-                node.get ('name')),
+                node.get ('name')
+            ),
+
             scope: this, fn: function (button) {
                 if (button != 'yes') return;
 
@@ -263,13 +246,9 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (op.success) return;
-
-                    message.error ({msg: Ext.String.format (
-                        message.DELETE_ERROR, node.get ('name')
-                    )});
-
-                    console.error ('[MainBar.destroy]', rec, op);
+                    if (!op.success) {
+                        console.error ('[MainBar.destroy]', rec, op);
+                    }
                 }
             }
         });
