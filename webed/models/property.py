@@ -54,13 +54,15 @@ class StringProperty (Property):
     __mapper_args__ = {'polymorphic_identity': 'StringProperty'}
 
     text_property_id = db.Column (db.Integer,
-        db.Sequence ('string_property_id_seq'), db.ForeignKey ('property.id'),
+        db.Sequence ('string_property_id_seq'),
+        db.ForeignKey ('property.id'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (StringProperty, self).__init__ (name, node,
             mime=mime if mime else 'text/plain', uuid=uuid)
+
         self.data = data
 
     def __repr__ (self):
@@ -68,6 +70,7 @@ class StringProperty (Property):
         return u'<StringProperty@%r: %r>' % (self.id, self.name)
 
     data = db.Column (db.String)
+    size = property (lambda self: len (self.data.encode ('utf-8')))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.Text
@@ -77,13 +80,15 @@ class TextProperty (Property):
     __mapper_args__ = {'polymorphic_identity': 'TextProperty'}
 
     text_property_id = db.Column (db.Integer,
-        db.Sequence ('text_property_id_seq'), db.ForeignKey ('property.id'),
+        db.Sequence ('text_property_id_seq'),
+        db.ForeignKey ('property.id'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (TextProperty, self).__init__ (name, node, mime=mime \
             if mime else 'text/plain', uuid=uuid)
+
         self.data = data
 
     def __repr__ (self):
@@ -91,6 +96,7 @@ class TextProperty (Property):
         return u'<TextProperty@%r: %r>' % (self.id, self.name)
 
     data = db.Column (db.Text)
+    size = property (lambda self: len (self.data.encode ('utf-8')))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.LargeBinary
@@ -101,12 +107,14 @@ class LargeBinaryProperty (Property):
 
     large_binary_property_id = db.Column (db.Integer,
         db.Sequence ('large_binary_property_id_seq'),
-        db.ForeignKey ('property.id'), primary_key=True)
+        db.ForeignKey ('property.id'),
+        primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (LargeBinaryProperty, self).__init__ (name, node, mime=mime \
             if mime else 'application/octet-stream', uuid=uuid)
+
         self.data = data
 
     def __repr__ (self):
@@ -114,6 +122,7 @@ class LargeBinaryProperty (Property):
         return u'<LargeBinaryProperty@%r: %r>' % (self.id, self.name)
 
     data = db.Column (db.LargeBinary)
+    size = property (lambda self: len (self.data))
 
 ###############################################################################
 ###############################################################################
