@@ -30,23 +30,22 @@ Ext.define ('Webed.controller.Property', {
         assert (args.property);
         assert (args.property.length >= 0);
 
-        for (var index in args.property) {
-            var property = args.property[index];
+        Ext.Array.each (args.property, function (prop, index) {
 
-            assert (property);
-            assert (property.node_uuid);
-            assert (property.uuid||true);
-            assert (property.type);
-            assert (property.mime);
-            assert (property.name);
-            assert (property.data||true);
-            assert (property.size==null);
+            assert (prop);
+            assert (prop.node_uuid);
+            assert (prop.uuid||true);
+            assert (prop.type);
+            assert (prop.mime);
+            assert (prop.name);
+            assert (prop.data||true);
+            assert (prop.size==null);
 
-            if (!property.uuid) {
-                property.uuid = UUID.random (); // TODO: Remove with next todo!
+            if (!prop.uuid) {
+                prop.uuid = UUID.random (); // TODO: Remove with next todo!
             }
 
-            var model = Ext.create ('Webed.model.Property', property);
+            var model = Ext.create ('Webed.model.Property', prop);
             assert (model);
 
             var model = model.save ({
@@ -76,7 +75,7 @@ Ext.define ('Webed.controller.Property', {
                                         args.scope||this, rec, op, index);
                                 }
                             }, params: {uuid: uuid}
-                        })
+                        });
                     } else {
                         if (args.callback && args.callback.call) {
                             args.callback.call (
@@ -87,7 +86,7 @@ Ext.define ('Webed.controller.Property', {
             });
 
             assert (model);
-        }
+        });
     },
 
     get_property: function (source, args) {
