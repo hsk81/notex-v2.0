@@ -40,14 +40,48 @@ Ext.define ('Webed.controller.Property', {
             assert (property.mime);
             assert (property.name);
             assert (property.data||true);
+            assert (property.size==null);
+
+            if (!property.uuid) {
+                property.uuid = UUID.random (); // TODO: Remove with next todo!
+            }
 
             var model = Ext.create ('Webed.model.Property', property);
             assert (model);
 
             var model = model.save ({
-                scope: args.scope||this, callback: function (rec, op) {
-                    if (args.callback && args.callback.call) {
-                        args.callback.call (args.scope||this, rec, op, index);
+                scope: this, callback: function (rec, op) {
+                    assert (rec && op);
+
+                    var uuid = rec.get ('uuid');
+                    assert (uuid);
+                    var size = rec.get ('size');
+                    assert (size == ''); // TODO: Remove with next todo!
+
+                    if (op.success) {
+
+                        //
+                        // TODO: Since ExtJS has the stupid courtesy *not* to
+                        //       set all data on save (the server annotations
+                        //       are completely ignored) we're force to do a
+                        //       second request to ask for rest; fix!
+                        //
+
+                        Webed.model.Property.load (null, {
+                            scope: this, callback: function (rec, op) {
+                                assert (rec && op);
+
+                                if (args.callback && args.callback.call) {
+                                    args.callback.call (
+                                        args.scope||this, rec, op, index);
+                                }
+                            }, params: {uuid: uuid}
+                        })
+                    } else {
+                        if (args.callback && args.callback.call) {
+                            args.callback.call (
+                                args.scope||this, rec, op, index);
+                        }
                     }
                 }
             });

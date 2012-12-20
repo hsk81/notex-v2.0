@@ -65,6 +65,7 @@ describe ('PropertyController', function () {
                 expect (prop.get ('node_uuid')).toEqual (uuid);
                 expect (prop.get ('name')).toEqual ('flag');
                 expect (prop.get ('data')).toEqual ('....');
+                expect (prop.get ('size')).toEqual (4);
                 expect (prop.get ('mime')).toEqual ('plain/text');
                 expect (prop.get ('type')).toEqual ('StringProperty');
                 expect (op).toBeTruthy ();
@@ -91,9 +92,9 @@ describe ('PropertyController', function () {
 
             window.app.fireEvent ('get_property', this, {
                 scope: this, callback: on_get, property: [{
-                    mime: 'text/plain'
+                    name: 'data'
                 },{
-                    mime: 'text/plain'
+                    name: 'data'
                 }]
             });
 
@@ -101,7 +102,8 @@ describe ('PropertyController', function () {
                 expect (props).toBeTruthy ();
                 expect (props.length).toBeGreaterThan (0);
                 expect (props[0]).not.toBeUndefined ();
-                expect (props[0].get ('mime')).toEqual ('text/plain');
+                expect (props[0].get ('name')).toEqual ('data');
+                expect (props[0].get ('size')).toBeGreaterThan (-1);
                 lock.pop ();
             }
         }});

@@ -306,6 +306,8 @@ def property_create (json=True):
     assert name
     data = request.json.get ('data', None)
     assert data or not data
+    size = request.json.get ('size', None)
+    assert size or not size
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -339,6 +341,8 @@ def property_read (json=True):
     if name: kwargs['name'] = name
     data = request.args.get ('data', None)
     if data: kwargs['data'] = data
+    size = request.args.get ('size', None)
+    if size: kwargs['size'] = size
 
     node_uuid = request.args.get ('node_uuid', None)
     if not node_uuid:
@@ -369,6 +373,8 @@ def property_update (json=True):
     assert name
     data = request.json.get ('data', None)
     assert data or not data
+    size = request.json.get ('size', None)
+    assert size or not size
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
@@ -383,6 +389,7 @@ def property_update (json=True):
     if mime and prop.mime != mime: prop.mime = mime
     if name and prop.name != name: prop.name = name
     if data and prop.data != data: prop.data = data
+    if size and prop.size != size: pass ## ignore!
 
     db.session.commit ()
 
@@ -480,6 +487,7 @@ def prop2ext (prop):
     assert prop.mime
     assert prop.name
     assert prop.data or not prop.data
+    assert prop.size >= 0
 
     return {
         'node_uuid': prop.node.uuid,
@@ -487,7 +495,8 @@ def prop2ext (prop):
         'type': prop.type,
         'mime': prop.mime,
         'name': prop.name,
-        'data': prop.data
+        'data': prop.data,
+        'size': prop.size
     }
 
 ###############################################################################

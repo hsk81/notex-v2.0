@@ -69,8 +69,20 @@ class StringProperty (Property):
 
         return u'<StringProperty@%r: %r>' % (self.id, self.name)
 
+    def get_size (self):
+
+        try:
+            self._size ## TODO: Use SQLAlchemy read-only property!
+        except:
+            self._size = None
+
+        if not self._size:
+            self._size = len (self.data.encode ('utf-8'))
+
+        return self._size
+
+    size = property (get_size)
     data = db.Column (db.String)
-    size = property (lambda self: len (self.data.encode ('utf-8')))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.Text
@@ -95,8 +107,20 @@ class TextProperty (Property):
 
         return u'<TextProperty@%r: %r>' % (self.id, self.name)
 
+    def get_size (self):
+
+        try:
+            self._size ## TODO: Use SQLAlchemy read-only property!
+        except:
+            self._size = None
+
+        if not self._size:
+            self._size = len (self.data.encode ('utf-8'))
+
+        return self._size
+
+    size = property (get_size)
     data = db.Column (db.Text)
-    size = property (lambda self: len (self.data.encode ('utf-8')))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.LargeBinary
@@ -121,8 +145,20 @@ class LargeBinaryProperty (Property):
 
         return u'<LargeBinaryProperty@%r: %r>' % (self.id, self.name)
 
+    def get_size (self):
+
+        try:
+            self._size ## TODO: Use SQLAlchemy read-only property!
+        except:
+            self._size = None
+
+        if not self._size:
+            self._size = len (self.data)
+
+        return self._size
+
+    size = property (get_size)
     data = db.Column (db.LargeBinary)
-    size = property (lambda self: len (self.data))
 
 ###############################################################################
 ###############################################################################
