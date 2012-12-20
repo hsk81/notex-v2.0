@@ -138,19 +138,23 @@ def init_article (root):
     db.session.add (node)
     leaf = Leaf ('options.cfg', node, mime='text/plain')
     db.session.add (leaf)
-    prop = TextProperty ('data', u'', leaf, mime='text/plain')
+    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
     db.session.add (prop)
     leaf = Leaf ('content.txt', node, mime='text/plain')
     db.session.add (leaf)
-    prop = TextProperty ('data', u'', leaf, mime='text/plain')
+    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
     db.session.add (prop)
 
     node = Node ('resources', node, mime='application/folder')
     db.session.add (node)
     leaf = Leaf ('wiki.png', node, mime='image/png')
     db.session.add (leaf)
+    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
+    db.session.add (prop)
     leaf = Leaf ('time.jpg', node, mime='image/jpg')
     db.session.add (leaf)
+    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
+    db.session.add (prop)
 
 def init_report (root):
 
@@ -158,19 +162,23 @@ def init_report (root):
     db.session.add (node)
     leaf = Leaf ('options.cfg', node, mime='text/plain')
     db.session.add (leaf)
-    prop = TextProperty ('data', u'', leaf, mime='text/plain')
+    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
     db.session.add (prop)
     leaf = Leaf ('content.txt', node, mime='text/plain')
     db.session.add (leaf)
-    prop = TextProperty ('data', u'', leaf, mime='text/plain')
+    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
     db.session.add (prop)
 
     node = Node ('resources', node, mime='application/folder')
     db.session.add (node)
     leaf = Leaf ('wiki.png', node, mime='image/png')
     db.session.add (leaf)
-    leaf = Leaf ('time.jpg', node, mime='image/png')
+    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
+    db.session.add (prop)
+    leaf = Leaf ('time.jpg', node, mime='image/jpg')
     db.session.add (leaf)
+    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
+    db.session.add (prop)
 
 ###############################################################################
 ###############################################################################
