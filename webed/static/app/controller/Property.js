@@ -65,6 +65,11 @@ Ext.define ('Webed.controller.Property', {
                         //       are completely ignored) we're force to do a
                         //       second request to ask for rest; fix!
                         //
+                        // TODO: Furthermore `Property.load` does not seem to
+                        //       cache the data in the property store; the re-
+                        //       sult is that upon a property creation *three*
+                        //       request are done instead of just one; fix!
+                        //
 
                         Webed.model.Property.load (null, {
                             scope: this, callback: function (rec, op) {
