@@ -46,6 +46,26 @@ class Property (db.Model):
 
         return u'<Property@%r: %r>' % (self.id, self.name)
 
+    ##
+    ## TODO: Ensure that **all** descendants have a *data* and a *size*
+    ##       attribute declared; abstract things with Python? ;P
+    ##
+
+###############################################################################
+###############################################################################
+
+def get_node_size (node, **kwargs):
+    """
+    TODO: Use caching with invalidation on a corresponding change in sub-tree!
+    """
+    props = node.props.filter_by (**kwargs).all ()
+    value = reduce (lambda acc, p: acc + p.size, props, 0)
+    value+= reduce (lambda acc, n: acc + n.get_size (**kwargs), node.nodes, 0)
+
+    return value
+
+Node.get_size = get_node_size
+
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
 ###############################################################################
@@ -70,16 +90,10 @@ class StringProperty (Property):
         return u'<StringProperty@%r: %r>' % (self.id, self.name)
 
     def get_size (self):
-
-        try:
-            self._size ## TODO: Use SQLAlchemy read-only property!
-        except:
-            self._size = None
-
-        if not self._size:
-            self._size = len (self.data.encode ('utf-8'))
-
-        return self._size
+        """
+        TODO: Use caching in combination with a SQLAlchemy read-only property!
+        """
+        return len (self.data.encode ('utf-8'))
 
     size = property (get_size)
     data = db.Column (db.String)
@@ -108,16 +122,10 @@ class TextProperty (Property):
         return u'<TextProperty@%r: %r>' % (self.id, self.name)
 
     def get_size (self):
-
-        try:
-            self._size ## TODO: Use SQLAlchemy read-only property!
-        except:
-            self._size = None
-
-        if not self._size:
-            self._size = len (self.data.encode ('utf-8'))
-
-        return self._size
+        """
+        TODO: Use caching in combination with a SQLAlchemy read-only property!
+        """
+        return len (self.data.encode ('utf-8'))
 
     size = property (get_size)
     data = db.Column (db.Text)
@@ -146,16 +154,10 @@ class LargeBinaryProperty (Property):
         return u'<LargeBinaryProperty@%r: %r>' % (self.id, self.name)
 
     def get_size (self):
-
-        try:
-            self._size ## TODO: Use SQLAlchemy read-only property!
-        except:
-            self._size = None
-
-        if not self._size:
-            self._size = len (self.data)
-
-        return self._size
+        """
+        TODO: Use caching in combination with a SQLAlchemy read-only property!
+        """
+        return len (self.data)
 
     size = property (get_size)
     data = db.Column (db.LargeBinary)

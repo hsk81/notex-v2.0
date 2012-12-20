@@ -41,17 +41,12 @@ Ext.define ('Webed.controller.Property', {
             assert (prop.data||true);
             assert (prop.size==null);
 
-            //
-            // TODO: Maybe it is a good idea to extend the meaning of `set-
-            //       property` from "create" to "create-or-update" property!?
-            //
-
-            var model = Ext.create ('Webed.model.Property', prop);
-            assert (model);
-
             if (!prop.uuid) {
                 prop.uuid = UUID.random (); // TODO: Remove with next todo!
             }
+
+            var model = Ext.create ('Webed.model.Property', prop);
+            assert (model);
 
             var model = model.save ({
                 scope: this, callback: function (rec, op) {
