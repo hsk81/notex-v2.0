@@ -66,7 +66,7 @@ Ext.define ('Webed.controller.MainBar', {
         function callback (records, op) {
             if (op.success) return;
 
-            message.error ({ msg: Ext.String.format (
+            message.error ({msg: Ext.String.format (
                 message.UPDATE_ERROR, (records.length > 0)
                     ? records[0].get ('name') : null
             )});
@@ -103,7 +103,7 @@ Ext.define ('Webed.controller.MainBar', {
                 function callback (rec, op) {
                     if (op.success) return;
 
-                    message.error ({ msg: Ext.String.format (
+                    message.error ({msg: Ext.String.format (
                         message.CREATE_ERROR, text
                     )});
 
@@ -136,7 +136,7 @@ Ext.define ('Webed.controller.MainBar', {
                 function callback (rec, op) {
                     if (op.success) return;
 
-                    message.error ({ msg: Ext.String.format (
+                    message.error ({msg: Ext.String.format (
                         message.CREATE_ERROR, text
                     )});
 
@@ -192,7 +192,7 @@ Ext.define ('Webed.controller.MainBar', {
                 }
 
                 function error (rec, op) {
-                    message.error ({ msg: Ext.String.format (
+                    message.error ({msg: Ext.String.format (
                         message.CREATE_ERROR, text
                     )});
 
@@ -227,13 +227,13 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!op.success) {
-                        message.error ({ msg: Ext.String.format (
-                            message.UPDATE_ERROR, node.get ('name')
-                        )});
+                    if (op.success) return;
 
-                        console.error ('[MainBar.rename]', rec, op);
-                    }
+                    message.error ({msg: Ext.String.format (
+                        message.UPDATE_ERROR, node.get ('name')
+                    )});
+
+                    console.error ('[MainBar.rename]', rec, op);
                 }
             }
         });
@@ -265,7 +265,7 @@ Ext.define ('Webed.controller.MainBar', {
                 function callback (rec, op) {
                     if (op.success) return;
 
-                    message.error ({ msg: Ext.String.format (
+                    message.error ({msg: Ext.String.format (
                         message.DELETE_ERROR, node.get ('name')
                     )});
 
