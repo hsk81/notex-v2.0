@@ -1,6 +1,54 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Allows not only to bind *all* arguments (except last one), but it enables
+ * actually to bind *any* consecutive, initial arguments.
+ */
+
+Function.prototype.curry = function () {
+    var slice = Array.prototype.slice,
+        args = slice.call (arguments),
+        func = this;
+
+    return function () {
+        return func.apply (this, args.concat (slice.call (arguments)));
+    };
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Allows to bind *any* argument using their names rather their position; this
+ * approach is more flexible if initial arguments are to be left unbound.
+ */
+
+Function.prototype.partial = function () {
+    var args = (arguments.length > 0) ? arguments[0] : {},
+        negs = {},
+        func = this;
+
+    var str = func.toString (),
+        lhs = str.indexOf ('(') + 1,
+        rhs = str.indexOf (')'),
+        names = str.slice (lhs, rhs).match (/([^\s,]+)/g);
+
+    var index = 0; names.every (function (value) {
+        if (value in args == false) { negs[index++] = value; } return true;
+    });
+
+    return function () {
+        var union = [];
+        for (var index in arguments) args[negs[index]] = arguments[index];
+        for (var index in names) union.push (args[names[index]]);
+        return func.apply (this, union);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 var and = function (object, callback, scope) {
     for (var key in object) {
         if (!callback.call (scope||this, key, object[key])) return false;
