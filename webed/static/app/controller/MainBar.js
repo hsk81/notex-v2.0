@@ -6,6 +6,8 @@ Ext.define ('Webed.controller.MainBar', {
 
     refs: [{
         selector: 'node-tree', ref: 'nodeTree'
+    },{
+        selector: 'content-tabs', ref: 'contentTabs'
     }],
 
     selection: function () {
@@ -145,6 +147,10 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
+                var contentTabs = this.getContentTabs ();
+                assert (contentTabs);
+                contentTabs.el.mask ('Loading...');
+
                 this.application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, with: {
                         root_uuid: root_uuid,
@@ -170,13 +176,19 @@ Ext.define ('Webed.controller.MainBar', {
                         function on_set (prop, op) {
                             if (prop && op && op.success) {
                                 this.application.fireEvent (
-                                    'create_tab', this, {record: leaf}
+                                    'create_tab', this, {
+                                        scope: this, callback: function () {
+                                            contentTabs.el.unmask ();
+                                        }, record: leaf
+                                    }
                                 );
                             } else {
+                                contentTabs.el.unmask ();
                                 error (prop, op);
                             }
                         }
                     } else {
+                        contentTabs.el.unmask ();
                         error (leaf, op);
                     }
                 }
