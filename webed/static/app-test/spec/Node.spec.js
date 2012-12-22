@@ -48,11 +48,13 @@ describe ('NodeController', function () {
                 scope: this, callback: on_set, node: [{
                     root_uuid: uuid,
                     name: 'node',
-                    mime: 'plain/text'
+                    mime: 'plain/text',
+                    size: 666 // read-only (backend size untouched!)
                 },{
                     root_uuid: uuid,
                     name: 'node',
-                    mime: 'plain/text'
+                    mime: 'plain/text',
+                    size: 666 // read-only (backend size untouched!)
                 }]
             });
 
@@ -61,6 +63,7 @@ describe ('NodeController', function () {
                 expect (node.get ('root_uuid')).toEqual (uuid);
                 expect (node.get ('name')).toEqual ('node');
                 expect (node.get ('mime')).toEqual ('plain/text');
+                expect (node.get ('size')).toEqual (666);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
                 expect (index).toBeGreaterThan (-1);

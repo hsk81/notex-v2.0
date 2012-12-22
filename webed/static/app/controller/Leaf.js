@@ -38,6 +38,10 @@ Ext.define ('Webed.controller.Leaf', {
             assert (leaf.uuid||true);
             assert (leaf.mime);
             assert (leaf.name);
+            assert (leaf.size||true);
+
+            if (!leaf.uuid) leaf.uuid = UUID.random ();
+            if (!leaf.size) leaf.size = 0;
 
             var model = Ext.create ('Webed.model.Leaf', leaf);
             assert (model);

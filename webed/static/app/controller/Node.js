@@ -26,6 +26,9 @@ Ext.define ('Webed.controller.Node', {
     set_node: function (source, args) {
         if (source == this) return;
 
+        var store = this.getNodesStore ();
+        assert (store);
+
         assert (args);
         assert (args.node);
         assert (args.node.length >= 0);
@@ -38,6 +41,10 @@ Ext.define ('Webed.controller.Node', {
             assert (node.uuid||true);
             assert (node.mime);
             assert (node.name);
+            assert (node.size||true);
+
+            if (!node.uuid) node.uuid = UUID.random ();
+            if (!node.size) node.size = 0;
 
             var model = Ext.create ('Webed.model.Node', node);
             assert (model);

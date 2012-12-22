@@ -159,7 +159,8 @@ Ext.define ('Webed.controller.MainBar', {
                             scope: this, callback: on_set, property: [{
                                 node_uuid: leaf.get ('uuid'),
                                 name: 'data',
-                                data: '',
+                                data: '....',
+                                size: 4,
                                 mime: 'text/plain',
                                 type: 'TextProperty'
                             }]

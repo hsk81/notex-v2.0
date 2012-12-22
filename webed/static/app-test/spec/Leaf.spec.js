@@ -48,11 +48,13 @@ describe ('LeafController', function () {
                 scope: this, callback: on_set, leaf: [{
                     root_uuid: uuid,
                     name: 'leaf',
-                    mime: 'plain/text'
+                    mime: 'plain/text',
+                    size: 666 // read-only (backend size untouched!)
                 },{
                     root_uuid: uuid,
                     name: 'leaf',
-                    mime: 'plain/text'
+                    mime: 'plain/text',
+                    size: 666 // read-only (backend size untouched!)
                 }]
             });
 
@@ -61,6 +63,7 @@ describe ('LeafController', function () {
                 expect (leaf.get ('root_uuid')).toEqual (uuid);
                 expect (leaf.get ('name')).toEqual ('leaf');
                 expect (leaf.get ('mime')).toEqual ('plain/text');
+                expect (leaf.get ('size')).toEqual (666);
                 expect (op).toBeTruthy ();
                 expect (op.success).toBeTruthy ();
                 expect (index).toBeGreaterThan (-1);
