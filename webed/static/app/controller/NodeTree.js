@@ -198,7 +198,7 @@ Ext.define ('Webed.controller.NodeTree', {
             this.application.fireEvent ('set_leaf', this, {
                 leaf: [leaf], scope: this, callback: function (rec, op) {
                     if (rec) {
-                        var store = this.getNodesStore ();
+                        var store = this.application.getStore ('Leafs');
                         assert (store); store.decorate (rec);
                     }
 
