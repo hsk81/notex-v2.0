@@ -210,6 +210,8 @@ Ext.define ('Webed.controller.ContentTabs', {
             assert (props && props.length > 0);
 
             props[0].set ('data', data);
+            props[0].set ('size', utf8Length (data.length));
+
             props[0].save ({
                 scope: scope||this, callback: function (prop, op) {
                     if (callback && callback.call)

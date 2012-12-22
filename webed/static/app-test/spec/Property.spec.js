@@ -49,12 +49,14 @@ describe ('PropertyController', function () {
                     node_uuid: uuid,
                     name: 'flag',
                     data: '....',
+                    size: 4,
                     mime: 'plain/text',
                     type: 'StringProperty'
                 },{
                     node_uuid: uuid,
                     name: 'flag',
                     data: '....',
+                    size: 4,
                     mime: 'plain/text',
                     type: 'StringProperty'
                 }]
