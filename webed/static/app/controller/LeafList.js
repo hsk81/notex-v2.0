@@ -33,7 +33,7 @@ Ext.define ('Webed.controller.LeafList', {
         console.debug ('[LeafList.settings]');
     },
 
-    refresh: function (args) {
+    refresh: function (args) { // TODO: Keep selection if present!
         var store = this.getLeafsStore ();
         assert (store);
 
