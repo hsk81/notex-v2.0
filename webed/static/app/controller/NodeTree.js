@@ -173,8 +173,6 @@ Ext.define ('Webed.controller.NodeTree', {
                 assert (view);
                 var semo = view.getSelectionModel ();
                 assert (semo); semo.select (node);
-
-                this.refresh (); // avoids 'complications' w.r.t. ExtJS
             }, this);
         }
 
