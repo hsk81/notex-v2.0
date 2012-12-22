@@ -6,15 +6,18 @@ Ext.define ('Webed.store.Leafs', {
     listeners: {
         load: function (store, records, successful, eOpts) {
             records.forEach (function (record) {
-
-                var mime = record.get ('mime');
-                assert (mime);
-                var icon = MIME.to_icon (mime, '-16');
-                assert (icon);
-
-                record.set ('iconCls', icon);
-            });
+                this.decorate (record);
+            }, this);
         }
+    },
+
+    decorate: function (leaf) {
+        var mime = leaf.get ('mime');
+        assert (mime);
+        var icon = MIME.to_icon (mime, '-16');
+        assert (icon);
+
+        leaf.set ('iconCls', icon);
     },
 
     autoLoad: true
