@@ -487,7 +487,7 @@ def prop2ext (prop):
     assert prop.mime
     assert prop.name
     assert prop.data or not prop.data
-    assert prop.size >= 0
+    assert prop.size >= 0 if prop.data else True
 
     return {
         'node_uuid': prop.node.uuid,
