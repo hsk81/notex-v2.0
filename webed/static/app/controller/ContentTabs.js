@@ -15,7 +15,6 @@ Ext.define ('Webed.controller.ContentTabs', {
         this.control ({
             'content-tabs' : {
                 render: this.render,
-                tabchange: this.tabchange,
                 beforeadd: this.beforeadd,
                 remove: this.remove
             }
@@ -50,15 +49,6 @@ Ext.define ('Webed.controller.ContentTabs', {
             var wrap = Ext.fly ('page-wrap');
             assert (wrap); wrap.setDisplayed (true);
         }
-    },
-
-    tabchange: function (view, newCard, oldCard, eOpts) {
-        assert (newCard);
-        assert (newCard.record);
-
-        this.application.fireEvent ('sync_selection', this, {
-            record: newCard.record
-        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -105,7 +95,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             items: [{
                 xtype: 'textarea',
                 listeners: {
-                    beforerender: function (ta, eOpts) { // TODO: Web Threads?
+                    beforerender: function (ta, eOpts) {
 
                         app.fireEvent ('get_property', this, {
                             callback: on_get, scope: scope||this, property: [{

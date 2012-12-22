@@ -64,7 +64,7 @@ Ext.define ('Webed.controller.MainBar', {
         });
 
         function callback (records, op) {
-            if (!op.success) {
+            if (!records||!op||!op.success) {
                 console.error ('[MainBar.saveDocument]', records, op);
             }
         }
@@ -96,7 +96,7 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!op.success) {
+                    if (!rec||!op||!op.success) {
                         console.error ('[MainBar.addProject]', rec, op);
                     }
                 }
@@ -125,7 +125,7 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!op.success) {
+                    if (!rec||!op||!op.success) {
                         console.error ('[MainBar.addFolder]', rec, op);
                     }
                 }
@@ -149,12 +149,13 @@ Ext.define ('Webed.controller.MainBar', {
                     scope: this, callback: callback, with: {
                         root_uuid: root_uuid,
                         mime: 'text/plain',
-                        name: text
+                        name: text,
+                        size: 4
                     }
                 });
 
                 function callback (leaf, op) {
-                    if (leaf && op.success) {
+                    if (leaf && op && op.success) {
                         this.application.fireEvent ('set_property', this, {
                             scope: this, callback: on_set, property: [{
                                 node_uuid: leaf.get ('uuid'),
@@ -167,7 +168,7 @@ Ext.define ('Webed.controller.MainBar', {
                         });
 
                         function on_set (prop, op) {
-                            if (op.success && prop) {
+                            if (prop && op && op.success) {
                                 this.application.fireEvent (
                                     'create_tab', this, {record: leaf}
                                 );
@@ -212,7 +213,7 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!op.success) {
+                    if (!rec||!op||!op.success) {
                         console.error ('[MainBar.rename]', rec, op);
                     }
                 }
@@ -247,7 +248,7 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!op.success) {
+                    if (!rec||!op||!op.success) {
                         console.error ('[MainBar.destroy]', rec, op);
                     }
                 }

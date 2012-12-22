@@ -18,18 +18,11 @@ Ext.define ('Webed.controller.LeafList', {
         this.control ({
             'leaf-list tool[action=refresh]': { click: this.refresh },
             'leaf-list tool[action=settings]': { click: this.settings },
-            'leaf-list': {
-                itemclick: this.itemclick,
-                select: this.select
-            }
+            'leaf-list': { itemclick: this.itemclick }
         });
 
         this.application.on ({
             refresh_leafs: this.refresh, scope: this
-        });
-
-        this.application.on ({
-            sync_selection: this.sync_selection, scope: this
         });
     },
 
@@ -72,50 +65,9 @@ Ext.define ('Webed.controller.LeafList', {
         assert (rhs_uuid);
 
         if (lhs_uuid == rhs_uuid) {
-            this.select (view, record, index, eOpts);
-        }
-    },
-
-    select: function (view, record, index, eOpts) {
-        this.application.fireEvent ('sync_selection', this, {record: record});
-        this.application.fireEvent ('create_tab', this, {record: record});
-    },
-
-    sync_selection: function (source, args) {
-        if (source == this) return;
-
-        assert (args);
-        var record = args.record;
-        assert (record);
-
-        if (record.isExpandable && record.isExpandable ()) {
-            return;
-        }
-
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var view = this.getLeafList ();
-        assert (view);
-        var store = this.getLeafsStore ();
-        assert (store);
-
-        var index = store.findBy (function (rec) {
-            return rec.get ('uuid') == uuid;
-        }, this);
-
-        if (index >= 0) {
-            var semo = view.getSelectionModel ();
-            assert (semo);
-            var records = semo.getSelection ();
-            assert (records);
-
-            var records = records.filter (function (rec) {
-                return rec.get ('uuid') == uuid;
-            }, this);
-
-            if (records.length == 0) {
-                semo.select (index);
-            }
+            this.application.fireEvent ('create_tab', this, {
+                record: record
+            });
         }
     }
 

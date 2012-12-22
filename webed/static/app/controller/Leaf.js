@@ -26,6 +26,9 @@ Ext.define ('Webed.controller.Leaf', {
     set_leaf: function (source, args) {
         if (source == this) return;
 
+        var store = this.getLeafsStore ();
+        assert (store);
+
         assert (args);
         assert (args.leaf);
         assert (args.leaf.length >= 0);
@@ -48,6 +51,12 @@ Ext.define ('Webed.controller.Leaf', {
 
             var model = model.save ({
                 scope: args.scope||this, callback: function (rec, op) {
+
+                    if (rec) {
+                        var models = store.add (rec);
+                        assert (models && models.length > 0);
+                    }
+
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op, index);
                     }
