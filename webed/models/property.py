@@ -93,7 +93,7 @@ class StringProperty (Property):
         """
         TODO: Use caching in combination with a SQLAlchemy read-only property!
         """
-        return len (self.data.encode ('utf-8'))
+        return len (self.data.encode ('utf-8')) if self.data else 0
 
     size = property (get_size)
     data = db.Column (db.String)
@@ -125,7 +125,7 @@ class TextProperty (Property):
         """
         TODO: Use caching in combination with a SQLAlchemy read-only property!
         """
-        return len (self.data.encode ('utf-8'))
+        return len (self.data.encode ('utf-8')) if self.data else 0
 
     size = property (get_size)
     data = db.Column (db.Text)
@@ -157,7 +157,7 @@ class LargeBinaryProperty (Property):
         """
         TODO: Use caching in combination with a SQLAlchemy read-only property!
         """
-        return len (self.data)
+        return len (self.data) if self.data else 0
 
     size = property (get_size)
     data = db.Column (db.LargeBinary)
