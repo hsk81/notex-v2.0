@@ -46,11 +46,6 @@ class Property (db.Model):
 
         return u'<Property@%r: %r>' % (self.id, self.name)
 
-    ##
-    ## TODO: Ensure that **all** descendants have a *data* and a *size*
-    ##       attribute declared; abstract things with Python? ;P
-    ##
-
 ###############################################################################
 ###############################################################################
 
