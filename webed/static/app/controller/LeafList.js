@@ -20,10 +20,6 @@ Ext.define ('Webed.controller.LeafList', {
             'leaf-list tool[action=settings]': { click: this.settings },
             'leaf-list': { itemclick: this.itemclick }
         });
-
-        this.application.on ({
-            refresh_leafs: this.refresh, scope: this
-        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -33,7 +29,7 @@ Ext.define ('Webed.controller.LeafList', {
         console.debug ('[LeafList.settings]');
     },
 
-    refresh: function (args) {
+    refresh: function () {
         var view = this.getLeafList ();
         assert (view);
         var semo = view.getSelectionModel ();
@@ -47,8 +43,6 @@ Ext.define ('Webed.controller.LeafList', {
         store.load ({
             scope: this, callback: function (recs, op) {
                 if (index > -1) semo.select (index);
-                if (args && args.callback && args.callback.call)
-                    args.callback.call (args.scope||this, recs, op);
             }
         });
     },
