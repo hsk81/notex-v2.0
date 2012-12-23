@@ -159,11 +159,13 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            $.extend (node, {expandable: true, leaf: false});
+            $.extend (node, {expandable: true, leaf: false, loaded: true});
         }
 
         function append_node (node) {
-            var root = get_root.call (this, node.root_uuid);
+            var root_uuid = node.get ('root_uuid');
+            assert (root_uuid);
+            var root = get_root.call (this, root_uuid);
             assert (root);
             var node = root.appendChild (node);
             assert (node);
@@ -188,12 +190,14 @@ Ext.define ('Webed.controller.NodeTree', {
         }
 
         //
-        // TODO: Since `node` is not a true `NodeInterface` later re-naming of
-        //       this node fails (unless a `refresh` is executed); fix (*not*
-        //       by doing an auto-refresh)!
+        // To accelerate append node, a `fake` record/model is created and
+        // appended. To avoid later creation it's marked as not a phantom.
         //
 
-        append_node.call (this, node);
+        var model = Ext.create ('Webed.model.Node', node);
+        assert (model); model.phantom = false;
+
+        append_node.call (this, model);
     },
 
     create_leaf: function (args) {
@@ -212,7 +216,7 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            $.extend (leaf, {expandable: false, leaf: true});
+            $.extend (leaf, {expandable: false, leaf: true, loaded: true});
         }
 
         this.create_node ($.extend (args, {creator: creator}));
@@ -246,6 +250,17 @@ Ext.define ('Webed.controller.NodeTree', {
 
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
+
+                    var view = this.getNodeTree ();
+                    assert (view);
+                    var base = view.getRootNode ();
+                    assert (base);
+                    var semo = view.getSelectionModel ();
+                    assert (semo);
+
+                    semo.select (base); // These two select statements seem to
+                    semo.select (rec);  // fix a ExtJS bug w.r.t. selection.
+
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
                     }

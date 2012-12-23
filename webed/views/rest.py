@@ -127,6 +127,9 @@ def node_update (leafs=True, json=True):
     node = Q (base.subnodes).one_or_default (uuid=uuid)
     assert node
 
+    if root_uuid == '00000000-0000-0000-0000-000000000000':
+        root_uuid = base.uuid
+
     if node.root and node.root.uuid != root_uuid:
         node.root = Q (base.subnodes).one (uuid=root_uuid)
         assert node.root
