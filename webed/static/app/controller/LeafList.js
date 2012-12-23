@@ -33,21 +33,24 @@ Ext.define ('Webed.controller.LeafList', {
         console.debug ('[LeafList.settings]');
     },
 
-    refresh: function (args) { // TODO: Keep selection if present!
+    refresh: function (args) {
+        var view = this.getLeafList ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
         var store = this.getLeafsStore ();
         assert (store);
 
-        if (args) {
-            store.load ({
-                scope: args.scope||this, callback: function (recs, op) {
-                    if (args.callback && args.callback.call) {
-                        args.callback.call (args.scope||this, recs, op);
-                    }
-                }
-            });
-        } else {
-            store.load ();
-        }
+        var leaf = semo.getLastSelected ();
+        var index = (leaf) ? store.indexOf (leaf) : -1;
+
+        store.load ({
+            scope: this, callback: function (recs, op) {
+                if (index > -1) semo.select (index);
+                if (args && args.callback && args.callback.call)
+                    args.callback.call (args.scope||this, recs, op);
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -56,10 +59,10 @@ Ext.define ('Webed.controller.LeafList', {
     itemclick: function (view, record, item, index, e, eOpts) {
         var semo = view.getSelectionModel ();
         assert (semo);
-        var node = semo.getLastSelected ();
-        assert (node);
+        var leaf = semo.getLastSelected ();
+        assert (leaf);
 
-        var lhs_uuid = node.get ('uuid');
+        var lhs_uuid = leaf.get ('uuid');
         assert (lhs_uuid);
         var rhs_uuid = record.get ('uuid');
         assert (rhs_uuid);
