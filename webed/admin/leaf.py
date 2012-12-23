@@ -17,6 +17,7 @@ class LeafAdmin (ModelView):
     column_list = ('base', 'root', 'type', 'uuid', 'mime', 'name')
     column_searchable_list = (Leaf.uuid, Leaf.mime, Leaf.name, Leaf.type)
     column_filters = (Leaf.uuid, Leaf.mime, Leaf.name, Leaf.type)
+    form_columns = ('root', 'mime', 'name')
 
     def __init__ (self, session):
         super (LeafAdmin, self).__init__ (Leaf, session)

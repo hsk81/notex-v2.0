@@ -19,6 +19,7 @@ class PropertyAdmin (ModelView):
         Property.uuid, Property.mime, Property.name, Property.type)
     column_filters = (
         Property.uuid, Property.mime, Property.name, Property.type)
+    form_columns = ('node', 'mime', 'name')
 
     def __init__ (self, session):
         super (PropertyAdmin, self).__init__ (Property, session)
