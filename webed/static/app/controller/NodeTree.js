@@ -187,6 +187,12 @@ Ext.define ('Webed.controller.NodeTree', {
                 : base;
         }
 
+        //
+        // TODO: Since `node` is not a true `NodeInterface` later re-naming of
+        //       this node fails (unless a `refresh` is executed); fix (*not*
+        //       by doing an auto-refresh)!
+        //
+
         append_node.call (this, node);
     },
 
