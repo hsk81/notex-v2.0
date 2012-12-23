@@ -127,21 +127,21 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     create_node: function (args) {
-        assert (args && args.with && args.with.root_uuid);
+        assert (args && args.with);
 
         var node = {
             root_uuid: args.with.root_uuid,
+            uuid: args.with.uuid||UUID.random (),
             mime: args.with.mime,
             name: args.with.name,
-            size: args.with.size || 0,
-            uuid: args.with.uuid || UUID.random ()
+            size: args.with.size||0
         }
 
+        assert (node.root_uuid);
+        assert (node.uuid);
         assert (node.mime);
         assert (node.name);
-        assert (node.root_uuid);
         assert (node.size >= 0);
-        assert (node.uuid);
 
         if (args.creator && args.creator.call) {
             args.creator.call (this, node);

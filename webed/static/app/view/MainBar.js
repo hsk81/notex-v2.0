@@ -72,19 +72,19 @@ Ext.define ('Webed.view.MainBar', {
     },{
 
         xtype: 'buttongroup',
-        title: 'Projects',
+        title: 'Project Archive',
         columns: 2,
         items: [{
             text: 'Import',
             iconCls: 'icon-page_white_zip-16',
             iconAlign: 'left',
-            tooltip : '<b>Import</b><br/>Open a project from a <b>ZIP</b> archive (at <i>local</i> storage)',
+            tooltip : '<b>Import</b><br/>Import a project from a <b>ZIP</b> archive (at <i>local</i> storage)',
             action: 'import-project'
         },{
             text: 'Export',
             iconCls: 'icon-report_go-16',
             iconAlign: 'left',
-            tooltip : '<b>Export</b><br/>Save selected project (to <i>local</i> storage)',
+            tooltip : '<b>Export</b><br/>Export selected project as a <b>ZIP</b> archive (to <i>local</i> storage)',
             action: 'export-project'
         }]
 
