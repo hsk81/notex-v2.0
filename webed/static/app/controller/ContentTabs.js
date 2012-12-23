@@ -98,7 +98,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                     beforerender: function (ta, eOpts) {
 
                         app.fireEvent ('get_property', this, {
-                            callback: on_get, scope: scope||this, property: [{
+                            callback: on_get, scope: this, property: [{
                                 node_uuid: uuid, name: 'data'
                             }]
                         });
@@ -191,7 +191,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (data);
 
         this.application.fireEvent ('get_property', this, {
-            callback: on_get, scope: scope||this, property: [{
+            callback: on_get, scope: this, property: [{
                 node_uuid: uuid, name: 'data'
             }]
         });
@@ -203,7 +203,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             props[0].set ('size', utf8Length (data.length));
 
             props[0].save ({
-                scope: scope||this, callback: function (prop, op) {
+                scope: this, callback: function (prop, op) {
                     if (callback && callback.call)
                         callback.call (scope||this, [prop], op);
                     if (ta.el) ta.el.unmask ();
