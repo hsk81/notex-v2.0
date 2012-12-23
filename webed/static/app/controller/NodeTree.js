@@ -196,7 +196,6 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var model = Ext.create ('Webed.model.Node', node);
         assert (model); model.phantom = false;
-
         append_node.call (this, model);
     },
 
