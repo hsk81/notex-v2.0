@@ -33,8 +33,7 @@ Ext.define ('Webed.controller.Leaf', {
         assert (args.leaf);
         assert (args.leaf.length >= 0);
 
-        for (var index in args.leaf) {
-            var leaf = args.leaf[index];
+        Ext.Array.each (args.leaf, function (leaf, index) {
 
             assert (leaf);
             assert (leaf.root_uuid);
@@ -52,7 +51,7 @@ Ext.define ('Webed.controller.Leaf', {
             var model = model.save ({
                 scope: args.scope||this, callback: function (rec, op) {
 
-                    if (rec) {
+                    if (rec && op && op.success) {
                         var models = store.add (rec);
                         assert (models && models.length > 0);
                     }
@@ -64,7 +63,7 @@ Ext.define ('Webed.controller.Leaf', {
             });
 
             assert (model);
-        }
+        });
     },
 
     get_leaf: function (source, args) {

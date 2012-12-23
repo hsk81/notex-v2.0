@@ -30,8 +30,7 @@ Ext.define ('Webed.controller.Node', {
         assert (args.node);
         assert (args.node.length >= 0);
 
-        for (var index in args.node) {
-            var node = args.node[index];
+        Ext.Array.each (args.node, function (node, index) {
 
             assert (node);
             assert (node.root_uuid);
@@ -55,7 +54,7 @@ Ext.define ('Webed.controller.Node', {
             });
 
             assert (model);
-        }
+        });
     },
 
     get_node: function (source, args) {

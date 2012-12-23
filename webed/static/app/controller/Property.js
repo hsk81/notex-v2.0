@@ -54,7 +54,7 @@ Ext.define ('Webed.controller.Property', {
             var model = model.save ({
                 scope: this, callback: function (rec, op) {
 
-                    if (rec) {
+                    if (rec && op && op.success) {
                         var models = store.add (rec);
                         assert (models && models.length > 0);
                     }
