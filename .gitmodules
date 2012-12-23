@@ -7,9 +7,6 @@
 [submodule "webed/static/lib/node-uuid.git"]
 	path = webed/static/lib/node-uuid.git
 	url = https://github.com/hsk81/node-uuid.git
-[submodule "webed/static/lib/jquery.git"]
-	path = webed/static/lib/jquery.git
-	url = https://github.com/jquery/jquery.git
 [submodule "webed/static/app-test/lib/jasmine.git"]
 	path = webed/static/app-test/lib/jasmine.git
 	url = https://github.com/hsk81/jasmin-standalone.git
