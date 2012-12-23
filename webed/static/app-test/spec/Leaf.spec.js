@@ -23,7 +23,7 @@ describe ('LeafController', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', 500);
+        waitsFor (function () { return lock.empty (); }, 'reset', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ describe ('LeafController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ describe ('LeafController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////

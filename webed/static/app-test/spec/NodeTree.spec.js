@@ -45,7 +45,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
     });
 
     afterEach (function () {
@@ -62,7 +62,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', 500);
+        waitsFor (function () { return lock.empty (); }, 'reset', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ describe ('NodeTree', function () {
                 }
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { create ({name: 'node', mime: 'application/project',
@@ -121,7 +121,7 @@ describe ('NodeTree', function () {
                 }
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { create ({name: 'leaf', mime: 'text/plain',
@@ -152,7 +152,7 @@ describe ('NodeTree', function () {
                 }
             })
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { load ('application/project'); });
@@ -178,7 +178,7 @@ describe ('NodeTree', function () {
                 }
             })
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { load ('text/plain'); });
@@ -209,7 +209,7 @@ describe ('NodeTree', function () {
                 }, for: node, to: {name:'node'}
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { update ('application/project'); });
@@ -239,7 +239,7 @@ describe ('NodeTree', function () {
                 }, for: leaf, to: {name:'leaf'}
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+            waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
         runs (function () { update ('text/plain'); });

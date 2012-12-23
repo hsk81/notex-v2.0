@@ -23,7 +23,7 @@ describe ('PropertyController', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', 500);
+        waitsFor (function () { return lock.empty (); }, 'reset', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ describe ('PropertyController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ describe ('PropertyController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 500);
+        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
     });
 
     ///////////////////////////////////////////////////////////////////////////
