@@ -221,23 +221,22 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args.to);
 
         if (args.for instanceof Webed.model.Node) {
-            callback.call (this, args.for);
+            on_get.call (this, args.for);
         } else {
             this.application.fireEvent ('get_node', this, {
                 node: [args.for], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
-                        for (var idx in recs) callback.call (this, recs[idx]);
+                        for (var idx in recs) on_get.call (this, recs[idx]);
                     }
                 }
             });
         }
 
-        function callback (record) {
-            if (!record) return;
-            if (!record.parentNode) return; // TODO: Why?
+        function on_get (record) {
+            assert (record);
 
             var strings = record.set (args.to);
-            assert (strings || strings == null);
+            assert (strings && string.length > 0 || strings == null);
 
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
@@ -274,19 +273,19 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args.for);
 
         if (args.for instanceof Webed.model.Node) {
-            callback.call (this, args.for);
+            on_get.call (this, args.for);
         } else {
             this.application.fireEvent ('get_node', this, {
                 node: [args.for], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
-                        for (var idx in recs) callback.call (this, recs[idx]);
+                        for (var idx in recs) on_get.call (this, recs[idx]);
                     }
                 }
             });
         }
 
-        function callback (record) {
-            if (!record) return;
+        function on_get (record) {
+            assert (record);
 
             record.destroy ({
                 scope: this, callback: function (rec, op) {
