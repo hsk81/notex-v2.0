@@ -258,7 +258,7 @@ Ext.define ('Webed.controller.NodeTree', {
                     assert (semo);
 
                     semo.select (base); // These two select statements seem to
-                    semo.select (rec);  // fix a ExtJS bug w.r.t. selection.
+                    semo.select (rec);  // fix an ExtJS bug w.r.t. selection.
 
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
