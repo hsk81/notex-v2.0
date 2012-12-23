@@ -296,6 +296,9 @@ Ext.define ('Webed.controller.NodeTree', {
         function on_get (record) {
             assert (record);
 
+            var record = record.removeAll (false);
+            assert (record);
+
             record.destroy ({
                 scope: this, callback: function (rec, op) {
                     if (args.callback && args.callback.call) {
