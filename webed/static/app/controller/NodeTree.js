@@ -240,17 +240,6 @@ Ext.define ('Webed.controller.NodeTree', {
 
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
-
-                    var view = this.getNodeTree ();
-                    assert (view);
-                    var base = view.getRootNode ();
-                    assert (base);
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
-
-                    semo.select (base);
-                    semo.select (rec);
-
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
                     }
