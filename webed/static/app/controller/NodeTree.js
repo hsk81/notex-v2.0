@@ -148,7 +148,7 @@ Ext.define ('Webed.controller.NodeTree', {
         } else {
             this.application.fireEvent ('set_node', this, {
                 node: [node], scope: this, callback: function (rec, op) {
-                    if (rec) {
+                    if (rec && op && op.success) {
                         var store = this.getNodesStore ();
                         assert (store); store.decorate (rec);
                     }
@@ -195,7 +195,7 @@ Ext.define ('Webed.controller.NodeTree', {
         function creator (leaf) {
             this.application.fireEvent ('set_leaf', this, {
                 leaf: [leaf], scope: this, callback: function (rec, op) {
-                    if (rec) {
+                    if (rec && op && op.success) {
                         var store = this.application.getStore ('Leafs');
                         assert (store); store.decorate (rec);
                     }
@@ -236,7 +236,7 @@ Ext.define ('Webed.controller.NodeTree', {
             assert (record);
 
             var strings = record.set (args.to);
-            assert (strings && string.length > 0 || strings == null);
+            assert (strings && strings.length > 0 || strings == null);
 
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
