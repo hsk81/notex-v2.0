@@ -88,12 +88,6 @@ Ext.define ('Webed.controller.Node', {
             if (recs.length > 0) {
                 args.callback.call (args.scope||this, recs, index);
             } else {
-
-                //
-                // TODO: Experiment with `Webed.model.Node.load (..)` (if a
-                //       `uuid` is given, since latter is for a singe record)!
-                //
-
                 store.load ({
                     scope: args.scope||this, callback: function (recs) {
                         args.callback.call (args.scope||this, recs, index);
