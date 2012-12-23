@@ -39,9 +39,6 @@ function clean_egg () {
 }
 
 function build () {
-    cd ./webed/static/lib/jquery.git/
-    npm install && grunt
-    cd ./../../../../
 }
 
 ###############################################################################
