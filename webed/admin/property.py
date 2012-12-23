@@ -7,24 +7,26 @@ from flask.ext.admin.contrib.sqlamodel import ModelView
 from flask.ext.login import current_user
 
 from webed.ext import db, admin
-from webed.models import Node
+from webed.models import Property
 
 ###############################################################################
 ###############################################################################
 
-class NodeAdmin (ModelView):
+class PropertyAdmin (ModelView):
 
-    column_list = ('base', 'root', 'type', 'uuid', 'mime', 'name')
-    column_searchable_list = (Node.uuid, Node.mime, Node.name, Node.type)
-    column_filters = (Node.uuid, Node.mime, Node.name, Node.type)
+    column_list = ('base', 'node', 'type', 'uuid', 'mime', 'name')
+    column_searchable_list = (
+        Property.uuid, Property.mime, Property.name, Property.type)
+    column_filters = (
+        Property.uuid, Property.mime, Property.name, Property.type)
 
     def __init__ (self, session):
-        super (NodeAdmin, self).__init__ (Node, session)
+        super (PropertyAdmin, self).__init__ (Property, session)
 
     def is_accessible(self):
         return current_user.is_authenticated ()
 
-admin.add_view (NodeAdmin (db.session))
+admin.add_view (PropertyAdmin (db.session))
 
 ###############################################################################
 ###############################################################################
