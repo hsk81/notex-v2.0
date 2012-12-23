@@ -13,3 +13,6 @@
 [submodule "webed/static/lib/codemirror.git"]
 	path = webed/static/lib/codemirror.git
 	url = https://github.com/hsk81/CodeMirror.git
+[submodule "webed/static/lib/jquery.git"]
+	path = webed/static/lib/jquery.git
+	url = https://github.com/hsk81/jquery-standalone.git
