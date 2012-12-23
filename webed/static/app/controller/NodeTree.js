@@ -289,8 +289,9 @@ Ext.define ('Webed.controller.NodeTree', {
 
             record.destroy ({
                 scope: this, callback: function (rec, op) {
-                    if (args.callback && args.callback.call)
+                    if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
+                    }
                 }
             });
 
