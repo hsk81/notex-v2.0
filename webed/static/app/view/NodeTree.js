@@ -8,7 +8,6 @@ Ext.define ('Webed.view.NodeTree', {
         'Ext.grid.column.Template'
     ],
 
-    useArrows: true,
     rootVisible: false,
     hideHeaders: false,
     fields: ['name', 'size'],
