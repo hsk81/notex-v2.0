@@ -44,11 +44,12 @@ class Node (db.Model):
 
         return u'<Node@%r: %r>' % (self.id, self.name)
 
-    def get_path (self):
+    def get_path (self, field='uuid'):
 
-        return (self.root.get_path () if self.root else []) + [self.uuid]
-
-    path = property (get_path)
+        if self.root:
+            return self.root.get_path (field) + [eval ('self.' + field)]
+        else:
+            return [eval ('self.' + field)]
 
 ###############################################################################
 ###############################################################################

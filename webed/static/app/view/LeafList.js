@@ -11,10 +11,23 @@ Ext.define ('Webed.view.LeafList', {
 
     columns: [{
         flex: 2,
+        text: 'Path',
+        dataIndex: 'path',
+        sortable: true,
+        renderer: function (value, meta, record) {
+            return (value) ? value.slice (1).join ('/') : value;
+        }
+    },{
+        flex: 2,
         text: 'Name',
-        xtype: 'templatecolumn',
-        tpl: '{name}',
-        sortable: true
+        dataIndex: 'name',
+        sortable: true,
+        renderer: function (value, meta, record) {
+            var path = record.get ('path');
+            if (path)
+                meta.tdAttr = 'data-qtip="' + path.slice (1).join ('/') + '"';
+            return value;
+        }, hidden: true
     },{
         flex: 1,
         text: 'Size',
