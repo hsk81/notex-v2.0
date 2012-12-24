@@ -14,6 +14,7 @@ Ext.define ('Webed.view.Viewport', {
     items: [{
         layout: 'border',
         items: [{
+            border: false,
             region: 'west',
             title: 'Projects',
             collapsible: true,
@@ -57,18 +58,25 @@ Ext.define ('Webed.view.Viewport', {
             }]
         },{
             region: 'center',
-            xtype: 'content-tabs',
-            tabPosition: 'bottom',
             flex: 4,
 
-            tbar: {
-                xtype: 'main-bar'
-            }
-        }],
+            layout: 'border',
+            items: [{
+                border: false,
+                region: 'center',
+                xtype: 'content-tabs',
+                tabPosition: 'bottom',
+                flex: 4,
 
-        bbar: {
-            xtype: 'status-bar'
-        }
+                tbar: {
+                    xtype: 'main-bar'
+                }
+            }],
+
+            bbar: {
+                xtype: 'status-bar'
+            }
+        }]
     }],
 
     listeners: {
