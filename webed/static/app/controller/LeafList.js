@@ -38,13 +38,24 @@ Ext.define ('Webed.controller.LeafList', {
         assert (store);
 
         var leaf = semo.getLastSelected ();
-        var index = (leaf) ? store.indexOf (leaf) : -1;
+        if (leaf) {
+            store.load ({
+                scope: this, callback: function (recs, op) {
+                    if (recs && recs.length > 0 && op && op.success) {
+                        var uuid = leaf.get ('uuid');
+                        assert (uuid);
 
-        store.load ({
-            scope: this, callback: function (recs, op) {
-                if (index > -1) semo.select (index);
-            }
-        });
+                        Ext.Array.each (recs, function (rec, index) {
+                            if (rec.get ('uuid') == uuid) {
+                                semo.select (index); return false;
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            store.load ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
