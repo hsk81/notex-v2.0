@@ -124,7 +124,7 @@ def node_update (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subnodes).one_or_default (uuid=uuid)
+    node = Q (base.subnodes).one (uuid=uuid)
     assert node
 
     if root_uuid == '00000000-0000-0000-0000-000000000000':
@@ -138,8 +138,8 @@ def node_update (leafs=True, json=True):
     if node.mime != mime: node.mime = mime
 
     db.session.commit ()
-    result = dict (success=True, result=node2ext (node, leafs=leafs))
 
+    result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
 def node_delete (leafs=True, json=True):
@@ -152,15 +152,13 @@ def node_delete (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subnodes).one_or_default (uuid=uuid)
-    if node:
-        db.session.delete (node)
-        db.session.commit ()
+    node = Q (base.subnodes).one (uuid=uuid)
+    assert node
 
-        result = dict (success=True, result=node2ext (node, leafs=leafs))
-    else:
-        result = dict (success=True)
+    db.session.delete (node)
+    db.session.commit ()
 
+    result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
 ###############################################################################
@@ -271,7 +269,7 @@ def leaf_delete (json=True):
     assert uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    leaf = Q (base.subleafs).one_or_default (uuid=uuid)
+    leaf = Q (base.subleafs).one (uuid=uuid)
     assert leaf
 
     db.session.delete (leaf)
@@ -314,7 +312,7 @@ def property_create (json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subnodes).one_or_default (uuid=node_uuid)
+    node = Q (base.subnodes).one (uuid=node_uuid)
     assert node
 
     Type = getattr (sys.modules[__name__], type)
@@ -408,7 +406,7 @@ def property_delete (json=True):
     assert uuid
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    prop = Q (base.subprops).one_or_default (uuid=uuid)
+    prop = Q (base.subprops).one (uuid=uuid)
     assert prop
 
     db.session.delete (prop)
