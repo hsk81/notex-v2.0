@@ -92,35 +92,23 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     refresh: function () {
+
         var view = this.getNodeTree ();
         assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var node = semo.getLastSelected ();
-        assert (node);
         var base = view.getRootNode ();
         assert (base);
         var base = base.removeAll (false);
         assert (base);
         var store = this.getNodesStore ();
         assert (store);
-        var mask = view.setLoading (true, true);
-        assert (mask);
 
-        var path = base.getPath ('uuid', '/');
-        assert (path);
-        var path = path + node.getPath ('uuid', '/');
-        assert (path);
+        var table = view.getView ();
+        assert (table);
+        table.el.mask ('Loading...');
 
-        var store = store.load ({callback: function (recs, op, success) {
-            if (mask) mask.destroy ();
-            if (success) {
-                view.expandPath (path, 'uuid', '/', function (success, node) {
-                    if (success && node) semo.select (node);
-                }, this);
-            }
+        store.load ({callback: function (recs, op, success) {
+            table.el.unmask ();
         }, node: base, scope: this});
-        assert (store);
     },
 
     ///////////////////////////////////////////////////////////////////////////
