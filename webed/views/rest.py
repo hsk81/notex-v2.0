@@ -226,10 +226,13 @@ def leaf_read (json=True):
     else:
         query = base.subleafs
 
-    start = request.args.get ('start', 0)
-    limit = request.args.get ('limit', 25)
+    start = int (request.args.get ('start', 0))
+    limit = int (request.args.get ('limit', 25))
 
     leafs, total = Q (query).page (offset=start, limit=limit, **kwargs)
+    if total > 0 and leafs == []:
+        leafs, total = Q (query).page (offset=0, limit=limit, **kwargs)
+
     leaf2exts = map (leaf2ext, leafs)
 
     result = dict (success=True, results=leaf2exts, total=total)
