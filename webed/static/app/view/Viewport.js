@@ -19,7 +19,7 @@ Ext.define ('Webed.view.Viewport', {
             title: 'Projects',
             collapsible: true,
             split: true,
-            minWidth: 272,
+            minWidth: 263,
             flex: 1,
 
             tools: [{
