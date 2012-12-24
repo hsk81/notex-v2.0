@@ -15,7 +15,12 @@ Ext.define ('Webed.view.LeafList', {
         dataIndex: 'path',
         sortable: true,
         renderer: function (value, meta, record) {
-            return (value) ? value.slice (1).join ('/') : value;
+            if (value) {
+                if (value.length > 1) value = value.slice (1);
+                return value.join ('/');
+            } else {
+                return value;
+            }
         }
     },{
         flex: 2,
@@ -24,8 +29,10 @@ Ext.define ('Webed.view.LeafList', {
         sortable: true,
         renderer: function (value, meta, record) {
             var path = record.get ('path');
-            if (path)
-                meta.tdAttr = 'data-qtip="' + path.slice (1).join ('/') + '"';
+            if (path)  {
+                if (path.length > 1) path = path.slice (1);
+                meta.tdAttr = 'data-qtip="' + path.join ('/') + '"';
+            }
             return value;
         }, hidden: true
     },{
