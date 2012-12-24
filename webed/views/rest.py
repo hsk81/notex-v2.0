@@ -88,7 +88,7 @@ def node_read (leafs=True, json=True):
         del kwargs['uuid']
 
     if root_uuid:
-        root = Q (Node.query).one_or_default (uuid=root_uuid, default=base.uuid)
+        root = Q (Node.query).one (uuid=root_uuid)
         node_query = root.not_leafs
         leaf_query = root.leafs
     else:
@@ -218,7 +218,7 @@ def leaf_read (json=True):
 
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
-        root = Q (Node.query).one_or_default (uuid=root_uuid, default=base.uuid)
+        root = Q (Node.query).one (uuid=root_uuid)
         query = root.leafs
     else:
         query = base.subleafs
@@ -247,6 +247,9 @@ def leaf_update (json=True):
     assert base
     leaf = Q (base.subleafs).one (uuid=uuid)
     assert leaf
+
+    if root_uuid == '00000000-0000-0000-0000-000000000000':
+        root_uuid = base.uuid
 
     if leaf.root and leaf.root.uuid != root_uuid:
         leaf.root = Q (base.subnodes).one (uuid=root_uuid)
@@ -312,7 +315,7 @@ def property_create (json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
-    node = Q (base.subnodes).one (uuid=node_uuid)
+    node = Q (base.subnodes).one_or_default (uuid=node_uuid, default=base)
     assert node
 
     Type = getattr (sys.modules[__name__], type)
@@ -381,6 +384,9 @@ def property_update (json=True):
     assert base
     prop = Q (base.subprops).one (uuid=uuid)
     assert prop
+
+    if node_uuid == '00000000-0000-0000-0000-000000000000':
+        node_uuid = base.uuid
 
     if prop.node and prop.node.uuid != node_uuid:
         prop.node = Q (base.subnodes).one (uuid=node_uuid)
