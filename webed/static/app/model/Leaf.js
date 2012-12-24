@@ -6,7 +6,7 @@ Ext.define ('Webed.model.Leaf', {
         type: 'rest',
         url: '/leaf',
         reader: {
-            type: 'json', root: 'results'
+            type: 'json', root: 'results', totalProperty: 'total'
         }
     }
 });

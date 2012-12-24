@@ -27,6 +27,27 @@ class Q:
         query = self.query.filter_by (**kwargs)
         return query.one () if query.count () == 1 else default
 
+    def page (self, offset, limit, **kwargs):
+
+        query = self.query.filter_by (**kwargs)
+        total = query.count ()
+        query = query.offset (offset=offset)
+        query = query.limit (limit=limit)
+
+        return  query.all (), total
+
+    def page_or_default (self, offset, limit, default=None, **kwargs):
+
+        query = self.query.filter_by (**kwargs)
+        total = query.count ()
+
+        if total >= 1:
+            query = query.offset (offset=offset)
+            query = query.limit (limit=limit)
+            return query.all (), total
+        else:
+            return default, total
+
 ###############################################################################
 ###############################################################################
 

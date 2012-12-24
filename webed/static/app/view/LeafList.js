@@ -22,5 +22,13 @@ Ext.define ('Webed.view.LeafList', {
         renderer: Ext.util.Format.fileSize,
         sortable: true,
         align: 'right'
+    }],
+
+    dockedItems: [{
+        xtype: 'pagingtoolbar',
+        store: 'Leafs',
+        dock: 'bottom',
+        displayInfo: false,
+        inputItemWidth: 40
     }]
 });

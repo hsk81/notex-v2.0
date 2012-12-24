@@ -223,10 +223,13 @@ def leaf_read (json=True):
     else:
         query = base.subleafs
 
-    leafs = Q (query).all (**kwargs)
+    start = request.args.get ('start', 0)
+    limit = request.args.get ('limit', 25)
+
+    leafs, total = Q (query).page (offset=start, limit=limit, **kwargs)
     leaf2exts = map (leaf2ext, leafs)
 
-    result = dict (success=True, results=leaf2exts)
+    result = dict (success=True, results=leaf2exts, total=total)
     return jsonify (result) if json else result
 
 def leaf_update (json=True):

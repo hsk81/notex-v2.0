@@ -129,6 +129,14 @@ def init ():
     prop = LargeBinaryProperty ('data', '....', leaf, mime='image/tiff')
     db.session.add (prop)
 
+    node = Node ('Archive', root=base, mime='application/project')
+    db.session.add (node)
+    for index in range (50):
+        leaf = Leaf ('file-%03d.txt' % index, root=node, mime='text/plain')
+        db.session.add (leaf)
+        prop = TextProperty ('data', u'....', leaf, mime='text/plain')
+        db.session.add (prop)
+
     db.session.commit ()
     session['root_uuid'] = base.uuid
 
