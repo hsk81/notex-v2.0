@@ -25,6 +25,10 @@ rest = Blueprint ('rest', __name__)
 ###############################################################################
 ###############################################################################
 
+@rest.route ('/node/root', methods=['GET'])
+def node_root (leafs=True, json=True):
+    return node_read (leafs=leafs, json=json)
+
 class NodeApi (MethodView):
 
     def post (self, leafs=True, json=True): return node_create (leafs, json)
@@ -64,7 +68,6 @@ def node_create (leafs=True, json=True):
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
-@rest.route ('/node/root', methods=['GET'])
 def node_read (leafs=True, json=True):
 
     base = Q (Node.query).one (uuid=session['root_uuid'])
@@ -98,11 +101,11 @@ def node_read (leafs=True, json=True):
     if 'uuid' in kwargs and omit_top:
         node = Q (node_query).one (**kwargs)
         rhs = map (lambda n: node2ext (n, leafs=leafs), node.not_leafs)
-        lhs = map (lambda l: leaf2ext (l), node.leafs)
+        lhs = map (lambda l: leaf2ext (l), node.leafs) if leafs else []
     else:
         nodes = Q (node_query).all (**kwargs)
         lhs = map (lambda n: node2ext (n, leafs=leafs), nodes)
-        leafs = Q (leaf_query).all (**kwargs)
+        leafs = Q (leaf_query).all (**kwargs) if leafs else []
         rhs = map (lambda l: leaf2ext (l), leafs)
 
     result = dict (success=True, results=lhs + rhs)
