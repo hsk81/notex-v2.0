@@ -70,6 +70,9 @@ def node_read (leafs=True, json=True):
     base = Q (Node.query).one (uuid=session['root_uuid'])
     assert base
 
+    omit_top = request.args.get ('omit_top', False)
+    if omit_top: omit_top = JSON.loads (omit_top)
+
     kwargs = {}
     uuid = request.args.get ('uuid', None)
     if uuid: kwargs['uuid'] = uuid
@@ -78,9 +81,6 @@ def node_read (leafs=True, json=True):
     name = request.args.get ('name', None)
     if name: kwargs['name'] = name
 
-    omit_top = request.args.get ('omit_top', False)
-    if omit_top: omit_top = JSON.loads (omit_top)
-
     if uuid != '00000000-0000-0000-0000-000000000000':
         root_uuid = request.args.get ('root_uuid', None)
     else:
@@ -88,7 +88,7 @@ def node_read (leafs=True, json=True):
         del kwargs['uuid']
 
     if root_uuid:
-        root = Q (Node.query).one (uuid=root_uuid)
+        root = Q (Node.query).one_or_default (uuid=root_uuid, default=base.uuid)
         node_query = root.not_leafs
         leaf_query = root.leafs
     else:
@@ -217,11 +217,11 @@ def leaf_read (json=True):
     if name: kwargs['name'] = name
 
     root_uuid = request.args.get ('root_uuid', None)
-    if not root_uuid:
-        query = base.subleafs
-    else:
-        root = Q (Node.query).one (uuid=root_uuid)
+    if root_uuid:
+        root = Q (Node.query).one_or_default (uuid=root_uuid, default=base.uuid)
         query = root.leafs
+    else:
+        query = base.subleafs
 
     leafs = Q (query).all (**kwargs)
     leaf2exts = map (leaf2ext, leafs)
@@ -346,11 +346,11 @@ def property_read (json=True):
     if size: kwargs['size'] = size
 
     node_uuid = request.args.get ('node_uuid', None)
-    if not node_uuid:
-        query = base.subprops
+    if node_uuid:
+        query = base.subprops.join (Node, Property.node).filter (
+            Node.uuid==node_uuid).back ()
     else:
-        query = base.subprops.join (Node, Property.node) \
-            .filter (Node.uuid==node_uuid).back ()
+        query = base.subprops
 
     props = Q (query).all (**kwargs)
 
