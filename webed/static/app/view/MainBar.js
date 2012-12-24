@@ -72,7 +72,7 @@ Ext.define ('Webed.view.MainBar', {
     },{
 
         xtype: 'buttongroup',
-        title: 'Project Archive',
+        title: 'ZIP Project',
         columns: 2,
         items: [{
             text: 'Import',
