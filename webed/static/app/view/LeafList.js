@@ -5,7 +5,8 @@ Ext.define ('Webed.view.LeafList', {
 
     requires: [
         'Ext.grid.column.Number',
-        'Ext.grid.column.Template'
+        'Ext.grid.column.Template',
+        'Ext.toolbar.Paging'
     ],
 
     columns: [{
