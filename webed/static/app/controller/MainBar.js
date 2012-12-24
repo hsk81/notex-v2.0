@@ -9,6 +9,15 @@ Ext.define ('Webed.controller.MainBar', {
     }],
 
     selection: function () {
+
+        //
+        // TODO: This function should return the last selected record from the
+        // union of `node-tree`, `leaf-list` and `component-tabs`. The reason
+        // is that `node-tree` might not show a particular node due to dynamic
+        // loading and plus, it is simply more intuitive for the user to point
+        // to a particular UI element and executed a desired action with it!
+        //
+
         var view = this.getNodeTree ();
         assert (view);
         var semo = view.getSelectionModel ();
