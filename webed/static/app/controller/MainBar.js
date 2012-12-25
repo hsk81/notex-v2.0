@@ -205,6 +205,13 @@ Ext.define ('Webed.controller.MainBar', {
                 function callback (rec, op) {
                     if (!rec||!op||!op.success) {
                         console.error ('[MainBar.rename]', rec, op);
+                    } else {
+                        this.application.fireEvent ('create_tab', this, {
+                            record: rec
+                        });
+                        this.application.fireEvent ('select_leaf', this, {
+                            record: rec
+                        });
                     }
                 }
             }
