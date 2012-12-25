@@ -8,24 +8,6 @@ Ext.define ('Webed.controller.MainBar', {
         selector: 'node-tree', ref: 'nodeTree'
     }],
 
-    selection: function () {
-
-        //
-        // TODO: This function should return the last selected record from the
-        // union of `node-tree`, `leaf-list` and `component-tabs`. The reason
-        // is that `node-tree` might not show a particular node due to dynamic
-        // loading and plus, it is simply more intuitive for the user to point
-        // to a particular UI element and executed a desired action with it!
-        //
-
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-
-        return semo.getLastSelected ();
-    },
-
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +44,59 @@ Ext.define ('Webed.controller.MainBar', {
                 click: this.exportProject
             }
         });
+
+        this.application.on ({
+            scope: this, select: function (source, args) {
+                if (source == this) return;
+                assert (args && args.record);
+                this.set_selection (args.record);
+            }
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    get_selection: function () {
+        var view = this.getNodeTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        return semo.getLastSelected ();
+    },
+
+    set_selection: function (record) {
+        assert (record);
+
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var path = record.get ('path');
+        if (!path) return;
+        var path = Ext.clone (path);
+        assert (path);
+
+        var view = this.getNodeTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var base = view.getRootNode ();
+        assert (base);
+
+        // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
+        path[0] = base.get ('uuid'); assert (path[0])
+        // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
+        path.unshift (''); path.pop ();
+        // ['','00..00','bb..bb''] => /00..00/bb..bb
+        var path = path.join ('/');
+        assert (path);
+
+        view.expandPath (path, 'uuid', '/', function (success, node) {
+            if (success) {
+                var node = node.findChild ('uuid', uuid, true);
+                if (node) semo.select (node);
+            }
+        }, this);
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -114,8 +149,9 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addFolder: function (item, event, options) {
-        var root = this.selection ();
+        var root = this.get_selection ();
         assert (root);
+
         var root_uuid = root.get ('expandable')
             ? root.get ('uuid') : root.parentNode.get ('uuid');
         assert (root_uuid);
@@ -143,8 +179,9 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addText: function (item, event, options) {
-        var root = this.selection ();
+        var root = this.get_selection ();
         assert (root);
+
         var root_uuid = root.get ('expandable')
             ? root.get ('uuid') : root.parentNode.get ('uuid');
         assert (root_uuid);
@@ -197,7 +234,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     rename: function (item, event, options) {
-        var node = this.selection ();
+        var node = this.get_selection ();
         assert (node);
 
         if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
@@ -230,7 +267,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     destroy: function (item, event, options) {
-        var node = this.selection ();
+        var node = this.get_selection ();
         assert (node);
 
         if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {

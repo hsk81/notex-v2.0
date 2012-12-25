@@ -16,7 +16,8 @@ Ext.define ('Webed.controller.ContentTabs', {
             'content-tabs' : {
                 render: this.render,
                 beforeadd: this.beforeadd,
-                remove: this.remove
+                remove: this.remove,
+                tabchange: this.tabchange
             }
         });
 
@@ -49,6 +50,12 @@ Ext.define ('Webed.controller.ContentTabs', {
             var wrap = Ext.fly ('page-wrap');
             assert (wrap); wrap.setDisplayed (true);
         }
+    },
+
+    tabchange: function (tabPanel, newCard, oldCard, eOpts) {
+        this.application.fireEvent ('select', this, {
+            record: newCard.record
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////

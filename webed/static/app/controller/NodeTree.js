@@ -65,6 +65,10 @@ Ext.define ('Webed.controller.NodeTree', {
                 record: record
             });
         }
+
+        this.application.fireEvent ('select', this, {
+            record: record
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////

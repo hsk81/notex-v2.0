@@ -12,7 +12,7 @@ Ext.define ('Webed.view.LeafList', {
     columns: [{
         flex: 2,
         text: 'Path',
-        dataIndex: 'path',
+        dataIndex: 'name_path',
         sortable: true,
         renderer: function (value, meta, record) {
             if (value) {
@@ -28,7 +28,7 @@ Ext.define ('Webed.view.LeafList', {
         dataIndex: 'name',
         sortable: true,
         renderer: function (value, meta, record) {
-            var path = record.get ('path');
+            var path = record.get ('name_path');
             if (path)  {
                 if (path.length > 1) path = path.slice (1);
                 meta.tdAttr = 'data-qtip="' + path.join ('/') + '"';
