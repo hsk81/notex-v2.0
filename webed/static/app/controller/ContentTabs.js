@@ -53,7 +53,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     tabchange: function (tabPanel, newCard, oldCard, eOpts) {
-        this.application.fireEvent ('select', this, {
+        this.application.fireEvent ('select_node', this, {
             record: newCard.record
         });
     },

@@ -48,7 +48,7 @@ Ext.define ('Webed.controller.LeafList', {
             record: record
         });
 
-        this.application.fireEvent ('select', this, {
+        this.application.fireEvent ('select_node', this, {
             record: record
         });
     }

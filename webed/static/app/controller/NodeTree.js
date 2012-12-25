@@ -46,7 +46,7 @@ Ext.define ('Webed.controller.NodeTree', {
         });
 
         this.application.on ({
-            scope: this, select: function (source, args) {
+            scope: this, select_node: function (source, args) {
                 if (source == this) return;
                 assert (args && args.record);
                 this.set_selection (args.record);
