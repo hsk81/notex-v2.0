@@ -4,9 +4,10 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    refs: [{
-        selector: 'node-tree', ref: 'nodeTree'
-    }],
+    get_selection: function () {
+        var controller = this.application.getController ('NodeTree');
+        assert (controller); return controller.get_selection ();
+    },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -44,59 +45,6 @@ Ext.define ('Webed.controller.MainBar', {
                 click: this.exportProject
             }
         });
-
-        this.application.on ({
-            scope: this, select: function (source, args) {
-                if (source == this) return;
-                assert (args && args.record);
-                this.set_selection (args.record);
-            }
-        });
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    get_selection: function () {
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-
-        return semo.getLastSelected ();
-    },
-
-    set_selection: function (record) {
-        assert (record);
-
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var path = record.get ('path');
-        if (!path) return;
-        var path = Ext.clone (path);
-        assert (path);
-
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var base = view.getRootNode ();
-        assert (base);
-
-        // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
-        path[0] = base.get ('uuid'); assert (path[0])
-        // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
-        path.unshift (''); path.pop ();
-        // ['','00..00','bb..bb''] => /00..00/bb..bb
-        var path = path.join ('/');
-        assert (path);
-
-        view.expandPath (path, 'uuid', '/', function (success, node) {
-            if (success) {
-                var node = node.findChild ('uuid', uuid, true);
-                if (node) semo.select (node);
-            }
-        }, this);
     },
 
     ///////////////////////////////////////////////////////////////////////////

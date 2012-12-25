@@ -44,21 +44,9 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
 
     itemclick: function (view, record, item, index, e, eOpts) {
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var leaf = semo.getLastSelected ();
-        assert (leaf);
-
-        var lhs_uuid = leaf.get ('uuid');
-        assert (lhs_uuid);
-        var rhs_uuid = record.get ('uuid');
-        assert (rhs_uuid);
-
-        if (lhs_uuid == rhs_uuid) {
-            this.application.fireEvent ('create_tab', this, {
-                record: record
-            });
-        }
+        this.application.fireEvent ('create_tab', this, {
+            record: record
+        });
 
         this.application.fireEvent ('select', this, {
             record: record

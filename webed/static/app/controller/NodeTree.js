@@ -44,31 +44,68 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.on ({
             delete_leaf: this.delete_leaf, scope: this
         });
+
+        this.application.on ({
+            scope: this, select: function (source, args) {
+                if (source == this) return;
+                assert (args && args.record);
+                this.set_selection (args.record);
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     itemclick: function (view, record, item, index, e, eOpts) {
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var node = semo.getLastSelected ();
-        assert (node);
-
-        var lhs_uuid = node.get ('uuid');
-        assert (lhs_uuid);
-        var rhs_uuid = record.get ('uuid');
-        assert (rhs_uuid);
-
-        if (lhs_uuid == rhs_uuid) {
-            this.application.fireEvent ('create_tab', this, {
-                record: record
-            });
-        }
-
-        this.application.fireEvent ('select', this, {
+        this.application.fireEvent ('create_tab', this, {
             record: record
         });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    get_selection: function () {
+        var view = this.getNodeTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        return semo.getLastSelected ();
+    },
+
+    set_selection: function (record) {
+        assert (record);
+
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var path = record.get ('path');
+        if (!path) return;
+        var path = Ext.clone (path);
+        assert (path);
+
+        var view = this.getNodeTree ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+        var base = view.getRootNode ();
+        assert (base);
+
+        // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
+        path[0] = base.get ('uuid'); assert (path[0])
+        // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
+        path.unshift (''); path.pop ();
+        // ['','00..00','bb..bb''] => /00..00/bb..bb
+        var path = path.join ('/');
+        assert (path);
+
+        view.expandPath (path, 'uuid', '/', function (success, node) {
+            if (success) {
+                var node = node.findChild ('uuid', uuid, true);
+                if (node) semo.select (node);
+            }
+        }, this);
     },
 
     ///////////////////////////////////////////////////////////////////////////
