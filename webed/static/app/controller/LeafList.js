@@ -20,6 +20,14 @@ Ext.define ('Webed.controller.LeafList', {
             'leaf-list tool[action=settings]': { click: this.settings },
             'leaf-list': { itemclick: this.itemclick }
         });
+
+        this.application.on ({
+            scope: this, select_leaf: function (source, args) {
+                if (source == this) return;
+                assert (args && args.record);
+                this.set_selection (args.record);
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -28,6 +36,45 @@ Ext.define ('Webed.controller.LeafList', {
     settings: function () {
         console.debug ('[LeafList.settings]');
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    get_selection: function () {
+        var view = this.getLeafList ();
+        assert (view);
+        var semo = view.getSelectionModel ();
+        assert (semo);
+
+        return semo.getLastSelected ();
+    },
+
+    set_selection: function (record) {
+        assert (record);
+        var uuid = record.get ('uuid');
+        assert (uuid);
+
+        var view = this.getLeafList ();
+        assert (view);
+        var store = this.getLeafsStore ();
+        assert (store);
+
+        var collection = store.queryBy (function (leaf) {
+            return leaf.get ('uuid') == uuid;
+        });
+
+        if (collection && collection.length > 0) {
+            var leaf = collection.items[0];
+            assert (leaf);
+            var table = view.getView ();
+            assert (table);
+
+            table.select (leaf);
+        }
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     refresh: function () {
         var view = this.getLeafList ();

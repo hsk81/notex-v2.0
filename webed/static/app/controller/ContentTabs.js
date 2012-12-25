@@ -56,6 +56,10 @@ Ext.define ('Webed.controller.ContentTabs', {
         this.application.fireEvent ('select_node', this, {
             record: newCard.record
         });
+
+        this.application.fireEvent ('select_leaf', this, {
+            record: newCard.record
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
