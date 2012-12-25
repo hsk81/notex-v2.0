@@ -21,6 +21,11 @@ Ext.define ('Webed.store.Nodes', {
             assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
 
+            //
+            // Ensure that expanding (and not yet loaded) nodes do not appear
+            // twice within the tree by omitting the top node information.
+            //
+
             if (operation.params.uuid) {
                 operation.params.omit_top = false;
             } else {
@@ -36,6 +41,27 @@ Ext.define ('Webed.store.Nodes', {
         assert (icon);
 
         node.set ('iconCls', icon);
+
+        //
+        // The `beforeexpand` and `expand` event handler ensure together that
+        // the *loading* icon appears for expanding (and not yet loaded) nodes.
+        //
+
+        function on_beforeexpand (self, eOpts) {
+            var loaded = this.get ('loaded');
+            if (!loaded) this.set ('iconCls', '');
+            this.un ('beforeexpand', on_beforeexpand);
+        }
+
+        node.on ('beforeexpand', on_beforeexpand);
+
+        function on_expand (self, eOpts) {
+            var loaded = this.get ('loaded');
+            if (loaded) this.set ('iconCls', icon);
+            this.un ('expand', on_expand);
+        }
+
+        node.on ('expand', on_expand);
     },
 
     autoLoad: true
