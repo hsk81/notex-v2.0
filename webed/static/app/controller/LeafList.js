@@ -22,11 +22,7 @@ Ext.define ('Webed.controller.LeafList', {
         });
 
         this.application.on ({
-            scope: this, select_leaf: function (source, args) {
-                if (source == this) return;
-                assert (args && args.record);
-                this.set_selection (args.record);
-            }
+            select_leaf: this.select_leaf, scope: this
         });
     },
 
@@ -35,6 +31,15 @@ Ext.define ('Webed.controller.LeafList', {
 
     settings: function () {
         console.debug ('[LeafList.settings]');
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    select_leaf: function (source, args) {
+        if (source == this) return;
+        assert (args && args.record);
+        this.set_selection (args.record);
     },
 
     ///////////////////////////////////////////////////////////////////////////

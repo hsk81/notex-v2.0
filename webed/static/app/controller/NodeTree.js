@@ -46,11 +46,10 @@ Ext.define ('Webed.controller.NodeTree', {
         });
 
         this.application.on ({
-            scope: this, select_node: function (source, args) {
-                if (source == this) return;
-                assert (args && args.record);
-                this.set_selection (args.record);
-            }
+            select_node: this.select_node, scope: this
+        });
+        this.application.on ({
+            select_leaf: this.select_leaf, scope: this
         });
     },
 
@@ -65,6 +64,19 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('select_leaf', this, {
             record: record
         });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    select_node: function (source, args) {
+        if (source == this) return;
+        assert (args && args.record);
+        this.set_selection (args.record);
+    },
+
+    select_leaf: function (source, args) {
+        this.select_node (source, args);
     },
 
     ///////////////////////////////////////////////////////////////////////////
