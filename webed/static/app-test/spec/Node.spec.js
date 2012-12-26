@@ -41,17 +41,17 @@ describe ('NodeController', function () {
 
             var root = records[0];
             expect (root).toBeTruthy ();
-            var uuid = root.get ('uuid');
-            expect (uuid).toBeTruthy ();
+            var root_uuid = root.get ('uuid');
+            expect (root_uuid).toBeTruthy ();
 
             window.app.fireEvent ('set_node', this, {
                 scope: this, callback: on_set, node: [{
-                    root_uuid: uuid,
+                    root_uuid: root_uuid,
                     name: 'node',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
                 },{
-                    root_uuid: uuid,
+                    root_uuid: root_uuid,
                     name: 'node',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
@@ -60,7 +60,7 @@ describe ('NodeController', function () {
 
             function on_set (node, op, index) {
                 expect (node).toBeTruthy ();
-                expect (node.get ('root_uuid')).toEqual (uuid);
+                expect (node.get ('root_uuid')).toEqual (root_uuid);
                 expect (node.get ('name')).toEqual ('node');
                 expect (node.get ('mime')).toEqual ('plain/text');
                 expect (node.get ('size')).toEqual (666);
