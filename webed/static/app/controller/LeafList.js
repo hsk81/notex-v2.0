@@ -47,16 +47,27 @@ Ext.define ('Webed.controller.LeafList', {
     },
 
     reload_leaf: function (source, args) {
+        if (source == this) return;
+        assert (args && args.record);
+
+        var uuid = args.record.get ('uuid');
+        assert (uuid);
         var view = this.getLeafList ();
         assert (view);
         var store = this.getLeafsStore ();
         assert (store);
 
-        store.reload ({
-            scope: this, callback: function () {
-                this.select_leaf (source, args);
-            }
+        var collection = store.queryBy (function (leaf) {
+            return leaf.get ('uuid') == uuid;
         });
+
+        if (collection && collection.length > 0) {
+            store.reload ({
+                scope: this, callback: function () {
+                    this.select_leaf (source, args);
+                }
+            });
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
