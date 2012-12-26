@@ -10,11 +10,7 @@ from ..ext import db
 ###############################################################################
 
 class Node (db.Model):
-    __mapper_args__ = {
-        'polymorphic_identity':'node',
-        'polymorphic_on':'type',
-        'order_by': 'name_path'
-    }
+    __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
 
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
     type = db.Column ('type', db.String (16))
@@ -44,26 +40,20 @@ class Node (db.Model):
         self.name = unicode (name) if name is not None else None
         self.mime = mime if mime else 'application/node'
 
-        self.uuid_path_list = self.get_path (field='uuid')
-        self.uuid_path = '/'.join (self.uuid_path_list)
-        self.name_path_list = self.get_path (field='name')
-        self.name_path =u'/'.join (self.name_path_list)
+        self.uuid_path = self.get_path (field='uuid')
 
     def __repr__ (self):
 
         return u'<Node&%05x: %s>' % (self.id, self.name)
 
-    uuid_path_list = db.Column (db.PickleType, nullable=False, unique=True)
-    uuid_path = db.Column (db.String, nullable=False, unique=True)
-    name_path_list = db.Column (db.PickleType, nullable=False)
-    name_path = db.Column (db.Unicode, nullable=False)
-
-    def get_path (self, field):
+    def get_path (self, field='uuid'):
 
         if self.root:
             return self.root.get_path (field) + [eval ('self.' + field)]
         else:
             return [eval ('self.' + field)]
+
+    uuid_path = db.Column (db.PickleType, nullable=False, unique=True)
 
 ###############################################################################
 ###############################################################################
