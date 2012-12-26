@@ -51,8 +51,11 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     saveDocument: function (item, event, options) {
+        var node = this.get_selection ();
+        assert (node);
+
         this.application.fireEvent ('update_tab', this, {
-            scope: this, callback: callback
+            scope: this, callback: callback, record: node
         });
 
         function callback (records, op) {
@@ -203,15 +206,12 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
-                        console.error ('[MainBar.rename]', rec, op);
+                    if (rec && op && op.success) {
+                        this.application.fireEvent ('rename_tab', this, {
+                            record: rec
+                        });
                     } else {
-                        this.application.fireEvent ('create_tab', this, {
-                            record: rec
-                        });
-                        this.application.fireEvent ('select_leaf', this, {
-                            record: rec
-                        });
+                        console.error ('[MainBar.rename]', rec, op);
                     }
                 }
             }

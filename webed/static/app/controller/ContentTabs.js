@@ -28,6 +28,10 @@ Ext.define ('Webed.controller.ContentTabs', {
         this.application.on ({
             update_tab: this.update_tab, scope: this
         });
+
+        this.application.on ({
+            rename_tab: this.rename_tab, scope: this
+        })
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -95,7 +99,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        var tab = this.get_tab (uuid, view);
+        var tab = this.get_tab (uuid);
         var tab = tab ? tab : view.add ({
             record: record,
             title: name,
@@ -151,36 +155,19 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     ///////////////////////////////////////////////////////////////////////////
-
-    get_tab: function (uuid, view) {
-        assert (uuid);
-        assert (view);
-
-        var tabs = view.queryBy (function (el) {
-            return (el.record && el.record.get ('uuid') == uuid)
-                ? true : false;
-        }, this);
-
-        assert (tabs);
-        return (tabs.length > 0) ? tabs[0] : null;
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     update_tab: function (source, args) {
         if (source == this) return;
-        var args = $.extend ({}, args);
+        assert (args && args.record);
 
-        var view = this.getContentTabs();
-        assert (view);
-        var tab = view.getActiveTab ();
-        if (!tab) return;
-
-        var record = tab.record;
-        assert (record);
-        var mime = record.get ('mime');
+        var uuid = args.record.get ('uuid');
+        assert (uuid);
+        var mime = args.record.get ('mime');
         assert (mime);
+
+        var tab = this.get_tab (uuid);
+        if (!tab) return;
 
         if (MIME.is_text (mime))
             this.update_text_tab (tab, args.callback, args.scope);
@@ -225,6 +212,40 @@ Ext.define ('Webed.controller.ContentTabs', {
 
     update_image_tab: function (tab, callback, scope) {
         //TODO!
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    rename_tab: function (source, args) {
+        if (source == this) return;
+        assert (args && args.record);
+
+        var uuid = args.record.get ('uuid');
+        assert (uuid);
+        var name = args.record.get ('name');
+        assert (name);
+
+        var tab = this.get_tab (uuid);
+        if (tab) tab.setTitle (name);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    get_tab: function (uuid) {
+        assert (uuid);
+
+        var view = this.getContentTabs ();
+        assert (view);
+
+        var tabs = view.queryBy (function (el) {
+            return (el.record && el.record.get ('uuid') == uuid)
+                ? true : false;
+        }, this);
+
+        assert (tabs);
+        return (tabs.length > 0) ? tabs[0] : null;
     }
 
     ///////////////////////////////////////////////////////////////////////////
