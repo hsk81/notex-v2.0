@@ -24,6 +24,10 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.on ({
             select_leaf: this.select_leaf, scope: this
         });
+
+        this.application.on ({
+            reload_leaf: this.reload_leaf, scope: this
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -40,6 +44,19 @@ Ext.define ('Webed.controller.LeafList', {
         if (source == this) return;
         assert (args && args.record);
         this.set_selection (args.record);
+    },
+
+    reload_leaf: function (source, args) {
+        var view = this.getLeafList ();
+        assert (view);
+        var store = this.getLeafsStore ();
+        assert (store);
+
+        store.reload ({
+            scope: this, callback: function () {
+                this.select_leaf (source, args);
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -99,7 +116,6 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.fireEvent ('create_tab', this, {
             record: record
         });
-
         this.application.fireEvent ('select_node', this, {
             record: record
         });

@@ -210,6 +210,9 @@ Ext.define ('Webed.controller.MainBar', {
                         this.application.fireEvent ('rename_tab', this, {
                             record: rec
                         });
+                        this.application.fireEvent ('reload_leaf', this, {
+                            record: rec
+                        });
                     } else {
                         console.error ('[MainBar.rename]', rec, op);
                     }
