@@ -93,8 +93,11 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
-        runs (function () { create ({name: 'node', mime: 'application/project',
-            root_uuid: '00000000-0000-0000-0000-000000000000'
+        runs (function () { create ({
+            name: 'node',
+            mime: 'application/project',
+            root_uuid: '00000000-0000-0000-0000-000000000000',
+            name_path: ['root', 'node']
         })});
     });
 
@@ -124,8 +127,11 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock', 750);
         }
 
-        runs (function () { create ({name: 'leaf', mime: 'text/plain',
-            root_uuid: '00000000-0000-0000-0000-000000000000'
+        runs (function () { create ({
+            name: 'leaf',
+            mime: 'text/plain',
+            root_uuid: '00000000-0000-0000-0000-000000000000',
+            name_path: ['root', 'leaf']
         })});
     });
 

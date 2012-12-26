@@ -41,17 +41,21 @@ describe ('LeafController', function () {
 
             var root = records[0];
             expect (root).toBeTruthy ();
-            var uuid = root.get ('uuid');
-            expect (uuid).toBeTruthy ();
+            var root_uuid = root.get ('uuid');
+            expect (root_uuid).toBeTruthy ();
+            var name_path = root.get ('name_path');
+            expect (name_path).toBeTruthy ();
 
             window.app.fireEvent ('set_leaf', this, {
                 scope: this, callback: on_set, leaf: [{
-                    root_uuid: uuid,
+                    name_path: Ext.Array.push (name_path, 'leaf'),
+                    root_uuid: root_uuid,
                     name: 'leaf',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
                 },{
-                    root_uuid: uuid,
+                    name_path: Ext.Array.push (name_path, 'leaf'),
+                    root_uuid: root_uuid,
                     name: 'leaf',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
@@ -60,7 +64,8 @@ describe ('LeafController', function () {
 
             function on_set (leaf, op, index) {
                 expect (leaf).toBeTruthy ();
-                expect (leaf.get ('root_uuid')).toEqual (uuid);
+                expect (leaf.get ('name_path')).toEqual (name_path);
+                expect (leaf.get ('root_uuid')).toEqual (root_uuid);
                 expect (leaf.get ('name')).toEqual ('leaf');
                 expect (leaf.get ('mime')).toEqual ('plain/text');
                 expect (leaf.get ('size')).toEqual (666);
