@@ -36,6 +36,7 @@ Ext.define ('Webed.controller.Leaf', {
         Ext.Array.each (args.leaf, function (leaf, index) {
 
             assert (leaf);
+            assert (leaf.name_path);
             assert (leaf.root_uuid);
             assert (leaf.uuid||true);
             assert (leaf.mime);

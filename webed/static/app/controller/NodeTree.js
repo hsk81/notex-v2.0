@@ -175,6 +175,7 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (args && args.with);
 
         var node = {
+            name_path: args.with.name_path,
             root_uuid: args.with.root_uuid,
             uuid: args.with.uuid||UUID.random (),
             mime: args.with.mime,
@@ -182,6 +183,7 @@ Ext.define ('Webed.controller.NodeTree', {
             size: args.with.size||0
         }
 
+        assert (node.name_path);
         assert (node.root_uuid);
         assert (node.uuid);
         assert (node.mime);

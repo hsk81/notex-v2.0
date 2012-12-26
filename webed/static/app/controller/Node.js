@@ -33,6 +33,7 @@ Ext.define ('Webed.controller.Node', {
         Ext.Array.each (args.node, function (node, index) {
 
             assert (node);
+            assert (node.name_path);
             assert (node.root_uuid);
             assert (node.uuid||true);
             assert (node.mime);
