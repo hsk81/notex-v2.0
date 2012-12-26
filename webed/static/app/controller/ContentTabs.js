@@ -32,6 +32,10 @@ Ext.define ('Webed.controller.ContentTabs', {
         this.application.on ({
             rename_tab: this.rename_tab, scope: this
         })
+
+        this.application.on ({
+            delete_tab: this.delete_tab, scope: this
+        })
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -228,6 +232,17 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var tab = this.get_tab (uuid);
         if (tab) tab.setTitle (name);
+    },
+
+    delete_tab: function (source, args) {
+        if (source == this) return;
+        assert (args && args.record);
+
+        var uuid = args.record.get ('uuid');
+        assert (uuid);
+
+        var tab = this.get_tab (uuid);
+        if (tab) tab.close ();
     },
 
     ///////////////////////////////////////////////////////////////////////////

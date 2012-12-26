@@ -248,7 +248,14 @@ Ext.define ('Webed.controller.MainBar', {
                 });
 
                 function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
+                    if (rec && op && op.success) {
+                        this.application.fireEvent ('delete_tab', this, {
+                            record: rec
+                        });
+                        this.application.fireEvent ('reload_leaf', this, {
+                            record: rec
+                        });
+                    } else {
                         console.error ('[MainBar.destroy]', rec, op);
                     }
                 }
