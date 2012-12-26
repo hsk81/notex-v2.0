@@ -96,7 +96,7 @@ Ext.define ('Webed.controller.NodeTree', {
 
         var uuid = record.get ('uuid');
         assert (uuid);
-        var path = record.get ('path');
+        var path = record.get ('uuid_path');
         assert (path);
         var path = Ext.clone (path);
         assert (path);

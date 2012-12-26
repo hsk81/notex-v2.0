@@ -491,7 +491,7 @@ def leaf2ext (leaf):
         'results': None,
         'root_uuid': leaf.root.uuid,
         'uuid': leaf.uuid,
-        'path': leaf.uuid_path,
+        'uuid_path': leaf.uuid_path,
         'name_path': leaf.get_path (field='name')
     }
 

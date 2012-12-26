@@ -4,6 +4,7 @@ Ext.define ('Webed.store.Nodes', {
     model: 'Webed.model.Node',
 
     root: {
+        uuid_path: ['00000000-0000-0000-0000-000000000000'],
         name_path: ['root'],
         uuid: '00000000-0000-0000-0000-000000000000',
         expanded: true,
