@@ -7,23 +7,47 @@ Ext.define ('Webed.view.StatusBar', {
     alias: 'widget.status-bar',
     text: 'WebEd',
     items: [{
-        xtype: 'status-bar.progress-bar'
+        xtype: 'statusbar.progressbar'
     },'-',{
-        xtype: 'status-bar.info-button'
+        xtype: 'statusbar.infobutton'
     },'-',{
-        text: '125%'
+        xtype: 'statusbar.spellcheck'
+    },'-',{
+        text: '100%'
     },{
-        xtype: 'status-bar.slider'
+        xtype: 'statusbar.slider'
     }]
+});
+
+Ext.define ('Webed.view.statusBar.SpellCheck', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.statusbar.spellcheck',
+
+    store: {
+        fields: ['lang', 'name'],
+        data : [{
+            "lang":"en_US", "name":"English: United States"
+        },{
+            "lang":"de_CH", "name":"German: Switzerland"
+        },{
+            "lang":"tr_TR", "name":"Turkish: Turkey"
+        }]
+    },
+
+    queryMode: 'local',
+    displayField: 'name',
+    valueField: 'lang',
+
+    emptyText: 'Spell check language ..'
 });
 
 Ext.define ('Webed.view.statusBar.ProgressBar', {
     extend: 'Ext.ProgressBar',
-    alias: 'widget.status-bar.progress-bar',
+    alias: 'widget.statusbar.progressbar',
 
     width : 256,
     value : 100.0,
-    hidden : false,
+    hidden : true,
 
     disabled: true,
     interval : 125, //[ms]
@@ -33,7 +57,7 @@ Ext.define ('Webed.view.statusBar.ProgressBar', {
 
 Ext.define ('Webed.view.statusBar.InfoButton', {
     extend: 'Ext.Button',
-    alias: 'widget.status-bar.info-button',
+    alias: 'widget.statusbar.infobutton',
 
     tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
     text: '',
@@ -43,11 +67,11 @@ Ext.define ('Webed.view.statusBar.InfoButton', {
 
 Ext.define ('Webed.view.statusBar.Slider', {
     extend: 'Ext.slider.Single',
-    alias: 'widget.status-bar.slider',
+    alias: 'widget.statusbar.slider',
 
     width : 128,
     increment : 25,
-    value : 125,
+    value : 100,
     minValue : 50,
     maxValue : 150
 });
