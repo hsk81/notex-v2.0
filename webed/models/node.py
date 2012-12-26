@@ -46,7 +46,7 @@ class Node (db.Model):
 
         return u'<Node&%05x: %s>' % (self.id, self.name)
 
-    def get_path (self, field='uuid'):
+    def get_path (self, field):
 
         if self.root:
             return self.root.get_path (field) + [eval ('self.' + field)]
