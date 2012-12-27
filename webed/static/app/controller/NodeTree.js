@@ -173,21 +173,24 @@ Ext.define ('Webed.controller.NodeTree', {
 
     create_node: function (args) {
         assert (args && args.with);
+        assert (args.with.root);
 
         var node = {
-            name_path: args.with.name_path,
-            root_uuid: args.with.root_uuid,
+            root_uuid: args.with.root.get ('uuid'),
             uuid: args.with.uuid||UUID.random (),
-            mime: args.with.mime,
+            uuid_path: args.with.root.get ('uuid_path'),
             name: args.with.name,
+            name_path: args.with.root.get ('name_path'),
+            mime: args.with.mime,
             size: args.with.size||0
         }
 
-        assert (node.name_path);
         assert (node.root_uuid);
+        assert (node.uuid_path);
         assert (node.uuid);
-        assert (node.mime);
+        assert (node.name_path);
         assert (node.name);
+        assert (node.mime);
         assert (node.size >= 0);
 
         if (args.creator && args.creator.call) {
@@ -241,9 +244,18 @@ Ext.define ('Webed.controller.NodeTree', {
         // appended. To avoid later creation it's marked as not a phantom.
         //
 
-        var model = Ext.create ('Webed.model.Node', node);
-        assert (model); model.phantom = false;
-        append_node.call (this, model);
+        function fake (node) {
+            node.uuid_path.push (node.uuid);
+            assert (node.uuid_path[node.uuid_path.length - 1] == node.uuid);
+            node.name_path.push (node.name);
+            assert (node.name_path[node.name_path.length - 1] == node.name);
+
+            var model = Ext.create ('Webed.model.Node', node);
+            assert (model); model.phantom = false;
+            return model;
+        }
+
+        append_node.call (this, fake (node));
     },
 
     create_leaf: function (args) {

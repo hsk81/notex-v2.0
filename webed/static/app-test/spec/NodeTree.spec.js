@@ -75,17 +75,18 @@ describe ('NodeTree', function () {
                 uuid: UUID.random ()
             });
 
+            var root_uuid = node.root.get ('uuid');
+            expect (root_uuid).toBeTruthy ();
+
             lock.init ([true]); window.app.fireEvent ('create_node', {
                 with: node, scope: this, callback: function (rec, op) {
                     expect (rec).toBeTruthy ();
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
-
                     expect (rec.get ('uuid')).toEqual (node.uuid);
                     expect (rec.get ('mime')).toEqual (node.mime);
                     expect (rec.get ('name')).toEqual (node.name);
-                    expect (rec.get ('root_uuid')).toEqual (node.root_uuid);
-
+                    expect (rec.get ('root_uuid')).toEqual (root_uuid);
                     lock.pop ();
                 }
             });
@@ -96,8 +97,7 @@ describe ('NodeTree', function () {
         runs (function () { create ({
             name: 'node',
             mime: 'application/project',
-            root_uuid: '00000000-0000-0000-0000-000000000000',
-            name_path: ['root', 'node']
+            root: node_store.getRootNode ()
         })});
     });
 
@@ -108,18 +108,18 @@ describe ('NodeTree', function () {
                 uuid: UUID.random ()
             });
 
+            var root_uuid = leaf.root.get ('uuid');
+            expect (root_uuid).toBeTruthy ();
+
             lock.init ([true]); window.app.fireEvent ('create_leaf', {
                 with: leaf, scope: this, callback: function (rec, op) {
-
                     expect (rec).toBeTruthy ();
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
-
                     expect (rec.get ('uuid')).toEqual (leaf.uuid);
                     expect (rec.get ('mime')).toEqual (leaf.mime);
                     expect (rec.get ('name')).toEqual (leaf.name);
-                    expect (rec.get ('root_uuid')).toEqual (leaf.root_uuid);
-
+                    expect (rec.get ('root_uuid')).toEqual (root_uuid);
                     lock.pop ();
                 }
             });
@@ -130,8 +130,7 @@ describe ('NodeTree', function () {
         runs (function () { create ({
             name: 'leaf',
             mime: 'text/plain',
-            root_uuid: '00000000-0000-0000-0000-000000000000',
-            name_path: ['root', 'leaf']
+            root: node_store.getRootNode ()
         })});
     });
 

@@ -43,19 +43,23 @@ describe ('LeafController', function () {
             expect (root).toBeTruthy ();
             var root_uuid = root.get ('uuid');
             expect (root_uuid).toBeTruthy ();
+            var uuid_path = root.get ('uuid_path');
+            expect (uuid_path).toBeTruthy ();
             var name_path = root.get ('name_path');
             expect (name_path).toBeTruthy ();
 
             window.app.fireEvent ('set_leaf', this, {
                 scope: this, callback: on_set, leaf: [{
-                    name_path: Ext.Array.push (name_path, 'leaf'),
                     root_uuid: root_uuid,
+                    uuid_path: uuid_path,
+                    name_path: name_path,
                     name: 'leaf',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
                 },{
-                    name_path: Ext.Array.push (name_path, 'leaf'),
                     root_uuid: root_uuid,
+                    uuid_path: uuid_path,
+                    name_path: name_path,
                     name: 'leaf',
                     mime: 'plain/text',
                     size: 666 // read-only (backend size untouched!)
@@ -64,9 +68,13 @@ describe ('LeafController', function () {
 
             function on_set (leaf, op, index) {
                 expect (leaf).toBeTruthy ();
-                expect (leaf.get ('name_path')).toEqual (name_path);
                 expect (leaf.get ('root_uuid')).toEqual (root_uuid);
+                expect (leaf.get ('uuid')).toBeTruthy ();
+                expect (leaf.get ('uuid_path')).toEqual (
+                    uuid_path.concat ([leaf.get ('uuid')]));
                 expect (leaf.get ('name')).toEqual ('leaf');
+                expect (leaf.get ('name_path')).toEqual (
+                    name_path.concat ([leaf.get ('name')]));
                 expect (leaf.get ('mime')).toEqual ('plain/text');
                 expect (leaf.get ('size')).toEqual (666);
                 expect (op).toBeTruthy ();

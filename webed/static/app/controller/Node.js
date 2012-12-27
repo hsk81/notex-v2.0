@@ -32,16 +32,27 @@ Ext.define ('Webed.controller.Node', {
 
         Ext.Array.each (args.node, function (node, index) {
 
+            var node = $.extend (Ext.clone (node), {
+                uuid_path: node.uuid_path.slice (0),
+                name_path: node.name_path.slice (0)
+            });
+
             assert (node);
-            assert (node.name_path);
             assert (node.root_uuid);
             assert (node.uuid||true);
-            assert (node.mime);
+            assert (node.uuid_path);
             assert (node.name);
+            assert (node.name_path);
+            assert (node.mime);
             assert (node.size||true);
 
-            if (!node.uuid) node.uuid = UUID.random ();
-            if (!node.size) node.size = 0;
+            if (!node.uuid) { node.uuid = UUID.random (); }
+            if (!node.size) { node.size = 0; }
+
+            node.uuid_path.push (node.uuid);
+            assert (node.uuid_path[node.uuid_path.length - 1] == node.uuid);
+            node.name_path.push (node.name);
+            assert (node.name_path[node.name_path.length - 1] == node.name);
 
             var model = Ext.create ('Webed.model.Node', node);
             assert (model);
