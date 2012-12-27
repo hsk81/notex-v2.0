@@ -11,7 +11,7 @@ from flask import Blueprint, session
 from datetime import datetime
 
 from ..models import *
-from ..ext import db
+from ..ext import db, cache
 from ..app import app
 from ..util import Q
 
@@ -102,6 +102,8 @@ def db_reset (name=None, mail=None):
     db.session.add (user)
     db.session.commit ()
 
+    cache.memory.clear ()  ## TODO: Use memcached/redis!
+
 def db_refresh ():
 
     if 'root_uuid' in session:
@@ -109,6 +111,19 @@ def db_refresh ():
         if base:
             db.session.delete (base)
             db.session.commit ()
+
+            ##
+            ## TODO: Use faster invalidation of memcached/redit!
+            ##
+
+            base_path = '/'.join (base.uuid_path)
+            def relevant ((uuid_path, _)):
+
+                return '/'.join (uuid_path).startswith (base_path)
+
+            for uuid_path, field in filter (relevant, cache.memory):
+                key = frozenset ((frozenset (uuid_path), field))
+                if key in cache.memory: del cache.memory[key]
 
 def init ():
 

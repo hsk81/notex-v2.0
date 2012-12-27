@@ -4,7 +4,9 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from uuid import uuid4 as uuid_random
-from ..ext import db
+from ..ext import db, cache
+
+from sqlalchemy.ext.hybrid import hybrid_property
 
 ###############################################################################
 ###############################################################################
@@ -27,9 +29,36 @@ class Node (db.Model):
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref ('base', remote_side=id))
 
+    uuid_path = db.Column (db.PickleType, nullable=False, unique=True)
     uuid = db.Column (db.String (36), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=True)
-    name = db.Column (db.Unicode (256), nullable=False)
+
+    @hybrid_property
+    def name (self):
+        return self._name
+
+    @name.setter
+    def name (self, value):
+
+        if self.root:
+
+            ##
+            ## TODO: Use faster invalidation of memcached/redit!
+            ##
+
+            root_path = '/'.join (self.root.uuid_path)
+            def relevant ((uuid_path, field)):
+
+                if field != 'name': return False
+                return '/'.join (uuid_path).startswith (root_path)
+
+            for uuid_path, field in filter (relevant, cache.memory):
+                key = frozenset ((frozenset (uuid_path), field))
+                if key in cache.memory: del cache.memory[key]
+
+        self._name = value
+
+    _name = db.Column (db.Unicode (256), nullable=False)
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
@@ -49,11 +78,15 @@ class Node (db.Model):
     def get_path (self, field):
 
         if self.root:
-            return self.root.get_path (field) + [eval ('self.' + field)]
+            key = frozenset ((frozenset (self.root.uuid_path), field))
+            if key in cache.memory:
+                root_path = cache.memory[key]
+            else:
+                root_path = cache.memory[key] = self.root.get_path (field)
+
+            return root_path + [eval ('self.' + field)]
         else:
             return [eval ('self.' + field)]
-
-    uuid_path = db.Column (db.PickleType, nullable=False, unique=True)
 
 ###############################################################################
 ###############################################################################

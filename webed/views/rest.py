@@ -454,7 +454,7 @@ def node2ext (node, leafs=True, level=1):
             'results': results,
             'root_uuid': node.root.uuid if node.root else None,
             'uuid': node.uuid,
-            'uuid_path': node.uuid_path,
+            'uuid_path': node.get_path (field='uuid'),
             'name_path': node.get_path (field='name'),
         }
 
@@ -491,7 +491,7 @@ def leaf2ext (leaf):
         'results': None,
         'root_uuid': leaf.root.uuid,
         'uuid': leaf.uuid,
-        'uuid_path': leaf.uuid_path,
+        'uuid_path': leaf.get_path (field='uuid'),
         'name_path': leaf.get_path (field='name')
     }
 
