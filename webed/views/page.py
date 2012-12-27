@@ -117,7 +117,7 @@ def db_refresh ():
             ##
 
             base_path = '/'.join (base.uuid_path)
-            def relevant ((uuid_path, _)):
+            def relevant ((uuid_path, field)):
 
                 return '/'.join (uuid_path).startswith (base_path)
 

@@ -49,8 +49,8 @@ class Node (db.Model):
             root_path = '/'.join (self.root.uuid_path)
             def relevant ((uuid_path, field)):
 
-                if field != 'name': return False
-                return '/'.join (uuid_path).startswith (root_path)
+                return field == 'name' and '/'.join (uuid_path) \
+                    .startswith (root_path)
 
             for uuid_path, field in filter (relevant, cache.memory):
                 key = frozenset ((frozenset (uuid_path), field))
