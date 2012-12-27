@@ -14,7 +14,7 @@ from webed.models import Property
 
 class PropertyAdmin (ModelView):
 
-    column_list = ('base', 'node', 'type', 'uuid', 'mime', 'name')
+    column_list = ('base', 'node', 'name', 'mime', 'uuid', 'type')
     column_searchable_list = (
         Property.uuid, Property.mime, Property.name, Property.type)
     column_filters = (
