@@ -99,6 +99,18 @@ Ext.define ('Webed.controller.Node', {
             if (recs.length > 0) {
                 args.callback.call (args.scope||this, recs, index);
             } else {
+
+                //
+                // Loading has the side effect of filtering associated views;
+                // most of time this is **not** desired. Therefore `get_node`
+                // should be called only with cached items, such that following
+                // load is *not* executed!
+                //
+                // It's only meant as a fallback solution, to deliver a result
+                // if it exists; but those use cases should be review and then
+                // implemented in such a way that the load is *avoided*.
+                //
+
                 store.load ({
                     scope: args.scope||this, callback: function (recs) {
                         args.callback.call (args.scope||this, recs, index);
