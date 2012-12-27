@@ -116,14 +116,16 @@ def db_refresh ():
             ## TODO: Use faster invalidation of memcached/redit!
             ##
 
-            base_path = '/'.join (base.uuid_path)
-            def relevant ((uuid_path, field)):
+            def only_revs (frozen_set):
 
-                return '/'.join (uuid_path).startswith (base_path)
+                sorted_set = sorted (frozen_set, key=lambda (_,pos): pos)
+                args = map (lambda (el,_): el, sorted_set)
+                base_uuid, root_uuid, field, value = args
 
-            for uuid_path, field in filter (relevant, cache.memory):
-                key = frozenset ((frozenset (uuid_path), field))
-                if key in cache.memory: del cache.memory[key]
+                return base_uuid == base.uuid and field == 'rev'
+
+            for key in filter (only_revs, cache.memory):
+                del cache.memory[key] ## invalidate revs
 
 def init ():
 

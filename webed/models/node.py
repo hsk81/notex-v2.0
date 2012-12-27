@@ -40,21 +40,12 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
 
-        if self.root:
-
-            ##
-            ## TODO: Use faster invalidation of memcached/redit!
-            ##
-
-            root_path = '/'.join (self.root.uuid_path)
-            def relevant ((uuid_path, field)):
-
-                return field == 'name' and '/'.join (uuid_path) \
-                    .startswith (root_path)
-
-            for uuid_path, field in filter (relevant, cache.memory):
-                key = frozenset ((frozenset (uuid_path), field))
-                if key in cache.memory: del cache.memory[key]
+        if self.base:
+            key = self.make_key (self.base.uuid, self.uuid, 'rev', 'name')
+            if key in cache.memory:
+                cache.memory[key]+= 1
+            else:
+                cache.memory[key] = 0
 
         self._name = value
 
@@ -78,7 +69,10 @@ class Node (db.Model):
     def get_path (self, field):
 
         if self.root:
-            key = frozenset ((frozenset (self.root.uuid_path), field))
+            key = self.make_key (self.base.uuid, self.root.uuid, 'rev', 'name')
+            rev = cache.memory[key] if key in cache.memory else 0
+            key = self.make_key (self.base.uuid, self.root.uuid, field, rev)
+
             if key in cache.memory:
                 root_path = cache.memory[key]
             else:
@@ -87,6 +81,9 @@ class Node (db.Model):
             return root_path + [eval ('self.' + field)]
         else:
             return [eval ('self.' + field)]
+
+    def make_key (self, *args):
+        return frozenset ([(el,idx) for (idx,el) in enumerate (args)])
 
 ###############################################################################
 ###############################################################################
