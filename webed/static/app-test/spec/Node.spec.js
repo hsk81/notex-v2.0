@@ -4,7 +4,7 @@ describe ('NodeController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var controller = null, lock = create_lock ();
+    var controller = null, lock = create_lock (), timeout = 4096;
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ describe ('NodeController', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', 750);
+        waitsFor (function () { return lock.empty (); }, 'reset', timeout);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ describe ('NodeController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
+        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ describe ('NodeController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', 750);
+        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
     });
 
     ///////////////////////////////////////////////////////////////////////////
