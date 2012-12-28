@@ -9,9 +9,9 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from ..models import *
-from ..ext.db import db
+from ..ext import db
 from ..app import app
+from ..models import *
 from ..util import Q, jsonify
 
 import sys

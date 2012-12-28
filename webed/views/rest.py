@@ -7,9 +7,9 @@ from flask.views import MethodView
 from flask.globals import request
 from flask import Blueprint, session
 
-from ..models import *
+from ..ext import db
 from ..app import app
-from ..ext.db import db
+from ..models import *
 from ..util import Q, JSON, jsonify
 
 import sys

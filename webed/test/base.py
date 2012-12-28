@@ -3,9 +3,9 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from ..ext import db
 from ..app import app
 from ..config import TestConfig
-from ..ext import db
 
 import unittest
 
