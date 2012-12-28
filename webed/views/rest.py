@@ -9,7 +9,7 @@ from flask import Blueprint, session
 
 from ..models import *
 from ..app import app
-from ..ext import db, logger
+from ..ext.db import db
 from ..util import Q
 
 import sys

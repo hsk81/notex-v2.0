@@ -10,7 +10,7 @@ from flask import Blueprint, session
 from datetime import datetime
 
 from ..models import *
-from ..ext import db
+from ..ext.db import db
 from ..app import app
 from ..util import Q
 
