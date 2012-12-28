@@ -39,10 +39,8 @@ class Node (db.Model):
 
     @name.setter
     def name (self, value):
-
         key = cache.make_key (self.uuid, 'rev', 'name')
-        rev = cache.get (key) or 0; cache.set (key, rev+1)
-
+        rev = cache.get (key) or 0; cache.set (key, rev + 1)
         self._name = value
 
     _name = db.Column (db.Unicode (256), nullable=False, name='name')
