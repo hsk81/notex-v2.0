@@ -72,6 +72,7 @@ def render_main_template (template, page, debug):
 ###############################################################################
 
 @page.route ('/reset/')
+@cache.memoize (15, unless=lambda: app.debug)
 def reset (json=True):
 
     if app.debug or app.testing:
@@ -85,6 +86,7 @@ def reset (json=True):
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
+@cache.memoize (15, unless=lambda: app.debug)
 def refresh (json=True):
 
     db_refresh (); init ()
