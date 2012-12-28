@@ -25,7 +25,8 @@ setup (
         'Flask-Login',
         'Flask-DebugToolbar',
         'ipython',
-        'flup'
+        'ujson',
+        'flup',
     ]
 )
 

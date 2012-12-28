@@ -5,7 +5,6 @@ __author__ = 'hsk81'
 
 from flask.templating import render_template
 from flask.globals import request
-from flask.helpers import jsonify
 from flask import Blueprint, session
 
 from datetime import datetime
@@ -16,6 +15,7 @@ from ..app import app
 from ..util import Q
 
 import sys
+import ujson as JSON
 
 ###############################################################################
 ###############################################################################
@@ -78,14 +78,14 @@ def reset (json=True):
     else:
         result = dict (success=False)
 
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 @page.route ('/refresh/')
 def refresh (json=True):
 
     db_refresh (); init ();
     result = dict (success=True)
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 ###############################################################################
 ###############################################################################

@@ -5,8 +5,6 @@ __author__ = 'hsk81'
 
 from flask.views import MethodView
 from flask.globals import request
-from flask.helpers import jsonify
-
 from flask import Blueprint, session
 
 from ..models import *
@@ -15,7 +13,7 @@ from ..ext import db, logger
 from ..util import Q
 
 import sys
-import json as JSON
+import ujson as JSON
 
 ###############################################################################
 ###############################################################################
@@ -66,7 +64,7 @@ def node_create (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def node_read (leafs=True, json=True):
 
@@ -109,7 +107,7 @@ def node_read (leafs=True, json=True):
         rhs = map (lambda l: leaf2ext (l), leafs)
 
     result = dict (success=True, results=lhs + rhs)
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def node_update (leafs=True, json=True):
 
@@ -143,7 +141,7 @@ def node_update (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def node_delete (leafs=True, json=True):
 
@@ -162,7 +160,7 @@ def node_delete (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 ###############################################################################
 ###############################################################################
@@ -204,7 +202,7 @@ def leaf_create (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def leaf_read (json=True):
 
@@ -236,7 +234,7 @@ def leaf_read (json=True):
     leaf2exts = map (leaf2ext, leafs)
 
     result = dict (success=True, results=leaf2exts, total=total)
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def leaf_update (json=True):
 
@@ -270,7 +268,7 @@ def leaf_update (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def leaf_delete (json=True):
 
@@ -288,7 +286,7 @@ def leaf_delete (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 ###############################################################################
 ###############################################################################
@@ -336,7 +334,7 @@ def property_create (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def property_read (json=True):
 
@@ -367,7 +365,7 @@ def property_read (json=True):
     props = Q (query).all (**kwargs)
 
     result = dict (success=True, results=map (prop2ext, props))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def property_update (json=True):
 
@@ -410,7 +408,7 @@ def property_update (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 def property_delete (json=True):
 
@@ -428,7 +426,7 @@ def property_delete (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return jsonify (result) if json else result
+    return JSON.encode (result) if json else result
 
 ###############################################################################
 ###############################################################################

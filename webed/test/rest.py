@@ -6,7 +6,7 @@ __author__ = 'hsk81'
 from ..util import Linq
 from base import BaseTestCase
 
-import json as JSON
+import ujson as JSON
 
 ###############################################################################
 ###############################################################################
