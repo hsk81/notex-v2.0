@@ -4,7 +4,7 @@ describe ('LeafController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var controller = null, lock = create_lock (), timeout = 4096;
+    var controller = null, lock = create_lock ();
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ describe ('LeafController', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', timeout);
+        waitsFor (function () { return lock.empty (); }, 'reset');
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ describe ('LeafController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+        waitsFor (function () { return lock.empty (); }, 'unlock');
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ describe ('LeafController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+        waitsFor (function () { return lock.empty (); }, 'unlock');
     });
 
     ///////////////////////////////////////////////////////////////////////////

@@ -8,8 +8,7 @@ describe ('NodeTree', function () {
     ///////////////////////////////////////////////////////////////////////////
 
     var tree_ctrl = null, node_ctrl = null, leaf_ctrl = null;
-    var view = null, node_store = null, lock = create_lock ();
-    var timeout = 4096;
+    var view = null, store = null, lock = create_lock ();
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -33,10 +32,10 @@ describe ('NodeTree', function () {
         if (!leaf_ctrl) leaf_ctrl = window.app.getController ('Leaf');
         expect (leaf_ctrl).toBeTruthy (); leaf_ctrl.init ();
 
-        if (!node_store) node_store = window.app.getStore ('Nodes');
-        expect (node_store).toBeTruthy ();
+        if (!store) store = window.app.getStore ('Nodes');
+        expect (store).toBeTruthy ();
 
-        lock.init ([true]); node_store.load ({
+        lock.init ([true]); store.load ({
             scope: this, callback: function (recs, op) {
                 expect (recs).toBeTruthy ();
                 expect (recs.length).toBeGreaterThan (0);
@@ -46,14 +45,14 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+        waitsFor (function () { return lock.empty (); }, 'unlock');
     });
 
     afterEach (function () {
         view.destroy ();
         view = null;
         tree_ctrl = null;
-        node_store = null;
+        store = null;
         node_ctrl = null;
         leaf_ctrl = null;
 
@@ -63,7 +62,7 @@ describe ('NodeTree', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', timeout);
+        waitsFor (function () { return lock.empty (); }, 'reset');
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -92,13 +91,13 @@ describe ('NodeTree', function () {
                 }
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { create ({
             name: 'node',
             mime: 'application/project',
-            root: node_store.getRootNode ()
+            root: store.getRootNode ()
         })});
     });
 
@@ -125,13 +124,13 @@ describe ('NodeTree', function () {
                 }
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { create ({
             name: 'leaf',
             mime: 'text/plain',
-            root: node_store.getRootNode ()
+            root: store.getRootNode ()
         })});
     });
 
@@ -141,7 +140,7 @@ describe ('NodeTree', function () {
     it ('should read nodes', function () {
 
         function load (mime) {
-            lock.init ([true]); node_store.load ({
+            lock.init ([true]); store.load ({
                 scope: this, callback: function (recs, op) {
 
                     expect (recs).toBeTruthy ();
@@ -149,7 +148,7 @@ describe ('NodeTree', function () {
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
 
-                    var root = node_store.getRootNode ();
+                    var root = store.getRootNode ();
                     expect (root).toBeTruthy ();
                     var node = root.findChild ('mime', mime, true);
                     expect (node).toBeTruthy ();
@@ -158,7 +157,7 @@ describe ('NodeTree', function () {
                 }
             })
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { load ('application/project'); });
@@ -167,7 +166,7 @@ describe ('NodeTree', function () {
     it ('should read leafs', function () {
 
         function load (mime) {
-            lock.init ([true]); node_store.load ({
+            lock.init ([true]); store.load ({
                 scope: this, callback: function (recs, op) {
 
                     expect (recs).toBeTruthy ();
@@ -175,7 +174,7 @@ describe ('NodeTree', function () {
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
 
-                    var root = node_store.getRootNode ();
+                    var root = store.getRootNode ();
                     expect (root).toBeTruthy ();
                     var node = root.findChild ('mime', mime, true);
                     expect (node).toBeTruthy ();
@@ -184,7 +183,7 @@ describe ('NodeTree', function () {
                 }
             })
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { load ('text/plain'); });
@@ -215,7 +214,7 @@ describe ('NodeTree', function () {
                 }, for: node, to: {name:'node'}
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { update ('application/project'); });
@@ -245,7 +244,7 @@ describe ('NodeTree', function () {
                 }, for: leaf, to: {name:'leaf'}
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { update ('text/plain'); });
@@ -274,7 +273,7 @@ describe ('NodeTree', function () {
                 }, for: node
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { destroy ('application/project'); });
@@ -300,7 +299,7 @@ describe ('NodeTree', function () {
                 }, for: leaf
             });
 
-            waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+            waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
         runs (function () { destroy ('text/plain'); });

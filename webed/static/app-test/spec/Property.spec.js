@@ -4,7 +4,7 @@ describe ('PropertyController', function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var controller = null, lock = create_lock (), timeout = 4096;
+    var controller = null, lock = create_lock ();
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ describe ('PropertyController', function () {
             }
         });
 
-        waitsFor (function () { return lock.empty (); }, 'reset', timeout);
+        waitsFor (function () { return lock.empty (); }, 'reset');
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ describe ('PropertyController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+        waitsFor (function () { return lock.empty (); }, 'unlock');
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ describe ('PropertyController', function () {
             }
         }});
 
-        waitsFor (function () { return lock.empty (); }, 'unlock', timeout);
+        waitsFor (function () { return lock.empty (); }, 'unlock');
     });
 
     ///////////////////////////////////////////////////////////////////////////

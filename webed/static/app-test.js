@@ -23,7 +23,8 @@ Ext.onReady (function() {
 
         launch: function () {
             var env = jasmine.getEnv ();
-            env.updateInterval = 250;
+            env.updateInterval = 256;
+            env.timeoutInterval = 2048; //TODO: Verify!
 
             var reporter = new jasmine.HtmlReporter ();
             assert (reporter);
