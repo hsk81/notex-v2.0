@@ -24,6 +24,13 @@ page = Blueprint ('page', __name__)
 ###############################################################################
 ###############################################################################
 
+def is_dev (): return app.debug or app.testing
+def is_reset (): return 'reset' in request.args
+def is_refresh (): return 'refresh' in request.args
+
+###############################################################################
+###############################################################################
+
 @page.route ('/test/')
 def test ():
     return main (page='home', template='index_test.html')
@@ -43,7 +50,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-@cache.memoize (15, unless=lambda: app.debug or app.testing)
+@cache.memoize (15, unless=lambda: is_dev () or is_refresh ())
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
@@ -51,7 +58,8 @@ def main (page='home', template='index.html'):
 
     if app.session_cookie_name in request.cookies:
         session_cn = app.session_cookie_name
-        session_id = request.cookies[session_cn].split ('?')[0]
+        session_id = request.cookies[session_cn] \
+            .split ('?')[1].split ('&')[0].split ('=')[1]
     else:
         session_id = None
 
@@ -59,19 +67,23 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Session ID: %s" % session_id
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
-    if 'reset' in request.args: reset (json=False)
-    if 'refresh' in request.args: refresh (json=False)
+    if is_reset (): reset (json=False)
+    if is_refresh (): refresh (session_id, json=False)
 
-    return render_template (template, page=page, debug=app.debug)
+    @cache.memoize (60, unless=is_dev)
+    def cached_template (template, page, debug):
+        return render_template (template, page=page, debug=debug)
+
+    return cached_template (template, page=page, debug=app.debug)
 
 ###############################################################################
 ###############################################################################
 
 @page.route ('/reset/')
-@cache.memoize (15, unless=lambda: app.debug or app.testing)
+@cache.memoize (15, unless=is_dev)
 def reset (json=True):
 
-    if app.debug or app.testing:
+    if is_dev ():
         name = request.args['name'] if 'name' in request.args else None
         mail = request.args['mail'] if 'mail' in request.args else None
         db_reset (name, mail); init ()
@@ -82,8 +94,15 @@ def reset (json=True):
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
-@cache.memoize (15, unless=lambda: app.debug or app.testing)
-def refresh (json=True):
+@cache.memoize (15, unless=is_dev)
+def refresh (session_id, json=True):
+
+    assert session_id or not session_id
+
+    ##
+    ## The parameter `session_id` is required for per session caching; other -
+    ## wise a refresh would be global.
+    ##
 
     db_refresh (); init ()
     result = dict (success=True)
@@ -140,6 +159,12 @@ def init ():
         db.session.add (prop)
 
     db.session.commit ()
+
+    ##
+    ## Ensures that session is associated with a *new* base node; it's quite
+    ## important since it provides the anchor for the rest of the application.
+    ##
+
     session['root_uuid'] = base.uuid
 
 def init_article (root):
