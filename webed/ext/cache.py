@@ -12,15 +12,15 @@ import ujson as JSON
 ###############################################################################
 ###############################################################################
 
-cache = Cache (app)
+class WebedCache (Cache):
 
-def make_key (*args):
+    def make_key (self, *args):
 
-    string = JSON.encode (args)
-    hashed = hashlib.md5 (string)
-    return hashed.hexdigest ()
+        string = JSON.encode (args)
+        hashed = hashlib.md5 (string)
+        return hashed.hexdigest ()
 
-cache.make_key = make_key
+cache = WebedCache (app)
 
 ###############################################################################
 ###############################################################################
