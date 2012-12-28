@@ -3,12 +3,12 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from .admin import *
-from .db import *
-from .debugtoolbar import *
-from .logger import *
-from .login import *
-from .cache import *
+from .admin import admin
+from .db import db
+from .debugtoolbar import debugtoolbar
+from .logger import logger
+from .login import login
+from .cache import cache
 
 ###############################################################################
 ###############################################################################

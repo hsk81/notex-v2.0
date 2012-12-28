@@ -3,9 +3,9 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from .linq import *
-from .rx import *
-from .jsonify import *
+from .linq import Linq, Q
+from .rx import in_rxs
+from .jsonify import jsonify
 from .json import *
 
 ###############################################################################
