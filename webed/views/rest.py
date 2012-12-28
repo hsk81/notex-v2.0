@@ -5,12 +5,12 @@ __author__ = 'hsk81'
 
 from flask.views import MethodView
 from flask.globals import request
-from flask import Response, Blueprint, session
+from flask import Blueprint, session
 
 from ..models import *
 from ..app import app
 from ..ext.db import db
-from ..util import Q
+from ..util import Q, jsonify
 
 import sys
 import ujson as JSON
@@ -64,8 +64,7 @@ def node_create (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def node_read (leafs=True, json=True):
 
@@ -73,7 +72,7 @@ def node_read (leafs=True, json=True):
     assert base
 
     omit_top = request.args.get ('omit_top', False)
-    if omit_top: omit_top = JSON.loads (omit_top)
+    if omit_top: omit_top = JSON.decode (omit_top)
 
     kwargs = {}
     uuid = request.args.get ('uuid', None)
@@ -108,8 +107,7 @@ def node_read (leafs=True, json=True):
         rhs = map (lambda l: leaf2ext (l), leafs)
 
     result = dict (success=True, results=lhs + rhs)
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def node_update (leafs=True, json=True):
 
@@ -143,8 +141,7 @@ def node_update (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def node_delete (leafs=True, json=True):
 
@@ -163,8 +160,7 @@ def node_delete (leafs=True, json=True):
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
@@ -206,8 +202,7 @@ def leaf_create (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def leaf_read (json=True):
 
@@ -239,8 +234,7 @@ def leaf_read (json=True):
     leaf2exts = map (leaf2ext, leafs)
 
     result = dict (success=True, results=leaf2exts, total=total)
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def leaf_update (json=True):
 
@@ -274,8 +268,7 @@ def leaf_update (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def leaf_delete (json=True):
 
@@ -293,8 +286,7 @@ def leaf_delete (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
@@ -342,8 +334,7 @@ def property_create (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def property_read (json=True):
 
@@ -374,8 +365,7 @@ def property_read (json=True):
     props = Q (query).all (**kwargs)
 
     result = dict (success=True, results=map (prop2ext, props))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def property_update (json=True):
 
@@ -418,8 +408,7 @@ def property_update (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 def property_delete (json=True):
 
@@ -437,8 +426,7 @@ def property_delete (json=True):
     db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
-    return Response (JSON.encode (result), mimetype='application/json') \
-        if json else result
+    return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
