@@ -44,7 +44,7 @@ class Property (db.Model):
 
     def __repr__ (self):
 
-        return u'<Property@%r: %r>' % (self.id, self.name)
+        return u'<Property@%x: %s>' % (self.id, self.name)
 
 ###############################################################################
 ###############################################################################

@@ -58,7 +58,7 @@ class Node (db.Model):
 
     def __repr__ (self):
 
-        return u'<Node&%05x: %s>' % (self.id, self.name)
+        return u'<Node@%x: %s>' % (self.id, self.name)
 
     def get_path (self, field):
 
