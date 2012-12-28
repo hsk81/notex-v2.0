@@ -43,7 +43,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-@cache.memoize (15, unless=lambda: app.debug)
+@cache.memoize (15, unless=lambda: app.debug or app.testing)
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
@@ -62,16 +62,13 @@ def main (page='home', template='index.html'):
     if 'reset' in request.args: reset (json=False)
     if 'refresh' in request.args: refresh (json=False)
 
-    return render_main_template (template, page=page, debug=app.debug)
-
-@cache.memoize (60, unless=lambda: app.debug)
-def render_main_template (template, page, debug):
-    return render_template (template, page=page, debug=debug)
+    return render_template (template, page=page, debug=app.debug)
 
 ###############################################################################
 ###############################################################################
 
 @page.route ('/reset/')
+@cache.memoize (15, unless=lambda: app.debug or app.testing)
 def reset (json=True):
 
     if app.debug or app.testing:
@@ -85,6 +82,7 @@ def reset (json=True):
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
+@cache.memoize (15, unless=lambda: app.debug or app.testing)
 def refresh (json=True):
 
     db_refresh (); init ()
