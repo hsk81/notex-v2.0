@@ -6,10 +6,21 @@ __author__ = 'hsk81'
 from flask.ext.cache import Cache
 from ..app import app
 
+import hashlib
+import ujson as JSON
+
 ###############################################################################
 ###############################################################################
 
 cache = Cache (app)
+
+def make_key (*args):
+
+    string = JSON.encode (args)
+    hashed = hashlib.md5 (string)
+    return hashed.hexdigest ()
+
+cache.make_key = make_key
 
 ###############################################################################
 ###############################################################################

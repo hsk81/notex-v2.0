@@ -9,9 +9,6 @@ from uuid import uuid4 as uuid_random
 from ..ext.db import db
 from ..ext.cache import cache
 
-import hashlib
-import ujson as JSON
-
 ###############################################################################
 ###############################################################################
 
@@ -43,7 +40,7 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
 
-        key = self.make_key (self.uuid, 'rev', 'name')
+        key = cache.make_key (self.uuid, 'rev', 'name')
         rev = cache.get (key) or 0; cache.set (key, rev+1)
 
         self._name = value
@@ -66,20 +63,14 @@ class Node (db.Model):
     def get_path (self, field):
 
         if self.root:
-            key = self.make_key (self.root.uuid, 'rev', field)
+            key = cache.make_key (self.root.uuid, 'rev', field)
             rev = cache.get (key) or 0
-            key = self.make_key (self.root.uuid, field, rev)
+            key = cache.make_key (self.root.uuid, field, rev)
             val = cache.get (key) or self.root.get_path (field)
 
             return val + [eval ('self.' + field)]
         else:
             return [eval ('self.' + field)]
-
-    def make_key (self, *args):
-
-        string = JSON.encode (args)
-        hashed = hashlib.md5 (string)
-        return hashed.hexdigest ()
 
 ###############################################################################
 ###############################################################################
