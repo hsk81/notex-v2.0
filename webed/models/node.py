@@ -3,10 +3,12 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from sqlalchemy.ext.hybrid import hybrid_property
 from uuid import uuid4 as uuid_random
 from ..ext import db, cache
 
-from sqlalchemy.ext.hybrid import hybrid_property
+import hashlib
+import ujson as JSON
 
 ###############################################################################
 ###############################################################################
@@ -29,7 +31,6 @@ class Node (db.Model):
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref ('base', remote_side=id))
 
-    uuid_path = db.Column (db.PickleType, nullable=False, unique=True)
     uuid = db.Column (db.String (36), nullable=False, unique=True)
     mime = db.Column (db.String (256), nullable=True)
 
@@ -40,12 +41,11 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
 
-        if self.base:
-            key = self.make_key (self.base.uuid, self.uuid, 'rev', 'name')
-            if key in cache.memory:
-                cache.memory[key]+= 1
-            else:
-                cache.memory[key] = 0
+        key = self.make_key (self.uuid, 'rev', 'name')
+        if key in cache.memory:
+            cache.memory[key]+= 1
+        else:
+            cache.memory[key] = 0
 
         self._name = value
 
@@ -60,8 +60,6 @@ class Node (db.Model):
         self.name = unicode (name) if name is not None else None
         self.mime = mime if mime else 'application/node'
 
-        self.uuid_path = self.get_path (field='uuid')
-
     def __repr__ (self):
 
         return u'<Node&%05x: %s>' % (self.id, self.name)
@@ -69,9 +67,9 @@ class Node (db.Model):
     def get_path (self, field):
 
         if self.root:
-            key = self.make_key (self.base.uuid, self.root.uuid, 'rev', 'name')
+            key = self.make_key (self.root.uuid, 'rev', field)
             rev = cache.memory[key] if key in cache.memory else 0
-            key = self.make_key (self.base.uuid, self.root.uuid, field, rev)
+            key = self.make_key (self.root.uuid, field, rev)
 
             if key in cache.memory:
                 root_path = cache.memory[key]
@@ -83,7 +81,10 @@ class Node (db.Model):
             return [eval ('self.' + field)]
 
     def make_key (self, *args):
-        return frozenset ([(el,idx) for (idx,el) in enumerate (args)])
+
+        string = JSON.encode (args)
+        hashed = hashlib.md5 (string)
+        return hashed.hexdigest ()
 
 ###############################################################################
 ###############################################################################
