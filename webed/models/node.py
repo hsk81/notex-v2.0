@@ -5,7 +5,9 @@ __author__ = 'hsk81'
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from uuid import uuid4 as uuid_random
-from ..ext import db, cache
+
+from ..ext.db import db
+from ..ext.cache import cache
 
 import hashlib
 import ujson as JSON
@@ -42,10 +44,7 @@ class Node (db.Model):
     def name (self, value):
 
         key = self.make_key (self.uuid, 'rev', 'name')
-        if key in cache.memory:
-            cache.memory[key]+= 1
-        else:
-            cache.memory[key] = 0
+        rev = cache.get (key) or 0; cache.set (key, rev+1)
 
         self._name = value
 
@@ -68,15 +67,11 @@ class Node (db.Model):
 
         if self.root:
             key = self.make_key (self.root.uuid, 'rev', field)
-            rev = cache.memory[key] if key in cache.memory else 0
+            rev = cache.get (key) or 0
             key = self.make_key (self.root.uuid, field, rev)
+            val = cache.get (key) or self.root.get_path (field)
 
-            if key in cache.memory:
-                root_path = cache.memory[key]
-            else:
-                root_path = cache.memory[key] = self.root.get_path (field)
-
-            return root_path + [eval ('self.' + field)]
+            return val + [eval ('self.' + field)]
         else:
             return [eval ('self.' + field)]
 

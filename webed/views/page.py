@@ -10,7 +10,7 @@ from flask import Blueprint, session
 from datetime import datetime
 
 from ..models import *
-from ..ext import db, cache
+from ..ext import db
 from ..app import app
 from ..util import Q
 
@@ -101,8 +101,6 @@ def db_reset (name=None, mail=None):
 
     db.session.add (user)
     db.session.commit ()
-
-    cache.memory.clear ()  ## TODO: Use memcached/redis!
 
 def db_refresh ():
 

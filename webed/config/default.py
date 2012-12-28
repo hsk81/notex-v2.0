@@ -20,6 +20,10 @@ class DefaultConfig:
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/webed.db'
 
+    CACHE_TYPE = 'memcached'
+    CACHE_KEY_PREFIX = 'webed'
+    CACHE_MEMCACHED_SERVERS = ['127.0.0.1']
+
     LOG_FILE = '../webed.log'
 
     ##

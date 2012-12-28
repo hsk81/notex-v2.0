@@ -23,8 +23,10 @@ setup (
         'Flask-SQLAlchemy',
         'Flask-Admin',
         'Flask-Login',
+        'Flask-Cache',
         'Flask-DebugToolbar',
         'ipython',
+        'pylibmc',
         'ujson',
         'flup',
     ]
