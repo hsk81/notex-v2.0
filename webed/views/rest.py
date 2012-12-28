@@ -10,10 +10,9 @@ from flask import Blueprint, session
 from ..models import *
 from ..app import app
 from ..ext.db import db
-from ..util import Q, jsonify
+from ..util import Q, JSON, jsonify
 
 import sys
-import ujson as JSON
 
 ###############################################################################
 ###############################################################################

@@ -5,9 +5,9 @@ __author__ = 'hsk81'
 
 from flask.ext.cache import Cache
 from ..app import app
+from ..util import JSON
 
 import hashlib
-import ujson as JSON
 
 ###############################################################################
 ###############################################################################
