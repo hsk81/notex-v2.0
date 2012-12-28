@@ -82,7 +82,7 @@ def reset (json=True):
 @page.route ('/refresh/')
 def refresh (json=True):
 
-    db_refresh (); init ();
+    db_refresh (); init ()
     result = dict (success=True)
     return jsonify (result) if json else result
 
