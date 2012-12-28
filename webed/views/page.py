@@ -9,9 +9,9 @@ from flask import Blueprint, session
 
 from datetime import datetime
 
-from ..ext import db
 from ..app import app
 from ..models import *
+from ..ext import db, cache
 from ..util import Q, jsonify
 
 import sys
@@ -43,6 +43,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
+@cache.memoize (15, unless=lambda: app.debug)
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
@@ -61,7 +62,11 @@ def main (page='home', template='index.html'):
     if 'reset' in request.args: reset (json=False)
     if 'refresh' in request.args: refresh (json=False)
 
-    return render_template (template, page=page, debug=app.debug)
+    return render_main_template (template, page=page, debug=app.debug)
+
+@cache.memoize (60, unless=lambda: app.debug)
+def render_main_template (template, page, debug):
+    return render_template (template, page=page, debug=debug)
 
 ###############################################################################
 ###############################################################################
