@@ -45,7 +45,7 @@ class Node (db.Model):
 
         self._name = value
 
-    _name = db.Column (db.Unicode (256), nullable=False)
+    _name = db.Column (db.Unicode (256), nullable=False, name='name')
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
