@@ -112,21 +112,6 @@ def db_refresh ():
             db.session.delete (base)
             db.session.commit ()
 
-            ##
-            ## TODO: Use faster invalidation of memcached/redit!
-            ##
-
-            def only_revs (frozen_set):
-
-                sorted_set = sorted (frozen_set, key=lambda (_,pos): pos)
-                args = map (lambda (el,_): el, sorted_set)
-                base_uuid, root_uuid, field, value = args
-
-                return base_uuid == base.uuid and field == 'rev'
-
-            for key in filter (only_revs, cache.memory):
-                del cache.memory[key] ## invalidate revs
-
 def init ():
 
     base = Node ('root', root=None, mime='application/root')
