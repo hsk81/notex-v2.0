@@ -18,7 +18,10 @@ Ext.define ('Webed.controller.LeafList', {
         this.control ({
             'leaf-list tool[action=refresh]': { click: this.refresh },
             'leaf-list tool[action=settings]': { click: this.settings },
-            'leaf-list': { itemclick: this.itemclick }
+            'leaf-list': {
+                itemclick: this.itemclick,
+                afterrender: this.afterrender
+            }
         });
 
         this.application.on ({
@@ -130,6 +133,19 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.fireEvent ('select_node', this, {
             record: record
         });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    afterrender: function (panel, eOpts) {
+        var store = this.getLeafsStore ();
+        assert (store);
+        var total = store.getTotalCount ();
+        assert (total >= 0);
+        if (total == 0) {
+            setTimeout (function() { store.load (); }, 125);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

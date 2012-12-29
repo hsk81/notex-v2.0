@@ -51,5 +51,7 @@ Ext.define ('Webed.view.LeafList', {
         dock: 'bottom',
         displayInfo: false,
         inputItemWidth: 40
-    }]
+    }],
+
+    collapsed: false
 });

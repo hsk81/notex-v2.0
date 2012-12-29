@@ -66,5 +66,5 @@ Ext.define ('Webed.store.Nodes', {
         node.on ('expand', on_expand);
     },
 
-    autoLoad: true
+    autoLoad: false
 });

@@ -20,5 +20,5 @@ Ext.define ('Webed.store.Leafs', {
         leaf.set ('iconCls', icon);
     },
 
-    autoLoad: {start: 0, limit: 25}
+    autoLoad: false
 });
