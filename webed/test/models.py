@@ -38,8 +38,8 @@ class ModelsTestCase (BaseTestCase):
         self.assertIs (node.root, base)
         self.assertIs (leaf.root, node)
 
-        self.assertEqual (base.subnodes.all (), [info, node, leaf])
-        self.assertEqual (base.nodes.all (), [info, node])
+        self.assertEqual (base.subnodes.all (), [leaf, node, info])
+        self.assertEqual (base.nodes.all (), [node, info])
         self.assertEqual (base.leafs.all (), [info])
 
         self.assertEqual (node.subnodes.all (), [])
@@ -54,7 +54,7 @@ class ModelsTestCase (BaseTestCase):
         base, info, node, leaf = self.create ()
         self.commit ([base, info, node, leaf])
 
-        info, node = base.nodes.all ()
+        node, info = base.nodes.all ()
         self.assertIsNotNone (info)
         self.assertIsNotNone (node)
 
@@ -231,7 +231,7 @@ class PropertyTestCase (BaseTestCase):
         node = Node ('node', root=None)
         self.db.session.add (node)
 
-        prop = LargeBinaryProperty ('large-binary', data=u'...', node=node)
+        prop = LargeBinaryProperty ('large-binary', data= '...', node=node)
         self.db.session.add (prop)
         self.db.session.commit ()
 
