@@ -350,14 +350,14 @@ def property_read (json=True):
     name = request.args.get ('name', None)
     if name: kwargs['name'] = name
     data = request.args.get ('data', None)
-    if data: kwargs['data'] = data
+    assert not data ## since no DB index
     size = request.args.get ('size', None)
-    if size: kwargs['size'] = size
+    assert not size ## since no DB column
 
     node_uuid = request.args.get ('node_uuid', None)
     if node_uuid:
-        query = base.subprops.join (Node, Property.node).filter (
-            Node.uuid==node_uuid).back ()
+        query = base.subprops.join (Node, Property.node) \
+            .filter (Node.uuid==node_uuid).back ()
     else:
         query = base.subprops
 
