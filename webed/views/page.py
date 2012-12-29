@@ -50,7 +50,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-@cache.memoize (15, unless=lambda: is_dev () or is_refresh ())
+#@cache.memoize (15, unless=lambda: is_dev () or is_refresh ())
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
@@ -70,9 +70,22 @@ def main (page='home', template='index.html'):
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (session_id, json=False)
 
-    @cache.memoize (60, unless=is_dev)
+    #@cache.memoize (60, unless=is_dev)
     def cached_template (template, page, debug):
-        return render_template (template, page=page, debug=debug)
+
+        ##
+        ## TODO: The FlaskCache.memoize decorator is trouble on timeout; fix
+        ##       with own decorator and put it to *WebedCache.memoize*!
+        ##
+
+        key = cache.make_key ('render_template', template, page, debug)
+        val = cache.get (key)
+
+        if not val:
+            val = render_template (template, page=page, debug=debug)
+            cache.set (key, val, timeout=15)
+
+        return val
 
     return cached_template (template, page=page, debug=app.debug)
 
@@ -80,7 +93,7 @@ def main (page='home', template='index.html'):
 ###############################################################################
 
 @page.route ('/reset/')
-@cache.memoize (15, unless=is_dev)
+#@cache.memoize (15, unless=is_dev)
 def reset (json=True):
 
     if is_dev ():
@@ -94,7 +107,7 @@ def reset (json=True):
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
-@cache.memoize (15, unless=is_dev)
+#@cache.memoize (15, unless=is_dev)
 def refresh (session_id=None, json=True):
 
     assert session_id or not session_id
