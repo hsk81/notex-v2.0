@@ -104,7 +104,7 @@ class StringProperty (Property):
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'),
-        db.ForeignKey ('property.id'),
+        db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
@@ -136,7 +136,7 @@ class TextProperty (Property):
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('text_property_id_seq'),
-        db.ForeignKey ('property.id'),
+        db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
@@ -168,7 +168,7 @@ class LargeBinaryProperty (Property):
 
     large_binary_property_id = db.Column (db.Integer,
         db.Sequence ('large_binary_property_id_seq'),
-        db.ForeignKey ('property.id'),
+        db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
