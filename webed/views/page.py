@@ -95,7 +95,7 @@ def reset (json=True):
 
 @page.route ('/refresh/')
 @cache.memoize (15, unless=is_dev)
-def refresh (session_id, json=True):
+def refresh (session_id=None, json=True):
 
     assert session_id or not session_id
 
