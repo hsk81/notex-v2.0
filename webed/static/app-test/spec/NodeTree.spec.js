@@ -57,7 +57,7 @@ describe ('NodeTree', function () {
         leaf_ctrl = null;
 
         lock.init ([true]); Ext.Ajax.request ({
-            url: '/refresh/', callback: function (opt, success, xhr) {
+            url: '/reset/', callback: function (opt, success, xhr) {
                 expect (success).toBeTruthy (); lock.pop ();
             }
         });
