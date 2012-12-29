@@ -50,7 +50,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-@cache.memoize (300, unless=lambda: is_dev () or is_refresh ())
+@cache.memoize (15, unless=lambda: is_dev () or is_refresh ())
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
@@ -70,7 +70,7 @@ def main (page='home', template='index.html'):
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (session_id, json=False)
 
-    @cache.memoize (900, unless=is_dev)
+    @cache.memoize (60, unless=is_dev)
     def cached_template (template, page, debug):
         return render_template (template, page=page, debug=debug)
 
@@ -101,7 +101,7 @@ def refresh (session_id=None, json=True):
 
     ##
     ## The parameter `session_id` is required for per session caching; other -
-    ## wise a refresh would be global.
+    ## wise a refresh would be globally cached, which is *not* desired here!
     ##
 
     db_refresh (); init ()
