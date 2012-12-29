@@ -38,23 +38,26 @@ class ModelsTestCase (BaseTestCase):
         self.assertIs (node.root, base)
         self.assertIs (leaf.root, node)
 
-        self.assertEqual (base.subnodes.all (), [leaf, node, info])
-        self.assertEqual (base.nodes.all (), [node, info])
-        self.assertEqual (base.leafs.all (), [info])
+        self.assertEqual (frozenset (base.subnodes.all ()),
+            frozenset ([info, leaf, node]))
+        self.assertEqual (frozenset (base.nodes.all ()),
+            frozenset ([info, node]))
+        self.assertEqual (frozenset (base.leafs.all ()),
+            frozenset ([info]))
 
-        self.assertEqual (node.subnodes.all (), [])
-        self.assertEqual (node.nodes.all (), [leaf])
-        self.assertEqual (node.leafs.all (), [leaf])
+        self.assertEqual (frozenset (node.subnodes.all ()), frozenset ([]))
+        self.assertEqual (frozenset (node.nodes.all ()), frozenset ([leaf]))
+        self.assertEqual (frozenset (node.leafs.all ()), frozenset ([leaf]))
 
-        self.assertEqual (leaf.subnodes.all (), [])
-        self.assertEqual (leaf.nodes.all (), [])
-        self.assertEqual (leaf.leafs.all (), [])
+        self.assertEqual (frozenset (leaf.subnodes.all ()), frozenset ([]))
+        self.assertEqual (frozenset (leaf.nodes.all ()), frozenset ([]))
+        self.assertEqual (frozenset (leaf.leafs.all ()), frozenset ([]))
 
     def test_polymorphic (self):
         base, info, node, leaf = self.create ()
         self.commit ([base, info, node, leaf])
 
-        node, info = base.nodes.all ()
+        info, node = sorted (base.nodes.all (), key=lambda n: n.type)
         self.assertIsNotNone (info)
         self.assertIsNotNone (node)
 
