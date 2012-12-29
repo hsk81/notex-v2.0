@@ -3,9 +3,11 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from sqlalchemy.ext.hybrid import hybrid_property
 from uuid import uuid4 as uuid_random
 from node import Node
-from ..ext import db
+
+from ..ext.db import db
 
 ###############################################################################
 ###############################################################################
@@ -32,18 +34,41 @@ class Property (db.Model):
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.base_id')
 
-    uuid = db.Column (db.String (36), nullable=False, index=True, unique=True)
-    mime = db.Column (db.String (256), nullable=False, index=True)
-    name = db.Column (db.String (256), nullable=False, index=True)
+    _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
+        name = 'uuid')
+    _mime = db.Column (db.String (256), nullable=False, index=True,
+        name = 'mime')
+    _name = db.Column (db.String (256), nullable=False, index=True,
+        name = 'name')
+
+    @hybrid_property
+    def uuid (self):
+        return self._uuid
+
+    @hybrid_property
+    def mime (self):
+        return self._mime
+
+    @mime.setter
+    def mime (self, value):
+        self._mime = value
+
+    @hybrid_property
+    def name (self):
+        return self._name
+
+    @name.setter
+    def name (self, value):
+        self._name = value
 
     def __init__ (self, name, node, mime=None, uuid=None):
 
         self.base = node.base if node and node.base else node
         self.node = node
 
-        self.uuid = uuid if uuid else str (uuid_random ())
-        self.mime = mime if mime else 'application/property'
-        self.name = name
+        self._uuid = uuid if uuid else str (uuid_random ())
+        self._mime = mime if mime else 'application/property'
+        self._name = name
 
     def __repr__ (self):
 
