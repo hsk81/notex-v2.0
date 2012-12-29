@@ -21,6 +21,7 @@ setup (
         'Flask',
         'Flask-Script',
         'Flask-SQLAlchemy',
+        'Flask-Psycopg2',
         'Flask-Admin',
         'Flask-Login',
         'Flask-Cache',
