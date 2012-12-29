@@ -33,10 +33,24 @@ class Node (db.Model):
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref ('base', remote_side=id))
 
-    uuid = db.Column (db.String (36), nullable=False, index=True, unique=True)
-    mime = db.Column (db.String (256), nullable=False, index=True)
+    _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
+        name = 'uuid')
+    _mime = db.Column (db.String (256), nullable=False, index=True,
+        name = 'mime')
     _name = db.Column (db.Unicode (256), nullable=False, index=True,
-        name='name')
+        name = 'name')
+
+    @hybrid_property
+    def uuid (self):
+        return self._uuid
+
+    @hybrid_property
+    def mime (self):
+        return self._mime
+
+    @mime.setter
+    def mime (self, value):
+        self._mime = value
 
     @hybrid_property
     def name (self):
@@ -54,9 +68,9 @@ class Node (db.Model):
         self.base = root.base if root and root.base else root
         self.root = root
 
-        self.uuid = uuid if uuid else str (uuid_random ())
-        self.name = unicode (name) if name is not None else None
-        self.mime = mime if mime else 'application/node'
+        self._uuid = uuid if uuid else str (uuid_random ())
+        self._name = unicode (name) if name is not None else None
+        self._mime = mime if mime else 'application/node'
 
     def __repr__ (self):
 
