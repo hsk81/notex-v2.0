@@ -16,22 +16,27 @@ class Node (db.Model):
     __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
 
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
-    type = db.Column ('type', db.String (16))
+    type = db.Column ('type', db.String (16), nullable=False, index=True)
 
-    root_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'))
+    root_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'),
+        index=True)
+    base_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'),
+        index=True)
+
     nodes = db.relationship ('Node',
         cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.root_id',
         backref=db.backref ('root', remote_side=id))
 
-    base_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'))
     subnodes = db.relationship ('Node',
         cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref ('base', remote_side=id))
 
-    uuid = db.Column (db.String (36), nullable=False, unique=True)
-    mime = db.Column (db.String (256), nullable=True)
+    uuid = db.Column (db.String (36), nullable=False, index=True, unique=True)
+    mime = db.Column (db.String (256), nullable=False, index=True)
+    _name = db.Column (db.Unicode (256), nullable=False, index=True,
+        name='name')
 
     @hybrid_property
     def name (self):
@@ -43,8 +48,6 @@ class Node (db.Model):
             key = cache.make_key (self.uuid, 'rev', 'name')
             rev = cache.get (key) or 0; cache.set (key, rev + 1)
             self._name = value
-
-    _name = db.Column (db.Unicode (256), nullable=False, name='name')
 
     def __init__ (self, name, root, mime=None, uuid=None):
 

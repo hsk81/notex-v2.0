@@ -20,20 +20,21 @@ class Property (db.Model):
     type = db.Column ('type', db.String (24))
 
     node_id = db.Column (db.Integer,
-        db.ForeignKey (Node.id, ondelete='CASCADE'), nullable=False)
+        db.ForeignKey (Node.id, ondelete='CASCADE'), index=True, nullable=False)
+    base_id = db.Column (db.Integer,
+        db.ForeignKey (Node.id, ondelete='CASCADE'), index=True, nullable=False)
+
     node = db.relationship (Node, backref=db.backref ('props',
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.node_id')
 
-    base_id = db.Column (db.Integer,
-        db.ForeignKey (Node.id, ondelete='CASCADE'), nullable=True)
     base = db.relationship (Node, backref=db.backref ('subprops',
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.base_id')
 
-    uuid = db.Column (db.String (36), nullable=False, unique=True)
-    mime = db.Column (db.String (256), nullable=False)
-    name = db.Column (db.String (256), nullable=False)
+    uuid = db.Column (db.String (36), nullable=False, index=True, unique=True)
+    mime = db.Column (db.String (256), nullable=False, index=True)
+    name = db.Column (db.String (256), nullable=False, index=True)
 
     def __init__ (self, name, node, mime=None, uuid=None):
 
