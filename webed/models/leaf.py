@@ -15,6 +15,8 @@ class Leaf (Node):
     leaf_id = db.Column (db.Integer, db.Sequence ('leaf_id_seq'),
         db.ForeignKey ('node.id', ondelete='CASCADE'), primary_key=True)
 
+    ###########################################################################
+
     def __init__ (self, name, root, mime=None, uuid=None):
 
         super (Leaf, self).__init__ (name, root, mime=mime if mime \

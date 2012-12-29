@@ -21,6 +21,8 @@ class Property (db.Model):
         primary_key=True)
     type = db.Column ('type', db.String (24))
 
+    ###########################################################################
+
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id, ondelete='CASCADE'), index=True, nullable=False)
     base_id = db.Column (db.Integer,
@@ -33,6 +35,8 @@ class Property (db.Model):
     base = db.relationship (Node, backref=db.backref ('subprops',
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.base_id')
+
+    ###########################################################################
 
     _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
         name = 'uuid')
@@ -60,6 +64,8 @@ class Property (db.Model):
     @name.setter
     def name (self, value):
         self._name = value
+
+    ###########################################################################
 
     def __init__ (self, name, node, mime=None, uuid=None):
 

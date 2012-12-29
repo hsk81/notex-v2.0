@@ -18,6 +18,8 @@ class Node (db.Model):
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
     type = db.Column ('type', db.String (16), nullable=False, index=True)
 
+    ###########################################################################
+
     root_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'),
         index=True)
     base_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'),
@@ -32,6 +34,8 @@ class Node (db.Model):
         cascade='all, delete-orphan', lazy='dynamic',
         primaryjoin='Node.id==Node.base_id',
         backref=db.backref ('base', remote_side=id))
+
+    ###########################################################################
 
     _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
         name = 'uuid')
@@ -63,6 +67,8 @@ class Node (db.Model):
             rev = cache.get (key) or 0; cache.set (key, rev + 1)
             self._name = value
 
+    ###########################################################################
+
     def __init__ (self, name, root, mime=None, uuid=None):
 
         self.base = root.base if root and root.base else root
@@ -75,6 +81,8 @@ class Node (db.Model):
     def __repr__ (self):
 
         return u'<Node@%x: %s>' % (self.id, self.name)
+
+    ###########################################################################
 
     def get_path (self, field):
 
