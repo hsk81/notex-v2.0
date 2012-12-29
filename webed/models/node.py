@@ -63,13 +63,9 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
 
-        ##
-        ## TODO: Use (long) timeout for 'rev'!?
-        ##
-
         if self._name != value:
             key = cache.make_key (self.uuid, 'rev', 'name')
-            rev = cache.get (key) or 0; cache.set (key, rev + 1)
+            rev = cache.get (key) or 0; cache.set (key, rev + 1, timeout=75)
             self._name = value
 
     ###########################################################################
@@ -92,14 +88,15 @@ class Node (db.Model):
     def get_path (self, field):
 
         if self.root:
-            key = cache.make_key (self.root.uuid, 'rev', field)
-            rev = cache.get (key) or 0
-            key = cache.make_key (self.root.uuid, field, rev)
-            val = cache.get (key) or self.root.get_path (field)
+            rev_key = cache.make_key (self.root.uuid, 'rev', field)
+            rev = cache.get (rev_key) or 0
+            val_key = cache.make_key (self.root.uuid, field, rev)
+            val = cache.get (val_key)
 
-            ##
-            ## TODO: Where the heck is cache.set (key, val)? Fix!
-            ##
+            if not val:
+                val = self.root.get_path (field)
+                cache.set (val_key, val, timeout=60)
+                cache.set (rev_key, rev, timeout=75)
 
             return val + [eval ('self.' + field)]
         else:
