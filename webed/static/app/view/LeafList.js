@@ -53,5 +53,5 @@ Ext.define ('Webed.view.LeafList', {
         inputItemWidth: 40
     }],
 
-    collapsed: false
+    collapsed: true
 });
