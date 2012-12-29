@@ -19,12 +19,14 @@ class Property (db.Model):
         primary_key=True)
     type = db.Column ('type', db.String (24))
 
-    node_id = db.Column (db.Integer, db.ForeignKey (Node.id), nullable=False)
+    node_id = db.Column (db.Integer,
+        db.ForeignKey (Node.id, ondelete='CASCADE'), nullable=False)
     node = db.relationship (Node, backref=db.backref ('props',
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.node_id')
 
-    base_id = db.Column (db.Integer, db.ForeignKey (Node.id), nullable=True)
+    base_id = db.Column (db.Integer,
+        db.ForeignKey (Node.id, ondelete='CASCADE'), nullable=True)
     base = db.relationship (Node, backref=db.backref ('subprops',
         cascade='all, delete-orphan', lazy='dynamic'),
         primaryjoin='Node.id==Property.base_id')

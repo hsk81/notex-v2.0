@@ -13,7 +13,7 @@ class Leaf (Node):
     __mapper_args__ = {'polymorphic_identity': 'leaf'}
 
     leaf_id = db.Column (db.Integer, db.Sequence ('leaf_id_seq'),
-        db.ForeignKey ('node.id'), primary_key=True)
+        db.ForeignKey ('node.id', ondelete='CASCADE'), primary_key=True)
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
