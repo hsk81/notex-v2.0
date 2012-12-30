@@ -50,15 +50,13 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-#@cache.memoize (15, unless=lambda: is_dev () or is_refresh ())
 def main (page='home', template='index.html'):
 
     if not 'timestamp' in session: init ()
     session['timestamp'] = datetime.now ()
 
     if app.session_cookie_name in request.cookies:
-        session_cn = app.session_cookie_name
-        session_id = request.cookies[session_cn] \
+        session_id = request.cookies[app.session_cookie_name] \
             .split ('?')[1].split ('&')[0].split ('=')[1]
     else:
         session_id = None
@@ -68,24 +66,12 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
     if is_reset (): reset (json=False)
-    if is_refresh (): refresh (session_id, json=False)
+    if is_refresh (): refresh (json=False)
 
-    #@cache.memoize (60, unless=is_dev)
+    @cache.memoize (60, name='views.main.cached_template', unless=is_dev)
     def cached_template (template, page, debug):
 
-        ##
-        ## TODO: The FlaskCache.memoize decorator is trouble on timeout; fix
-        ##       with own decorator and put it to *WebedCache.memoize*!
-        ##
-
-        key = cache.make_key ('render_template', template, page, debug)
-        val = cache.get (key)
-
-        if not val:
-            val = render_template (template, page=page, debug=debug)
-            cache.set (key, val, timeout=15)
-
-        return val
+        return render_template (template, page=page, debug=debug)
 
     return cached_template (template, page=page, debug=app.debug)
 
@@ -93,10 +79,14 @@ def main (page='home', template='index.html'):
 ###############################################################################
 
 @page.route ('/reset/')
-#@cache.memoize (15, unless=is_dev)
+@cache.memoize (900, name='views.reset', unless=is_dev)
 def reset (json=True):
-
-    if is_dev ():
+    """
+    Resets the database and is therefore a very dangerous function; so it's
+    protected by an authentication mechanism plus it's only effective once
+    every 15 minutes (if the authentication protection is circumvented).
+    """
+    if is_dev (): ## TODO: Replace with authentication!
         name = request.args['name'] if 'name' in request.args else None
         mail = request.args['mail'] if 'mail' in request.args else None
         db_reset (name, mail); init ()
@@ -107,16 +97,13 @@ def reset (json=True):
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
-#@cache.memoize (15, unless=is_dev)
-def refresh (session_id=None, json=True):
-
-    assert session_id or not session_id
-
-    ##
-    ## The parameter `session_id` is required for per session caching; other -
-    ## wise a refresh would be globally cached, which is *not* desired here!
-    ##
-
+@cache.memoize (900, name='views.refresh', session=session, unless=is_dev)
+def refresh (json=True):
+    """
+    Resets the session: If a particular user wants to get rid of her own data
+    and initialize the application to a clean state then this function should
+    be called. To avoid misuse it's effective only once every 15 minutes.
+    """
     db_refresh (); init ()
     result = dict (success=True)
     return jsonify (result) if json else result
