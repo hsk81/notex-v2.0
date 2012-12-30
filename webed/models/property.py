@@ -75,7 +75,7 @@ class Property (db.Model):
 
         for uuid in self.node.get_path ('uuid'):
             key = cache.make_key (uuid, 'rev', 'size', name='data')
-            rev = cache.get (key) or 0; cache.set (key, rev+1, timeout=60)
+            rev = cache.get (key) or 0; cache.set (key, rev+1)
 
         self._data = value
 
@@ -113,8 +113,8 @@ def get_node_size (node, **kwargs):
         val = reduce (lambda acc, p: acc+p.size, props, 0)
         val+= reduce (lambda acc, n: acc+n.get_size (**kwargs), node.nodes, 0)
 
-        cache.set (rev_key, rev, timeout=60)
-        cache.set (val_key, val, timeout=60)
+        cache.set (rev_key, rev)
+        cache.set (val_key, val)
 
     return val
 

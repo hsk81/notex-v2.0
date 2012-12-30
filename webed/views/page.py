@@ -68,7 +68,7 @@ def main (page='home', template='index.html'):
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (json=False)
 
-    @cache.memoize (60, name='views.main.cached_template', unless=is_dev)
+    @cache.memoize (name='views.main.cached_template', unless=is_dev)
     def cached_template (template, page, debug):
 
         return render_template (template, page=page, debug=debug)
