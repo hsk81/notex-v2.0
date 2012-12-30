@@ -59,7 +59,7 @@ class WebedCache (Cache):
                     return fn (*args, **kwargs)
 
                 key = self.make_key (session, name or get_name (fn),
-                    *args, **kwargs)
+                    *args, **kwargs) ## TODO: sorted (kwargs)?
                 value = self.get (key)
 
                 if value is None:
