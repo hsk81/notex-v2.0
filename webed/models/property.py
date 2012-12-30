@@ -77,6 +77,9 @@ class Property (db.Model):
             key = cache.make_key (uuid, 'rev', 'size', name='data')
             rev = cache.get (key) or 0; cache.set (key, rev+1)
 
+        key = cache.make_key (self.uuid, 'rev', 'size', name='data')
+        rev = cache.get (key) or 0; cache.set (key, rev+1)
+
         self._data = value
 
     @hybrid_property
@@ -101,7 +104,7 @@ class Property (db.Model):
 ###############################################################################
 ###############################################################################
 
-def get_node_size (node, **kwargs):
+def get_node_size (node, **kwargs): ## TODO: 'rev'-decorator?
 
     rev_key = cache.make_key (node.uuid, 'rev', 'size', **kwargs)
     rev = cache.get (rev_key) or 0
@@ -112,9 +115,7 @@ def get_node_size (node, **kwargs):
         props = node.props.filter_by (**kwargs).all ()
         val = reduce (lambda acc, p: acc+p.size, props, 0)
         val+= reduce (lambda acc, n: acc+n.get_size (**kwargs), node.nodes, 0)
-
-        cache.set (rev_key, rev)
-        cache.set (val_key, val)
+        cache.set (rev_key, rev); cache.set (val_key, val)
 
     return val
 
@@ -143,11 +144,18 @@ class StringProperty (Property):
 
         return u'<StringProperty@%r: %r>' % (self.id, self.name)
 
-    def get_size (self):
-        """
-        TODO: Use caching in combination with a SQLAlchemy read-only property!
-        """
-        return len (self.data.encode ('utf-8')) if self.data else None
+    def get_size (self): ## TODO: 'rev'-decorator?
+
+        rev_key = cache.make_key (self.uuid, 'rev', 'size', name='data')
+        rev = cache.get (rev_key) or 0
+        val_key = cache.make_key (self.uuid, 'size', rev, name='data')
+        val = cache.get (val_key)
+
+        if not val:
+            val = len (self.data.encode ('utf-8')) if self.data else None
+            cache.set (rev_key, rev); cache.set (val_key, val)
+
+        return val
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -175,11 +183,18 @@ class TextProperty (Property):
 
         return u'<TextProperty@%r: %r>' % (self.id, self.name)
 
-    def get_size (self):
-        """
-        TODO: Use caching in combination with a SQLAlchemy read-only property!
-        """
-        return len (self.data.encode ('utf-8')) if self.data else None
+    def get_size (self): ## TODO: 'rev'-decorator?
+
+        rev_key = cache.make_key (self.uuid, 'rev', 'size', name='data')
+        rev = cache.get (rev_key) or 0
+        val_key = cache.make_key (self.uuid, 'size', rev, name='data')
+        val = cache.get (val_key)
+
+        if not val:
+            val = len (self.data.encode ('utf-8')) if self.data else None
+            cache.set (rev_key, rev); cache.set (val_key, val)
+
+        return val
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -207,11 +222,18 @@ class LargeBinaryProperty (Property):
 
         return u'<LargeBinaryProperty@%r: %r>' % (self.id, self.name)
 
-    def get_size (self):
-        """
-        TODO: Use caching in combination with a SQLAlchemy read-only property!
-        """
-        return len (self.data) if self.data else None
+    def get_size (self): ## TODO: 'rev'-decorator?
+
+        rev_key = cache.make_key (self.uuid, 'rev', 'size', name='data')
+        rev = cache.get (rev_key) or 0
+        val_key = cache.make_key (self.uuid, 'size', rev, name='data')
+        val = cache.get (val_key)
+
+        if not val:
+            val = len (self.data) if self.data else None
+            cache.set (rev_key, rev); cache.set (val_key, val)
+
+        return val
 
     _data = db.Column (db.LargeBinary, name='data')
     _size = property (get_size)

@@ -85,7 +85,7 @@ class Node (db.Model):
 
     ###########################################################################
 
-    def get_path (self, field):
+    def get_path (self, field): ## TODO: 'rev'-decorator?
 
         if self.root:
             rev_key = cache.make_key (self.root.uuid, 'rev', field)
