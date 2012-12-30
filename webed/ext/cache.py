@@ -23,22 +23,19 @@ class WebedCache (Cache):
 
         return hashed.hexdigest ()
 
-    def memoize (self, timeout=None, name=None, session=None, unless=None):
+    def cached (self, timeout=None, name=None, session=None, unless=None):
 
         def get_name (fn):
             return fn.__name__ ## TODO: Fully qualified name!?
 
-        def wrap (fn):
+        def decorator (fn):
             @functools.wraps (fn)
-            def wrapped (*args, **kwargs):
+            def decorated (*args, **kwargs):
 
                 if callable (unless) and unless () is True:
                     return fn (*args, **kwargs)
 
-                args.insert (0, name or get_name (fn))
-                if session: args.insert (0, session)
-
-                key = self.make_key (*args, **kwargs)
+                key = self.make_key (session, name or get_name (fn))
                 value = self.get (key)
 
                 if value is None:
@@ -46,8 +43,32 @@ class WebedCache (Cache):
                     self.set (key, value, timeout=timeout)
 
                 return value
-            return wrapped
-        return wrap
+            return decorated
+        return decorator
+
+    def memoize (self, timeout=None, name=None, session=None, unless=None):
+
+        def get_name (fn):
+            return fn.__name__ ## TODO: Fully qualified name!?
+
+        def decorator (fn):
+            @functools.wraps (fn)
+            def decorated (*args, **kwargs):
+
+                if callable (unless) and unless () is True:
+                    return fn (*args, **kwargs)
+
+                key = self.make_key (session, name or get_name (fn),
+                    *args, **kwargs)
+                value = self.get (key)
+
+                if value is None:
+                    value = fn (*args, **kwargs)
+                    self.set (key, value, timeout=timeout)
+
+                return value
+            return decorated
+        return decorator
 
 cache = WebedCache (app)
 
