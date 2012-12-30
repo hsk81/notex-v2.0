@@ -18,7 +18,7 @@ class WebedCache (Cache):
     def make_key (self, *args, **kwargs):
 
         kwargs.update (dict (enumerate (args)))
-        string = JSON.encode (kwargs)
+        string = JSON.encode (sorted (kwargs.items ()))
         hashed = hashlib.sha512 (string)
 
         return hashed.hexdigest ()
@@ -58,8 +58,8 @@ class WebedCache (Cache):
                 if callable (unless) and unless () is True:
                     return fn (*args, **kwargs)
 
-                key = self.make_key (session, name or get_name (fn),
-                    *args, **kwargs) ## TODO: sorted (kwargs)?
+                key = self.make_key (
+                    session, name or get_name (fn), *args, **kwargs)
                 value = self.get (key)
 
                 if value is None:
