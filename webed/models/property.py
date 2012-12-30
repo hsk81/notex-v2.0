@@ -8,6 +8,7 @@ from uuid import uuid4 as uuid_random
 from node import Node
 
 from ..ext.db import db
+from ..ext.cache import cache
 
 ###############################################################################
 ###############################################################################
@@ -65,6 +66,23 @@ class Property (db.Model):
     def name (self, value):
         self._name = value
 
+    @hybrid_property
+    def data (self):
+        return self._data
+
+    @data.setter
+    def data (self, value):
+
+        for uuid in self.node.get_path ('uuid'):
+            key = cache.make_key (uuid, 'rev', 'size', name='data')
+            rev = cache.get (key) or 0; cache.set (key, rev+1, timeout=60)
+
+        self._data = value
+
+    @hybrid_property
+    def size (self):
+        return self._size
+
     ###########################################################################
 
     def __init__ (self, name, node, mime=None, uuid=None):
@@ -84,14 +102,21 @@ class Property (db.Model):
 ###############################################################################
 
 def get_node_size (node, **kwargs):
-    """
-    TODO: Use caching with invalidation on a corresponding change in sub-tree!
-    """
-    props = node.props.filter_by (**kwargs).all ()
-    value = reduce (lambda acc, p: acc + p.size, props, 0)
-    value+= reduce (lambda acc, n: acc + n.get_size (**kwargs), node.nodes, 0)
 
-    return value
+    rev_key = cache.make_key (node.uuid, 'rev', 'size', **kwargs)
+    rev = cache.get (rev_key) or 0
+    val_key = cache.make_key (node.uuid, 'size', rev, **kwargs)
+    val = cache.get (val_key)
+
+    if not val:
+        props = node.props.filter_by (**kwargs).all ()
+        val = reduce (lambda acc, p: acc+p.size, props, 0)
+        val+= reduce (lambda acc, n: acc+n.get_size (**kwargs), node.nodes, 0)
+
+        cache.set (rev_key, rev, timeout=60)
+        cache.set (val_key, val, timeout=60)
+
+    return val
 
 Node.get_size = get_node_size
 
@@ -124,8 +149,8 @@ class StringProperty (Property):
         """
         return len (self.data.encode ('utf-8')) if self.data else None
 
-    size = property (get_size)
-    data = db.Column (db.String)
+    _data = db.Column (db.String, name='data')
+    _size = property (get_size)
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.Text
@@ -156,8 +181,8 @@ class TextProperty (Property):
         """
         return len (self.data.encode ('utf-8')) if self.data else None
 
-    size = property (get_size)
-    data = db.Column (db.Text)
+    _data = db.Column (db.String, name='data')
+    _size = property (get_size)
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.LargeBinary
@@ -188,8 +213,8 @@ class LargeBinaryProperty (Property):
         """
         return len (self.data) if self.data else None
 
-    size = property (get_size)
-    data = db.Column (db.LargeBinary)
+    _data = db.Column (db.LargeBinary, name='data')
+    _size = property (get_size)
 
 ###############################################################################
 ###############################################################################
