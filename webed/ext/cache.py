@@ -19,7 +19,7 @@ class WebedCache (Cache):
 
         kwargs.update (dict (enumerate (args)))
         string = JSON.encode (kwargs)
-        hashed = hashlib.md5 (string)
+        hashed = hashlib.sha512 (string)
 
         return hashed.hexdigest ()
 

@@ -84,7 +84,7 @@ def reset (json=True):
     """
     Resets the database and is therefore a very dangerous function; so it's
     protected by an authentication mechanism plus it's only effective once
-    every 15 minutes (if the authentication protection is circumvented).
+    every 15 minutes.
     """
     if is_dev (): ## TODO: Replace with authentication!
         name = request.args['name'] if 'name' in request.args else None
