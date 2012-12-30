@@ -5,9 +5,11 @@ Ext.define ('Webed.store.Leafs', {
 
     listeners: {
         load: function (store, records, successful, eOpts) {
-            records.forEach (function (record) {
-                this.decorate (record);
-            }, this);
+            if (records && successful) {
+                records.forEach (function (record) {
+                    this.decorate (record);
+                }, this);
+            }
         }
     },
 
