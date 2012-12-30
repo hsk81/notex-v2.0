@@ -90,9 +90,9 @@ def reset (json=True):
         name = request.args['name'] if 'name' in request.args else None
         mail = request.args['mail'] if 'mail' in request.args else None
         db_reset (name, mail); init ()
-        result = dict (success=True)
+        result = dict (success=True, timestamp=datetime.now ())
     else:
-        result = dict (success=False)
+        result = dict (success=False, timestamp=datetime.now ())
 
     return jsonify (result) if json else result
 
@@ -105,7 +105,7 @@ def refresh (json=True):
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
     db_refresh (); init ()
-    result = dict (success=True)
+    result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
 ###############################################################################
