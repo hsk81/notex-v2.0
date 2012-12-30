@@ -65,7 +65,7 @@ class Node (db.Model):
 
         if self._name != value:
             key = cache.make_key (self.uuid, 'rev', 'name')
-            rev = cache.get (key) or 0; cache.set (key, rev + 1, timeout=75)
+            rev = cache.get (key) or 0; cache.set (key, rev+1, timeout=60)
             self._name = value
 
     ###########################################################################
@@ -95,8 +95,8 @@ class Node (db.Model):
 
             if not val:
                 val = self.root.get_path (field)
+                cache.set (rev_key, rev, timeout=60)
                 cache.set (val_key, val, timeout=60)
-                cache.set (rev_key, rev, timeout=75)
 
             return val + [eval ('self.' + field)]
         else:
