@@ -55,14 +55,8 @@ def main (page='home', template='index.html'):
     if not 'timestamp' in session: init ()
     session['timestamp'] = datetime.now ()
 
-    if app.session_cookie_name in request.cookies:
-        session_id = request.cookies[app.session_cookie_name] \
-            .split ('?')[1].split ('&')[0].split ('=')[1]
-    else:
-        session_id = None
-
     if not request.args.get ('silent', False):
-        print >> sys.stderr, "Session ID: %s" % session_id
+        print >> sys.stderr, "Session ID: %r" % session['_id']
         print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
     if is_reset (): reset (json=False)
