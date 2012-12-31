@@ -17,7 +17,7 @@ class RestTestCase (BaseTestCase):
 
     def test_node_root (self):
 
-        response = self.app.get ('/?silent=True')
+        response = self.app.get ('/?reset&silent=True')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
 
@@ -93,7 +93,7 @@ class RestTestCase (BaseTestCase):
 
     def test_leaf_root (self):
 
-        response = self.app.get ('/?silent=True')
+        response = self.app.get ('/?reset&silent=True')
         self.assertIsNotNone (response)
         self.assertEqual (response.status_code, 200)
 
