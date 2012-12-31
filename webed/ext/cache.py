@@ -36,7 +36,6 @@ class WebedCache (Cache):
                  keyfunc=None):
 
         if session:
-            assert '_id' in session
             sid = session['_id']
         else:
             sid = None
