@@ -23,19 +23,27 @@ class WebedCache (Cache):
 
         return hashed.hexdigest ()
 
-    def cached (self, timeout=None, name=None, session=None, unless=None,
-                keyfunc=None):
+    def cached (self, timeout=None, name=None, unless=None, session=None,
+                sidfunc=None, keyfunc=None):
 
-        if keyfunc is None:
-            keyfunc = lambda ss, fn, *args, **kwargs: \
-                WebedCache.make_key (ss, name or fn.__name__) ## no (kw)args!
+        if not callable (keyfunc):
+            keyfunc = lambda sid, fn, *args, **kwargs: \
+                WebedCache.make_key (sid, name or fn.__name__) ## no (kw)args!
 
-        return self.memoize (timeout, name, session, unless, keyfunc)
+        return self.memoize (timeout, name, unless, session, sidfunc, keyfunc)
 
-    def memoize (self, timeout=None, name=None, session=None, unless=None,
-                 keyfunc=None):
+    def memoize (self, timeout=None, name=None, unless=None, session=None,
+                 sidfunc=None, keyfunc=None):
 
-        if keyfunc is None:
+        if session and callable (sidfunc):
+            sid = sidfunc (session)
+        elif session:
+            assert '_id' in session
+            sid = session['_id']
+        else:
+            sid = None
+
+        if not callable (keyfunc):
             keyfunc = WebedCache.make_key
 
         def decorator (fn):
@@ -45,7 +53,7 @@ class WebedCache (Cache):
                 if callable (unless) and unless () is True:
                     return fn (*args, **kwargs)
 
-                key = keyfunc (session, name or fn.__name__, *args, **kwargs)
+                key = keyfunc (sid, name or fn.__name__, *args, **kwargs)
                 cached_value = self.get (key)
 
                 if cached_value is None:
