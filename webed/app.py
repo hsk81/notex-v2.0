@@ -4,7 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from flask.app import Flask
-from config import DefaultConfig
+from config import DefaultConfig, TestConfig
 
 ###############################################################################
 ###############################################################################
@@ -12,7 +12,7 @@ from config import DefaultConfig
 app = Flask (__name__)
 app.config.from_object (DefaultConfig)
 
-if not app.debug and not app.testing:
+if not app.testing:
     app.config.from_envvar ('WEBED_SETTINGS', silent=False)
 
 ###############################################################################
