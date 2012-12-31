@@ -18,7 +18,7 @@ describe ('LeafController', function () {
         controller = null;
 
         lock.init ([true]); Ext.Ajax.request ({
-            url: '/reset/', callback: function (opt, success, xhr) {
+            url: '/refresh/', callback: function (opt, success, xhr) {
                 expect (success).toBeTruthy (); lock.pop ();
             }
         });
