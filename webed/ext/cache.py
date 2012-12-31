@@ -23,21 +23,19 @@ class WebedCache (Cache):
 
         return hashed.hexdigest ()
 
-    def cached (self, timeout=None, name=None, unless=None, session=None,
-                sidfunc=None, keyfunc=None):
+    def cached (self, timeout=None, name=None, session=None, unless=None,
+                keyfunc=None):
 
         if not callable (keyfunc):
             keyfunc = lambda sid, fn, *args, **kwargs: \
                 WebedCache.make_key (sid, name or fn.__name__) ## no (kw)args!
 
-        return self.memoize (timeout, name, unless, session, sidfunc, keyfunc)
+        return self.memoize (timeout, name, session, unless, keyfunc)
 
-    def memoize (self, timeout=None, name=None, unless=None, session=None,
-                 sidfunc=None, keyfunc=None):
+    def memoize (self, timeout=None, name=None, session=None, unless=None,
+                 keyfunc=None):
 
-        if session and callable (sidfunc):
-            sid = sidfunc (session)
-        elif session:
+        if session:
             assert '_id' in session
             sid = session['_id']
         else:
