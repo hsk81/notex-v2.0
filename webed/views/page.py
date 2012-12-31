@@ -59,9 +59,8 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Session ID: %r" % session['_id']
 
     if is_reset (): reset (json=False)
-    if is_refresh (): refresh (json=False)
-
-    init_session ()
+    elif is_refresh (): refresh (json=False)
+    else: init_session ()
 
     @cache.memoize (name='views.main.cached_template', unless=is_dev)
     def cached_template (template, page, debug):
@@ -81,7 +80,7 @@ def reset (json=True):
     every 15 minutes.
     """
     if is_dev (): ## TODO: Replace with authentication!
-        Anchor (session).reset ()
+        Anchor (session).reset (); init_session ()
 
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
@@ -94,7 +93,7 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
-    Anchor (session).refresh ()
+    Anchor (session).refresh (); init_session ()
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
