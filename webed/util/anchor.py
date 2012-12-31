@@ -12,34 +12,48 @@ class Anchor (object):
 
     def __init__ (self, session, timeout=None):
         self.session = session
-        self.timeout = timeout if timeout else 3600*72
+        assert self.session
+        self.timeout = timeout if timeout is not None else 3600*72
+        assert self.timeout or self.timeout == 0
 
     def get_version_key (self):
-        return cache.make_key ('global', 'version', 'anchor')
+        version_key = cache.make_key ('global', 'version', 'anchor')
+        assert version_key
+        return version_key
 
     def get_version (self, key=None):
         version_key = key if key else self.get_version_key ()
-        return (cache.get (version_key) or 0) if version_key else 0
+        assert version_key
+        return cache.get (version_key) or 0
 
     def get_value_key (self, version=None, version_key=None):
         version = version if version else self.get_version (key=version_key)
-        return cache.make_key (self.session['_id'], 'anchor', version)
+        assert version >= 0
+        value_key = cache.make_key (self.session['_id'], 'anchor', version)
+        assert value_key
+        return value_key
 
     def get_value (self, key=None, version_key=None):
         value_key = key if key else self.get_value_key (version_key=version_key)
-        return cache.get (value_key) if value_key else None
+        assert value_key
+        return cache.get (value_key)
 
-    def set_value (self, value, key=None, version_key=None):
+    def set_value (self, value, timeout=None, key=None, version_key=None):
         value_key = key if key else self.get_value_key (version_key=version_key)
-        if value_key: cache.set (value_key, value, timeout=self.timeout)
+        assert value_key
+        cache.set (value_key, value, timeout=timeout if timeout \
+            else self.timeout)
 
     def reset (self):
         version_key = self.get_version_key ()
+        assert version_key
         version = self.get_version (key=version_key)
+        assert version >= 0
         cache.set (version_key, version+1, timeout=0) ## indefinite
 
     def refresh (self):
         value_key = self.get_value_key ()
+        assert value_key
         value = self.get_value (key=value_key)
         if value: cache.delete (value_key)
 
