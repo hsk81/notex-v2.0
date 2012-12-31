@@ -11,7 +11,8 @@ from datetime import datetime
 
 from ..app import app
 from ..ext import db, cache
-from ..util import SID, jsonify
+from ..util import jsonify
+from ..util.anchor import Anchor
 
 from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
@@ -55,7 +56,7 @@ def contact (): return main (page='contact')
 def main (page='home', template='index.html'):
 
     if not request.args.get ('silent', False):
-        print >> sys.stderr, "Session ID: %r" % SID ()
+        print >> sys.stderr, "Session ID: %r" % session['_id']
 
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (json=False)
@@ -64,7 +65,6 @@ def main (page='home', template='index.html'):
 
     @cache.memoize (name='views.main.cached_template', unless=is_dev)
     def cached_template (template, page, debug):
-
         return render_template (template, page=page, debug=debug)
 
     return cached_template (template, page=page, debug=app.debug)
@@ -81,10 +81,9 @@ def reset (json=True):
     every 15 minutes.
     """
     if is_dev (): ## TODO: Replace with authentication!
-        db_reset (); result = dict (success=True, timestamp=datetime.now ())
-    else:
-        result = dict (success=False, timestamp=datetime.now ())
+        Anchor (session).reset ()
 
+    result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
 @page.route ('/refresh/')
@@ -95,42 +94,17 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
-    db_refresh (); result = dict (success=True, timestamp=datetime.now ())
+    Anchor (session).refresh ()
+    result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def db_reset ():
-
-    version_key = cache.make_key ('global', 'version', 'anchor')
-    version = cache.get (version_key) or 0
-    cache.set (version_key, version+1, timeout=0)
-
-def db_refresh ():
-
-    version_key = cache.make_key ('global', 'version', 'anchor')
-    version = cache.get (version_key) or 0
-    anchor_key = cache.make_key (SID (), 'anchor', version)
-    anchor = cache.get (anchor_key)
-
-    if anchor:
-        cache.delete (anchor_key)
-
- ## if anchor: ## TODO: Queue delete task!
- ##     base = Q (Node.query).one_or_default (uuid=anchor)
- ##     if base:
- ##         db.session.delete (base)
- ##         db.session.commit ()
-
 def init_session ():
 
-    version_key = cache.make_key ('global', 'version', 'anchor')
-    version = cache.get (version_key) or 0
-    anchor_key = cache.make_key (SID (), 'anchor', version)
-    anchor = cache.get (anchor_key)
-
-    if anchor: return ## cache hit!
+    if Anchor (session).initiated:
+        return ## cache hit!
 
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
@@ -165,7 +139,7 @@ def init_session ():
     ##
 
     session['root_uuid'] = base.uuid ## TODO: Remove!
-    cache.set (anchor_key, base.uuid, timeout=3600*72)
+    Anchor (session).set_value (base.uuid)
 
 def init_article (root):
 

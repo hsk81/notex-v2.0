@@ -7,7 +7,6 @@ from .json import *
 from .jsonify import jsonify
 from .linq import Linq, Q
 from .rx import in_rxs
-from .sid import SID
 
 ###############################################################################
 ###############################################################################
