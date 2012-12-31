@@ -22,7 +22,7 @@ class DefaultConfig:
 
     CACHE_TYPE = 'memcached'
     CACHE_KEY_PREFIX = 'webed:'
-    CACHE_DEFAULT_TIMEOUT = 3600*8 ## secs
+    CACHE_DEFAULT_TIMEOUT = 3600*8 ## 8h
     CACHE_MEMCACHED_SERVERS = ['127.0.0.1']
 
     LOG_FILE = '../webed.log'
