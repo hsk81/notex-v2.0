@@ -5,7 +5,6 @@ __author__ = 'hsk81'
 
 from flask.ext.cache import Cache
 from ..app import app
-from ..util import JSON
 
 import hashlib
 import functools
@@ -19,7 +18,7 @@ class WebedCache (Cache):
     def make_key (*args, **kwargs):
 
         kwargs.update (dict (enumerate (args)))
-        string = JSON.encode (sorted (kwargs.items ()))
+        string = unicode (sorted (kwargs.items ()))
         hashed = hashlib.sha512 (string)
 
         return hashed.hexdigest ()
