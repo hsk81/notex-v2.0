@@ -133,7 +133,7 @@ def init_session ():
     db.session.commit ()
 
     ##
-    ## Ensures that session is associated with a *new* base node; it's quite
+    ## Ensures that session is associated with the *new* base node; it's quite
     ## important since it provides the anchor for the rest of the application.
     ##
 
