@@ -23,7 +23,7 @@ Ext.onReady (function() {
 
         launch: function () {
             var env = jasmine.getEnv ();
-            env.defaultTimeoutInterval = 4096; //ms
+            env.defaultTimeoutInterval = 512; //ms
 
             var reporter = new jasmine.HtmlReporter ();
             assert (reporter);
