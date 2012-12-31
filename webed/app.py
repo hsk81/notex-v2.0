@@ -11,7 +11,9 @@ from config import DefaultConfig
 
 app = Flask (__name__)
 app.config.from_object (DefaultConfig)
-app.config.from_envvar ('WEBED_SETTINGS', silent=False)
+
+if not app.debug and not app.testing:
+    app.config.from_envvar ('WEBED_SETTINGS', silent=False)
 
 ###############################################################################
 ###############################################################################
