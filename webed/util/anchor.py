@@ -10,11 +10,9 @@ from ..ext.cache import cache
 
 class Anchor (object):
 
-    def __init__ (self, session, timeout=None):
+    def __init__ (self, session):
         self.session = session
         assert self.session
-        self.timeout = timeout if timeout is not None else 3600*72
-        assert self.timeout or self.timeout == 0
 
     def get_version_key (self):
         version_key = cache.make_key ('global', 'version', 'anchor')
@@ -41,8 +39,7 @@ class Anchor (object):
     def set_value (self, value, timeout=None, key=None, version_key=None):
         value_key = key if key else self.get_value_key (version_key=version_key)
         assert value_key
-        cache.set (value_key, value, timeout=timeout if timeout \
-            else self.timeout)
+        cache.set (value_key, value, timeout=timeout)
 
     def reset (self):
         version_key = self.get_version_key ()
