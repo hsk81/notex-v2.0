@@ -15,7 +15,8 @@ import functools
 
 class WebedCache (Cache):
 
-    def make_key (self, *args, **kwargs):
+    @staticmethod
+    def make_key (*args, **kwargs):
 
         kwargs.update (dict (enumerate (args)))
         string = JSON.encode (sorted (kwargs.items ()))
@@ -23,33 +24,20 @@ class WebedCache (Cache):
 
         return hashed.hexdigest ()
 
-    def cached (self, timeout=None, name=None, session=None, unless=None):
+    def cached (self, timeout=None, name=None, session=None, unless=None,
+                keyfunc=None):
 
-        def get_name (fn):
-            return fn.__name__ ## TODO: Fully qualified name!?
+        if keyfunc is None:
+            keyfunc = lambda ss, fn, *args, **kwargs: \
+                WebedCache.make_key (ss, name or fn.__name__) ## no (kw)args!
 
-        def decorator (fn):
-            @functools.wraps (fn)
-            def decorated (*args, **kwargs):
+        return self.memoize (timeout, name, session, unless, keyfunc)
 
-                if callable (unless) and unless () is True:
-                    return fn (*args, **kwargs)
+    def memoize (self, timeout=None, name=None, session=None, unless=None,
+                 keyfunc=None):
 
-                key = self.make_key (session, name or get_name (fn))
-                value = self.get (key)
-
-                if value is None:
-                    value = fn (*args, **kwargs)
-                    self.set (key, value, timeout=timeout)
-
-                return value
-            return decorated
-        return decorator
-
-    def memoize (self, timeout=None, name=None, session=None, unless=None):
-
-        def get_name (fn):
-            return fn.__name__ ## TODO: Fully qualified name!?
+        if keyfunc is None:
+            keyfunc = WebedCache.make_key
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -58,15 +46,14 @@ class WebedCache (Cache):
                 if callable (unless) and unless () is True:
                     return fn (*args, **kwargs)
 
-                key = self.make_key (
-                    session, name or get_name (fn), *args, **kwargs)
-                value = self.get (key)
+                key = keyfunc (session, name or fn.__name__, *args, **kwargs)
+                cached_value = self.get (key)
 
-                if value is None:
-                    value = fn (*args, **kwargs)
-                    self.set (key, value, timeout=timeout)
+                if cached_value is None:
+                    cached_value = fn (*args, **kwargs)
+                    self.set (key, cached_value, timeout=timeout)
 
-                return value
+                return cached_value
             return decorated
         return decorator
 
