@@ -138,7 +138,6 @@ def init_session ():
     ## important since it provides the anchor for the rest of the application.
     ##
 
-    session['root_uuid'] = base.uuid ## TODO: Remove!
     Anchor (session).set_value (base.uuid)
 
 def init_article (root):
