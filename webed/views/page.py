@@ -52,12 +52,11 @@ def contact (): return main (page='contact')
 @page.route ('/')
 def main (page='home', template='index.html'):
 
-    if not 'timestamp' in session: init ()
-    session['timestamp'] = datetime.now ()
+    if not 'root_uuid' in session:
+        init_session ()
 
     if not request.args.get ('silent', False):
         print >> sys.stderr, "Session ID: %r" % session['_id']
-        print >> sys.stderr, "Time Stamp: %s" % session['timestamp']
 
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (json=False)
@@ -83,7 +82,10 @@ def reset (json=True):
     if is_dev (): ## TODO: Replace with authentication!
         name = request.args['name'] if 'name' in request.args else None
         mail = request.args['mail'] if 'mail' in request.args else None
-        db_reset (name, mail); init ()
+        db_reset (name, mail)
+
+        init_session ()
+
         result = dict (success=True, timestamp=datetime.now ())
     else:
         result = dict (success=False, timestamp=datetime.now ())
@@ -98,7 +100,10 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
-    db_refresh (); init ()
+
+    db_refresh ()
+    init_session ()
+
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
@@ -125,7 +130,7 @@ def db_refresh ():
             db.session.delete (base)
             db.session.commit ()
 
-def init ():
+def init_session ():
 
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
