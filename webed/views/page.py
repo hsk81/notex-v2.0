@@ -10,9 +10,11 @@ from flask import Blueprint, session
 from datetime import datetime
 
 from ..app import app
-from ..models import *
 from ..ext import db, cache
-from ..util import Q, jsonify
+from ..util import SID, jsonify
+
+from ..models import Node, Leaf
+from ..models import TextProperty, LargeBinaryProperty
 
 import sys
 
@@ -52,14 +54,13 @@ def contact (): return main (page='contact')
 @page.route ('/')
 def main (page='home', template='index.html'):
 
-    if not 'root_uuid' in session:
-        init_session ()
-
     if not request.args.get ('silent', False):
-        print >> sys.stderr, "Session ID: %r" % session['_id']
+        print >> sys.stderr, "Session ID: %r" % SID ()
 
     if is_reset (): reset (json=False)
     if is_refresh (): refresh (json=False)
+
+    init_session ()
 
     @cache.memoize (name='views.main.cached_template', unless=is_dev)
     def cached_template (template, page, debug):
@@ -80,13 +81,7 @@ def reset (json=True):
     every 15 minutes.
     """
     if is_dev (): ## TODO: Replace with authentication!
-        name = request.args['name'] if 'name' in request.args else None
-        mail = request.args['mail'] if 'mail' in request.args else None
-        db_reset (name, mail)
-
-        init_session ()
-
-        result = dict (success=True, timestamp=datetime.now ())
+        db_reset (); result = dict (success=True, timestamp=datetime.now ())
     else:
         result = dict (success=False, timestamp=datetime.now ())
 
@@ -100,37 +95,42 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
-
-    db_refresh ()
-    init_session ()
-
-    result = dict (success=True, timestamp=datetime.now ())
+    db_refresh (); result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
 ###############################################################################
 ###############################################################################
 
-def db_reset (name=None, mail=None):
+def db_reset ():
 
-    db.drop_all ()
-    db.create_all ()
-
-    user = User (
-        name=name if name else u'admin',
-        mail=mail if mail else u'admin@mail.net')
-
-    db.session.add (user)
-    db.session.commit ()
+    version_key = cache.make_key ('global', 'version', 'anchor')
+    version = cache.get (version_key) or 0
+    cache.set (version_key, version+1, timeout=0)
 
 def db_refresh ():
 
-    if 'root_uuid' in session:
-        base = Q (Node.query).one_or_default (uuid=session['root_uuid'])
-        if base:
-            db.session.delete (base)
-            db.session.commit ()
+    version_key = cache.make_key ('global', 'version', 'anchor')
+    version = cache.get (version_key) or 0
+    anchor_key = cache.make_key (SID (), 'anchor', version)
+    anchor = cache.get (anchor_key)
+
+    if anchor:
+        cache.delete (anchor_key)
+
+ ## if anchor: ## TODO: Queue delete task!
+ ##     base = Q (Node.query).one_or_default (uuid=anchor)
+ ##     if base:
+ ##         db.session.delete (base)
+ ##         db.session.commit ()
 
 def init_session ():
+
+    version_key = cache.make_key ('global', 'version', 'anchor')
+    version = cache.get (version_key) or 0
+    anchor_key = cache.make_key (SID (), 'anchor', version)
+    anchor = cache.get (anchor_key)
+
+    if anchor: return ## cache hit!
 
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
@@ -164,7 +164,8 @@ def init_session ():
     ## important since it provides the anchor for the rest of the application.
     ##
 
-    session['root_uuid'] = base.uuid
+    session['root_uuid'] = base.uuid ## TODO: Remove!
+    cache.set (anchor_key, base.uuid, timeout=3600*72)
 
 def init_article (root):
 
