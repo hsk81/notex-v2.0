@@ -10,31 +10,6 @@ from node import Node
 from ..ext.db import db
 from ..ext.cache import cache
 
-import functools
-
-###############################################################################
-###############################################################################
-
-def version (*args, **kwargs):
-
-    def decorator (fn):
-        @functools.wraps
-        def decorated (*fn_args, **fn_kwargs):
-
-            version_key = cache.make_key ('version', *args, **kwargs)
-            version = cache.get (version_key) or 0
-            value_key = cache.make_key (version, *args, **kwargs)
-            cached_value = cache.get (value_key)
-
-            if not cached_value:
-                cached_value = fn (*fn_args, **fn_kwargs)
-                cache.set (version_key, version)
-                cache.set (value_key, cached_value)
-
-            return cached_value
-        return decorated
-    return decorator
-
 ###############################################################################
 ###############################################################################
 
@@ -99,12 +74,9 @@ class Property (db.Model):
     def data (self, value):
 
         for uuid in self.node.get_path ('uuid'):
-            key = cache.make_key ('version', key=[uuid, 'size', 'data'])
-            version = cache.get (key) or 0; cache.set (key, version+1)
+            cache.increase_version (key=[uuid, 'size', 'data'])
 
-        key = cache.make_key ('version', key=[self.uuid, 'size', 'data'])
-        version = cache.get (key) or 0; cache.set (key, version+1)
-
+        cache.increase_version (key=[self.uuid, 'size', 'data'])
         self._data = value
 
     @hybrid_property
@@ -129,20 +101,17 @@ class Property (db.Model):
 ###############################################################################
 ###############################################################################
 
-def get_node_size (node, **kwargs): ## TODO: 'rev'-decorator?
+def get_node_size (node, **kwargs):
 
-    version_key = cache.make_key ('version', key=[node.uuid,'size'] + kwargs.values ())
-    version = cache.get (version_key) or 0
-    value_key = cache.make_key (version, key=[node.uuid, 'size'] + kwargs.values ())
-    value = cache.get (value_key)
+    @cache.version (key=[node.uuid, 'size'] + kwargs.values ())
+    def cached_size (node, **kwargs):
 
-    if not value:
         props = node.props.filter_by (**kwargs).all ()
         value = reduce (lambda acc,p: acc+p.size, props, 0)
         value+= reduce (lambda acc,n: acc+n.get_size (**kwargs), node.nodes, 0)
-        cache.set (version_key, version); cache.set (value_key, value)
+        return value
 
-    return value
+    return cached_size (node, **kwargs)
 
 Node.get_size = get_node_size
 
@@ -169,18 +138,13 @@ class StringProperty (Property):
 
         return u'<StringProperty@%r: %r>' % (self.id, self._name)
 
-    def get_size (self): ## TODO: 'rev'-decorator?
+    def get_size (self):
 
-        version_key = cache.make_key ('version', key=[self.uuid, 'size', 'data'])
-        version = cache.get (version_key) or 0
-        value_key = cache.make_key (version, key=[self.uuid, 'size', 'data'])
-        value = cache.get (value_key)
+        @cache.version (key=[self.uuid, 'size', 'data'])
+        def cached_size (data):
+            return len (data.encode ('utf-8')) if data else None
 
-        if not value:
-            value = len (self._data.encode ('utf-8')) if self._data else None
-            cache.set (version_key, version); cache.set (value_key, value)
-
-        return value
+        return cached_size (self._data)
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -208,18 +172,13 @@ class TextProperty (Property):
 
         return u'<TextProperty@%r: %r>' % (self.id, self._name)
 
-    def get_size (self): ## TODO: 'rev'-decorator?
+    def get_size (self):
 
-        version_key = cache.make_key ('version', key=[self.uuid, 'size', 'data'])
-        version = cache.get (version_key) or 0
-        value_key = cache.make_key (version, key=[self.uuid, 'size', 'data'])
-        value = cache.get (value_key)
+        @cache.version (key=[self.uuid, 'size', 'data'])
+        def cached_size (data):
+            return len (data.encode ('utf-8')) if data else None
 
-        if not value:
-            value = len (self._data.encode ('utf-8')) if self._data else None
-            cache.set (version_key, version); cache.set (value_key, value)
-
-        return value
+        return cached_size (self._data)
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -247,18 +206,13 @@ class LargeBinaryProperty (Property):
 
         return u'<LargeBinaryProperty@%r: %r>' % (self.id, self._name)
 
-    def get_size (self): ## TODO: 'rev'-decorator?
+    def get_size (self):
 
-        version_key = cache.make_key ('version', key=[self.uuid, 'size', 'data'])
-        version = cache.get (version_key) or 0
-        value_key = cache.make_key (version, key=[self.uuid, 'size', 'data'])
-        value = cache.get (value_key)
+        @cache.version (key=[self.uuid, 'size', 'data'])
+        def cached_size (data):
+            return len (data) if data else None
 
-        if not value:
-            value = len (self._data) if self._data else None
-            cache.set (version_key, version); cache.set (value_key, value)
-
-        return value
+        return cached_size (self._data)
 
     _data = db.Column (db.LargeBinary, name='data')
     _size = property (get_size)

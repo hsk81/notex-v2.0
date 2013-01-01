@@ -50,16 +50,50 @@ class WebedCache (Cache):
                 if callable (unless) and unless () is True:
                     return fn (*args, **kwargs)
 
-                key = keyfunc (sid, name or fn.__name__, *args, **kwargs)
-                cached_value = self.get (key)
+                value_key = keyfunc (sid, name or fn.__name__, *args, **kwargs)
+                cached_value = self.get (value_key)
 
                 if cached_value is None:
                     cached_value = fn (*args, **kwargs)
-                    self.set (key, cached_value, timeout=timeout)
+                    self.set (value_key, cached_value, timeout=timeout)
 
                 return cached_value
             return decorated
         return decorator
+
+    def version (self, *args, **kwargs):
+
+        def decorator (fn):
+            @functools.wraps (fn)
+            def decorated (*fn_args, **fn_kwargs):
+
+                version_key = WebedCache.version_key (*args, **kwargs)
+                version = cache.get (version_key) or 0
+                value_key = cache.make_key (version, *args, **kwargs)
+                cached_value = cache.get (value_key)
+
+                if not cached_value:
+                    cached_value = fn (*fn_args, **fn_kwargs)
+                    cache.set (version_key, version)
+                    cache.set (value_key, cached_value)
+
+                return cached_value
+            return decorated
+        return decorator
+
+    def increase_version (self, *args, **kwargs):
+        version_key = WebedCache.version_key (*args, **kwargs)
+        version = cache.get (version_key) or 0
+        cache.set (version_key, version + 1)
+
+    def decrease_version (self, *args, **kwargs):
+        version_key = WebedCache.version_key (*args, **kwargs)
+        version = cache.get (version_key) or 0
+        cache.set (version_key, version - 1)
+
+    @staticmethod
+    def version_key (*args, **kwargs):
+        return WebedCache.make_key ('version', *args, **kwargs)
 
 cache = WebedCache (app)
 
