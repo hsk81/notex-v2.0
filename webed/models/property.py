@@ -141,10 +141,10 @@ class StringProperty (Property):
     def get_size (self):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (data):
-            return len (data.encode ('utf-8')) if data else None
+        def cached_size (self):
+            return len (self._data.encode ('utf-8')) if self._data else None
 
-        return cached_size (self._data)
+        return cached_size (self)
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -175,10 +175,10 @@ class TextProperty (Property):
     def get_size (self):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (data):
-            return len (data.encode ('utf-8')) if data else None
+        def cached_size (self):
+            return len (self._data.encode ('utf-8')) if self._data else None
 
-        return cached_size (self._data)
+        return cached_size (self)
 
     _data = db.Column (db.String, name='data')
     _size = property (get_size)
@@ -209,10 +209,10 @@ class LargeBinaryProperty (Property):
     def get_size (self):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (data):
-            return len (data) if data else None
+        def cached_size (self):
+            return len (self._data) if self._data else None
 
-        return cached_size (self._data)
+        return cached_size (self)
 
     _data = db.Column (db.LargeBinary, name='data')
     _size = property (get_size)
