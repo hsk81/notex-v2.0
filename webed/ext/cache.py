@@ -56,12 +56,15 @@ class WebedCache (Cache):
                 if cached_value is None:
                     cached_value = fn (*args, **kwargs)
                     self.set (value_key, cached_value, timeout=timeout)
-
                 return cached_value
+
+            decorated.uncached = fn
+            decorated.timeout = timeout
             return decorated
+
         return decorator
 
-    def version (self, *args, **kwargs):
+    def version (self, timeout=None, *args, **kwargs):
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -74,11 +77,14 @@ class WebedCache (Cache):
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    cache.set (version_key, version)
-                    cache.set (value_key, cached_value)
-
+                    cache.set (version_key, version, timeout)
+                    cache.set (value_key, cached_value, timeout)
                 return cached_value
+
+            decorated.uncached = fn
+            decorated.timeout = timeout
             return decorated
+
         return decorator
 
     def increase_version (self, *args, **kwargs):
