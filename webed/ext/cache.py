@@ -87,15 +87,15 @@ class WebedCache (Cache):
 
         return decorator
 
-    def increase_version (self, *args, **kwargs):
+    def increase_version (self, timeout=None, *args, **kwargs):
         version_key = WebedCache.version_key (*args, **kwargs)
         version = cache.get (version_key) or 0
-        cache.set (version_key, version + 1)
+        cache.set (version_key, version+1, timeout=timeout)
 
-    def decrease_version (self, *args, **kwargs):
+    def decrease_version (self, timeout=None, *args, **kwargs):
         version_key = WebedCache.version_key (*args, **kwargs)
         version = cache.get (version_key) or 0
-        cache.set (version_key, version - 1)
+        cache.set (version_key, version-1, timeout=timeout)
 
     @staticmethod
     def version_key (*args, **kwargs):
