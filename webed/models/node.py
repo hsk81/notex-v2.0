@@ -62,10 +62,7 @@ class Node (db.Model):
 
     @name.setter
     def name (self, value):
-
-        if self._name != value:
-            cache.increase_version (key=[self.uuid, 'path', 'name'])
-            self._name = value
+        self._name = value
 
     ###########################################################################
 
@@ -80,20 +77,24 @@ class Node (db.Model):
 
     def __repr__ (self):
 
-        return u'<Node@%x: %s>' % (self.id, self.name)
+        return u'<Node@%x: %s>' % (self.id, self._name)
 
     ###########################################################################
 
     def get_path (self, field):
 
-        if self.root:
-            @cache.version (key=[self.root.uuid, 'path', field])
-            def cached_root_path (self, field):
-                return self.root.get_path (field)
+        @cache.version (key=[self.uuid, 'path', field])
+        def cached_path (self, field):
 
-            return cached_root_path (self, field) + [getattr (self, field)]
+            if self.root:
+                return self.root.get_path (field) + [getattr (self, field)]
+            else:
+                return [getattr (self, field)]
+
+        if field == 'uuid':
+            return cached_path (self, field)
         else:
-            return [getattr (self, field)]
+            return cached_path.uncached (self, field)
 
 ###############################################################################
 ###############################################################################
