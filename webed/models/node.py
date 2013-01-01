@@ -64,8 +64,7 @@ class Node (db.Model):
     def name (self, value):
 
         if self._name != value:
-            key = cache.make_key (self.uuid, 'rev', 'name')
-            rev = cache.get (key) or 0; cache.set (key, rev+1)
+            cache.increase_version (key=[self.uuid, 'name'])
             self._name = value
 
     ###########################################################################
@@ -85,20 +84,14 @@ class Node (db.Model):
 
     ###########################################################################
 
-    def get_path (self, field): ## TODO: 'rev'-decorator?
+    def get_path (self, field):
 
         if self.root:
-            rev_key = cache.make_key (self.root.uuid, 'rev', field)
-            rev = cache.get (rev_key) or 0
-            val_key = cache.make_key (self.root.uuid, field, rev)
-            val = cache.get (val_key)
+            @cache.version (key=[self.root.uuid, field])
+            def cached_path (self, field):
+                return self.root.get_path (field) + [eval ('self.' + field)]
 
-            if not val:
-                val = self.root.get_path (field)
-                cache.set (rev_key, rev)
-                cache.set (val_key, val)
-
-            return val + [eval ('self.' + field)]
+            return cached_path (self, field)
         else:
             return [eval ('self.' + field)]
 
