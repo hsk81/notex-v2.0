@@ -17,7 +17,7 @@ class Anchor (object):
     ###########################################################################
 
     def get_version_key (self):
-        return cache.make_key ('version', 'anchor', '*')
+        return cache.make_key ('version', self.sid)
 
     def get_version (self):
         key = self.get_version_key ()
@@ -27,7 +27,7 @@ class Anchor (object):
 
     def get_value_key (self):
         version, _ = self.get_version ()
-        return cache.make_key (version, 'anchor', self.sid), version
+        return cache.make_key (version, self.sid), version
 
     def get_value (self):
         key, _ = self.get_value_key ()
@@ -39,19 +39,15 @@ class Anchor (object):
 
     ###########################################################################
 
-    def reset (self):
+    def reset (self, timeout=None):
         version, key = self.get_version ()
-        cache.set (key, version+1, timeout=0) ## indefinite
+        cache.set (key, version+1, timeout=timeout or 0) ## indefinite
+        return version
 
     def refresh (self):
         value, key = self.get_value ()
-        if value: cache.delete (key)
-
-     ## if value: ## TODO: Queue delete task!
-     ##     base = Q (Node.query).one_or_default (uuid=value)
-     ##     if base:
-     ##         db.session.delete (base)
-     ##         db.session.commit ()
+        if value and key: cache.delete (key)
+        return value
 
     ###########################################################################
 

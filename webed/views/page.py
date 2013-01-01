@@ -93,7 +93,13 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective only once every 15 minutes.
     """
-    Anchor (session).refresh (); init_session ()
+    base_uuid = Anchor (session).refresh ()
+    if base_uuid: pass ## TODO: Queue delete task!
+ ##    base = Q (Node.query).one_or_default (uuid=base_uuid)
+ ##    if base: db.session.delete (base); db.session.commit ()
+
+    init_session () ## restore the original app files
+
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
