@@ -84,21 +84,14 @@ class Node (db.Model):
 
     ###########################################################################
 
-    def get_path (self, field): ## TODO: 'rev'-decorator?
+    def get_path (self, field):
 
         if self.root:
+            @cache.version (key=[self.root.uuid, 'path', field])
+            def cached_root_path (self, field):
+                return self.root.get_path (field)
 
-            version_key = cache.version_key (key=[self.root.uuid, 'path', field])
-            version = cache.get (version_key) or 0
-            value_key = cache.make_key (version, key=[self.root.uuid, 'path', field])
-            value = cache.get (value_key)
-
-            if not value:
-                value = self.root.get_path (field)
-                cache.set (version_key, version)
-                cache.set (value_key, value)
-
-            return value + [getattr (self, field)]
+            return cached_root_path (self, field) + [getattr (self, field)]
         else:
             return [getattr (self, field)]
 
