@@ -64,7 +64,7 @@ class Node (db.Model):
     def name (self, value):
 
         if self._name != value:
-            cache.increase_version (key=[self.uuid, 'name'])
+            cache.increase_version (key=[self.uuid, 'path', 'name'])
             self._name = value
 
     ###########################################################################
@@ -84,16 +84,23 @@ class Node (db.Model):
 
     ###########################################################################
 
-    def get_path (self, field):
+    def get_path (self, field): ## TODO: 'rev'-decorator?
 
         if self.root:
-            @cache.version (key=[self.root.uuid, field])
-            def cached_path (self, field):
-                return self.root.get_path (field) + [eval ('self.' + field)]
 
-            return cached_path (self, field)
+            version_key = cache.version_key (key=[self.root.uuid, 'path', field])
+            version = cache.get (version_key) or 0
+            value_key = cache.make_key (version, key=[self.root.uuid, 'path', field])
+            value = cache.get (value_key)
+
+            if not value:
+                value = self.root.get_path (field)
+                cache.set (version_key, version)
+                cache.set (value_key, value)
+
+            return value + [getattr (self, field)]
         else:
-            return [eval ('self.' + field)]
+            return [getattr (self, field)]
 
 ###############################################################################
 ###############################################################################
