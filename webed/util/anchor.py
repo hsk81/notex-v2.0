@@ -17,7 +17,7 @@ class Anchor (object):
     ###########################################################################
 
     def get_version_key (self):
-        return cache.make_key ('global', 'version', 'anchor')
+        return cache.make_key ('version', 'anchor', '*')
 
     def get_version (self):
         key = self.get_version_key ()
@@ -27,7 +27,7 @@ class Anchor (object):
 
     def get_value_key (self):
         version, _ = self.get_version ()
-        return cache.make_key (self.sid, 'anchor', version), version
+        return cache.make_key (version, 'anchor', self.sid), version
 
     def get_value (self):
         key, _ = self.get_value_key ()
