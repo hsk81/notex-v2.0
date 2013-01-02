@@ -146,7 +146,7 @@ Ext.define ('Webed.controller.MainBar', {
             },{
                 text : 'Cancel',
                 iconCls : 'icon-cross-16',
-                handler : function (btn) {
+                handler : function () {
                     var window = this.up ('window');
                     assert (window); window.hide ();
                 }
