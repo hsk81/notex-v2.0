@@ -34,13 +34,6 @@ def is_refresh (): return 'refresh' in request.args
 ###############################################################################
 ###############################################################################
 
-@page.route ('/test/')
-def test ():
-    return main (page='home', template='index_test.html')
-
-###############################################################################
-###############################################################################
-
 @page.route ('/home/')
 def home (): return main (page='home')
 @page.route ('/overview/')
@@ -51,6 +44,10 @@ def tutorial (): return main (page='tutorial')
 def faq (): return main (page='faq')
 @page.route ('/contact/')
 def contact (): return main (page='contact')
+
+@page.route ('/test/')
+def test ():
+    return main (page='home', template='index_test.html')
 
 @page.route ('/')
 def main (page='home', template='index.html'):
