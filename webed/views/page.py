@@ -27,13 +27,6 @@ page = Blueprint ('page', __name__)
 ###############################################################################
 ###############################################################################
 
-def is_dev (): return app.debug or app.testing
-def is_reset (): return 'reset' in request.args
-def is_refresh (): return 'refresh' in request.args
-
-###############################################################################
-###############################################################################
-
 @page.route ('/home/')
 def home (): return main (page='home')
 @page.route ('/overview/')
@@ -64,6 +57,13 @@ def main (page='home', template='index.html'):
         return render_template (template, page=page, debug=debug)
 
     return cached_template (template, page=page, debug=app.debug)
+
+###############################################################################
+###############################################################################
+
+def is_dev (): return app.debug or app.testing
+def is_reset (): return 'reset' in request.args
+def is_refresh (): return 'refresh' in request.args
 
 ###############################################################################
 ###############################################################################
