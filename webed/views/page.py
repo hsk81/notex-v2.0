@@ -17,10 +17,7 @@ from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
 
 from datetime import datetime
-from tempfile import TemporaryFile
-
 import sys
-
 
 ###############################################################################
 ###############################################################################
@@ -87,22 +84,17 @@ def upload ():
     assert name
     mime = file.mimetype
     assert mime
+    data = file.read ()
+    assert data is not None
 
-    with TemporaryFile () as temp:
-
-        file.save (temp)
-        temp.seek (0)
-        data = temp.read ()
-        assert data or data == ''
+    if mime == 'text/plain':
+        TProperty = TextProperty
+    else:
+        TProperty = LargeBinaryProperty
 
     leaf = Leaf (name, root, mime=mime)
     db.session.add (leaf)
-
-    if mime == 'text/plain':
-        property = TextProperty ('data', data, leaf, mime=mime)
-    else:
-        property = LargeBinaryProperty ('data', data, leaf, mime=mime)
-
+    property = TProperty ('data', data, leaf, mime=mime)
     db.session.add (property)
     db.session.commit ()
 
