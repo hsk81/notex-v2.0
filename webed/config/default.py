@@ -36,7 +36,7 @@ class DefaultConfig:
 
     ##
     ## Override secret key in production environment using value from the
-    ## *production.py* file.
+    ## *production.py* file to ensure proper security.
     ##
 
     SECRET_KEY = '000000000000000000000000000000000000000='
@@ -56,6 +56,13 @@ class DefaultConfig:
     ##
 
     MAX_NODE_LEVEL = 2
+
+    ##
+    ## Limits the max. payload to `MAX_CONTENT_LENGTH` bytes. If a larger file
+    ## is transmitted, an `RequestEntityTooLarge` exception will be raised.
+    ##
+
+    MAX_CONTENT_LENGTH = 1 * 1024 * 1024 ## 1MB
 
 ###############################################################################
 ###############################################################################
