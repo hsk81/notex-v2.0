@@ -65,6 +65,11 @@ Ext.define ('Webed.controller.MainBar', {
         }
     },
 
+    /**
+     * TODO: Refactor by pulling `window = Ext.create (..)` out and defining it
+     *       an ExtJS class (view/controller?) in a separate file.
+     */
+
     openDocument: function (item, event, options) {
         var root = this.get_selection ();
         assert (root);
