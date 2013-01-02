@@ -66,7 +66,94 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     openDocument: function (item, event, options) {
-        console.debug ('[MainBar.openDocument]');
+        var root = this.get_selection ();
+        assert (root);
+
+        if (root.isLeaf ()) {
+            assert (root.parentNode);
+            root = root.parentNode;
+        }
+
+        var root_uuid = root.get ('uuid');
+        assert (root_uuid);
+        var application = this.application;
+        assert (application);
+
+        var window = Ext.create ('Ext.window.Window', {
+
+            border: false,
+            iconCls: 'icon-folder_page-16',
+            layout: 'fit',
+            modal: true,
+            resizable: false,
+            title: 'Open File',
+            width: 320,
+
+            items: [{
+                xtype: 'form',
+                border: false,
+                layout: 'fit',
+
+                items: [{
+                    border: false,
+                    xtype: 'filefield',
+                    allowBlank: false,
+                    anchor: '100%',
+                    buttonText: 'Select..',
+                    msgTarget: 'none',
+                    name: 'file',
+
+                    listeners: {
+                        change: function (self, value, eOpts) {
+                            var path = this.getValue ();
+                            if (path) {
+                                var last = path.lastIndexOf ('\\');
+                                if (last > -1) {
+                                    var name = path.substring (last+1);
+                                    this.setRawValue (name);
+                                }
+                            }
+                        }
+                    }
+                }]
+            }],
+
+            buttons: [{
+                text: 'Upload',
+                iconCls : 'icon-tick-16',
+                handler: function () {
+                    var window = this.up ('window'); assert (window);
+                    var panel = window.down ('form'); assert (panel);
+                    var form = panel.getForm (); assert (form);
+                    if (form.isValid ()) {
+                        form.submit ({
+                            url: '/upload/?root_uuid=' + root_uuid,
+                            waitMsg: 'Uploading your file..',
+
+                            success: function (form, action) {
+                                assert (window); window.hide ();
+                                application.fireEvent ('refresh_tree');
+                            },
+
+                            failure: function (form, action) {
+                                assert (window); window.hide ();
+                                console.error ('[MainBar.openDocument]',
+                                    form, action);
+                            }
+                        });
+                    }
+                }
+            },{
+                text : 'Cancel',
+                iconCls : 'icon-cross-16',
+                handler : function (btn) {
+                    var window = this.up ('window');
+                    assert (window); window.hide ();
+                }
+            }]
+        });
+
+        window.show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -106,7 +193,7 @@ Ext.define ('Webed.controller.MainBar', {
         var root = this.get_selection ();
         assert (root);
 
-        if (root.get ('leaf')) {
+        if (root.isLeaf ()) {
             assert (root.parentNode);
             root = root.parentNode;
         }

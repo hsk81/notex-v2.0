@@ -3,21 +3,24 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from werkzeug.utils import secure_filename
 from flask.templating import render_template
-from flask.globals import request
-from flask import Blueprint, session
-
-from datetime import datetime
+from flask.globals import request, session
+from flask import Blueprint
 
 from ..app import app
 from ..ext import db, cache
-from ..util import jsonify
+from ..util import JSON, Q, jsonify
 from ..util.anchor import Anchor
 
 from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
 
+from datetime import datetime
+from tempfile import TemporaryFile
+
 import sys
+
 
 ###############################################################################
 ###############################################################################
@@ -57,6 +60,53 @@ def main (page='home', template='index.html'):
         return render_template (template, page=page, debug=debug)
 
     return cached_template (template, page=page, debug=app.debug)
+
+###############################################################################
+###############################################################################
+
+@page.route ('/upload/', methods=['POST'])
+def upload ():
+
+    if not request.is_xhr:
+        request.json = request.args
+
+    file = request.files['file']
+    if not file: return JSON.encode (dict (success=False))
+
+    root_uuid = request.json.get ('root_uuid', None)
+    assert root_uuid
+
+    if root_uuid == '00000000-0000-0000-0000-000000000000':
+        root = Q (Node.query).one (uuid=Anchor (session).value)
+        assert root
+    else:
+        root = Q (Node.query).one (uuid=root_uuid)
+        assert root
+
+    name = secure_filename (file.filename)
+    assert name
+    mime = file.mimetype
+    assert mime
+
+    with TemporaryFile () as temp:
+
+        file.save (temp)
+        temp.seek (0)
+        data = temp.read ()
+        assert data or data == ''
+
+    leaf = Leaf (name, root, mime=mime)
+    db.session.add (leaf)
+
+    if mime == 'text/plain':
+        property = TextProperty ('data', data, leaf, mime=mime)
+    else:
+        property = LargeBinaryProperty ('data', data, leaf, mime=mime)
+
+    db.session.add (property)
+    db.session.commit ()
+
+    return JSON.encode (dict (success=True))
 
 ###############################################################################
 ###############################################################################

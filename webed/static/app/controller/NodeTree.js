@@ -51,6 +51,10 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.on ({
             select_leaf: this.select_leaf, scope: this
         });
+
+        this.application.on ({
+            refresh_tree: this.refresh, scope: this
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
