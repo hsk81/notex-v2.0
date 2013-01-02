@@ -28,7 +28,7 @@ class WebedCache (Cache):
 
         if not callable (keyfunc):
             keyfunc = lambda sid, fn, *args, **kwargs: \
-                WebedCache.make_key (sid, name or fn.__name__) ## no (kw)args!
+                self.make_key (sid, name or fn.__name__) ## no (kw)args!
 
         return self.memoize (timeout, name, session, unless, keyfunc)
 
@@ -41,7 +41,7 @@ class WebedCache (Cache):
             sid = None
 
         if not callable (keyfunc):
-            keyfunc = WebedCache.make_key
+            keyfunc = self.make_key
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -70,7 +70,7 @@ class WebedCache (Cache):
             @functools.wraps (fn)
             def decorated (*fn_args, **fn_kwargs):
 
-                version_key = WebedCache.version_key (*args, **kwargs)
+                version_key = self.version_key (*args, **kwargs)
                 version = cache.get (version_key) or 0
                 value_key = cache.make_key (version, *args, **kwargs)
                 cached_value = cache.get (value_key)
@@ -88,12 +88,12 @@ class WebedCache (Cache):
         return decorator
 
     def increase_version (self, timeout=None, *args, **kwargs):
-        version_key = WebedCache.version_key (*args, **kwargs)
+        version_key = self.version_key (*args, **kwargs)
         version = cache.get (version_key) or 0
         cache.set (version_key, version+1, timeout=timeout)
 
     def decrease_version (self, timeout=None, *args, **kwargs):
-        version_key = WebedCache.version_key (*args, **kwargs)
+        version_key = self.version_key (*args, **kwargs)
         version = cache.get (version_key) or 0
         cache.set (version_key, version-1, timeout=timeout)
 
