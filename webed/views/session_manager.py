@@ -75,7 +75,8 @@ class SessionManager:
         self.session = session
 
     def setup (self):
-        setup_session ()
+        base_uuid = setup_session (); assert base_uuid
+        Anchor (session).set_value (base_uuid)
 
     def reset (self):
         Anchor (session).reset ()
@@ -139,13 +140,7 @@ def setup_session ():
         db.session.add (prop)
 
     db.session.commit ()
-
-    ##
-    ## Ensures that session is associated with the *new* base node; it's quite
-    ## important since it provides the anchor for the rest of the application.
-    ##
-
-    Anchor (session).set_value (base.uuid)
+    return base.uuid
 
 def setup_article (root):
 

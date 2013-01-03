@@ -41,7 +41,7 @@ class Anchor (object):
 
     def reset (self, timeout=None):
         version, key = self.get_version ()
-        cache.set (key, version+1, timeout=timeout or 0) ## indefinite
+        cache.set (key, version + 1, timeout=timeout or 0) ## indefinite
         return version
 
     def refresh (self):
