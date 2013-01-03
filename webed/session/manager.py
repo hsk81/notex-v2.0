@@ -10,7 +10,7 @@ from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
 
 from datetime import datetime
-from anchor import SessionAnchor as Anchor
+from anchor import SessionAnchor
 
 ###############################################################################
 ###############################################################################
@@ -18,18 +18,18 @@ from anchor import SessionAnchor as Anchor
 class SessionManager:
 
     def __init__ (self, session):
-        self.session = session
+        self._anchor = SessionAnchor (session)
 
     def setup (self):
         base_uuid = setup_session (); assert base_uuid
-        Anchor (self.session).set_value (base_uuid)
+        self._anchor.set_value (base_uuid)
 
     def reset (self):
-        Anchor (self.session).reset ()
+        self._anchor.reset ()
         self.setup ()
 
     def refresh (self, json=True):
-        base_uuid = Anchor (self.session).delete ()
+        base_uuid = self._anchor.delete ()
         if base_uuid: self.cleanup (base_uuid)
         self.setup ()
 
@@ -53,11 +53,11 @@ class SessionManager:
 
     @property
     def virgin (self):
-        return not Anchor (self.session).initialized
+        return not self._anchor.initialized
 
     @property
     def anchor (self):
-        return Anchor (self.session).value
+        return self._anchor.value
 
 ###############################################################################
 ###############################################################################
