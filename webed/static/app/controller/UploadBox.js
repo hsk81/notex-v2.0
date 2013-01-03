@@ -63,12 +63,12 @@ Ext.define ('Webed.controller.UploadBox', {
 
                 success: function (form, action) {
                     assert (view); view.hide ();
-                    application.fireEvent ('upload_success', form, action);
+                    application.fireEvent ('refresh_tree');
                 },
 
                 failure: function (form, action) {
                     assert (view); view.hide ();
-                    application.fireEvent ('upload_failure', form, action);
+                    console.debug ('[UploadBox.confirmUpload]', 'failed');
                 }
             });
         }
