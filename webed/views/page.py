@@ -3,21 +3,15 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from werkzeug.utils import secure_filename
 from flask.templating import render_template
 from flask.globals import request, session
 from flask import Blueprint
 
 from ..app import app
-from ..ext import db, cache
-from ..util import JSON, Q, jsonify
-from ..util.anchor import Anchor
+from ..ext import cache
 
-from ..models import Node, Leaf
-from ..models import TextProperty, LargeBinaryProperty
-
-from datetime import datetime
 import sys
+import session_manager
 
 ###############################################################################
 ###############################################################################
@@ -48,189 +42,18 @@ def main (page='home', template='index.html'):
     if not request.args.get ('silent', False):
         print >> sys.stderr, "Session ID: %r" % session['_id']
 
-    if is_reset (): reset (json=False)
-    elif is_refresh (): refresh (json=False)
-    else: init_session ()
+    if 'reset' in request.args:
+        session_manager.reset (json=False)
+    elif 'refresh' in request.args:
+        session_manager.refresh (json=False)
+    else:
+        session_manager.setup (json=False)
 
-    @cache.memoize (name='views.main.cached_template', unless=is_dev)
+    @cache.memoize (name='views.main.cached_template', unless=app.is_dev)
     def cached_template (template, page, debug):
         return render_template (template, page=page, debug=debug)
 
     return cached_template (template, page=page, debug=app.debug)
-
-###############################################################################
-###############################################################################
-
-@page.route ('/upload/', methods=['POST'])
-def upload ():
-
-    if not request.is_xhr:
-        request.json = request.args
-
-    file = request.files['file']
-    if not file: return JSON.encode (dict (success=False))
-
-    root_uuid = request.json.get ('root_uuid', None)
-    assert root_uuid
-
-    if root_uuid == '00000000-0000-0000-0000-000000000000':
-        root = Q (Node.query).one (uuid=Anchor (session).value)
-        assert root
-    else:
-        root = Q (Node.query).one (uuid=root_uuid)
-        assert root
-
-    name = secure_filename (file.filename)
-    assert name
-    mime = file.mimetype
-    assert mime
-    data = file.read ()
-    assert data is not None
-
-    if mime == 'text/plain':
-        TProperty = TextProperty
-    else:
-        TProperty = LargeBinaryProperty
-
-    leaf = Leaf (name, root, mime=mime)
-    db.session.add (leaf)
-    property = TProperty ('data', data, leaf, mime=mime)
-    db.session.add (property)
-    db.session.commit ()
-
-    return JSON.encode (dict (success=True))
-
-###############################################################################
-###############################################################################
-
-def is_dev (): return app.debug or app.testing
-def is_reset (): return 'reset' in request.args
-def is_refresh (): return 'refresh' in request.args
-
-###############################################################################
-###############################################################################
-
-@page.route ('/reset/')
-@cache.memoize (900, name='views.reset', unless=is_dev)
-def reset (json=True):
-    """
-    Resets the database and is therefore a very dangerous function; so it's
-    protected by an authentication mechanism plus it's only effective once
-    every 15 minutes.
-    """
-    if is_dev (): ## TODO: Replace with authentication!
-        Anchor (session).reset (); init_session ()
-
-    result = dict (success=True, timestamp=datetime.now ())
-    return jsonify (result) if json else result
-
-@page.route ('/refresh/')
-@cache.memoize (900, name='views.refresh', session=session, unless=is_dev)
-def refresh (json=True):
-    """
-    Resets the session: If a particular user wants to get rid of her own data
-    and initialize the application to a clean state then this function should
-    be called. To avoid misuse it's effective only once every 15 minutes.
-    """
-    base_uuid = Anchor (session).refresh ()
-    if base_uuid: pass ## TODO: Queue delete task!
- ##    base = Q (Node.query).one_or_default (uuid=base_uuid)
- ##    if base: db.session.delete (base); db.session.commit ()
-
-    init_session () ## restore the original app files
-
-    result = dict (success=True, timestamp=datetime.now ())
-    return jsonify (result) if json else result
-
-###############################################################################
-###############################################################################
-
-def init_session ():
-
-    if Anchor (session).initiated:
-        return ## cache hit!
-
-    base = Node ('root', root=None, mime='application/root')
-    db.session.add (base)
-    db.session.commit ()
-
-    init_article (root=base)
-    init_report (root=base)
-
-    leaf = Leaf ('author.txt', root=base, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-
-    leaf = Leaf ('about.tiff', root=base, mime='image/tiff')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/tiff')
-    db.session.add (prop)
-
-    node = Node ('Archive', root=base, mime='application/project')
-    db.session.add (node)
-    for index in range (50):
-        leaf = Leaf ('file-%03d.txt' % index, root=node, mime='text/plain')
-        db.session.add (leaf)
-        prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-        db.session.add (prop)
-
-    db.session.commit ()
-
-    ##
-    ## Ensures that session is associated with the *new* base node; it's quite
-    ## important since it provides the anchor for the rest of the application.
-    ##
-
-    Anchor (session).set_value (base.uuid)
-
-def init_article (root):
-
-    node = Node ('Article', root, mime='application/project')
-    db.session.add (node)
-    leaf = Leaf ('options.cfg', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-    leaf = Leaf ('content.txt', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-
-    node = Node ('resources', node, mime='application/folder')
-    db.session.add (node)
-    leaf = Leaf ('wiki.png', node, mime='image/png')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
-    db.session.add (prop)
-    leaf = Leaf ('time.jpg', node, mime='image/jpg')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
-    db.session.add (prop)
-
-def init_report (root):
-
-    node = Node ('Report', root, mime='application/project')
-    db.session.add (node)
-    leaf = Leaf ('options.cfg', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-    leaf = Leaf ('content.txt', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-
-    node = Node ('resources', node, mime='application/folder')
-    db.session.add (node)
-    leaf = Leaf ('wiki.png', node, mime='image/png')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
-    db.session.add (prop)
-    leaf = Leaf ('time.jpg', node, mime='image/jpg')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
-    db.session.add (prop)
 
 ###############################################################################
 ###############################################################################

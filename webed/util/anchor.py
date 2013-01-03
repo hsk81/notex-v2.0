@@ -69,7 +69,7 @@ class Anchor (object):
     ###########################################################################
 
     @property
-    def initiated (self):
+    def initialized (self):
         return self.value is not None
 
 ###############################################################################
