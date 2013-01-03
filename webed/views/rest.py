@@ -165,14 +165,14 @@ def node_delete (leafs=True, json=True):
 ###############################################################################
 ###############################################################################
 
-class LeafsApi (MethodView):
+class LeafApi (MethodView):
 
     def post (self, json=True): return leaf_create (json)
     def get (self, json=True): return leaf_read (json)
     def put (self, json=True): return leaf_update (json)
     def delete (self, json=True): return leaf_delete (json)
 
-rest.add_url_rule ('/leaf', view_func=LeafsApi.as_view ('leafs'))
+rest.add_url_rule ('/leaf', view_func=LeafApi.as_view ('leafs'))
 
 def leaf_create (json=True):
 
