@@ -4,13 +4,12 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
-from flask.globals import request, session
+from flask.globals import request
 from flask import Blueprint
 
 from ..app import app
 from ..ext import db
 from ..util import JSON, Q
-from ..util.anchor import Anchor
 
 from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
@@ -36,7 +35,7 @@ def upload ():
     assert root_uuid
 
     if root_uuid == '00000000-0000-0000-0000-000000000000':
-        root = Q (Node.query).one (uuid=Anchor (session).value)
+        root = Q (Node.query).one (uuid=app.session_manager.anchor)
         assert root
     else:
         root = Q (Node.query).one (uuid=root_uuid)
