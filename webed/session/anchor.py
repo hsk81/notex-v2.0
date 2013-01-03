@@ -8,7 +8,7 @@ from ..ext.cache import cache
 ###############################################################################
 ###############################################################################
 
-class Anchor (object):
+class SessionAnchor (object):
 
     def __init__ (self, session):
 
@@ -39,18 +39,6 @@ class Anchor (object):
 
     ###########################################################################
 
-    def reset (self, timeout=None):
-        version, key = self.get_version ()
-        cache.set (key, version + 1, timeout=timeout or 0) ## indefinite
-        return version
-
-    def refresh (self):
-        value, key = self.get_value ()
-        if value and key: cache.delete (key)
-        return value
-
-    ###########################################################################
-
     @property
     def key (self):
         key, _ = self.get_value_key ()
@@ -71,6 +59,18 @@ class Anchor (object):
     @property
     def initialized (self):
         return self.value is not None
+
+    ###########################################################################
+
+    def reset (self, timeout=None):
+        version, key = self.get_version ()
+        cache.set (key, version + 1, timeout=timeout or 0) ## indefinite
+        return version
+
+    def delete (self):
+        value, key = self.get_value ()
+        if key: cache.delete (key)
+        return value
 
 ###############################################################################
 ###############################################################################
