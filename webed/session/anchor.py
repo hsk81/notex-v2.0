@@ -56,6 +56,10 @@ class SessionAnchor (object):
     ###########################################################################
 
     @property
+    def sid (self):
+        return self._sid
+
+    @property
     def initialized (self):
         return self.value is not None
 
