@@ -9,7 +9,6 @@ from flask import Blueprint
 from ..app import app
 from ..ext import cache
 from ..util import jsonify
-from ..session import SessionManager
 
 from datetime import datetime
 
@@ -29,9 +28,8 @@ def setup (json=True):
     To avoid misuse - in addition to the virginity check - it's effective only
     once per 15 min (per session).
     """
-    session_manager = SessionManager (session)
-    if session_manager.virgin:
-        session_manager.setup ()
+    if app.session_manager.virgin:
+        app.session_manager.setup ()
         result = dict (success=True, timestamp=datetime.now ())
     else:
         result = dict (success=False, timestamp=datetime.now ())
@@ -46,7 +44,7 @@ def refresh (json=True):
     and initialize the application to a clean state then this function should
     be called. To avoid misuse it's effective once per 15 min (per session)!
     """
-    SessionManager (session).refresh ()
+    app.session_manager.refresh ()
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
@@ -58,8 +56,7 @@ def reset (json=True):
     protected by an authentication mechanism plus it's only effective once
     every 15 minutes (globally)!
     """
-    session_manager = SessionManager (session)
-    if session_manager.authenticated: session_manager.reset ()
+    if app.session_manager.authenticated: app.session_manager.reset ()
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 

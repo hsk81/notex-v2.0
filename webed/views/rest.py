@@ -11,7 +11,6 @@ from ..ext import db
 from ..app import app
 from ..models import *
 from ..util import Q, JSON, jsonify
-from ..session import SessionManager as SM
 
 import sys
 
@@ -50,7 +49,7 @@ def node_create (leafs=True, json=True):
     name = request.json.get ('name', None)
     assert name is not None
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     root = Q (base.subnodes).one_or_default (uuid=root_uuid, default=base)
     assert root
@@ -68,7 +67,7 @@ def node_create (leafs=True, json=True):
 
 def node_read (leafs=True, json=True):
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
 
     omit_top = request.args.get ('omit_top', False)
@@ -123,7 +122,7 @@ def node_update (leafs=True, json=True):
     mime = request.json.get ('mime', None)
     assert mime
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     node = Q (base.subnodes).one (uuid=uuid)
     assert node
@@ -151,7 +150,7 @@ def node_delete (leafs=True, json=True):
     uuid = request.json.get ('uuid', None)
     assert uuid
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     node = Q (base.subnodes).one (uuid=uuid)
     assert node
@@ -188,7 +187,7 @@ def leaf_create (json=True):
     name = request.json.get ('name', None)
     assert name is not None
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     root = Q (base.subnodes).one_or_default (uuid=root_uuid, default=base)
     assert root
@@ -206,7 +205,7 @@ def leaf_create (json=True):
 
 def leaf_read (json=True):
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
 
     kwargs = {}
@@ -250,7 +249,7 @@ def leaf_update (json=True):
     name = request.json.get ('name', None)
     assert name is not None
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     leaf = Q (base.subleafs).one (uuid=uuid)
     assert leaf
@@ -277,7 +276,7 @@ def leaf_delete (json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     leaf = Q (base.subleafs).one (uuid=uuid)
     assert leaf
@@ -320,7 +319,7 @@ def property_create (json=True):
     size = request.json.get ('size', None)
     assert size or not size
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     node = Q (base.subnodes).one_or_default (uuid=node_uuid, default=base)
     assert node
@@ -338,7 +337,7 @@ def property_create (json=True):
 
 def property_read (json=True):
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
 
     kwargs = {}
@@ -387,7 +386,7 @@ def property_update (json=True):
     size = request.json.get ('size', None)
     assert size or not size
 
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     prop = Q (base.subprops).one (uuid=uuid)
     assert prop
@@ -417,7 +416,7 @@ def property_delete (json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
-    base = Q (Node.query).one (uuid=SM (session).anchor)
+    base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     prop = Q (base.subprops).one (uuid=uuid)
     assert prop

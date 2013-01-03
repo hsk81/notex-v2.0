@@ -3,16 +3,27 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from flask.globals import session
 from flask.app import Flask
-from config import DefaultConfig
+
+from .config import DefaultConfig
 
 ###############################################################################
 ###############################################################################
 
 class WebedApplication (Flask):
 
+    def __init__ (self, *args, **kwargs):
+        super (WebedApplication, self).__init__ (*args, **kwargs)
+
+    @property
+    def session_manager (self):
+        from .session import SessionManager
+        return SessionManager (session)
+
     def is_dev (self):
         return self.debug or self.testing
+
     dev = property (is_dev)
 
 app = WebedApplication (__name__)
