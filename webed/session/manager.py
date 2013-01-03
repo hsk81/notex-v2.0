@@ -29,7 +29,7 @@ class SessionManager:
         self.setup ()
 
     def refresh (self, json=True):
-        base_uuid = self._anchor.delete ()
+        base_uuid = self._anchor.refresh ()
         if base_uuid: self.cleanup (base_uuid)
         self.setup ()
 

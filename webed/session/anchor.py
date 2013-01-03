@@ -11,13 +11,12 @@ from ..ext.cache import cache
 class SessionAnchor (object):
 
     def __init__ (self, session):
-
-        self.sid = session['_id']
+        self._sid = session['_id']
 
     ###########################################################################
 
     def get_version_key (self):
-        return cache.make_key ('version', self.sid)
+        return cache.make_key ('version', self._sid)
 
     def get_version (self):
         key = self.get_version_key ()
@@ -27,7 +26,7 @@ class SessionAnchor (object):
 
     def get_value_key (self):
         version, _ = self.get_version ()
-        return cache.make_key (version, self.sid), version
+        return cache.make_key (version, self._sid), version
 
     def get_value (self):
         key, _ = self.get_value_key ()
@@ -67,7 +66,7 @@ class SessionAnchor (object):
         cache.set (key, version + 1, timeout=timeout or 0) ## indefinite
         return version
 
-    def delete (self):
+    def refresh (self):
         value, key = self.get_value ()
         if key: cache.delete (key)
         return value
