@@ -42,7 +42,7 @@ class SessionManager:
         """
         assert base_uuid
         ##  base = Q (Node.query).one_or_default (uuid=base_uuid)
-    ##  if base: db.session.delete (base); db.session.commit ()
+        ##  if base: db.session.delete (base); db.session.commit ()
 
     @property
     def authenticated (self):
