@@ -26,7 +26,8 @@ Ext.application ({
         'LeafList',
         'MainBar',
         'ContentTabs',
-        'StatusBar'
+        'StatusBar',
+        'UploadBox'
     ],
 
     paths: {
@@ -35,5 +36,12 @@ Ext.application ({
 
     launch: function () {
         Ext.create ('Webed.view.Viewport');
+    },
+
+    get_selection: function () {
+        var controller = this.getController ('NodeTree');
+        assert (controller);
+
+        return controller.get_selection ();
     }
 });

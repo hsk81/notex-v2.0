@@ -3,10 +3,9 @@ Ext.define ('Webed.view.MainBar', {
     alias: 'widget.main-bar',
 
     requires: [
-        'Ext.form.Panel',
         'Ext.button.Split',
-        'Ext.form.field.File',
-        'Ext.container.ButtonGroup'
+        'Ext.container.ButtonGroup',
+        'Webed.view.UploadBox'
     ],
 
     items: [{
