@@ -58,8 +58,8 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     openDocument: function (item, event, options) {
-        var window = Ext.create ('Webed.view.UploadBox');
-        assert (window); window.show ();
+        var uploadBox = Ext.create ('Webed.view.UploadBox');
+        assert (uploadBox); uploadBox.show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
