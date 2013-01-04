@@ -36,7 +36,7 @@ Ext.apply (Ext.form.field.VTypes, {
 Ext.define ('Webed.view.FileUploadBox', {
     extend: 'Webed.view.UploadBox',
     alias: 'widget.file-upload-box',
-    iconCls: 'icon-page_white_add-16',
+    iconCls: 'icon-folder_page-16',
     title: 'Upload File',
 
     items: [{
@@ -69,7 +69,7 @@ Ext.apply (Ext.form.field.VTypes, {
 Ext.define ('Webed.view.ArchiveUploadBox', {
     extend: 'Webed.view.UploadBox',
     alias: 'widget.archive-upload-box',
-    iconCls: 'icon-package_add-16',
+    iconCls: 'icon-page_white_zip-16',
     title: 'Upload Archive',
 
     items: [{
