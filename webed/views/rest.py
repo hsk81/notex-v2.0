@@ -5,7 +5,7 @@ __author__ = 'hsk81'
 
 from flask.views import MethodView
 from flask.globals import request
-from flask import Blueprint, session
+from flask import Blueprint
 
 from ..ext import db
 from ..app import app
