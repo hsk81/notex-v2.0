@@ -219,9 +219,9 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs
+        query = root.leafs ## TODO: Sort by `leaf.get-path ('name')`!
     else:
-        query = base.subleafs
+        query = base.subleafs ## TODO: Sort!
 
     start = int (request.args.get ('start', 0))
     limit = int (request.args.get ('limit', 25))
