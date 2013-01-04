@@ -8,28 +8,11 @@ Ext.define ('Webed.view.UploadBox', {
     ],
 
     border: false,
-    iconCls: 'icon-folder_page-16',
     layout: 'fit',
     modal: true,
     resizable: false,
     title: 'Upload',
     width: 320,
-
-    items: [{
-        xtype: 'form',
-        border: false,
-        layout: 'fit',
-
-        items: [{
-            border: false,
-            xtype: 'filefield',
-            allowBlank: false,
-            anchor: '100%',
-            buttonText: 'Select..',
-            msgTarget: 'none',
-            name: 'file'
-        }]
-    }],
 
     buttons: [{
         text: 'Upload',
@@ -53,22 +36,24 @@ Ext.apply (Ext.form.field.VTypes, {
 Ext.define ('Webed.view.FileUploadBox', {
     extend: 'Webed.view.UploadBox',
     alias: 'widget.file-upload-box',
+    iconCls: 'icon-page_white_add-16',
     title: 'Upload File',
 
     items: [{
         xtype: 'form',
-        border: false,
         layout: 'fit',
+        bodyPadding: '4',
 
         items: [{
-            border: false,
             xtype: 'filefield',
+            vtype: 'file',
             allowBlank: false,
-            anchor: '100%',
-            buttonText: 'Select..',
-            msgTarget: 'none',
             name: 'file',
-            vtype: 'file'
+            emptyText: 'Select file ..',
+            buttonText: '',
+            buttonConfig: {
+                iconCls: 'icon-folder-16'
+            }
         }]
     }]
 });
@@ -84,22 +69,24 @@ Ext.apply (Ext.form.field.VTypes, {
 Ext.define ('Webed.view.ArchiveUploadBox', {
     extend: 'Webed.view.UploadBox',
     alias: 'widget.archive-upload-box',
+    iconCls: 'icon-package_add-16',
     title: 'Upload Archive',
 
     items: [{
         xtype: 'form',
-        border: false,
         layout: 'fit',
+        bodyPadding: '4',
 
         items: [{
-            border: false,
             xtype: 'filefield',
+            vtype: 'zipArchive',
             allowBlank: false,
-            anchor: '100%',
-            buttonText: 'Select..',
-            msgTarget: 'none',
             name: 'file',
-            vtype: 'zipArchive'
+            emptyText: 'Select ZIP archive ..',
+            buttonText: '',
+            buttonConfig: {
+                iconCls: 'icon-folder-16'
+            }
         }]
     }]
 });
