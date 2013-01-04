@@ -46,7 +46,7 @@ Ext.apply (Ext.form.field.VTypes, {
     zipArchiveText: "ZIP Archive expected",
     zipArchiveMask: /\w\d\s\./i,
     zipArchive: function (value, field) {
-        return /^.*\.zip$/i.test (value);
+        return /^.+\.zip$/i.test (value);
     }
 });
 
