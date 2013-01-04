@@ -273,7 +273,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     importProject: function () {
-        console.debug ('[MainBar.importProject]');
+        Ext.create ('Webed.view.ArchiveUploadBox').show ();
     },
 
     exportProject: function () {
