@@ -48,7 +48,7 @@ Ext.define ('Webed.controller.UploadBox', {
 
         if (form.isValid ()) {
             form.submit ({
-                url: url + root_uuid,
+                url: Ext.String.format ('{0}/?root_uuid={1}', url, root_uuid),
                 waitMsg: 'Uploading your file..',
 
                 success: function () {

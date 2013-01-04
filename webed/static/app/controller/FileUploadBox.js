@@ -29,7 +29,7 @@ Ext.define ('Webed.controller.FileUploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_url: function () {
-        return '/file-upload/?root_uuid=';
+        return '/file-upload';
     },
 
     get_root: function () {
