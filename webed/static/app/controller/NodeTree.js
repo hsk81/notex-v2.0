@@ -154,6 +154,8 @@ Ext.define ('Webed.controller.NodeTree', {
 
     refresh: function () {
 
+        var node = this.get_selection ();
+        assert (node);
         var view = this.getNodeTree ();
         assert (view);
         var base = view.getRootNode ();
@@ -168,6 +170,7 @@ Ext.define ('Webed.controller.NodeTree', {
         table.el.mask ('Loading...');
 
         store.load ({callback: function (recs, op, success) {
+            this.set_selection (node);
             table.el.unmask ();
         }, node: base, scope: this});
     },
