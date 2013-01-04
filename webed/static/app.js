@@ -41,8 +41,6 @@ Ext.application ({
 
     get_selection: function () {
         var controller = this.getController ('NodeTree');
-        assert (controller);
-
-        return controller.get_selection ();
+        assert (controller); return controller.get_selection ();
     }
 });
