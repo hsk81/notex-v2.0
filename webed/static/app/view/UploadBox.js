@@ -43,10 +43,10 @@ Ext.define ('Webed.view.UploadBox', {
 });
 
 Ext.apply (Ext.form.field.VTypes, {
-    zipArchiveText: "ZIP Archive expected",
-    zipArchiveMask: /\w\d\s\./i,
-    zipArchive: function (value, field) {
-        return /^.+\.zip$/i.test (value);
+    fileText: "File expected",
+    fileMask: /\w\d\s\./i,
+    file: function (value, field) {
+        return /^.+$/i.test (value);
     }
 });
 
@@ -68,16 +68,16 @@ Ext.define ('Webed.view.FileUploadBox', {
             buttonText: 'Select..',
             msgTarget: 'none',
             name: 'file',
-            vtype: 'zipArchive'
+            vtype: 'file'
         }]
     }]
 });
 
 Ext.apply (Ext.form.field.VTypes, {
-    fileText: "File expected",
-    fileMask: /\w\d\s\./i,
-    file: function (value, field) {
-        return /^.+$/i.test (value);
+    zipArchiveText: "ZIP Archive expected",
+    zipArchiveMask: /\w\d\s\./i,
+    zipArchive: function (value, field) {
+        return /^.+\.zip$/i.test (value);
     }
 });
 
@@ -99,7 +99,7 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
             buttonText: 'Select..',
             msgTarget: 'none',
             name: 'file',
-            vtype: 'file'
+            vtype: 'zipArchive'
         }]
     }]
 });
