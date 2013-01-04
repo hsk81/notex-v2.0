@@ -12,7 +12,7 @@ Ext.define ('Webed.view.UploadBox', {
     layout: 'fit',
     modal: true,
     resizable: false,
-    title: 'Open File',
+    title: 'Upload',
     width: 320,
 
     items: [{
@@ -39,5 +39,67 @@ Ext.define ('Webed.view.UploadBox', {
         text : 'Cancel',
         iconCls : 'icon-cross-16',
         action: 'cancel'
+    }]
+});
+
+Ext.apply (Ext.form.field.VTypes, {
+    zipArchiveText: "ZIP Archive expected",
+    zipArchiveMask: /\w\d\s\./i,
+    zipArchive: function (value, field) {
+        return /^.*\.zip$/i.test (value);
+    }
+});
+
+Ext.define ('Webed.view.FileUploadBox', {
+    extend: 'Webed.view.UploadBox',
+    alias: 'widget.file-upload-box',
+    title: 'Upload File',
+
+    items: [{
+        xtype: 'form',
+        border: false,
+        layout: 'fit',
+
+        items: [{
+            border: false,
+            xtype: 'filefield',
+            allowBlank: false,
+            anchor: '100%',
+            buttonText: 'Select..',
+            msgTarget: 'none',
+            name: 'file',
+            vtype: 'zipArchive'
+        }]
+    }]
+});
+
+Ext.apply (Ext.form.field.VTypes, {
+    fileText: "File expected",
+    fileMask: /\w\d\s\./i,
+    file: function (value, field) {
+        return /^.+$/i.test (value);
+    }
+});
+
+Ext.define ('Webed.view.ArchiveUploadBox', {
+    extend: 'Webed.view.UploadBox',
+    alias: 'widget.archive-upload-box',
+    title: 'Upload Archive',
+
+    items: [{
+        xtype: 'form',
+        border: false,
+        layout: 'fit',
+
+        items: [{
+            border: false,
+            xtype: 'filefield',
+            allowBlank: false,
+            anchor: '100%',
+            buttonText: 'Select..',
+            msgTarget: 'none',
+            name: 'file',
+            vtype: 'file'
+        }]
     }]
 });

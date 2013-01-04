@@ -42,7 +42,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    saveDocument: function (item, event, options) {
+    saveDocument: function () {
         var node = this.get_selection ();
         assert (node);
 
@@ -57,19 +57,18 @@ Ext.define ('Webed.controller.MainBar', {
         }
     },
 
-    openDocument: function (item, event, options) {
-        var uploadBox = Ext.create ('Webed.view.UploadBox');
-        assert (uploadBox); uploadBox.show ();
+    openDocument: function () {
+        Ext.create ('Webed.view.FileUploadBox').show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    add: function (item, event, options) {
-        this.addProject (item, event, options);
+    add: function () {
+        this.addProject ();
     },
 
-    addProject: function (item, event, options) {
+    addProject: function () {
         var root = Ext.getStore ('Nodes').getRootNode ();
         assert (root);
 
@@ -95,7 +94,7 @@ Ext.define ('Webed.controller.MainBar', {
         });
     },
 
-    addFolder: function (item, event, options) {
+    addFolder: function () {
         var root = this.get_selection ();
         assert (root);
 
@@ -126,7 +125,7 @@ Ext.define ('Webed.controller.MainBar', {
         });
     },
 
-    addText: function (item, event, options) {
+    addText: function () {
         var root = this.get_selection ();
         assert (root);
 
@@ -135,12 +134,15 @@ Ext.define ('Webed.controller.MainBar', {
             root = root.parentNode;
         }
 
+        var application = this.application;
+        assert (application);
+
         message.prompt ({
             title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
-                this.application.fireEvent ('create_leaf', {
+                application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, with: {
                         root: root,
                         mime: 'text/plain',
@@ -151,7 +153,7 @@ Ext.define ('Webed.controller.MainBar', {
 
                 function callback (leaf, op) {
                     if (leaf && op && op.success) {
-                        this.application.fireEvent ('set_property', this, {
+                        application.fireEvent ('set_property', this, {
                             scope: this, callback: on_set, property: [{
                                 node_uuid: leaf.get ('uuid'),
                                 name: 'data',
@@ -182,13 +184,16 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    rename: function (item, event, options) {
+    rename: function () {
         var node = this.get_selection ();
         assert (node);
 
         if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
             return;
         }
+
+        var application = this.application;
+        assert (application);
 
         message.prompt ({
             title: 'Rename', value: node.get ('name'),
@@ -197,7 +202,7 @@ Ext.define ('Webed.controller.MainBar', {
                     return;
                 }
 
-                this.application.fireEvent ('update_node', {
+                application.fireEvent ('update_node', {
                     scope: this, callback: callback, for: node, to: {
                         name: text
                     }
@@ -205,10 +210,10 @@ Ext.define ('Webed.controller.MainBar', {
 
                 function callback (rec, op) {
                     if (rec && op && op.success) {
-                        this.application.fireEvent ('rename_tab', this, {
+                        application.fireEvent ('rename_tab', this, {
                             record: rec
                         });
-                        this.application.fireEvent ('reload_leaf', this, {
+                        application.fireEvent ('reload_leaf', this, {
                             record: rec
                         });
                     } else {
@@ -222,13 +227,16 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    destroy: function (item, event, options) {
+    destroy: function () {
         var node = this.get_selection ();
         assert (node);
 
         if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
             return;
         }
+
+        var application = this.application;
+        assert (application);
 
         message.confirm ({
             title: 'Delete',
@@ -241,16 +249,16 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, fn: function (button) {
                 if (button != 'yes') return;
 
-                this.application.fireEvent ('delete_node', {
+                application.fireEvent ('delete_node', {
                     scope: this, callback: callback, for: node
                 });
 
                 function callback (rec, op) {
                     if (rec && op && op.success) {
-                        this.application.fireEvent ('delete_tab', this, {
+                        application.fireEvent ('delete_tab', this, {
                             record: rec
                         });
-                        this.application.fireEvent ('reload_leaf', this, {
+                        application.fireEvent ('reload_leaf', this, {
                             record: rec
                         });
                     } else {
@@ -264,11 +272,11 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    importProject: function (item, event, options) {
+    importProject: function () {
         console.debug ('[MainBar.importProject]');
     },
 
-    exportProject: function (item, event, options) {
+    exportProject: function () {
         console.debug ('[MainBar.exportProject]');
     },
 

@@ -4,25 +4,13 @@ Ext.define ('Webed.controller.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    refs: [{
-        selector: 'upload-box', ref: 'uploadBox'
-    }],
+    get_url: null, //@abstract
+    get_root: null, //@abstract
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    init: function () {
-        this.control ({
-            'upload-box button[action=confirm]': { click: this.confirmUpload },
-            'upload-box button[action=cancel]': { click: this.cancelUpload },
-            'upload-box form filefield': { change: this.change }
-        });
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    change: function (field, value, eOpts) {
+    change: function (field) {
         var path = field.getValue ();
         if (path) {
             var last = path.lastIndexOf ('\\');
@@ -36,7 +24,7 @@ Ext.define ('Webed.controller.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    confirmUpload: function (button, event, eOpts) {
+    confirmUpload: function () {
         var application = this.application;
         assert (application);
         var view = this.getUploadBox ();
@@ -45,12 +33,14 @@ Ext.define ('Webed.controller.UploadBox', {
         assert (panel);
         var form = panel.getForm ();
         assert (form);
-        var root = this.get_selection ();
+
+        var url = this.get_url ();
+        assert (url);
+        var root = this.get_root ();
         assert (root);
 
         if (root.isLeaf ()) {
-            assert (root.parentNode);
-            root = root.parentNode;
+            assert (root.parentNode); root = root.parentNode;
         }
 
         var root_uuid = root.get ('uuid');
@@ -58,15 +48,15 @@ Ext.define ('Webed.controller.UploadBox', {
 
         if (form.isValid ()) {
             form.submit ({
-                url: '/upload/?root_uuid=' + root_uuid,
+                url: url + root_uuid,
                 waitMsg: 'Uploading your file..',
 
-                success: function (form, action) {
+                success: function () {
                     assert (view); view.destroy ();
                     application.fireEvent ('refresh_tree');
                 },
 
-                failure: function (form, action) {
+                failure: function () {
                     assert (view); view.destroy ();
                     console.debug ('[UploadBox.confirmUpload]', 'failed');
                 }
@@ -74,16 +64,9 @@ Ext.define ('Webed.controller.UploadBox', {
         }
     },
 
-    cancelUpload: function (item, event, options) {
+    cancelUpload: function () {
         var view = this.getUploadBox ();
-        assert (view); view.hide ();
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    get_selection: function () {
-        return this.application.get_selection ();
+        assert (view); view.destroy ();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,42 @@
+Ext.define ('Webed.controller.ArchiveUploadBox', {
+    extend: 'Webed.controller.UploadBox',
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    refs: [{
+        selector: 'archive-upload-box', ref: 'uploadBox'
+    }],
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    init: function () {
+        this.control ({
+            'archive-upload-box button[action=confirm]': {
+                click: this.confirmUpload
+            },
+            'archive-upload-box button[action=cancel]': {
+                click: this.cancelUpload
+            },
+            'archive-upload-box form filefield': {
+                change: this.change
+            }
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    get_url: function () {
+        return '/archive-upload/?root_uuid=';
+    },
+
+    get_root: function () {
+        var nodes = this.application.getStore ('Nodes');
+        assert (nodes); return nodes.getRootNode ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+});

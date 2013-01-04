@@ -27,7 +27,8 @@ Ext.application ({
         'MainBar',
         'ContentTabs',
         'StatusBar',
-        'UploadBox'
+        'FileUploadBox',
+        'ArchiveUploadBox'
     ],
 
     paths: {
