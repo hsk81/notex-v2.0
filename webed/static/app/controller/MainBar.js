@@ -187,8 +187,10 @@ Ext.define ('Webed.controller.MainBar', {
     rename: function () {
         var node = this.get_selection ();
         assert (node);
+        var uuid = node.get ('uuid');
+        assert (uuid);
 
-        if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
+        if (uuid == '00000000-0000-0000-0000-000000000000') {
             return;
         }
 
@@ -230,8 +232,10 @@ Ext.define ('Webed.controller.MainBar', {
     destroy: function () {
         var node = this.get_selection ();
         assert (node);
+        var uuid = node.get ('uuid');
+        assert (uuid);
 
-        if (node.get ('uuid') == '00000000-0000-0000-0000-000000000000') {
+        if (uuid == '00000000-0000-0000-0000-000000000000') {
             return;
         }
 
@@ -277,7 +281,59 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     exportProject: function () {
-        console.debug ('[MainBar.exportProject]');
+        var node = this.get_selection ();
+        assert (node);
+
+        while (node.parentNode != null && node.parentNode.parentNode != null) {
+            node = node.parentNode
+        }
+
+        var uuid = node.get ('uuid');
+        assert (uuid);
+
+        if (uuid == '00000000-0000-0000-0000-000000000000') return;
+        var url = '/archive-download/?node_uuid=' + uuid;
+
+        var onSuccess = function (xhr, opts) {
+            var body = Ext.getBody ();
+
+            var old_frame = Ext.get ('iframe');
+            if (old_frame != null) Ext.destroy (old_frame);
+
+            var new_frame = body.createChild ({
+                tag: 'iframe',
+                cls: 'x-hidden',
+                id: 'iframe',
+                name: 'iframe'
+            }); assert (new_frame);
+
+            var form = body.createChild ({
+                tag: 'form',
+                cls: 'x-hidden',
+                id: 'form',
+                method: 'POST',
+                action: url + '&fetch=true',
+                target: 'iframe'
+            }); assert (form);
+
+            form.dom.submit ();
+        }
+
+        var onFailure = function (xhr, opts, res) {
+            console.error ('[MainBar.exportProject]', xhr, opts, res)
+        }
+
+        Ext.Ajax.request ({
+            url: url, callback: function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText);
+                    if (res.success) onSuccess (xhr, opts);
+                    else onFailure (xhr, opts, res);
+                } else {
+                    onFailure (xhr, opts);
+                }
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
