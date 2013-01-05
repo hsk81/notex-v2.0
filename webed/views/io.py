@@ -116,7 +116,12 @@ def extract (zip_file, path):
         return path
 
     with zipfile.ZipFile (zip_file, 'r') as zip_buffer:
-        for zi in zip_buffer.infolist ():
+
+        infolist = zip_buffer.infolist ()
+        swap = lambda (lhs, rhs): (rhs, lhs)
+        key = lambda zi: swap (os.path.splitext (zi.filename))
+
+        for zi in sorted (infolist, key=key, reverse=True):
 
             zi.filename = sanitize (zi.filename)
             zip_buffer.extract (zi, path=path)
