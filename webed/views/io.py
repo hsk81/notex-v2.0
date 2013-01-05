@@ -242,7 +242,7 @@ def archive_download (chunk_size = 256*1024):
             content_csz = chunk_size
 
             def next_chunk (length, size):
-                for index in range(0, length, size):
+                for index in range (0, length, size):
                     yield content_val[index:index+size]
 
             response = Response (next_chunk (content_len, content_csz))
