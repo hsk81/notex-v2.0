@@ -255,11 +255,15 @@ def compress (root):
     str_buffer = StringIO ()
     zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
 
-    def compress_node (node, path):
+    def compress_node (node, node_path):
 
-        pass ## nothing to do!
+        for path, nodes, leafs in walk (node):
+            for sub_node in nodes:
+                compress_node (sub_node, os.path.join (node_path, path))
+            for sub_leaf in leafs:
+                compress_leaf (sub_leaf, os.path.join (node_path, path))
 
-    def compress_leaf (leaf, path):
+    def compress_leaf (leaf, leaf_path):
 
         prop = Q (leaf.props).one (name='data')
         assert prop
@@ -272,16 +276,16 @@ def compress (root):
             data = prop.data
 
         assert data is not None
-        leaf_path = os.path.join (path, leaf.name)
-        leaf_path = os.path.normpath (leaf_path)
-        zip_buffer.writestr (leaf_path, bytes=data)
+        path = os.path.join (leaf_path, leaf.name)
+        path = os.path.normpath (path)
+        zip_buffer.writestr (path, bytes=data)
 
     if isinstance (root, Leaf):
-        compress_leaf (root, path='')
+        compress_leaf (root, leaf_path='')
     else:
         for path, nodes, leafs in walk (root):
-            for node in nodes: compress_node (node, path=path)
-            for leaf in leafs: compress_leaf (leaf, path=path)
+            for sub_node in nodes: compress_node (sub_node, path)
+            for sub_leaf in leafs: compress_leaf (sub_leaf, path)
 
     zip_buffer.close ()
     content_val = str_buffer.getvalue ()
