@@ -119,7 +119,6 @@ def extract (zip_file, path):
         for zi in zip_buffer.infolist ():
 
             zi.filename = sanitize (zi.filename)
-            if not zi.filename: continue ## security!
             zip_buffer.extract (zi, path=path)
 
 ###############################################################################
