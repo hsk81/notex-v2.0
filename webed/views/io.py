@@ -130,8 +130,7 @@ def create_prj (path, name):
     assert base
 
     prj_node = Node (name, base, mime='application/project')
-    cache = {path: prj_node}
-    db.session.add (prj_node)
+    db.session.add (prj_node); cache = {path: prj_node}
 
     for cur_path, dir_names, file_names in os.walk (path):
         root = cache.get (cur_path)
@@ -139,18 +138,16 @@ def create_prj (path, name):
 
         for dn in dir_names:
             node = create_dir (cur_path, dn, root, mime='application/folder')
-            dir_path = os.path.join (cur_path, dn)
-            cache[dir_path] = node
-            db.session.add (node)
+            db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
             mime = guess_mime (cur_path, fn)
             if mime == 'text/plain':
-                leaf, prop = create_txt (cur_path, fn, root, mime=mime)
+                leaf, _ = create_txt (cur_path, fn, root, mime=mime)
+                db.session.add (leaf)
             else:
-                leaf, prop = create_bin (cur_path, fn, root, mime=mime)
-            db.session.add (leaf)
-            db.session.add (prop)
+                leaf, _ = create_bin (cur_path, fn, root, mime=mime)
+                db.session.add (leaf)
 
     db.session.commit ()
     return prj_node
@@ -165,7 +162,7 @@ def create_txt (path, name, root, mime):
         data = file.read ().replace ('\r\n','\n')
 
     leaf = Leaf (name, root, mime=mime)
-    prop = TextProperty (name, data, leaf, mime=mime)
+    prop = TextProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
@@ -175,7 +172,7 @@ def create_bin (path, name, root, mime):
         data = file.read () ## TODO: 'data:%s;base64,..'?
 
     leaf = Leaf (name, root, mime=mime)
-    prop = LargeBinaryProperty (name, data, leaf, mime=mime)
+    prop = LargeBinaryProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
@@ -185,6 +182,10 @@ def guess_mime (path, name):
 
     if not mimetypes.inited:
         mimetypes.init ()
+
+    ##
+    ## TODO: Use better discriminator, that uses the content!
+    ##
 
     mimetype, _ = mimetypes.guess_type (name)
     return mimetype
