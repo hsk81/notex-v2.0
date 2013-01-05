@@ -14,6 +14,7 @@ from ..util import JSON, Q
 from ..models import Node, Leaf
 from ..models import TextProperty, LargeBinaryProperty
 
+import subprocess
 import mimetypes
 import tempfile
 import zipfile
@@ -195,15 +196,19 @@ def create_bin (path, name, root, mime):
 
 def guess_mime (path, name):
 
-    if not mimetypes.inited:
-        mimetypes.init ()
-
-    ##
-    ## TODO: Use better discriminator, that uses the content!
-    ##
-
+    if not mimetypes.inited: mimetypes.init ()
     mime, _ = mimetypes.guess_type (name)
-    return mime.lower () if mime else None
+
+    if not mime:
+        path = os.path.join (path, name)
+        args = ['/usr/bin/file', '-b', '--mime-type', path]
+
+        try:
+            mime = subprocess.check_output (args)
+        except subprocess.CalledProcessError:
+            pass ## TODO: logging!?
+
+    return mime.rstrip ().lower () if mime else None
 
 ###############################################################################
 ###############################################################################
