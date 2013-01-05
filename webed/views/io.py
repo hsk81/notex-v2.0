@@ -223,7 +223,7 @@ def guess_mime (path, name):
 ###############################################################################
 
 @io.route ('/archive-download/', methods=['GET', 'POST'])
-def archive_download ():
+def archive_download (chunk_size = 256*1024):
 
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
@@ -237,10 +237,16 @@ def archive_download ():
 
     if content_val:
         if request.args.get ('fetch', False):
-            def get_chunk (): yield content_val
 
-            response = Response (get_chunk ())
-            response.headers ['Content-Length'] = len (content_val)
+            content_len = len (content_val)
+            content_csz = chunk_size
+
+            def next_chunk (length, size):
+                for index in range(0, length, size):
+                    yield content_val[index:index+size]
+
+            response = Response (next_chunk (content_len, content_csz))
+            response.headers ['Content-Length'] = content_len
             response.headers ['Content-Disposition'] = \
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
@@ -271,7 +277,7 @@ def compress (root):
         assert prop
 
         if leaf.mime == 'text/plain':
-            data = prop.data.replace ('\n','\r\n')
+            data = prop.data.replace ('\n','\r\n').encode ('utf-8')
         elif leaf.mime.startswith ('image'):
             data = base64.decodestring (prop.data.split (',')[1])
         else:
