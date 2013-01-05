@@ -118,14 +118,14 @@ Ext.define ('Webed.controller.NodeTree', {
         path.unshift (''); path.pop ();
         // ['','00..00','bb..bb''] => /00..00/bb..bb
         var path = path.join ('/');
-        assert (path);
-
-        view.expandPath (path, 'uuid', '/', function (success, node) {
-            if (success) {
-                var node = node.findChild ('uuid', uuid, true);
-                if (node) semo.select (node);
-            }
-        }, this);
+        if (path) {
+            view.expandPath (path, 'uuid', '/', function (success, node) {
+                if (success) {
+                    var node = node.findChild ('uuid', uuid, true);
+                    if (node) semo.select (node);
+                }
+            }, this);
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
