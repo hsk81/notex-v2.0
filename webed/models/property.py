@@ -114,6 +114,7 @@ def get_node_size (node, **kwargs):
     return cached_size (node, **kwargs)
 
 Node.get_size = get_node_size
+Node.size = property (lambda self: self.get_size (name='data'))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
