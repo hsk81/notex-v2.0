@@ -255,9 +255,13 @@ def compress (root):
     str_buffer = StringIO ()
     zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
 
-    def compress_node (node, path):
+    def compress_node (root_node, root_path):
 
-        pass ## nothing to do!
+        for path, nodes, leafs in walk (root_node):
+            for node in nodes:
+                compress_node (node, os.path.join (root_path, path))
+            for leaf in leafs:
+                compress_leaf (leaf, os.path.join (root_path, path))
 
     def compress_leaf (leaf, path):
 
@@ -280,8 +284,8 @@ def compress (root):
         compress_leaf (root, path='')
     else:
         for path, nodes, leafs in walk (root):
-            for node in nodes: compress_node (node, path=path)
-            for leaf in leafs: compress_leaf (leaf, path=path)
+            for node in nodes: compress_node (node, path)
+            for leaf in leafs: compress_leaf (leaf, path)
 
     zip_buffer.close ()
     content_val = str_buffer.getvalue ()
