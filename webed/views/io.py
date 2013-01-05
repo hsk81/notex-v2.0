@@ -285,9 +285,7 @@ def compress (root):
     if isinstance (root, Leaf):
         compress_leaf (root, leaf_path='')
     else:
-        for path, nodes, leafs in walk (root):
-            for sub_node in nodes: compress_node (sub_node, path)
-            for sub_leaf in leafs: compress_leaf (sub_leaf, path)
+        compress_node (root, node_path='')
 
     zip_buffer.close ()
     content_val = str_buffer.getvalue ()
