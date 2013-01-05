@@ -24,9 +24,7 @@ class Leaf (Node):
 
     def __repr__ (self):
 
-        if self.id:
-            return u'<Leaf@%x: %s>' % (self.id, self._name)
-        return u'<Leaf@%s: %s>' % (self.uuid, self._name)
+        return u'<Leaf@%x: %s>' % (self.id if self.id else 0, self._name)
 
 ###############################################################################
 ###############################################################################

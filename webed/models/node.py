@@ -77,9 +77,7 @@ class Node (db.Model):
 
     def __repr__ (self):
 
-        if self.id:
-            return u'<Node@%x: %s>' % (self.id, self._name)
-        return u'<Node@%s: %s>' % (self.uuid, self._name)
+        return u'<Node@%x: %s>' % (self.id if self.id else 0, self._name)
 
     ###########################################################################
 

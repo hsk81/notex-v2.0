@@ -96,9 +96,7 @@ class Property (db.Model):
 
     def __repr__ (self):
 
-        if self.id:
-            return u'<Property@%x: %s>' % (self.id, self._name)
-        return u'<Property@%s: %s>' % (self.uuid, self._name)
+        return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
 
 ###############################################################################
 ###############################################################################
@@ -138,7 +136,8 @@ class StringProperty (Property):
 
     def __repr__ (self):
 
-        return u'<StringProperty@%r: %r>' % (self.id, self._name)
+        return u'<StringProperty@%r: %r>' % (self.id if self.id \
+            else 0, self._name)
 
     def get_size (self):
 
@@ -172,9 +171,8 @@ class TextProperty (Property):
 
     def __repr__ (self):
 
-        if self.id:
-            return u'<TextProperty@%x: %s>' % (self.id, self._name)
-        return u'<TextProperty@%s: %s>' % (self.uuid, self._name)
+        return u'<TextProperty@%x: %s>' % (self.id if self.id \
+            else 0, self._name)
 
     def get_size (self):
 
@@ -208,9 +206,8 @@ class LargeBinaryProperty (Property):
 
     def __repr__ (self):
 
-        if self.id:
-            return u'<LargeBinaryProperty@%x: %s>' % (self.id, self._name)
-        return u'<LargeBinaryProperty@%s: %s>' % (self.uuid, self._name)
+        return u'<LargeBinaryProperty@%x: %s>' % (self.id if self.id \
+            else 0, self._name)
 
     def get_size (self):
 
