@@ -17,6 +17,7 @@ from ..models import TextProperty, LargeBinaryProperty
 import mimetypes
 import tempfile
 import zipfile
+import base64
 import urllib
 import shutil
 import os
@@ -137,8 +138,7 @@ def create_prj (path, name):
     db.session.add (prj_node); cache = {path: prj_node}
 
     for cur_path, dir_names, file_names in os.walk (path):
-        root = cache.get (cur_path)
-        assert root
+        root = cache.get (cur_path); assert root
 
         for dn in dir_names:
             node = create_dir (cur_path, dn, root, mime='application/folder')
@@ -146,12 +146,13 @@ def create_prj (path, name):
 
         for fn in file_names:
             mime = guess_mime (cur_path, fn)
-            if mime == 'text/plain':
+            if mime and mime == 'text/plain':
                 leaf, _ = create_txt (cur_path, fn, root, mime=mime)
-                db.session.add (leaf)
+            elif mime and mime.startswith ('image'):
+                leaf, _ = create_img (cur_path, fn, root, mime=mime)
             else:
                 leaf, _ = create_bin (cur_path, fn, root, mime=mime)
-                db.session.add (leaf)
+            db.session.add (leaf)
 
     db.session.commit ()
     return prj_node
@@ -170,10 +171,20 @@ def create_txt (path, name, root, mime):
 
     return leaf, prop
 
+def create_img (path, name, root, mime):
+
+    with open (os.path.join (path, name)) as file:
+        data = 'data:%s;base64,%s' % (mime, base64.encodestring (file.read ()))
+
+    leaf = Leaf (name, root, mime=mime)
+    prop = TextProperty ('data', data, leaf, mime=mime)
+
+    return leaf, prop
+
 def create_bin (path, name, root, mime):
 
     with open (os.path.join (path, name)) as file:
-        data = file.read () ## TODO: 'data:%s;base64,..'?
+        data = file.read ()
 
     leaf = Leaf (name, root, mime=mime)
     prop = LargeBinaryProperty ('data', data, leaf, mime=mime)
@@ -191,8 +202,8 @@ def guess_mime (path, name):
     ## TODO: Use better discriminator, that uses the content!
     ##
 
-    mimetype, _ = mimetypes.guess_type (name)
-    return mimetype
+    mime, _ = mimetypes.guess_type (name)
+    return mime.lower () if mime else None
 
 ###############################################################################
 ###############################################################################
