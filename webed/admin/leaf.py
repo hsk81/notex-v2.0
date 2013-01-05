@@ -14,7 +14,7 @@ from webed.models import Leaf
 
 class LeafAdmin (ModelView):
 
-    column_list = ('base', 'root', 'name', 'mime', 'uuid', 'type')
+    column_list = ('base', 'root', 'name', 'mime', 'uuid', 'type', 'size')
     column_searchable_list = (Leaf.uuid, Leaf.mime, Leaf.name, Leaf.type)
     column_filters = (Leaf.uuid, Leaf.mime, Leaf.name, Leaf.type)
     form_columns = ('root', 'mime', 'name')

@@ -77,7 +77,9 @@ class Node (db.Model):
 
     def __repr__ (self):
 
-        return u'<Node@%x: %s>' % (self.id, self._name)
+        if self.id:
+            return u'<Node@%x: %s>' % (self.id, self._name)
+        return u'<Node@%s: %s>' % (self.uuid, self._name)
 
     ###########################################################################
 
@@ -95,6 +97,10 @@ class Node (db.Model):
             return cached_path (self, field)
         else:
             return cached_path.uncached (self, field)
+
+    ###########################################################################
+
+    size = property (lambda self: self.get_size (name='data'))
 
 ###############################################################################
 ###############################################################################
