@@ -153,7 +153,7 @@ def create_prj (path, name, root):
         root = cache.get (cur_path); assert root
 
         for dn in dir_names:
-            mime = 'application/' + 'folder' if root.root else 'project'
+            mime = 'application/' + ('folder' if root.root else 'project')
             node = create_dir (cur_path, dn, root, mime=mime)
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 

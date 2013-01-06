@@ -85,8 +85,8 @@ def setup_session ():
     for path, dirnames, filenames in os.walk (archive_path):
         for filename in filenames:
 
-            if in_rxs (filename, archive_exclude) is True: continue
-            if in_rxs (filename, archive_require) is False: continue
+            if in_rxs (filename, archive_exclude): continue
+            if in_rxs (filename, archive_require): continue
 
             with open (os.path.join (path, filename), mode='r') as stream:
                 file_storage = FileStorage (stream=stream, filename=filename)
