@@ -144,7 +144,8 @@ class StringProperty (Property):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
         def cached_size (self):
-            return len (self._data.encode ('utf-8')) if self._data else None
+            return len (self._data.encode ('utf-8')) \
+                if self._data  is not None else 0
 
         return cached_size (self)
 
@@ -179,7 +180,8 @@ class TextProperty (Property):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
         def cached_size (self):
-            return len (self._data.encode ('utf-8')) if self._data else None
+            return len (self._data.encode ('utf-8')) \
+                if self._data is not None else 0
 
         return cached_size (self)
 
@@ -214,7 +216,7 @@ class LargeBinaryProperty (Property):
 
         @cache.version (key=[self.uuid, 'size', 'data'])
         def cached_size (self):
-            return len (self._data) if self._data else None
+            return len (self._data) if self._data is not None else 0
 
         return cached_size (self)
 
