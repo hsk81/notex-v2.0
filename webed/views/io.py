@@ -142,16 +142,14 @@ def extract (zip_file, path):
 def create_prj (path, name):
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
-    assert base
-
-    prj_node = Node (name, base, mime='application/project')
-    db.session.add (prj_node); cache = {path: prj_node}
+    assert base; cache = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
         root = cache.get (cur_path); assert root
 
         for dn in dir_names:
-            node = create_dir (cur_path, dn, root, mime='application/folder')
+            mime = 'application/' + 'project' if root == base else 'folder'
+            node = create_dir (cur_path, dn, root, mime=mime)
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
@@ -165,7 +163,6 @@ def create_prj (path, name):
             db.session.add (leaf)
 
     db.session.commit ()
-    return prj_node
 
 def create_dir (path, name, root, mime):
 
