@@ -8,7 +8,7 @@ from flask.globals import request
 from flask import Blueprint, Response
 
 from ..app import app
-from ..ext import db, cache
+from ..ext import db, cache, logger
 from ..util import Q, JSON, jsonify
 
 from ..models import Node
@@ -214,8 +214,8 @@ def guess_mime (path, name):
 
         try:
             mime = subprocess.check_output (args)
-        except subprocess.CalledProcessError:
-            pass ## TODO: logging!?
+        except subprocess.CalledProcessError, ex:
+            logger.exception (ex)
 
     return mime.rstrip ().lower () if mime else None
 
