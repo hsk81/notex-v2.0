@@ -3,14 +3,18 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from werkzeug.datastructures import FileStorage
+
 from ..ext import db
 from ..app import app
-from ..util import jsonify
-from ..models import Node, Leaf
-from ..models import TextProperty, LargeBinaryProperty
+from ..models import Node
+from ..util import jsonify, in_rxs
+from ..views.io import archive_upload
 
 from datetime import datetime
 from anchor import SessionAnchor
+
+import os
 
 ###############################################################################
 ###############################################################################
@@ -70,79 +74,26 @@ def setup_session ():
 
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
-    db.session.commit ()
 
-    setup_article (root=base)
-    setup_report (root=base)
+    archive_path = app.config['ARCHIVE_PATH']
+    assert archive_path
+    archive_exclude = app.config['ARCHIVE_EXCLUDE']
+    assert isinstance (archive_exclude, list)
+    archive_require = app.config['ARCHIVE_REQUIRE']
+    assert isinstance (archive_require, list)
 
-    leaf = Leaf ('author.txt', root=base, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
+    for path, dirnames, filenames in os.walk (archive_path):
+        for filename in filenames:
 
-    leaf = Leaf ('about.tiff', root=base, mime='image/tiff')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/tiff')
-    db.session.add (prop)
+            if in_rxs (filename, archive_exclude) is True: continue
+            if in_rxs (filename, archive_require) is False: continue
 
-    node = Node ('Archive', root=base, mime='application/project')
-    db.session.add (node)
-    for index in range (50):
-        leaf = Leaf ('file-%03d.txt' % index, root=node, mime='text/plain')
-        db.session.add (leaf)
-        prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-        db.session.add (prop)
+            with open (os.path.join (path, filename), mode='r') as stream:
+                file_storage = FileStorage (stream=stream, filename=filename)
+                archive_upload (file=file_storage, root=base, skip_commit=True)
 
     db.session.commit ()
     return base.uuid
-
-def setup_article (root):
-
-    node = Node ('Article', root, mime='application/project')
-    db.session.add (node)
-    leaf = Leaf ('options.cfg', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-    leaf = Leaf ('content.txt', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-
-    node = Node ('resources', node, mime='application/folder')
-    db.session.add (node)
-    leaf = Leaf ('wiki.png', node, mime='image/png')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
-    db.session.add (prop)
-    leaf = Leaf ('time.jpg', node, mime='image/jpg')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
-    db.session.add (prop)
-
-def setup_report (root):
-
-    node = Node ('Report', root, mime='application/project')
-    db.session.add (node)
-    leaf = Leaf ('options.cfg', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-    leaf = Leaf ('content.txt', node, mime='text/plain')
-    db.session.add (leaf)
-    prop = TextProperty ('data', u'....', leaf, mime='text/plain')
-    db.session.add (prop)
-
-    node = Node ('resources', node, mime='application/folder')
-    db.session.add (node)
-    leaf = Leaf ('wiki.png', node, mime='image/png')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/png')
-    db.session.add (prop)
-    leaf = Leaf ('time.jpg', node, mime='image/jpg')
-    db.session.add (leaf)
-    prop = LargeBinaryProperty ('data', '....', leaf, mime='image/jpg')
-    db.session.add (prop)
 
 ###############################################################################
 ###############################################################################

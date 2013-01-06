@@ -25,7 +25,16 @@ class DefaultConfig:
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
     CACHE_MEMCACHED_SERVERS = ['127.0.0.1']
 
-    LOG_FILE = '../webed.log'
+    LOG_FILE = os.path.join ('..', 'webed.log')
+
+    ##
+    ## At session setup data is required: ARCHIVE_PATH is the path to the
+    ## archives, which will be imported on the first visit.
+    ##
+
+    ARCHIVE_PATH = os.path.join ('webed', 'static', 'dat')
+    ARCHIVE_REQUIRE = [r'\.[Zz][Ii][Pp]$']
+    ARCHIVE_EXCLUDE = [r'^_']
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since

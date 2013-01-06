@@ -83,8 +83,8 @@ def file_upload ():
 ###############################################################################
 
 @io.route ('/archive-upload/', methods=['POST'])
-def archive_upload ():
-    file = request.files['file']
+def archive_upload (file=None, root=None, skip_commit=None):
+    file = file if file else request.files['file']
 
     if not file:
         return JSON.encode (dict (success=False, filename=None,
@@ -93,6 +93,10 @@ def archive_upload ():
     if not file.filename or len (file.filename) == 0:
         return JSON.encode (dict (success=False, filename=None,
             message='filename invalid'))
+
+    if not root:
+        root = Q (Node.query).one (uuid=app.session_manager.anchor)
+        assert root
 
     with tempfile.TemporaryFile () as zip_file:
 
@@ -108,8 +112,11 @@ def archive_upload ():
 
         temp_path = tempfile.mkdtemp  ()
         extract (zip_file, path=temp_path)
-        create_prj (path=temp_path, name=zip_name)
+        create_prj (temp_path, zip_name, root)
         shutil.rmtree (temp_path)
+
+    if not skip_commit:
+        db.session.commit ()
 
     return JSON.encode (dict (success=True, filename=file.filename))
 
@@ -139,16 +146,14 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-def create_prj (path, name):
-
-    base = Q (Node.query).one (uuid=app.session_manager.anchor)
-    assert base; cache = {path: base}
+def create_prj (path, name, root):
+    cache = {path: root}
 
     for cur_path, dir_names, file_names in os.walk (path):
         root = cache.get (cur_path); assert root
 
         for dn in dir_names:
-            mime = 'application/' + 'project' if root == base else 'folder'
+            mime = 'application/' + 'folder' if root.root else 'project'
             node = create_dir (cur_path, dn, root, mime=mime)
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
@@ -161,8 +166,6 @@ def create_prj (path, name):
             else:
                 leaf, _ = create_bin (cur_path, fn, root, mime=mime)
             db.session.add (leaf)
-
-    db.session.commit ()
 
 def create_dir (path, name, root, mime):
 
