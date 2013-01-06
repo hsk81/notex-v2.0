@@ -150,12 +150,57 @@ Ext.define ('Webed.controller.ContentTabs', {
             }]
         });
 
-        assert (tab);
         view.setActiveTab (tab);
     },
 
     create_image_tab: function (record, callback, scope) {
-        //TODO!
+        assert (record);
+
+        var uuid = record.get ('uuid');
+        assert (uuid);
+        var name = record.get ('name');
+        assert (name);
+        var iconCls = record.get ('iconCls');
+        assert (iconCls);
+
+        var view = this.getContentTabs ();
+        assert (view);
+        var app = this.application;
+        assert (app);
+
+        var tab = this.get_tab (uuid);
+        if (tab == undefined) {
+            app.fireEvent ('get_property', this, {
+                callback: on_get, scope: this, property: [{
+                    node_uuid: uuid, name: 'data'
+                }]
+            });
+
+            function on_get (props) {
+                assert (props && props.length > 0);
+                var data = props[0].get ('data');
+                assert (data || data == '');
+
+                var tab = view.add ({
+                    record: record,
+                    title: name,
+                    closable: true,
+                    iconCls: iconCls,
+
+                    items: [{
+                        xtype: 'box', autoEl: {
+                            tag: 'img', src: data, style: 'padding: 4px;'
+                        }
+                    }]
+                });
+
+                if (callback && callback.call) {
+                    callback.call (scope||this, props);
+                }
+
+                view.setActiveTab (tab);
+            }
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
