@@ -23,6 +23,7 @@ import zipfile
 import base64
 import urllib
 import shutil
+import errno
 import os
 
 from cStringIO import StringIO
@@ -142,7 +143,11 @@ def extract (zip_file, path):
         for zi in sorted (infolist, key=key, reverse=True):
 
             zi.filename = sanitize (zi.filename)
-            zip_buffer.extract (zi, path=path)
+            try:
+                zip_buffer.extract (zi, path=path)
+            except IOError, ex:
+                if ex.errno != errno.EISDIR:
+                    raise ex
 
 ###############################################################################
 
