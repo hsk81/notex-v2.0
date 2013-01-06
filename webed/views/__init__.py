@@ -3,9 +3,9 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from .boss import refresh
-from .boss import reset
-from .boss import setup
+from .director import refresh
+from .director import reset
+from .director import setup
 from .io import archive_upload
 from .io import file_upload
 from .page import contact

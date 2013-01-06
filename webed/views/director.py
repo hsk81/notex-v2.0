@@ -15,12 +15,12 @@ from datetime import datetime
 ###############################################################################
 ###############################################################################
 
-boss = Blueprint ('boss', __name__)
+director = Blueprint ('director', __name__)
 
 ###############################################################################
 ###############################################################################
 
-@boss.route ('/setup/')
+@director.route ('/setup/')
 @cache.memoize (900, name='views.setup', session=session, unless=app.is_dev)
 def setup (json=True):
     """
@@ -36,7 +36,7 @@ def setup (json=True):
 
     return jsonify (result) if json else result
 
-@boss.route ('/refresh/')
+@director.route ('/refresh/')
 @cache.memoize (900, name='views.refresh', session=session, unless=app.is_dev)
 def refresh (json=True):
     """
@@ -48,7 +48,7 @@ def refresh (json=True):
     result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
-@boss.route ('/reset/')
+@director.route ('/reset/')
 @cache.memoize (900, name='views.reset', unless=app.is_dev)
 def reset (json=True):
     """
@@ -63,7 +63,7 @@ def reset (json=True):
 ###############################################################################
 ###############################################################################
 
-app.register_blueprint (boss)
+app.register_blueprint (director)
 
 ###############################################################################
 ###############################################################################

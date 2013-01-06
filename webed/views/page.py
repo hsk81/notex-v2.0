@@ -11,7 +11,7 @@ from ..app import app
 from ..ext import cache
 
 import sys
-import boss
+import director
 
 ###############################################################################
 ###############################################################################
@@ -43,11 +43,11 @@ def main (page='home', template='index.html'):
         print >> sys.stderr, "Session ID: %r" % session['_id']
 
     if 'reset' in request.args:
-        boss.reset (json=False)
+        director.reset (json=False)
     elif 'refresh' in request.args:
-        boss.refresh (json=False)
+        director.refresh (json=False)
     else:
-        boss.setup (json=False)
+        director.setup (json=False)
 
     @cache.memoize (name='views.main.cached_template', unless=app.is_dev)
     def cached_template (template, page, debug):
