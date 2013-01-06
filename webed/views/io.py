@@ -111,7 +111,7 @@ def archive_upload (file=None, root=None, skip_commit=None):
         zip_name = secure_filename (file.filename)
         zip_name = os.path.splitext (zip_name)[0]
 
-        temp_path = tempfile.mkdtemp  ()
+        temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
         create_prj (temp_path, zip_name, root)
         shutil.rmtree (temp_path)
