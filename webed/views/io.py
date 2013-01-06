@@ -141,8 +141,8 @@ def extract (zip_file, path):
         key = lambda zi: swap (os.path.splitext (zi.filename))
 
         for zi in sorted (infolist, key=key, reverse=True):
-
             zi.filename = sanitize (zi.filename)
+
             try:
                 zip_buffer.extract (zi, path=path)
             except IOError, ex:
