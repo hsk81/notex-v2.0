@@ -8,12 +8,12 @@ import re
 ###############################################################################
 ###############################################################################
 
-def in_rxs (exp, rxs):
+def in_rxs (exp, rxs, *flags):
     """
     Returns ``None`` if expression ``exp`` does not match any in list ``rxs``
     of regular expressions; otherwise returns first match.
     """
-    return reduce (lambda res, rx: res or re.match (rx, exp), rxs, None)
+    return reduce (lambda res, rx: res or re.match (rx,exp,*flags), rxs, None)
 
 ###############################################################################
 ###############################################################################
