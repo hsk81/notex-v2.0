@@ -25,8 +25,6 @@ Ext.define ('Webed.controller.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirmUpload: function () {
-        var application = this.application;
-        assert (application);
         var view = this.getUploadBox ();
         assert (view);
         var panel = view.down ('form');
@@ -45,6 +43,8 @@ Ext.define ('Webed.controller.UploadBox', {
 
         var root_uuid = root.get ('uuid');
         assert (root_uuid);
+        var app = this.application;
+        assert (app);
 
         if (form.isValid ()) {
             form.submit ({
@@ -53,7 +53,7 @@ Ext.define ('Webed.controller.UploadBox', {
 
                 success: function () {
                     assert (view); view.destroy ();
-                    application.fireEvent ('refresh_tree');
+                    app.fireEvent ('refresh_tree');
                 },
 
                 failure: function () {
