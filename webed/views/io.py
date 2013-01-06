@@ -263,6 +263,8 @@ def archive_download (chunk_size = 256*1024):
 
     return response
 
+###############################################################################
+
 def compress (root):
 
     str_buffer = StringIO ()
@@ -270,7 +272,7 @@ def compress (root):
 
     def compress_node (node, node_path):
 
-        for path, nodes, leafs in walk (node):
+        for path, nodes, leafs in node.walk (field='name'):
             for sub_node in nodes:
                 compress_node (sub_node, os.path.join (node_path, path))
             for sub_leaf in leafs:
@@ -303,18 +305,6 @@ def compress (root):
     str_buffer.close ()
 
     return content_val
-
-def walk (node, path=''):
-
-    path = os.path.join (path, node.name)
-    path = os.path.normpath (path) + os.sep
-    nodes = node.not_leafs.all ()
-    leafs = node.leafs.all ()
-
-    yield path, nodes, leafs
-
-    for node in nodes:
-        walk (node, path=path)
 
 ###############################################################################
 ###############################################################################

@@ -9,6 +9,8 @@ from uuid import uuid4 as uuid_random
 from ..ext.db import db
 from ..ext.cache import cache
 
+import os.path
+
 ###############################################################################
 ###############################################################################
 
@@ -95,6 +97,20 @@ class Node (db.Model):
             return cached_path (self, field)
         else:
             return cached_path.uncached (self, field)
+
+    ###########################################################################
+
+    def walk (self, field, path=''):
+
+        path = os.path.join (path, getattr (self, field))
+        path = os.path.normpath (path)
+        nodes = self.not_leafs.all ()
+        leafs = self.leafs.all ()
+
+        yield path, nodes, leafs
+
+        for node in nodes:
+            node.walk (field=field, path=path)
 
 ###############################################################################
 ###############################################################################
