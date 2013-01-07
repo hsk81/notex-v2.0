@@ -218,7 +218,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                         assert (data || data== '');
 
                         panel.add ({
-                            xtype: 'box', autoEl: {tag: 'img', src: data},
+                            xtype: 'box', autoEl: {tag: 'img', src: data}
                         });
 
                         if (callback && callback.call) {
