@@ -135,16 +135,13 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                             setTimeout (function() {
                                 if (ta.el) ta.el.unmask ();
-                            }, 75);
+                            }, 25);
                         }
                     },
 
                     afterrender: function (ta, eOpts) {
-                        if (!ta.getValue ()) {
-                            setTimeout (function() {
-                                ta.el.mask ('Loading...');
-                            }, 25);
-                        }
+                        var value = ta.getValue ();
+                        if (value == undefined) ta.el.mask ('Loading...');
                     }
                 }
             }]
@@ -168,36 +165,9 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        function center (panel, level) {
-            var level = level||0;
-            var innerEl = panel.down ('box');
-            if (innerEl) {
-                var outerEl = panel.body;
-                if (outerEl) {
-                    var W = outerEl.getWidth ();
-                    var H = outerEl.getHeight ();
-                    var w = innerEl.getWidth ();
-                    var h = innerEl.getHeight ();
-
-                    if (w && h || level > 3) {
-                        var innerDx = (W - w) / 2.0;
-                        var innerDy = (H - h) / 2.0;
-
-                        innerEl.setPosition (innerDx, innerDy);
-                    } else {
-                        setTimeout (function () { center (panel,level+1); },5);
-                    }
-                } else {
-                    setTimeout (function () { center (panel,level+1); },5);
-                }
-            } else {
-                setTimeout (function () { center (panel,level+1); },5);
-            }
-        }
-
         var tab = this.get_tab (uuid) || view.add ({
-            autoScroll : true,
-            bodyStyle : 'background-color: grey;',
+            autoScroll: true,
+            bodyStyle: 'background: grey;',
             closable: true,
             iconCls: iconCls,
             layout: 'absolute',
@@ -218,20 +188,54 @@ Ext.define ('Webed.controller.ContentTabs', {
                         assert (data || data== '');
 
                         panel.add ({
-                            xtype: 'box', autoEl: {tag: 'img', src: data}
+                            xtype: 'box', autoEl: {
+                                tag: 'img', src: data
+                            }
                         });
 
                         if (callback && callback.call) {
                             callback.call (scope||this, props);
                         }
+
+                        setTimeout (function() {
+                            panel.el.unmask ();
+                        }, 25);
                     }
                 },
 
                 afterlayout: function (panel) {
-                    center (panel);
+                    var box =  panel.down ('box');
+                    if (box == undefined) panel.el.mask ('Loading...');
+                    setTimeout (function () { center (panel); }, 10);
                 }
             }
         });
+
+        function center (panel, stop) {
+            var inner = panel.down ('box');
+            if (inner) {
+                var outer = panel.body;
+                if (outer) {
+                    var W = outer.getWidth ();
+                    var H = outer.getHeight ();
+                    var w = inner.getWidth ();
+                    var h = inner.getHeight ();
+
+                    if (w>0 && h>0 || stop) {
+                        var innerDx = (W - w) / 2.0;
+                        var innerDy = (H - h) / 2.0;
+
+                        inner.setPosition (innerDx, innerDy);
+                    } else {
+                        setTimeout (function () { center (panel, true); }, 10);
+                    }
+                } else {
+                    setTimeout (function () { center (panel); }, 10);
+                }
+            } else {
+                setTimeout (function () { center (panel); }, 10);
+            }
+        }
 
         view.setActiveTab (tab);
     },
