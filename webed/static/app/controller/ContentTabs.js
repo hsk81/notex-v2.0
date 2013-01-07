@@ -135,7 +135,7 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                             setTimeout (function() {
                                 if (ta.el) ta.el.unmask ();
-                            }, 125);
+                            }, 75);
                         }
                     },
 
@@ -198,7 +198,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                             callback.call (scope||this, props);
                         }
 
-                        setTimeout (function() { panel.el.unmask (); }, 125);
+                        setTimeout (function() { panel.el.unmask (); }, 75);
                     }
                 },
 
