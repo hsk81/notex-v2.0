@@ -168,75 +168,72 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        var tab = this.get_tab (uuid);
-        if (tab == undefined) {
-            view.el.mask ('Loading...');
+        function center (panel, level) {
+            var level = level||0;
+            var innerEl = panel.down ('box');
+            if (innerEl) {
+                var outerEl = panel.body;
+                if (outerEl) {
+                    var W = outerEl.getWidth ();
+                    var H = outerEl.getHeight ();
+                    var w = innerEl.getWidth ();
+                    var h = innerEl.getHeight ();
 
-            app.fireEvent ('get_property', this, {
-                callback: on_get, scope: this, property: [{
-                    node_uuid: uuid, name: 'data'
-                }]
-            });
-
-            function on_get (props) {
-                assert (props && props.length > 0);
-                var data = props[0].get ('data');
-                assert (data || data == '');
-
-                var tab = view.add ({
-                    autoScroll : true,
-                    bodyStyle : 'background-color: grey;',
-                    closable: true,
-                    iconCls: iconCls,
-                    layout: 'absolute',
-                    record: record,
-                    title: name,
-
-                    items: [{
-                        xtype: 'box', autoEl: {
-                            tag: 'img', src: data
-                        }
-                    }],
-
-                    listeners: {
-                        afterlayout: function (tabPanel) {
-                            var controller = this; setTimeout (function() {
-                                controller.centerImage (tabPanel);
-                            }, 15);
-                        }
-                    },
-
-                    centerImage: function (tabPanel) {
-                        var innerEl = tabPanel.down ('box');
-                        assert (innerEl);
-                        var outerEl = tabPanel.body;
-                        assert (outerEl);
-
-                        var W = outerEl.getWidth ();
-                        var H = outerEl.getHeight ();
-                        var w = innerEl.getWidth ();
-                        var h = innerEl.getHeight ();
-
-                        console.debug ('WxH', W, H);
-                        console.debug ('wxh', w, h);
-
+                    if (w && h || level > 3) {
                         var innerDx = (W - w) / 2.0;
                         var innerDy = (H - h) / 2.0;
 
                         innerEl.setPosition (innerDx, innerDy);
+                    } else {
+                        setTimeout (function () { center (panel,level+1); },5);
                     }
-                });
-
-                if (callback && callback.call) {
-                    callback.call (scope||this, props);
+                } else {
+                    setTimeout (function () { center (panel,level+1); },5);
                 }
-
-                view.setActiveTab (tab);
-                view.el.unmask ();
+            } else {
+                setTimeout (function () { center (panel,level+1); },5);
             }
-        } else {
-            view.setActiveTab (tab);
         }
+
+        var tab = this.get_tab (uuid) || view.add ({
+            autoScroll : true,
+            bodyStyle : 'background-color: grey;',
+            closable: true,
+            iconCls: iconCls,
+            layout: 'absolute',
+            record: record,
+            title: name,
+
+            listeners: {
+                afterrender: function (panel) {
+                    app.fireEvent ('get_property', this, {
+                        callback: on_get, scope: this, property: [{
+                            node_uuid: uuid, name: 'data'
+                        }]
+                    });
+
+                    function on_get (props) {
+                        assert (props && props.length > 0);
+                        var data = props[0].get ('data');
+                        assert (data || data== '');
+
+                        panel.add ({
+                            xtype: 'box', autoEl: {tag: 'img', src: data},
+                        });
+
+                        if (callback && callback.call) {
+                            callback.call (scope||this, props);
+                        }
+                    }
+                },
+
+                afterlayout: function (panel) {
+                    center (panel);
+                }
+            }
+        });
+
+        view.setActiveTab (tab);
     },
 
     ///////////////////////////////////////////////////////////////////////////
