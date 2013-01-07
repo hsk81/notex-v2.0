@@ -186,7 +186,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                     function on_get (props) {
                         assert (props && props.length > 0);
                         var data = props[0].get ('data');
-                        assert (data || data== '');
+                        assert (data || data == '');
 
                         panel.add ({
                             xtype: 'box', autoEl: {
