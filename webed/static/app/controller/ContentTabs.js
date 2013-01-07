@@ -135,13 +135,14 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                             setTimeout (function() {
                                 if (ta.el) ta.el.unmask ();
-                            }, 25);
+                            }, 125);
                         }
                     },
 
                     afterrender: function (ta, eOpts) {
-                        var value = ta.getValue ();
-                        if (value == undefined) ta.el.mask ('Loading...');
+                        if (!ta.getValue ()) setTimeout (function() {
+                            ta.el.mask ('Loading...');
+                        }, 25);
                     }
                 }
             }]
@@ -197,16 +198,14 @@ Ext.define ('Webed.controller.ContentTabs', {
                             callback.call (scope||this, props);
                         }
 
-                        setTimeout (function() {
-                            panel.el.unmask ();
-                        }, 25);
+                        setTimeout (function() { panel.el.unmask (); }, 125);
                     }
                 },
 
                 afterlayout: function (panel) {
-                    var box =  panel.down ('box');
-                    if (box == undefined) panel.el.mask ('Loading...');
-                    setTimeout (function () { center (panel); }, 10);
+                    if (!panel.down ('box')) setTimeout (function() {
+                        panel.el.mask ('Loading...'); center (panel);
+                    }, 25);
                 }
             }
         });
