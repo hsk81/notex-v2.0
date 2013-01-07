@@ -170,6 +170,8 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
+            view.el.mask ('Loading...');
+
             app.fireEvent ('get_property', this, {
                 callback: on_get, scope: this, property: [{
                     node_uuid: uuid, name: 'data'
@@ -182,16 +184,47 @@ Ext.define ('Webed.controller.ContentTabs', {
                 assert (data || data == '');
 
                 var tab = view.add ({
-                    record: record,
-                    title: name,
+                    autoScroll : true,
+                    bodyStyle : 'background-color: grey;',
                     closable: true,
                     iconCls: iconCls,
+                    layout: 'absolute',
+                    record: record,
+                    title: name,
 
                     items: [{
                         xtype: 'box', autoEl: {
-                            tag: 'img', src: data, style: 'padding: 4px;'
+                            tag: 'img', src: data
                         }
-                    }]
+                    }],
+
+                    listeners: {
+                        afterlayout: function (tabPanel) {
+                            var controller = this; setTimeout (function() {
+                                controller.centerImage (tabPanel);
+                            }, 15);
+                        }
+                    },
+
+                    centerImage: function (tabPanel) {
+                        var innerEl = tabPanel.down ('box');
+                        assert (innerEl);
+                        var outerEl = tabPanel.body;
+                        assert (outerEl);
+
+                        var W = outerEl.getWidth ();
+                        var H = outerEl.getHeight ();
+                        var w = innerEl.getWidth ();
+                        var h = innerEl.getHeight ();
+
+                        console.debug ('WxH', W, H);
+                        console.debug ('wxh', w, h);
+
+                        var innerDx = (W - w) / 2.0;
+                        var innerDy = (H - h) / 2.0;
+
+                        innerEl.setPosition (innerDx, innerDy);
+                    }
                 });
 
                 if (callback && callback.call) {
@@ -199,7 +232,10 @@ Ext.define ('Webed.controller.ContentTabs', {
                 }
 
                 view.setActiveTab (tab);
+                view.el.unmask ();
             }
+        } else {
+            view.setActiveTab (tab);
         }
     },
 
