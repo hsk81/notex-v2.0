@@ -204,8 +204,10 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                 afterlayout: function (panel) {
                     if (!panel.down ('box')) setTimeout (function() {
-                        panel.el.mask ('Loading...'); center (panel);
+                        panel.el.mask ('Loading...');
                     }, 25);
+
+                    setTimeout (function() { center (panel); }, 10);
                 }
             }
         });
