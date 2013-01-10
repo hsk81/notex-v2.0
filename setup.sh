@@ -24,11 +24,19 @@ function setup_env () {
 }
 
 function clean_env () {
-    rm bin/ include/ lib/ -rf
+    rm -rf bin/ include/ lib/
 }
 
 function clean_egg () {
-    rm build/ dist/ *.egg-info/ -rf
+    rm -rf build/ dist/ *.egg-info/
+}
+
+function clean_pyc () {
+    rm -rf $(tree -fi | grep \\.pyc$)
+}
+
+function clean_log () {
+    rm -rf $(tree -fi | grep \\.log$)
 }
 
 function build () {
@@ -40,11 +48,18 @@ function build () {
 
 case $ACTMETH in
     clean)
-        clean_egg && clean_env ;;
-    clean-egg)
-        clean_egg ;;
+        clean_env && \
+        clean_egg && \
+        clean_pyc && \
+        clean_log ;;
     clean-env)
         clean_env ;;
+    clean-egg)
+        clean_egg ;;
+    clean-pyc)
+        clean_pyc ;;
+    clean-log)
+        clean_log ;;
     init)
         setup_env $APPNAME ;;
     *)
