@@ -24,10 +24,6 @@ function setup_env () {
 }
 
 function clean_env () {
-    if [ $VIRTUAL_ENV ] ; then
-        deactivate
-    fi
-
     rm bin/ include/ lib/ -rf
 }
 

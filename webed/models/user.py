@@ -25,7 +25,7 @@ class User (db.Model, UserMixin):
 
     def __repr__ (self):
 
-        return u'<User@%r: %r>' % (self.id, self.mail)
+        return u'<User@%x: %r>' % (self.id if self.id else 0, self.mail)
 
 ###############################################################################
 ###############################################################################

@@ -235,6 +235,7 @@ class RestTestCase (BaseTestCase):
 
         json = JSON.decode (response.data)
         self.assertIsNotNone (json)
+        self.assertIn ('success', json)
         self.assertTrue (json['success'])
 
         return json
