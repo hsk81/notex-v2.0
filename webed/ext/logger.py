@@ -30,6 +30,7 @@ class Logger:
 
         file_handler.setLevel (logging.DEBUG)
         app.logger.addHandler (file_handler)
+        app.logger.setLevel (logging.DEBUG)
 
     def __getattr__ (self, attr):
         return getattr (current_app.logger, attr)
