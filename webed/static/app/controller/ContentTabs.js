@@ -277,7 +277,7 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var ta = tab.child ('textarea');
         assert (ta);
-        ta.el.mask ('Saving...'); //TODO: Replace with `progress-bar.start ()`!
+        ta.el.mask ('Saving ..'); //TODO: Replace with `progress-bar.start ()`!
         var data = ta.getValue ();
         assert (data);
 
