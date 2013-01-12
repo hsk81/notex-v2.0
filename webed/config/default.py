@@ -15,7 +15,7 @@ class DefaultConfig:
 
     MACH_DEVS = [r'(.*)\.blackhan.ch$']
     DEBUG = os.environ['DEBUG'] == 'True' if 'DEBUG' in os.environ \
-        else in_rxs (socket.getfqdn (), MACH_DEVS)
+        else bool (in_rxs (socket.getfqdn (), MACH_DEVS))
 
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/webed.db'

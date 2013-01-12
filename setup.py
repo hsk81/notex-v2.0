@@ -19,17 +19,18 @@ setup (
     zip_safe=False,
     install_requires=[
         'Flask',
+        'Flask-Admin',
+        'Flask-Cache',
+        'Flask-DebugToolbar',
+        'Flask-Login',
+        'Flask-Mail',
         'Flask-Script',
         'Flask-SQLAlchemy',
         'Flask-Psycopg2',
-        'Flask-Admin',
-        'Flask-Login',
-        'Flask-Cache',
-        'Flask-DebugToolbar',
+        'flup',
         'ipython',
         'pylibmc',
         'ujson',
-        'flup',
     ]
 )
 
