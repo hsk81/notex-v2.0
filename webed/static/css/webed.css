@@ -182,17 +182,12 @@ body {
     width: 640px;
 }
 
-#page.contact form label {
-    color: grey;
-    font-weight: bold;
-}
-
 #page.contact form input[type=text],
 #page.contact form input[type=email] {
     border: grey solid 1px;
     font-family: monospace;
-    font-size: 13px;
     margin-bottom: 4px;
+    font-size: 13px;
     padding: 4px;
     width: 100%;
 }
@@ -200,19 +195,17 @@ body {
 #page.contact form textarea {
     border: grey solid 1px;
     font-family: monospace;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     font-size: 13px;
-    height: 320px;
+    height: 280px;
     padding: 4px;
     width: 100%;
 }
 
 #page.contact form input[type=submit],
 #page.contact form input[type=reset] {
-    font-weight: bold;
     padding: 2px 0;
-    color: grey;
-    width: 64px;
+    width: 96px;
 }
 
 /******************************************************************************
