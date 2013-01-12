@@ -2,6 +2,7 @@
     <form method="post"
           action="{{ url_for ('contact.feedback') }}"
           onsubmit="Ext.getBody ().mask ('Sending ..');">
+
         <label>Name</label>
         <input class="input" type="text" name="name" placeholder=".." required>
         <label>Email</label>
