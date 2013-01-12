@@ -28,6 +28,13 @@ class DefaultConfig:
     LOG_FILE = os.path.join ('..', 'webed.log')
 
     ##
+    ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who
+    ## are in charge of processing feedback mails.
+    ##
+
+    DEFAULT_MAIL_RECEIVERS = []
+
+    ##
     ## At session setup data is required: ARCHIVE_PATH is the path to the
     ## archives, which will be imported on the first visit.
     ##
@@ -67,8 +74,8 @@ class DefaultConfig:
     MAX_NODE_LEVEL = 2
 
     ##
-    ## Limits the max. payload to `MAX_CONTENT_LENGTH` bytes. If a larger file
-    ## is transmitted, an `RequestEntityTooLarge` exception will be raised.
+    ## Limits the max. payload to MAX_CONTENT_LENGTH bytes. If a larger file is
+    ## transmitted, an `RequestEntityTooLarge` exception will be raised.
     ##
 
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024 ## 1MB
