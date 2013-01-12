@@ -1,5 +1,7 @@
 <div id="page" class="contact">
-    <form action="{{ url_for ('contact.feedback') }}" method="post">
+    <form method="post"
+          action="{{ url_for ('contact.feedback') }}"
+          onsubmit="Ext.getBody ().mask ('Sending ..', 'x-mask-loading');" >
         <label>Name</label>
         <input class="input" type="text" name="name" placeholder=".." required>
         <label>Email</label>
