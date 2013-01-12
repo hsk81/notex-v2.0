@@ -3,6 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from .contact import feedback
 from .director import refresh
 from .director import reset
 from .director import setup

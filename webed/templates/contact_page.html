@@ -1,0 +1,14 @@
+<div id="page" class="contact">
+    <form action="{{ url_for ('contact.feedback') }}" method="post">
+        <label>Name</label>
+        <input class="input" type="text" name="name" placeholder=".." required>
+        <label>Email</label>
+        <input class="input" type="email" name="mail" placeholder=".." required>
+
+        <textarea class="textarea" name="comment" rows="20" cols="64"
+                  placeholder=".." required></textarea>
+
+        <input type="submit" value="Send">
+        <input type="reset" value="Reset">
+    </form>
+</div>
