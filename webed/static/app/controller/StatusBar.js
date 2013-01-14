@@ -12,6 +12,7 @@ Ext.define ('Webed.controller.StatusBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
+        
         this.control ({
             'statusbar progressbar' : {
                 update: this.pb_update
