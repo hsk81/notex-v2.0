@@ -149,7 +149,7 @@ Ext.define ('Webed.controller.MainBar', {
         message.prompt ({
             title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
             scope: this, callback: function (button, text) {
-                if (button != 'ok' || !text) return;
+                if (button != 'ok'||!text) return;
 
                 application.fireEvent ('create_leaf', {
                     scope: this, callback: callback, with: {
