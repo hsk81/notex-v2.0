@@ -304,7 +304,6 @@ Ext.define ('Webed.controller.MainBar', {
         var uuid = node.get ('uuid'); assert (uuid);
         var url = '/archive-download/?node_uuid=' + uuid;
 
-
         Ext.Ajax.request ({
             url: url, scope: this, callback: function (opts, status, xhr) {
                 if (status) {
