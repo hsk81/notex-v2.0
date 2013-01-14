@@ -269,15 +269,8 @@ Ext.define ('Webed.controller.ContentTabs', {
         var uuid = record.get ('uuid');
         assert (uuid);
 
-        //
-        // TODO: While saving document remains unediteable; instead the save
-        //       button should be disabled, a saving progress should be shown,
-        //       but the editor should *remain* accessible
-        //
-
         var ta = tab.child ('textarea');
         assert (ta);
-        ta.el.mask ('Saving ..'); //TODO: Replace with `progress-bar.start ()`!
         var data = ta.getValue ();
         assert (data);
 
@@ -295,9 +288,9 @@ Ext.define ('Webed.controller.ContentTabs', {
 
             props[0].save ({
                 scope: this, callback: function (prop, op) {
-                    if (callback && callback.call)
+                    if (callback && callback.call) {
                         callback.call (scope||this, [prop], op);
-                    if (ta.el) ta.el.unmask ();  //TODO: `pg-bar.stop ()`!
+                    }
                 }
             });
         }

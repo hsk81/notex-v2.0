@@ -45,14 +45,17 @@ Ext.define ('Webed.view.statusBar.ProgressBar', {
     extend: 'Ext.ProgressBar',
     alias: 'widget.statusbar.progressbar',
 
-    width : 256,
-    value : 100.0,
-    hidden : true,
+    width: 256,
+    value: 0.0,
+    hidden: true,
 
-    disabled: true,
-    interval : 125, //[ms]
-    total : 0, //[ms]
-    increment : 100 // #segments
+    interval: 125, //[ms]
+    increment: 80, // #segments
+
+    total: 0, //[ms]
+    setTotal: function (value) { this.total = value; },
+    message: 'Processing',
+    setMessage: function (value) { this.message = value; }
 });
 
 Ext.define ('Webed.view.statusBar.InfoButton', {

@@ -46,7 +46,14 @@ Ext.define ('Webed.controller.MainBar', {
         var node = this.get_selection ();
         assert (node);
 
-        this.application.fireEvent ('update_tab', this, {
+        var application = this.application;
+        assert (application);
+
+        application.fireEvent ('progress-play', this, {
+            message: 'Saving'
+        });
+
+        application.fireEvent ('update_tab', this, {
             scope: this, callback: callback, record: node
         });
 
@@ -54,6 +61,8 @@ Ext.define ('Webed.controller.MainBar', {
             if (!records||!op||!op.success) {
                 console.error ('[MainBar.saveDocument]', records, op);
             }
+
+            application.fireEvent ('progress-stop', this);
         }
     },
 
