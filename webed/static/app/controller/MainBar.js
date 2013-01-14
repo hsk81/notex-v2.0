@@ -287,21 +287,35 @@ Ext.define ('Webed.controller.MainBar', {
         Ext.create ('Webed.view.ArchiveUploadBox').show ();
     },
 
-    exportProject: function () {
-        var node = this.get_selection ();
-        assert (node);
-
+    exportProject: function (button) {
+        var node = this.get_selection (); assert (node);
         while (node.parentNode != null && node.parentNode.parentNode != null) {
-            node = node.parentNode
+            node = node.parentNode;
         }
 
-        var uuid = node.get ('uuid');
-        assert (uuid);
+        if (node.isRoot ()) {
+            return;
+        }
 
-        if (uuid == '00000000-0000-0000-0000-000000000000') return;
+        assert (button);
+        button.disable ();
+
+        var uuid = node.get ('uuid'); assert (uuid);
         var url = '/archive-download/?node_uuid=' + uuid;
 
-        var onSuccess = function (xhr, opts) {
+        Ext.Ajax.request ({
+            url: url, callback: function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText);
+                    if (res.success) onSuccess (xhr, opts);
+                    else onFailure (xhr, opts, res);
+                } else {
+                    onFailure (xhr, opts);
+                }
+            }
+        });
+
+        function onSuccess (xhr, opts) {
             var body = Ext.getBody ();
 
             var old_frame = Ext.get ('iframe');
@@ -321,27 +335,17 @@ Ext.define ('Webed.controller.MainBar', {
                 method: 'POST',
                 action: url + '&fetch=true',
                 target: 'iframe'
-            }); assert (form);
+            });
 
             form.dom.submit ();
+            button.enable ();
         }
 
-        var onFailure = function (xhr, opts, res) {
+        function onFailure (xhr, opts, res) {
             console.error ('[MainBar.exportProject]', xhr, opts, res)
+            button.enable ();
         }
-
-        Ext.Ajax.request ({
-            url: url, callback: function (opts, status, xhr) {
-                if (status) {
-                    var res = Ext.decode (xhr.responseText);
-                    if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts, res);
-                } else {
-                    onFailure (xhr, opts);
-                }
-            }
-        });
-    },
+   },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
