@@ -115,7 +115,7 @@ Ext.define ('Webed.controller.MainBar', {
         message.prompt ({
             title: 'Add Folder', msg: 'Enter a name:', value: 'folder',
             scope: this, callback: function (button, text) {
-                if (button != 'ok' || !text) return;
+                if (button != 'ok'||!text) return;
 
                 this.application.fireEvent ('create_node', {
                     scope: this, callback: callback, with: {
