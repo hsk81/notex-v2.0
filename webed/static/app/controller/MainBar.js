@@ -57,8 +57,10 @@ Ext.define ('Webed.controller.MainBar', {
         });
 
         function callback (records, op) {
-            if (!records||!op||!op.success)
+            if (!records||!op||!op.success) {
                 console.error ('[MainBar.saveDocument]', records, op);
+            }
+
             application.fireEvent ('progress-stop', this);
             button.enable ();
         }
