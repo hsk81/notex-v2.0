@@ -297,14 +297,16 @@ Ext.define ('Webed.controller.MainBar', {
             return;
         }
 
-        assert (button);
-        button.disable ();
+        assert (button); button.disable ();
+        var application = this.application; assert (application);
+        application.fireEvent ('progress-play', this, {message: 'Exporting'});
 
         var uuid = node.get ('uuid'); assert (uuid);
         var url = '/archive-download/?node_uuid=' + uuid;
 
+
         Ext.Ajax.request ({
-            url: url, callback: function (opts, status, xhr) {
+            url: url, scope: this, callback: function (opts, status, xhr) {
                 if (status) {
                     var res = Ext.decode (xhr.responseText);
                     if (res.success) onSuccess (xhr, opts);
@@ -312,6 +314,9 @@ Ext.define ('Webed.controller.MainBar', {
                 } else {
                     onFailure (xhr, opts);
                 }
+
+                application.fireEvent ('progress-stop', this);
+                button.enable ();
             }
         });
 
@@ -326,7 +331,7 @@ Ext.define ('Webed.controller.MainBar', {
                 cls: 'x-hidden',
                 id: 'iframe',
                 name: 'iframe'
-            }); assert (new_frame);
+            });
 
             var form = body.createChild ({
                 tag: 'form',
@@ -338,12 +343,10 @@ Ext.define ('Webed.controller.MainBar', {
             });
 
             form.dom.submit ();
-            button.enable ();
         }
 
         function onFailure (xhr, opts, res) {
             console.error ('[MainBar.exportProject]', xhr, opts, res)
-            button.enable ();
         }
    },
 
