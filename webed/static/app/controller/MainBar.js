@@ -42,27 +42,25 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    saveDocument: function () {
+    saveDocument: function (button) {
         var node = this.get_selection ();
-        assert (node);
+        assert (node); if (!node.isLeaf ()) return;
+        assert (button); button.disable ();
 
         var application = this.application;
         assert (application);
-
         application.fireEvent ('progress-play', this, {
             message: 'Saving'
         });
-
         application.fireEvent ('update_tab', this, {
             scope: this, callback: callback, record: node
         });
 
         function callback (records, op) {
-            if (!records||!op||!op.success) {
+            if (!records||!op||!op.success)
                 console.error ('[MainBar.saveDocument]', records, op);
-            }
-
             application.fireEvent ('progress-stop', this);
+            button.enable ();
         }
     },
 
