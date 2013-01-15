@@ -195,13 +195,9 @@ Ext.define ('Webed.controller.MainBar', {
 
     rename: function () {
         var node = this.get_selection ();
-        assert (node);
+        assert (node); if (node.isRoot ()) return;
         var uuid = node.get ('uuid');
         assert (uuid);
-
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
-            return;
-        }
 
         var application = this.application;
         assert (application);
@@ -240,13 +236,9 @@ Ext.define ('Webed.controller.MainBar', {
 
     destroy: function () {
         var node = this.get_selection ();
-        assert (node);
+        assert (node); if (node.isRoot ()) return;
         var uuid = node.get ('uuid');
         assert (uuid);
-
-        if (uuid == '00000000-0000-0000-0000-000000000000') {
-            return;
-        }
 
         var application = this.application;
         assert (application);
