@@ -1,12 +1,11 @@
 Ext.define ('Webed.view.LeafList', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.leaf-list',
-    store: 'Leafs',
+    store: 'SearchLeafs',
 
     requires: [
         'Ext.grid.column.Number',
-        'Ext.grid.column.Template',
-        'Ext.toolbar.Paging'
+        'Ext.grid.column.Template'
     ],
 
     columns: [{
@@ -46,11 +45,54 @@ Ext.define ('Webed.view.LeafList', {
     }],
 
     dockedItems: [{
-        xtype: 'pagingtoolbar',
-        store: 'Leafs',
+        xtype: 'toolbar',
         dock: 'bottom',
-        displayInfo: false,
-        inputItemWidth: 40
+        items: [{
+            xtype: 'triggerfield',
+            emptyText: 'Search by path, name and/or regex ..',
+            hasSearch : false,
+            paramName : 'query',
+            store: 'SearchLeafs',
+            style: 'margin-top: 1px; margin-bottom: 1px;',
+            trigger1Cls: Ext.baseCSSPrefix + 'form-clear-trigger',
+            trigger2Cls: Ext.baseCSSPrefix + 'form-search-trigger',
+            width: '100%',
+
+            initComponent: function () {
+                this.callParent  (arguments);
+                this.on('specialkey', function (f, e) {
+                    if (e.getKey () == e.ENTER) {
+                        this.onTrigger2Click ();
+                    }
+                }, this);
+            },
+
+            onTrigger1Click: function () {
+                if (this.hasSearch) {
+                    this.setValue ('');
+                    this.store.clearFilter ();
+                    this.hasSearch = false;
+                    this.triggerCell.item (0).setDisplayed (false);
+                    this.updateLayout ();
+                }
+            },
+
+            onTrigger2Click: function () {
+                var value = this.getValue ();
+                if (value.length > 0) {
+
+                    this.store.filter ({
+                        id: this.paramName,
+                        property: this.paramName,
+                        value: value
+                    });
+
+                    this.hasSearch = true;
+                    this.triggerCell.item (0).setDisplayed (true);
+                    this.updateLayout ();
+                }
+            }
+        }]
     }],
 
     collapsed: true

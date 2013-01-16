@@ -7,6 +7,7 @@ Ext.require ('Ext.data.writer.Json');
 Ext.require ('Ext.data.reader.Json');
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
+Ext.require ('Webed.store.SearchLeafs');
 Ext.require ('Webed.store.Properties');
 Ext.require ('Webed.view.Viewport');
 
@@ -15,7 +16,7 @@ Ext.application ({
     requires: ['Ext.container.Viewport'],
 
     models: ['Node', 'Leaf', 'Property'],
-    stores: ['Nodes', 'Leafs', 'Properties'],
+    stores: ['Nodes', 'Leafs', 'SearchLeafs', 'Properties'],
 
     controllers: [
         'Property',
