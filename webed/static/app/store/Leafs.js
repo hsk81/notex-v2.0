@@ -4,7 +4,7 @@ Ext.define ('Webed.store.Leafs', {
     model: 'Webed.model.Leaf',
 
     listeners: {
-        load: function (store, records, successful, eOpts) {
+        prefetch: function (store, records, successful, eOpts) {
             if (records && successful) {
                 records.forEach (function (record) {
                     this.decorate (record);
@@ -22,5 +22,14 @@ Ext.define ('Webed.store.Leafs', {
         leaf.set ('iconCls', icon);
     },
 
-    autoLoad: false
+    sorters: [{
+        property: 'name_path'
+    }],
+
+    leadingBufferZone: 1000,
+    remoteFilter: true,
+    remoteSort: true,
+    buffered: true,
+    autoLoad: true,
+    pageSize: 100
 });

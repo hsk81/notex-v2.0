@@ -1,7 +1,7 @@
 Ext.define ('Webed.view.LeafList', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.leaf-list',
-    store: 'SearchLeafs',
+    store: 'Leafs',
 
     requires: [
         'Ext.grid.column.Number',
@@ -52,7 +52,7 @@ Ext.define ('Webed.view.LeafList', {
             emptyText: 'Search by path, name and/or regex ..',
             hasSearch : false,
             paramName : 'query',
-            store: 'SearchLeafs',
+            store: 'Leafs',
             style: 'margin-top: 1px; margin-bottom: 1px;',
             trigger1Cls: Ext.baseCSSPrefix + 'form-clear-trigger',
             trigger2Cls: Ext.baseCSSPrefix + 'form-search-trigger',
@@ -67,7 +67,7 @@ Ext.define ('Webed.view.LeafList', {
                 }, this);
             },
 
-            onTrigger1Click: function () {
+            onTrigger1Click: functminorion () {
                 if (this.hasSearch) {
                     this.setValue ('');
                     this.store.clearFilter ();

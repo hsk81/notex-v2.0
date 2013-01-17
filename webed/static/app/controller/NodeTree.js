@@ -64,10 +64,6 @@ Ext.define ('Webed.controller.NodeTree', {
         this.application.fireEvent ('create_tab', this, {
             record: record
         });
-
-        this.application.fireEvent ('select_leaf', this, {
-            record: record
-        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
