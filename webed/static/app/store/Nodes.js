@@ -14,7 +14,7 @@ Ext.define ('Webed.store.Nodes', {
     },
 
     listeners: {
-        append: function (root, record, index, options) {
+        append: function (root, record, index, eOpts) {
             this.decorate (record);
         },
 
