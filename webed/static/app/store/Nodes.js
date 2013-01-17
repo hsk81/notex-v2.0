@@ -18,7 +18,7 @@ Ext.define ('Webed.store.Nodes', {
             this.decorate (record);
         },
 
-        beforeload: function (store, operation, options) {
+        beforeload: function (store, operation, eOpts) {
             var uuid = operation.node.get ('uuid');
             assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
