@@ -67,7 +67,7 @@ Ext.define ('Webed.view.LeafList', {
                 }, this);
             },
 
-            onTrigger1Click: functminorion () {
+            onTrigger1Click: function () {
                 if (this.hasSearch) {
                     this.setValue ('');
                     this.store.clearFilter ();
