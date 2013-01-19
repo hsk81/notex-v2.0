@@ -297,7 +297,6 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     update_image_tab: function (tab, callback, scope) {
-        //TODO!
     },
 
     ///////////////////////////////////////////////////////////////////////////
