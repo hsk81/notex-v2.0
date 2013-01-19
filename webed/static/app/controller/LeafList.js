@@ -130,6 +130,9 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.fireEvent ('create_tab', this, {
             record: record
         });
+        this.application.fireEvent ('select_node', this, {
+            record: record
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////

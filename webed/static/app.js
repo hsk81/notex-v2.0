@@ -40,10 +40,7 @@ Ext.application ({
     },
 
     get_selection: function () {
-        return this.selection;
-    },
-
-    set_selection: function (record) {
-        this.selection = record;
+        var controller = this.getController ('NodeTree');
+        assert (controller); return controller.get_selection ();
     }
 });
