@@ -43,8 +43,12 @@ class Node (db.Model):
         name = 'uuid')
     _mime = db.Column (db.String (256), nullable=False, index=True,
         name = 'mime')
-    _name = db.Column (db.Unicode (256), nullable=False, index=True,
+    _name = db.Column (db.Unicode (length=None), nullable=False, index=True,
         name = 'name')
+    _path = db.Column (db.Unicode (length=None), nullable=False, index=True,
+        name = 'path')
+
+    ###########################################################################
 
     @hybrid_property
     def uuid (self):
@@ -53,7 +57,6 @@ class Node (db.Model):
     @hybrid_property
     def mime (self):
         return self._mime
-
     @mime.setter
     def mime (self, value):
         self._mime = value
@@ -61,10 +64,14 @@ class Node (db.Model):
     @hybrid_property
     def name (self):
         return self._name
-
     @name.setter
     def name (self, value):
         self._name = value
+        self._path = os.path.sep.join (self.get_path (field='name'))
+
+    @hybrid_property
+    def path (self):
+        return self._path
 
     ###########################################################################
 
@@ -74,8 +81,9 @@ class Node (db.Model):
         self.root = root
 
         self._uuid = uuid if uuid else str (uuid_random ())
-        self._name = unicode (name) if name is not None else None
         self._mime = mime if mime else 'application/node'
+        self._name = unicode (name) if name is not None else None
+        self._path = os.path.sep.join (self.get_path (field='name'))
 
     def __repr__ (self):
 
@@ -97,20 +105,6 @@ class Node (db.Model):
             return cached_path (self, field)
         else:
             return cached_path.uncached (self, field)
-
-    ###########################################################################
-
-    def walk (self, field, path=''):
-
-        path = os.path.join (path, getattr (self, field))
-        path = os.path.normpath (path)
-        nodes = self.not_leafs.all ()
-        leafs = self.leafs.all ()
-
-        yield path, nodes, leafs
-
-        for node in nodes:
-            node.walk (field=field, path=path)
 
 ###############################################################################
 ###############################################################################

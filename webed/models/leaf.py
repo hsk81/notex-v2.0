@@ -6,6 +6,8 @@ __author__ = 'hsk81'
 from node import Node
 from ..ext.db import db
 
+import os.path
+
 ###############################################################################
 ###############################################################################
 
@@ -14,8 +16,6 @@ class Leaf (Node):
 
     leaf_id = db.Column (db.Integer, db.Sequence ('leaf_id_seq'),
         db.ForeignKey ('node.id', ondelete='CASCADE'), primary_key=True)
-
-    ###########################################################################
 
     def __init__ (self, name, root, mime=None, uuid=None):
 
@@ -44,6 +44,22 @@ Node.not_subleafs = property (lambda self: self.subnodes
     .outerjoin (Leaf, Node.id==Leaf.leaf_id)
     .filter_by (leaf_id=None)
     .back ())
+
+###############################################################################
+
+def walk (self, field, path=''):
+
+    path = os.path.join (path, getattr (self, field))
+    path = os.path.normpath (path)
+    nodes = self.not_leafs.all ()
+    leafs = self.leafs.all ()
+
+    yield path, nodes, leafs
+
+    for node in nodes:
+        node.walk (field=field, path=path)
+
+Node.walk = walk
 
 ###############################################################################
 ###############################################################################
