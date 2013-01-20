@@ -49,11 +49,8 @@ Ext.define ('Webed.view.LeafList', {
         dock: 'bottom',
         items: [{
             xtype: 'triggerfield',
-            emptyText: 'Search by path, name and/or regex ..',
-            hasSearch : false,
-            paramName : 'query',
-            store: 'Leafs',
-            style: 'margin-top: 1px; margin-bottom: 1px;',
+            emptyText: 'Search by name and/or regex ..',
+            paramName : 'name_path',
             trigger1Cls: Ext.baseCSSPrefix + 'form-clear-trigger',
             trigger2Cls: Ext.baseCSSPrefix + 'form-search-trigger',
             width: '100%',
@@ -61,18 +58,16 @@ Ext.define ('Webed.view.LeafList', {
             initComponent: function () {
                 this.callParent  (arguments);
                 this.on('specialkey', function (f, e) {
-                    if (e.getKey () == e.ENTER) {
-                        this.onTrigger2Click ();
-                    }
+                    if (e.getKey () == e.ESC) this.onTrigger1Click ();
+                    if (e.getKey () == e.ENTER) this.onTrigger2Click ();
                 }, this);
             },
 
             onTrigger1Click: function () {
                 if (this.hasSearch) {
                     this.setValue ('');
-                    this.store.clearFilter ();
+                    this.getStore ().clearFilter ();
                     this.hasSearch = false;
-                    this.triggerCell.item (0).setDisplayed (false);
                     this.updateLayout ();
                 }
             },
@@ -80,17 +75,28 @@ Ext.define ('Webed.view.LeafList', {
             onTrigger2Click: function () {
                 var value = this.getValue ();
                 if (value.length > 0) {
-
-                    this.store.filter ({
+                    this.getStore ().clearFilter ();
+                    this.getStore ().filter ({
                         id: this.paramName,
                         property: this.paramName,
-                        value: value
+                        value: new RegExp (value, 'i')
                     });
 
                     this.hasSearch = true;
-                    this.triggerCell.item (0).setDisplayed (true);
                     this.updateLayout ();
                 }
+            },
+
+            getStore: function () {
+                if (!this.store) {
+                    var result = Ext.ComponentQuery.query ('leaf-list');
+                    assert (result && result.length > 0);
+                    var leaf_list = result.pop ();
+                    this.store = leaf_list.store;
+                    assert (this.store);
+                }
+
+                return this.store;
             }
         }]
     }],

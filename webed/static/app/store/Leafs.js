@@ -27,7 +27,7 @@ Ext.define ('Webed.store.Leafs', {
     }],
 
     leadingBufferZone: 1000,
-    remoteFilter: true,
+    remoteFilter: false ,
     remoteSort: true,
     buffered: true,
     autoLoad: true,
