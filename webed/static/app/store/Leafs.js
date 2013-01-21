@@ -26,10 +26,10 @@ Ext.define ('Webed.store.Leafs', {
         property: 'name_path'
     }],
 
-    leadingBufferZone: 250,
+    leadingBufferZone: 1250,
     remoteFilter: true,
     remoteSort: true,
     buffered: true,
     autoLoad: true,
-    pageSize: 25
+    pageSize: 125
 });

@@ -45,11 +45,8 @@ class Node (db.Model):
         name = 'mime')
     _name = db.Column (db.Unicode (length=None), nullable=False, index=True,
         name = 'name')
-
     _name_path = db.Column (db.Unicode (length=None), nullable=False,
         index=True, name = 'name_path')
-    _uuid_path = db.Column (db.Unicode (length=None), nullable=False,
-        index=True, name = 'uuid_path')
 
     ###########################################################################
 
@@ -70,11 +67,13 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
         self._name = value
-        self._name_path = os.path.sep.join (self.get_path (field='name'))
 
-    @hybrid_property
-    def uuid_path (self):
-        return self._uuid_path
+        for _, nodes in self.tree (field='name'):
+            for node in nodes:
+                node._name_path = os.sep.join (node.get_path (field='name'))
+
+        self._name_path = os.sep.join (self.get_path (field='name'))
+
     @hybrid_property
     def name_path (self):
         return self._name_path
@@ -89,8 +88,6 @@ class Node (db.Model):
         self._mime = mime if mime else 'application/node'
         self._uuid = uuid if uuid else str (uuid_random ())
         self._name = unicode (name) if name is not None else None
-
-        self._uuid_path = os.path.sep.join (self.get_path (field='uuid'))
         self._name_path = os.path.sep.join (self.get_path (field='name'))
 
     def __repr__ (self):
@@ -113,6 +110,19 @@ class Node (db.Model):
             return cached_path (self, field)
         else:
             return cached_path.uncached (self, field)
+
+    ###########################################################################
+
+    def tree (self, field, path=''):
+
+        path = os.path.join (path, getattr (self, field))
+        path = os.path.normpath (path)
+        nodes = self.nodes.all ()
+
+        yield path, nodes
+
+        for node in nodes:
+            node.tree (field=field, path=path)
 
 ###############################################################################
 ###############################################################################
