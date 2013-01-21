@@ -77,7 +77,7 @@ Ext.define ('Webed.view.LeafList', {
                 if (value.length > 0) {
                     this.getStore ().clearFilter ();
                     this.getStore ().filter ({
-                        column: this.paramName,
+                        property: this.paramName,
                         regex: new RegExp (value, 'i')
                     });
 

@@ -219,27 +219,43 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs.order_by ('name_path')
+        query = root.leafs
     else:
-        query = base.subleafs.order_by ('name_path')
+        query = base.subleafs
 
     filters = request.args.get ('filters', None)
     if filters:
         for filter in JSON.decode (filters):
 
-            column_name = filter['column']
-            assert column_name
-            regex_value = filter['regex']
-            assert regex_value
-            regex_icase = filter['icase']
-            assert regex_icase
+            property = filter['property']
+            assert property
+            regex = filter['regex']
+            assert regex
+            ignore_case = filter['ignore_case']
+            assert ignore_case is not None
 
-            column = getattr (Node, column_name)
+            column = getattr (Node, property)
             assert column
-            operation = column.op ('~' if not regex_icase else '~*')
+            operation = column.op ('~*' if ignore_case else '~')
             assert operation
 
-            query = query.filter (operation (regex_value))
+            query = query.filter (operation (regex))
+
+    sorters = request.args.get ('sort', None)
+    if sorters:
+        for sorter in JSON.decode (sorters):
+
+            property = sorter['property']
+            assert property
+            direction = sorter['direction']
+            assert direction
+            column = getattr (Node, property)
+            assert column
+
+            if direction.lower () != 'desc':
+                query = query.order_by (column)
+            else:
+                query = query.order_by (column.desc ())
 
     start = int (request.args.get ('start', 0))
     limit = int (request.args.get ('limit', 25))

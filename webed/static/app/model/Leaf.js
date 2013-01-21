@@ -27,14 +27,16 @@ Ext.define ('Webed.model.Leaf', {
             }
 
             return JSON.stringify (filters.map (function (el, index) {
-                var column = map (el.column);
-                assert (column);
+                var property = map (el.property);
+                assert (property);
                 var regex = el.regex.source;
                 assert (regex);
-                var icase = el.regex.ignoreCase;
-                assert (icase != undefined);
+                var ignore_case = el.regex.ignoreCase;
+                assert (ignore_case != undefined);
 
-                return {column: column, regex: regex, icase: icase};
+                return {
+                    property: property, regex: regex, ignore_case: ignore_case
+                };
             }));
         }
     }
