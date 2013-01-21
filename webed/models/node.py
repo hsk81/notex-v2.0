@@ -69,8 +69,8 @@ class Node (db.Model):
         self._name = value
 
         for _, nodes in self.tree (field='name'):
-            for node in nodes:
-                node._name_path = os.sep.join (node.get_path (field='name'))
+            for node in nodes: node._name_path = \
+                os.sep.join (node.get_path (field='name'))
 
         self._name_path = os.sep.join (self.get_path (field='name'))
 
