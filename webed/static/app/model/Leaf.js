@@ -12,22 +12,8 @@ Ext.define ('Webed.model.Leaf', {
         },
 
         filterParam: 'filters', encodeFilters: function (filters) {
-
-            function map (value) {
-                switch (value) {
-                    case 'name_path': return 'name_path';
-                    case 'uuid_path': return 'uuid_path';
-                    case 'root_uuid': return null;
-                    case 'uuid': return 'uuid';
-                    case 'name': return 'name';
-                    case 'mime': return 'mime';
-                    case 'size': return null;
-                    default: return null;
-                }
-            }
-
             return JSON.stringify (filters.map (function (el, index) {
-                var property = map (el.property);
+                var property = el.property;
                 assert (property);
                 var regex = el.regex.source;
                 assert (regex);

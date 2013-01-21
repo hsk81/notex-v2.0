@@ -235,7 +235,7 @@ def leaf_read (json=True):
             assert ignore_case is not None
 
             column = getattr (Node, property)
-            assert column
+            assert column.op ## TODO: Really a DB column?
             operation = column.op ('~*' if ignore_case else '~')
             assert operation
 
@@ -250,7 +250,7 @@ def leaf_read (json=True):
             direction = sorter['direction']
             assert direction
             column = getattr (Node, property)
-            assert column
+            assert column.op ## TODO: Really a DB column?
 
             if direction.lower () != 'desc':
                 query = query.order_by (column)

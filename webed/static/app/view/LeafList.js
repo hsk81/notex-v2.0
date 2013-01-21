@@ -40,7 +40,7 @@ Ext.define ('Webed.view.LeafList', {
         dataIndex: 'size',
         xtype: 'numbercolumn',
         renderer: Ext.util.Format.fileSize,
-        sortable: true,
+        sortable: false, //TODO: true!?
         align: 'right'
     }],
 
