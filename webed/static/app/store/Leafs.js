@@ -22,14 +22,10 @@ Ext.define ('Webed.store.Leafs', {
         leaf.set ('iconCls', icon);
     },
 
-    sorters: [{
-        property: 'name_path'
-    }],
-
-    leadingBufferZone: 1000,
-    remoteFilter: false,
+    leadingBufferZone: 250,
+    remoteFilter: true,
     remoteSort: true,
     buffered: true,
     autoLoad: true,
-    pageSize: 100
+    pageSize: 25
 });

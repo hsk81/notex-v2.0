@@ -45,8 +45,11 @@ class Node (db.Model):
         name = 'mime')
     _name = db.Column (db.Unicode (length=None), nullable=False, index=True,
         name = 'name')
-    _path = db.Column (db.Unicode (length=None), nullable=False, index=True,
-        name = 'path')
+
+    _name_path = db.Column (db.Unicode (length=None), nullable=False,
+        index=True, name = 'name_path')
+    _uuid_path = db.Column (db.Unicode (length=None), nullable=False,
+        index=True, name = 'uuid_path')
 
     ###########################################################################
 
@@ -67,11 +70,14 @@ class Node (db.Model):
     @name.setter
     def name (self, value):
         self._name = value
-        self._path = os.path.sep.join (self.get_path (field='name'))
+        self._name_path = os.path.sep.join (self.get_path (field='name'))
 
     @hybrid_property
-    def path (self):
-        return self._path
+    def uuid_path (self):
+        return self._uuid_path
+    @hybrid_property
+    def name_path (self):
+        return self._name_path
 
     ###########################################################################
 
@@ -80,10 +86,12 @@ class Node (db.Model):
         self.base = root.base if root and root.base else root
         self.root = root
 
-        self._uuid = uuid if uuid else str (uuid_random ())
         self._mime = mime if mime else 'application/node'
+        self._uuid = uuid if uuid else str (uuid_random ())
         self._name = unicode (name) if name is not None else None
-        self._path = os.path.sep.join (self.get_path (field='name'))
+
+        self._uuid_path = os.path.sep.join (self.get_path (field='uuid'))
+        self._name_path = os.path.sep.join (self.get_path (field='name'))
 
     def __repr__ (self):
 

@@ -219,9 +219,27 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs.order_by ('path')
+        query = root.leafs.order_by ('name_path')
     else:
-        query = base.subleafs.order_by ('path')
+        query = base.subleafs.order_by ('name_path')
+
+    filters = request.args.get ('filters', None)
+    if filters:
+        for filter in JSON.decode (filters):
+
+            column_name = filter['column']
+            assert column_name
+            regex_value = filter['regex']
+            assert regex_value
+            regex_icase = filter['icase']
+            assert regex_icase
+
+            column = getattr (Node, column_name)
+            assert column
+            operation = column.op ('~' if not regex_icase else '~*')
+            assert operation
+
+            query = query.filter (operation (regex_value))
 
     start = int (request.args.get ('start', 0))
     limit = int (request.args.get ('limit', 25))
