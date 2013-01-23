@@ -47,7 +47,7 @@ Node.not_subleafs = property (lambda self: self.subnodes
 
 ###############################################################################
 
-def walk (self, field, path=''):
+def do_walk (self, field, path=''):
 
     path = os.path.join (path, getattr (self, field))
     path = os.path.normpath (path)
@@ -59,7 +59,7 @@ def walk (self, field, path=''):
     for node in nodes:
         node.walk (field=field, path=path)
 
-Node.walk = walk
+Node.walk = do_walk
 
 ###############################################################################
 ###############################################################################
