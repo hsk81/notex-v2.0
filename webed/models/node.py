@@ -3,10 +3,11 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from sqlalchemy.sql.expression import ColumnClause
+from sqlalchemy.sql.expression import ColumnElement
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects import postgres as pg
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy import inspect
 
 from uuid import uuid4 as uuid_random
 
@@ -18,15 +19,23 @@ import os.path
 ###############################################################################
 ###############################################################################
 
-class UuidPathColumn (ColumnClause): pass
-class NamePathColumn (ColumnClause): pass
+class UuidPathColumn (ColumnElement):
+    def __init__(self, entity):
+        insp = inspect (entity)
+        self.entity = insp.selectable
 
 @compiles (UuidPathColumn)
 def compile_uuid_path_column (element, compiler, **kwargs):
-    return 'node.uuid_path' ## TODO!?
+    return "%s.uuid_path" % compiler.process (element.entity, ashint=True)
+
+class NamePathColumn (ColumnElement):
+    def __init__(self, entity):
+        insp = inspect (entity)
+        self.entity = insp.selectable
+
 @compiles (NamePathColumn)
 def compile_name_path_column (element, compiler, **kwargs):
-    return 'node.name_path' ## TODO!?
+    return "%s.name_path" % compiler.process (element.entity, ashint=True)
 
 ###############################################################################
 ###############################################################################
