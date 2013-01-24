@@ -4,6 +4,8 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.dialects import postgres as pg
+
 from uuid import uuid4 as uuid_random
 from node import Node
 
@@ -39,11 +41,11 @@ class Property (db.Model):
 
     ###########################################################################
 
-    _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
+    _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
         name = 'uuid')
-    _mime = db.Column (db.String (256), nullable=False, index=True,
+    _mime = db.Column (db.String (), nullable=False, index=True,
         name = 'mime')
-    _name = db.Column (db.String (256), nullable=False, index=True,
+    _name = db.Column (db.String (), nullable=False, index=True,
         name = 'name')
 
     @hybrid_property
@@ -97,24 +99,6 @@ class Property (db.Model):
     def __repr__ (self):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
-
-###############################################################################
-###############################################################################
-
-def get_node_size (node, **kwargs):
-
-    @cache.version (key=[node.uuid, 'size'] + kwargs.values ())
-    def cached_size (node, **kwargs):
-
-        props = node.props.filter_by (**kwargs).all ()
-        value = reduce (lambda acc,p: acc+p.size, props, 0)
-        value+= reduce (lambda acc,n: acc+n.get_size (**kwargs), node.nodes, 0)
-        return value
-
-    return cached_size (node, **kwargs)
-
-Node.get_size = get_node_size
-Node.size = property (lambda self: self.get_size (name='data'))
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String

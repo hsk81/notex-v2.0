@@ -15,8 +15,8 @@ from webed.models import Node
 class NodeAdmin (ModelView):
 
     column_list = ('base', 'root', 'name', 'mime', 'uuid', 'type', 'size')
-    column_searchable_list = (Node.uuid, Node.mime, Node.name, Node.type)
-    column_filters = (Node.uuid, Node.mime, Node.name, Node.type)
+    column_searchable_list = (Node.mime, Node.name, Node.type)
+    column_filters = (Node.mime, Node.name, Node.type)
     form_columns = ('root', 'mime', 'name')
 
     def __init__ (self, session):

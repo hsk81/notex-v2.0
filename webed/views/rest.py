@@ -219,7 +219,7 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs
+        query = root.leafs ## TODO: root.subleafs!?
     else:
         query = base.subleafs
 
@@ -235,7 +235,7 @@ def leaf_read (json=True):
             assert ignore_case is not None
 
             column = getattr (Node, property)
-            assert column.op ## TODO: Really a DB column?
+            assert column.op
             operation = column.op ('~*' if ignore_case else '~')
             assert operation
 
@@ -250,7 +250,7 @@ def leaf_read (json=True):
             direction = sorter['direction']
             assert direction
             column = getattr (Node, property)
-            assert column.op ## TODO: Really a DB column?
+            assert column.op
 
             if direction.lower () != 'desc':
                 query = query.order_by (column)
@@ -485,8 +485,8 @@ def node2ext (node, leafs=True, level=1):
             'results': results,
             'root_uuid': node.root.uuid if node.root else None,
             'uuid': node.uuid,
-            'uuid_path': node.get_path (field='uuid'),
-            'name_path': node.get_path (field='name'),
+            'uuid_path': node.uuid_path,
+            'name_path': node.name_path,
         }
 
     if app.config['MAX_NODE_SIZE'] < node.nodes.count ():
@@ -522,8 +522,8 @@ def leaf2ext (leaf):
         'results': None,
         'root_uuid': leaf.root.uuid,
         'uuid': leaf.uuid,
-        'uuid_path': leaf.get_path (field='uuid'),
-        'name_path': leaf.get_path (field='name')
+        'uuid_path': leaf.uuid_path,
+        'name_path': leaf.name_path
     }
 
 def prop2ext (prop):

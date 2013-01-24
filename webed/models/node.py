@@ -3,13 +3,30 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from sqlalchemy.sql.expression import ColumnClause
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.dialects import postgres as pg
+from sqlalchemy.ext.compiler import compiles
+
 from uuid import uuid4 as uuid_random
 
 from ..ext.db import db
 from ..ext.cache import cache
 
 import os.path
+
+###############################################################################
+###############################################################################
+
+class UuidPathColumn (ColumnClause): pass
+class NamePathColumn (ColumnClause): pass
+
+@compiles (UuidPathColumn)
+def compile_node_uuid_path_column (element, compiler, **kwargs):
+    return 'node.uuid_path'
+@compiles (NamePathColumn)
+def compile_node_name_path_column (element, compiler, **kwargs):
+    return 'node.name_path'
 
 ###############################################################################
 ###############################################################################
@@ -39,14 +56,12 @@ class Node (db.Model):
 
     ###########################################################################
 
-    _uuid = db.Column (db.String (36), nullable=False, index=True, unique=True,
+    _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
         name = 'uuid')
-    _mime = db.Column (db.String (256), nullable=False, index=True,
+    _mime = db.Column (db.String (), nullable=False, index=True,
         name = 'mime')
-    _name = db.Column (db.Unicode (length=None), nullable=False, index=True,
+    _name = db.Column (db.Unicode (), nullable=False, index=True,
         name = 'name')
-    _name_path = db.Column (db.Unicode (length=None), nullable=False,
-        index=True, name = 'name_path')
 
     ###########################################################################
 
@@ -68,16 +83,6 @@ class Node (db.Model):
     def name (self, value):
         self._name = value
 
-        for _, nodes in self.tree (field='name'):
-            for node in nodes: node._name_path = \
-                os.sep.join (node.get_path (field='name'))
-
-        self._name_path = os.sep.join (self.get_path (field='name'))
-
-    @hybrid_property
-    def name_path (self):
-        return self._name_path
-
     ###########################################################################
 
     def __init__ (self, name, root, mime=None, uuid=None):
@@ -88,7 +93,6 @@ class Node (db.Model):
         self._mime = mime if mime else 'application/node'
         self._uuid = uuid if uuid else str (uuid_random ())
         self._name = unicode (name) if name is not None else None
-        self._name_path = os.path.sep.join (self.get_path (field='name'))
 
     def __repr__ (self):
 
@@ -111,18 +115,39 @@ class Node (db.Model):
         else:
             return cached_path.uncached (self, field)
 
+    @hybrid_property
+    def uuid_path (self):
+        return os.path.sep.join (self.get_path (field='uuid'))
+
+    @uuid_path.expression
+    def uuid_path (cls):
+        return UuidPathColumn (cls)
+
+    @hybrid_property
+    def name_path (self):
+        return os.path.sep.join (self.get_path (field='name'))
+
+    @name_path.expression
+    def name_path (cls):
+        return NamePathColumn (cls)
+
     ###########################################################################
 
-    def tree (self, field, path=''):
+    def get_size (self, **kwargs):
 
-        path = os.path.join (path, getattr (self, field))
-        path = os.path.normpath (path)
-        nodes = self.nodes.all ()
+        @cache.version (key=[self.uuid, 'size'] + kwargs.values ())
+        def cached_size (node, **kwargs):
 
-        yield path, nodes
+            props = node.props.filter_by (**kwargs).all ()
+            value = reduce (lambda s,p: s+p.size, props, 0)
+            value+= reduce (lambda s,n: s+n.get_size (**kwargs), node.nodes, 0)
+            return value
 
-        for node in nodes:
-            node.tree (field=field, path=path)
+        return cached_size (self, **kwargs)
+
+    @hybrid_property
+    def size (self):
+        return self.get_size (name='data')
 
 ###############################################################################
 ###############################################################################
