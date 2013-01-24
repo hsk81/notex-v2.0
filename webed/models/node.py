@@ -23,10 +23,10 @@ class NamePathColumn (ColumnClause): pass
 
 @compiles (UuidPathColumn)
 def compile_uuid_path_column (element, compiler, **kwargs):
-    return 'node.uuid_path'
+    return 'node.uuid_path' ## TODO!?
 @compiles (NamePathColumn)
 def compile_name_path_column (element, compiler, **kwargs):
-    return 'node.name_path'
+    return 'node.name_path' ## TODO!?
 
 ###############################################################################
 ###############################################################################
