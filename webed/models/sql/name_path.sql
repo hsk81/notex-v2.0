@@ -13,7 +13,7 @@ UNION
     FROM node n, graph g
     WHERE n.root_id = g.id)
 
-SELECT array_to_string (g.name_path, '/','.*')
+SELECT array_to_string (g.name_path, '/')
 FROM graph g
 WHERE (g.id_path[1] = $1.base_id OR g.root_id IS NULL)
 AND (g.id = $1.id)
