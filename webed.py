@@ -64,11 +64,9 @@ class DbDrop (Command):
 
     def run (self):
 
-        with db.session.connection () as connection:
-            connection.execute ('DROP TABLE "property" CASCADE;')
-            connection.execute ('DROP TABLE "leaf" CASCADE;')
-            connection.execute ('DROP TABLE "node" CASCADE;')
-            connection.execute ('DROP TABLE "user" CASCADE;')
+        ##
+        ## TODO: Drop name_path(node), node_path_view & node_ex (with indices)!
+        ##
 
         db.drop_all ()
 
