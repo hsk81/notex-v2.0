@@ -219,9 +219,11 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs ## TODO: root.subleafs!?
+     ## query = root.leafs ## TODO: root.subleafs!?
+        query = NodeEx.query.filter_by (root_id=root.id, type='leaf')
     else:
-        query = base.subleafs
+     ## query = base.subleafs
+        query = NodeEx.query.filter_by (base_id=base.id, type='leaf')
 
     filters = request.args.get ('filters', None)
     if filters:
@@ -234,7 +236,7 @@ def leaf_read (json=True):
             ignore_case = filter['ignore_case']
             assert ignore_case is not None
 
-            column = getattr (Node, property)
+            column = getattr (NodeEx, property)
             assert column.op
             operation = column.op ('~*' if ignore_case else '~')
             assert operation
@@ -249,7 +251,7 @@ def leaf_read (json=True):
             assert property
             direction = sorter['direction']
             assert direction
-            column = getattr (Node, property)
+            column = getattr (NodeEx, property)
             assert column.op
 
             if direction.lower () != 'desc':

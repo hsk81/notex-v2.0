@@ -3,7 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from sqlalchemy.sql.expression import ColumnElement
+from sqlalchemy.sql.expression import ColumnClause, ColumnElement
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects import postgres as pg
 from sqlalchemy.ext.compiler import compiles
@@ -19,22 +19,22 @@ import os.path
 ###############################################################################
 ###############################################################################
 
-class UuidPathColumn (ColumnElement):
+class NodeUuidPathColumn (ColumnElement):
     def __init__(self, entity):
         insp = inspect (entity)
         self.entity = insp.selectable
 
-@compiles (UuidPathColumn)
-def compile_uuid_path_column (element, compiler, **kwargs):
+@compiles (NodeUuidPathColumn)
+def compile_node_uuid_path_column (element, compiler, **kwargs):
     return "%s.uuid_path" % compiler.process (element.entity, ashint=True)
 
-class NamePathColumn (ColumnElement):
+class NodeNamePathColumn (ColumnElement):
     def __init__(self, entity):
         insp = inspect (entity)
         self.entity = insp.selectable
 
-@compiles (NamePathColumn)
-def compile_name_path_column (element, compiler, **kwargs):
+@compiles (NodeNamePathColumn)
+def compile_node_name_path_column (element, compiler, **kwargs):
     return "%s.name_path" % compiler.process (element.entity, ashint=True)
 
 ###############################################################################
@@ -127,18 +127,16 @@ class Node (db.Model):
     @hybrid_property
     def uuid_path (self):
         return os.path.sep.join (self.get_path (field='uuid'))
-
     @uuid_path.expression
     def uuid_path (cls):
-        return UuidPathColumn (cls)
+        return NodeUuidPathColumn (cls)
 
     @hybrid_property
     def name_path (self):
         return os.path.sep.join (self.get_path (field='name'))
-
     @name_path.expression
     def name_path (cls):
-        return NamePathColumn (cls)
+        return NodeNamePathColumn (cls)
 
     ###########################################################################
 
@@ -157,6 +155,55 @@ class Node (db.Model):
     @hybrid_property
     def size (self):
         return self.get_size (name='data')
+
+###############################################################################
+###############################################################################
+
+class NodeExUuidPathColumn (ColumnClause):
+    pass
+
+@compiles (NodeExUuidPathColumn)
+def compile_node_ex_uuid_path_column (element, compiler, **kwargs):
+    return "node_ex.uuid_path" ## TODO: % compiler.process (..)!?
+
+class NodeExNamePathColumn (ColumnClause):
+    pass
+
+@compiles (NodeExNamePathColumn)
+def compile_node_ex_name_path_column (element, compiler, **kwargs):
+    return "node_ex.name_path" ## TODO: % compiler.process (..)!?
+
+###############################################################################
+###############################################################################
+
+class NodeEx (Node):
+    __tablename__ = 'node_ex'
+    __mapper_args__ = {'polymorphic_identity': 'node-ex'}
+
+    node_id = db.Column (db.Integer, db.ForeignKey ('node.id'),
+        primary_key=True)
+
+    def __init__ (self, name, root, mime=None, uuid=None):
+
+        super (NodeEx, self).__init__ (name, root, mime=mime, uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<NodeEx@%x: %s>' % (self.id if self.id else 0, self._name)
+
+    @hybrid_property
+    def uuid_path (self):
+        return os.path.sep.join (self.get_path (field='uuid'))
+    @uuid_path.expression
+    def uuid_path (cls):
+        return NodeExUuidPathColumn (cls)
+
+    @hybrid_property
+    def name_path (self):
+        return os.path.sep.join (self.get_path (field='name'))
+    @name_path.expression
+    def name_path (cls):
+        return NodeExNamePathColumn (cls)
 
 ###############################################################################
 ###############################################################################
