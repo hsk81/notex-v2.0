@@ -55,6 +55,9 @@ Ext.define ('Webed.view.LeafList', {
             trigger2Cls: Ext.baseCSSPrefix + 'form-search-trigger',
             width: '100%',
 
+            minLength: 3,
+            maxLength: 256,
+
             initComponent: function () {
                 this.callParent  (arguments);
                 this.on('specialkey', function (f, e) {
@@ -74,7 +77,7 @@ Ext.define ('Webed.view.LeafList', {
 
             onTrigger2Click: function () {
                 var value = this.getValue ();
-                if (value.length > 0 && value != this.search) {
+                if (this.isValid () && value != this.search) {
                     this.getStore ().clearFilter ();
                     this.getStore ().filter ({
                         property: this.paramName,
@@ -96,6 +99,12 @@ Ext.define ('Webed.view.LeafList', {
                 }
 
                 return this.store;
+            },
+
+            listeners: {
+                afterrender: function (self, eOpts) {
+                    self.inputEl.set ({spellcheck:false});
+                }
             }
         }]
     }],

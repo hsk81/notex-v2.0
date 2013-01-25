@@ -239,7 +239,7 @@ def leaf_read (json=True):
             operation = column.op ('~*' if ignore_case else '~')
             assert operation
 
-            query = query.filter (operation (regex))
+            query = query.filter (operation (regex[:256]))
 
     sorters = request.args.get ('sort', None)
     if sorters:
