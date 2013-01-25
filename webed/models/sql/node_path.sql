@@ -3,9 +3,9 @@ CREATE OR REPLACE FUNCTION name_path(node)
 	RETURNS text AS
 $BODY$
 	SELECT array_to_string (v.name_path, '/') AS name_path
-	FROM name_path_view v
-	WHERE (v.id = $1.id)
-	AND (v.id_path[1] = $1.base_id)
+	FROM name_path_view npv
+	WHERE (npv.id = $1.id)
+	AND (npv.id_path[1] = $1.base_id)
 $BODY$
 LANGUAGE sql STABLE LEAKPROOF
 COST 100;
