@@ -63,6 +63,13 @@ class DbDrop (Command):
     """Drops database tables"""
 
     def run (self):
+
+        with db.session.connection () as connection:
+            connection.execute ('DROP TABLE "property" CASCADE;')
+            connection.execute ('DROP TABLE "leaf" CASCADE;')
+            connection.execute ('DROP TABLE "node" CASCADE;')
+            connection.execute ('DROP TABLE "user" CASCADE;')
+
         db.drop_all ()
 
 manager.add_command ('drop-db', DbDrop ())
