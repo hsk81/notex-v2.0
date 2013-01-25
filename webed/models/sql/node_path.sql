@@ -40,7 +40,7 @@ OWNER TO webed;
 -- DROP TABLE node_ex;
 CREATE TABLE node_ex AS
 
-	SELECT n.id as node_id,
+	SELECT n.id AS node_id,
 	       array_to_string (npv.name_path, '/') AS name_path
 	FROM node n, node_path_view npv
 	WHERE (n.id = npv.id);
@@ -54,6 +54,6 @@ CREATE INDEX ix_node_ex_name_path ON node_ex USING btree (name_path COLLATE pg_c
 CREATE INDEX ix_node_ex_node_id ON node_ex USING btree (node_id);
 
 --
-SELECT n.id, n.root_id, n.base_id, n.name_path
+SELECT n.node_id, n.name_path
 FROM node_ex n
-ORDER BY n.id, n.name_path;
+ORDER BY n.node_id, n.name_path;
