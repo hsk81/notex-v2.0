@@ -5,21 +5,28 @@ CREATE OR REPLACE FUNCTION uuid_path(node)
   RETURNS text AS
 $BODY$
 
-WITH RECURSIVE graph (id, root_id, id_path, uuid_path) AS (
-    SELECT n.id, n.root_id, ARRAY[n.id], ARRAY[n.uuid]
+WITH RECURSIVE graph (id, root_id, base_id, id_path, path) AS (
+    SELECT n.id, n.root_id, n.base_id, ARRAY[n.id],
+           ARRAY[n.uuid]
     FROM node n
-UNION
-    SELECT n.id, n.root_id, id_path||ARRAY[n.id], uuid_path||ARRAY[n.uuid]
-    FROM node n, graph g
-    WHERE n.root_id = g.id)
+    WHERE (n.base_id = $1.base_id OR n.base_id IS NULL)
 
-SELECT array_to_string (g.uuid_path, '/')
+UNION
+    SELECT n.id, n.root_id, n.base_id, id_path||ARRAY[n.id],
+           path||ARRAY[n.uuid]
+    FROM node n, graph g
+    WHERE (n.root_id = g.id)
+    AND (n.base_id = $1.base_id OR n.base_id IS NULL)
+    AND (g.base_id = $1.base_id OR g.base_id IS NULL))
+
+SELECT array_to_string (g.path, '/')
 FROM graph g
-WHERE (g.id_path[1] = $1.base_id OR g.root_id IS NULL)
-AND (g.id = $1.id)
+WHERE (g.id = $1.id)
+AND (g.id_path[1] = $1.base_id OR g.base_id IS NULL)
 
 $BODY$
-  LANGUAGE sql STABLE
+  LANGUAGE sql STABLE LEAKPROOF
   COST 100;
 ALTER FUNCTION uuid_path(node)
   OWNER TO webed;
+
