@@ -220,10 +220,10 @@ def leaf_read (json=True):
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
      ## query = root.leafs ## TODO: root.subleafs!?
-        query = NodeEx.query.filter_by (root_id=root.id, type='leaf')
+        query = NodeEx.query.filter_by (root_id=root.id, type='leaf') ## TODO!
     else:
      ## query = base.subleafs
-        query = NodeEx.query.filter_by (base_id=base.id, type='leaf')
+        query = NodeEx.query.filter_by (base_id=base.id, type='leaf') ## TODO!
 
     filters = request.args.get ('filters', None)
     if filters:
