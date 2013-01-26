@@ -142,14 +142,12 @@ class NodePath (db.Model):
     node = db.relationship ('Node',
         backref=db.backref('node_path', uselist=False))
 
-    ###########################################################################
-
-    uuid_path = db.Column (db.Text (), nullable=True, index=True)
-    name_path = db.Column (db.Text (), nullable=True, index=True)
+    uuid_path = db.Column (db.Text (), nullable=False, index=True)
+    name_path = db.Column (db.Text (), nullable=False, index=True)
 
     ###########################################################################
 
-    def __init__ (self, node, uuid_path=None, name_path=None):
+    def __init__ (self, node, uuid_path, name_path):
 
         self.node = node
         self.uuid_path = uuid_path
