@@ -145,6 +145,9 @@ class NodePath (db.Model):
     uuid_path = db.Column (db.Text (), nullable=False, index=True)
     name_path = db.Column (db.Text (), nullable=False, index=True)
 
+    dirty = db.Column (db.Boolean, nullable=False, index=True, default=False)
+    expiry = db.Column (db.DateTime, nullable=True, index=True, default=None)
+
     ###########################################################################
 
     def __init__ (self, node, uuid_path, name_path):
