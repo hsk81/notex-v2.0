@@ -3,39 +3,14 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from sqlalchemy.sql.expression import ColumnClause, ColumnElement
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects import postgres as pg
-from sqlalchemy.ext.compiler import compiles
-from sqlalchemy import inspect
-
 from uuid import uuid4 as uuid_random
 
 from ..ext.db import db
 from ..ext.cache import cache
 
 import os.path
-
-###############################################################################
-###############################################################################
-
-class NodeUuidPathColumn (ColumnElement):
-    def __init__(self, entity):
-        insp = inspect (entity)
-        self.entity = insp.selectable
-
-@compiles (NodeUuidPathColumn)
-def compile_node_uuid_path_column (element, compiler, **kwargs):
-    return "%s.uuid_path" % compiler.process (element.entity, ashint=True)
-
-class NodeNamePathColumn (ColumnElement):
-    def __init__(self, entity):
-        insp = inspect (entity)
-        self.entity = insp.selectable
-
-@compiles (NodeNamePathColumn)
-def compile_node_name_path_column (element, compiler, **kwargs):
-    return "%s.name_path" % compiler.process (element.entity, ashint=True)
 
 ###############################################################################
 ###############################################################################
@@ -129,14 +104,14 @@ class Node (db.Model):
         return os.path.sep.join (self.get_path (field='uuid'))
     @uuid_path.expression
     def uuid_path (cls):
-        return NodeUuidPathColumn (cls)
+        return NodePath.uuid_path
 
     @hybrid_property
     def name_path (self):
         return os.path.sep.join (self.get_path (field='name'))
     @name_path.expression
     def name_path (cls):
-        return NodeNamePathColumn (cls)
+        return NodePath.name_path
 
     ###########################################################################
 
@@ -159,51 +134,31 @@ class Node (db.Model):
 ###############################################################################
 ###############################################################################
 
-class NodeExUuidPathColumn (ColumnClause):
-    pass
+class NodePath (db.Model):
 
-@compiles (NodeExUuidPathColumn)
-def compile_node_ex_uuid_path_column (element, compiler, **kwargs):
-    return "node_ex.uuid_path" ## TODO: % compiler.process (..)!?
+    node_id = db.Column (db.Integer, db.Sequence ('node_id_seq'),
+        db.ForeignKey ('node.id'), primary_key=True)
 
-class NodeExNamePathColumn (ColumnClause):
-    pass
+    node = db.relationship ('Node',
+        backref=db.backref('node_path', uselist=False))
 
-@compiles (NodeExNamePathColumn)
-def compile_node_ex_name_path_column (element, compiler, **kwargs):
-    return "node_ex.name_path" ## TODO: % compiler.process (..)!?
+    ###########################################################################
 
-###############################################################################
-###############################################################################
+    uuid_path = db.Column (db.Text (), nullable=True, index=True)
+    name_path = db.Column (db.Text (), nullable=True, index=True)
 
-class NodeEx (Node):
-    __tablename__ = 'node_ex'
-    __mapper_args__ = {'polymorphic_identity': 'node-ex'}
+    ###########################################################################
 
-    node_id = db.Column (db.Integer, db.ForeignKey ('node.id'),
-        primary_key=True)
+    def __init__ (self, node, uuid_path=None, name_path=None):
 
-    def __init__ (self, name, root, mime=None, uuid=None):
-
-        super (NodeEx, self).__init__ (name, root, mime=mime, uuid=uuid)
+        self.node = node
+        self.uuid_path = uuid_path
+        self.name_path = name_path
 
     def __repr__ (self):
 
-        return u'<NodeEx@%x: %s>' % (self.id if self.id else 0, self._name)
-
-    @hybrid_property
-    def uuid_path (self):
-        return os.path.sep.join (self.get_path (field='uuid'))
-    @uuid_path.expression
-    def uuid_path (cls):
-        return NodeExUuidPathColumn (cls)
-
-    @hybrid_property
-    def name_path (self):
-        return os.path.sep.join (self.get_path (field='name'))
-    @name_path.expression
-    def name_path (cls):
-        return NodeExNamePathColumn (cls)
+        return u'<NodePath@%x: %s>' % (self.node_id if self.node_id else 0,
+            self.name_path)
 
 ###############################################################################
 ###############################################################################

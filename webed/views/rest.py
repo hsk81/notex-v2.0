@@ -219,11 +219,9 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-     ## query = root.leafs ## TODO: root.subleafs!?
-        query = NodeEx.query.filter_by (root_id=root.id, type='leaf') ## TODO!
+        query = root.leafs ## TODO: root.subleafs!?
     else:
-     ## query = base.subleafs
-        query = NodeEx.query.filter_by (base_id=base.id, type='leaf') ## TODO!
+        query = base.subleafs
 
     filters = request.args.get ('filters', None)
     if filters:
@@ -236,12 +234,17 @@ def leaf_read (json=True):
             ignore_case = filter['ignore_case']
             assert ignore_case is not None
 
-            column = getattr (NodeEx, property)
-            assert column.op
-            operation = column.op ('~*' if ignore_case else '~')
-            assert operation
+            regex_op = '~*' if ignore_case else '~'
+            regex = regex[:256]
 
-            query = query.filter (operation (regex[:256]))
+            column = getattr (Node, property)
+            if column:
+                if hasattr (NodePath, property):
+                    alias = db.aliased (NodePath)
+                    column = getattr (alias, property)
+                    query = query.join (alias)
+
+                query = query.filter (column.op (regex_op) (regex))
 
     sorters = request.args.get ('sort', None)
     if sorters:
@@ -249,15 +252,19 @@ def leaf_read (json=True):
 
             property = sorter['property']
             assert property
-            direction = sorter['direction']
+            direction = sorter['direction'] if 'direction' in sorter else 'asc'
             assert direction
-            column = getattr (NodeEx, property)
-            assert column.op
 
-            if direction.lower () != 'desc':
+            column = getattr (Node, property)
+            if column:
+                if hasattr (NodePath, property):
+                    alias = db.aliased (NodePath)
+                    column = getattr (alias, property)
+                    query = query.join (alias)
+                if direction.lower () == 'desc':
+                    column = column.desc ()
+
                 query = query.order_by (column)
-            else:
-                query = query.order_by (column.desc ())
 
     start = int (request.args.get ('start', 0))
     limit = int (request.args.get ('limit', 25))
