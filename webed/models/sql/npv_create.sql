@@ -1,4 +1,3 @@
-﻿-- DROP VIEW node_path_view;
 CREATE OR REPLACE VIEW node_path_view AS
 
 	WITH RECURSIVE graph (id, root_id, base_id, id_path, uuid_path, name_path) AS (
@@ -18,16 +17,3 @@ CREATE OR REPLACE VIEW node_path_view AS
 
 ALTER VIEW node_path_view
 OWNER TO webed;
-
--- DROP TABLE node_path;
-INSERT INTO node_path
-
-	SELECT npv.id as node_id,
-	       array_to_string (npv.uuid_path, '/') AS uuid_path,
-	       array_to_string (npv.name_path, '/') AS name_path
-	FROM node_path_view npv;
-
---
-SELECT np.node_id, np.uuid_path, np.name_path
-FROM node_path np
-ORDER BY np.node_id, np.name_path;

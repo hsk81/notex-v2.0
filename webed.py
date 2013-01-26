@@ -5,11 +5,12 @@
 
 from webed.app import app
 from webed.ext import db
+from webed.util import Q
 from webed.models import User
 
 from flask.ext.script import Manager, Command, Option
 
-###############################################################################
+##############################################################################
 ###############################################################################
 
 manager = Manager (app)
@@ -48,11 +49,11 @@ class DbInit (Command):
     def run (self, name, mail):
         db.create_all ()
 
-        assert name
-        assert mail
-        user = User (name=name, mail=mail)
+        assert name, mail
+        user = Q (User.query).one_or_default (mail=mail)
+        if not user: db.session.add (User (name=name, mail=mail))
 
-        db.session.add (user)
+        db.session.script (['webed', 'models', 'sql', 'npv_create.sql'])
         db.session.commit ()
 
 manager.add_command ('init-db', DbInit ())
@@ -64,10 +65,8 @@ class DbDrop (Command):
 
     def run (self):
 
-        ##
-        ## TODO: Drop name_path(node), node_path_view & node_ex (with indices)!
-        ##
-
+        db.session.script (['webed', 'models', 'sql', 'npv_drop.sql'])
+        db.session.commit ()
         db.drop_all ()
 
 manager.add_command ('drop-db', DbDrop ())
