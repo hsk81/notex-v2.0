@@ -1,3 +1,4 @@
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_node (IN nid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -11,6 +12,7 @@ $BODY$;
 ALTER FUNCTION public.npt_delete_node (IN bid integer)
   OWNER TO webed;
 
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_base (IN bid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -24,6 +26,7 @@ $BODY$;
 ALTER FUNCTION public.npt_delete_base (IN bid integer)
   OWNER TO webed;
 
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_full ()
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -35,3 +38,5 @@ $BODY$;
 
 ALTER FUNCTION public.npt_delete_full ()
   OWNER TO webed;
+
+-------------------------------------------------------------------------------

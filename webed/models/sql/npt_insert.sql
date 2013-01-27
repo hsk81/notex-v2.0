@@ -1,4 +1,5 @@
-﻿CREATE OR REPLACE FUNCTION npt_insert_node (IN nid integer)
+﻿-------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION npt_insert_node (IN nid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
  BEGIN
@@ -16,6 +17,7 @@ $BODY$;
 ALTER FUNCTION public.npt_insert_node (IN bid integer)
   OWNER TO webed;
 
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_base (IN bid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -31,6 +33,7 @@ SELECT npv.base_id AS base_id,
    END
 $BODY$;
 
+-------------------------------------------------------------------------------
 ALTER FUNCTION public.npt_insert_base (IN bid integer)
   OWNER TO webed;
 
@@ -50,3 +53,5 @@ $BODY$;
 
 ALTER FUNCTION public.npt_insert_full ()
   OWNER TO webed;
+
+-------------------------------------------------------------------------------
