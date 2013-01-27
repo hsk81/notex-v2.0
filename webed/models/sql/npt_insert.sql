@@ -4,7 +4,8 @@ CREATE OR REPLACE FUNCTION npt_insert_node (IN nid integer)
 $BODY$
  BEGIN
 INSERT INTO node_path
-SELECT npv.base_id AS base_id,
+SELECT npv.node_id AS id,
+       npv.base_id AS base_id,
        npv.node_id AS node_id,
        array_to_string (npv.uuid_path, '/') AS uuid_path,
        array_to_string (npv.name_path, '/') AS name_path,
@@ -23,7 +24,8 @@ CREATE OR REPLACE FUNCTION npt_insert_base (IN bid integer)
 $BODY$
  BEGIN
 INSERT INTO node_path
-SELECT npv.base_id AS base_id,
+SELECT npv.node_id AS id,
+       npv.base_id AS base_id,
        npv.node_id AS node_id,
        array_to_string (npv.uuid_path, '/') AS uuid_path,
        array_to_string (npv.name_path, '/') AS name_path,
@@ -42,7 +44,8 @@ CREATE OR REPLACE FUNCTION npt_insert_full ()
 $BODY$
  BEGIN
 INSERT INTO node_path
-SELECT npv.base_id AS base_id,
+SELECT npv.node_id AS id,
+       npv.base_id AS base_id,
        npv.node_id AS node_id,
        array_to_string (npv.uuid_path, '/') AS uuid_path,
        array_to_string (npv.name_path, '/') AS name_path,
