@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_cancel_node (IN nid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -40,4 +40,3 @@ ALTER FUNCTION public.npt_cancel_full ()
   OWNER TO webed;
 
 -------------------------------------------------------------------------------
-
