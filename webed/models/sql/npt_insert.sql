@@ -33,10 +33,10 @@ SELECT npv.base_id AS base_id,
    END
 $BODY$;
 
--------------------------------------------------------------------------------
 ALTER FUNCTION public.npt_insert_base (IN bid integer)
   OWNER TO webed;
 
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_full ()
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
