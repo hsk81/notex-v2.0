@@ -5,9 +5,9 @@ __author__ = 'hsk81'
 
 from werkzeug.datastructures import FileStorage
 
-from ..ext import db
 from ..app import app
 from ..models import Node
+from ..ext import db, logger
 from ..util import jsonify, in_rxs
 from ..views.io import archive_upload
 
@@ -82,20 +82,30 @@ def setup_session ():
     archive_require = app.config['ARCHIVE_REQUIRE']
     assert isinstance (archive_require, list)
 
-    for path, dirnames, filenames in os.walk (archive_path):
-        for filename in filenames:
+    try:
+        for path, dirnames, filenames in os.walk (archive_path):
+            for filename in filenames:
 
-            if in_rxs (filename, archive_exclude): continue
-            if in_rxs (filename, archive_require): continue
+                if in_rxs (filename, archive_exclude): continue
+                if in_rxs (filename, archive_require): continue
 
-            with open (os.path.join (path, filename), mode='r') as stream:
-                file_storage = FileStorage (stream=stream, filename=filename)
-                archive_upload (file=file_storage, root=base, skip_commit=True)
+                with open (os.path.join (path, filename), mode='r') as stream:
 
-    db.session.commit ()
+                    try:
+                        db.session.begin (nested=True)
+                        fs = FileStorage (stream=stream, filename=filename)
+                        archive_upload (file=fs, root=base, skip_commit=True)
+                        db.session.commit ()
+                    except Exception, ex:
+                        db.session.rollback ()
+                        logger.exception (ex)
 
-    db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
-    db.session.commit ()
+        db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
+        db.session.commit ()
+    except Exception, ex:
+        db.session.rollback ()
+        logger.exception (ex)
+        raise
 
     return base.uuid
 
