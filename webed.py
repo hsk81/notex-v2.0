@@ -54,6 +54,9 @@ class DbInit (Command):
         if not user: db.session.add (User (name=name, mail=mail))
 
         db.session.script (['webed', 'models', 'sql', 'npv_create.sql'])
+        db.session.script (['webed', 'models', 'sql', 'npt_insert.sql'])
+        db.session.script (['webed', 'models', 'sql', 'npt_delete.sql'])
+        db.session.script (['webed', 'models', 'sql', 'npt_cancel.sql'])
         db.session.commit ()
 
 manager.add_command ('init-db', DbInit ())
@@ -66,6 +69,7 @@ class DbDrop (Command):
     def run (self):
 
         db.session.script (['webed', 'models', 'sql', 'npv_drop.sql'])
+        db.session.script (['webed', 'models', 'sql', 'npt_drop.sql'])
         db.session.commit ()
         db.drop_all ()
 

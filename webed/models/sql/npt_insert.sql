@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_node (IN nid integer)
   RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
@@ -55,3 +55,4 @@ ALTER FUNCTION public.npt_insert_full ()
   OWNER TO webed;
 
 -------------------------------------------------------------------------------
+

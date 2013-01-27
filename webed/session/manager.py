@@ -93,6 +93,10 @@ def setup_session ():
                 archive_upload (file=file_storage, root=base, skip_commit=True)
 
     db.session.commit ()
+
+    db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
+    db.session.commit ()
+
     return base.uuid
 
 ###############################################################################
