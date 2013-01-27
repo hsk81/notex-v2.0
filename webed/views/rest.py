@@ -141,6 +141,13 @@ def node_update (leafs=True, json=True):
     if node.name != name: node.name = name
     if node.mime != mime: node.mime = mime
 
+    db.session.begin (nested=True)
+    db.session.add (node)
+    db.session.commit ()
+
+    ## TODO: Switch to `npt_delete/insert_root`!
+    db.session.execute ('SELECT npt_delete_base (%d);' % node.base.id)
+    db.session.execute ('SELECT npt_insert_base (%d);' % node.base.id)
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
@@ -315,6 +322,12 @@ def leaf_update (json=True):
     if mime and leaf.mime != mime: leaf.mime = mime
     if name and leaf.name != name: leaf.name = name
 
+    db.session.begin (nested=True)
+    db.session.add (leaf)
+    db.session.commit ()
+
+    db.session.execute ('SELECT npt_delete_node (%d);' % leaf.id)
+    db.session.execute ('SELECT npt_insert_node (%d);' % leaf.id)
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
