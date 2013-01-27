@@ -72,8 +72,10 @@ class SessionManager:
 
 def setup_session ():
 
+    db.session.begin (nested=True)
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)
+    db.session.commit ()
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
