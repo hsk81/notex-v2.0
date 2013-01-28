@@ -10,7 +10,7 @@ DELETE
    END
 $BODY$;
 
-ALTER FUNCTION public.npt_delete_node (IN bid integer)
+ALTER FUNCTION public.npt_delete_node (IN integer, IN integer)
       OWNER TO webed;
 
 -------------------------------------------------------------------------------
@@ -24,6 +24,6 @@ DELETE
    END
 $BODY$;
 
-ALTER FUNCTION public.npt_delete_base (IN bid integer)
+ALTER FUNCTION public.npt_delete_base (IN integer)
       OWNER TO webed;
 
