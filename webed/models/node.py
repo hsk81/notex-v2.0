@@ -145,6 +145,7 @@ class NodePath (db.Model):
     node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref(
         'node_path', cascade='all, delete-orphan', uselist=False))
 
+    id_path = db.Column (pg.ARRAY (db.Integer), nullable=False, index=False)
     name_path = db.Column (db.Text (), nullable=False, index=True)
 
     ###########################################################################
@@ -153,6 +154,7 @@ class NodePath (db.Model):
 
         self.node = node
         self.base = node.base
+        self.id_path = node.get_path (field='id')
         self.name_path = node.name_path
 
     def __repr__ (self):

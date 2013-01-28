@@ -142,9 +142,8 @@ def node_update (leafs=True, json=True):
     db.session.add (node)
     db.session.commit ()
 
-    ## TODO: Switch to `'npt_del/ins_root (%d,%d)' % (bid,rid)`!?
-    db.session.execute ('SELECT npt_delete_base (%d);' % base.id)
-    db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
+    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, node.id))
+    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, node.id))
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))

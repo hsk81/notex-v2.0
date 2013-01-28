@@ -5,7 +5,7 @@ $BODY$
 DELETE
   FROM node_path npt
  WHERE npt.base_id = bid
-   AND npt.node_id = nid;
+   AND nid = ANY (npt.id_path);
 $BODY$;
 
 ALTER FUNCTION public.npt_delete_node (IN integer, IN integer)
