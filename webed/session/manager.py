@@ -81,15 +81,15 @@ def setup_session ():
     assert archive_path
     archive_exclude = app.config['ARCHIVE_EXCLUDE']
     assert isinstance (archive_exclude, list)
-    archive_require = app.config['ARCHIVE_REQUIRE']
-    assert isinstance (archive_require, list)
+    archive_include = app.config['ARCHIVE_INCLUDE']
+    assert isinstance (archive_include, list)
 
     try:
         for path, dirnames, filenames in os.walk (archive_path):
-            for filename in filenames:
+            for filename in sorted (filenames):
 
                 if in_rxs (filename, archive_exclude): continue
-                if in_rxs (filename, archive_require): continue
+                if not in_rxs (filename, archive_include): continue
 
                 with open (os.path.join (path, filename), mode='r') as stream:
 

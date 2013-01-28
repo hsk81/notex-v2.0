@@ -40,8 +40,8 @@ class DefaultConfig:
     ##
 
     ARCHIVE_PATH = os.path.join ('webed', 'static', 'dat')
-    ARCHIVE_REQUIRE = [r'\.[Zz][Ii][Pp]$']
-    ARCHIVE_EXCLUDE = [r'^_']
+    ARCHIVE_INCLUDE = [r'(.+)\.zip$']
+    ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since
