@@ -96,15 +96,25 @@ def setup_session ():
                     try:
                         db.session.begin (nested=True)
                         fs = FileStorage (stream=stream, filename=filename)
+                        logger.debug ('[-] upload (file=%r)' % fs)
                         archive_upload (file=fs, root=base, skip_commit=True)
+                        logger.debug ('[+] upload (file=%r)' % fs)
+                        logger.debug ('[-] commit ()')
                         db.session.commit ()
+                        logger.debug ('[+] commit ()')
                     except Exception, ex:
                         db.session.rollback ()
                         logger.exception (ex)
 
+        logger.debug ('[-] npt_delete_base (bid=%r)' % base.id)
         db.session.execute ('SELECT npt_delete_base (%d);' % base.id)
+        logger.debug ('[+] npt_delete_base (bid=%r)' % base.id)
+        logger.debug ('[-] npt_insert_base (bid=%r)' % base.id)
         db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
+        logger.debug ('[+] npt_insert_base (bid=%r)' % base.id)
+        logger.debug ('[-] commit ()')
         db.session.commit ()
+        logger.debug ('[+] commit ()')
     except Exception, ex:
         db.session.rollback ()
         logger.exception (ex)

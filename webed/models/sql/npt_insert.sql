@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_node (IN bid integer, IN nid integer)
-  RETURNS void LANGUAGE plpgsql VOLATILE AS
+  RETURNS void LANGUAGE plpgsql STABLE AS
 $BODY$
  BEGIN
 INSERT INTO node_path
@@ -19,7 +19,7 @@ ALTER FUNCTION public.npt_insert_node (IN integer, IN integer)
 
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_base (IN bid integer)
-  RETURNS void LANGUAGE plpgsql VOLATILE AS
+  RETURNS void LANGUAGE plpgsql STABLE AS
 $BODY$
  BEGIN
 INSERT INTO node_path
