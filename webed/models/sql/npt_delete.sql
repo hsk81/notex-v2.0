@@ -11,9 +11,6 @@ $BODY$;
 ALTER FUNCTION public.npt_delete_node (IN integer, IN integer)
       OWNER TO webed;
 
-COMMENT ON FUNCTION npt_insert_node (IN integer, IN integer) IS
-    'Not optimal since `O(n)` where n ~ #rows in `node`, instead of `O(1)`.';
-
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_base (IN bid integer)
   RETURNS void LANGUAGE sql VOLATILE AS

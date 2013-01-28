@@ -104,8 +104,12 @@ class Node (db.Model):
     def uuid_path (self):
         return os.path.sep.join (self.get_path (field='uuid'))
 
+    @hybrid_property
     def name_path (self):
         return os.path.sep.join (self.get_path (field='name'))
+    @name_path.expression
+    def name_path (cls):
+        return NodePath.name_path
 
     ###########################################################################
 
