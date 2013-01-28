@@ -139,10 +139,13 @@ class NodePath (db.Model):
     id = db.Column (db.Integer, db.Sequence ('node_path_id_seq'),
         primary_key=True)
 
-    base_id = db.Column (db.Integer)
+    base_id = db.Column (db.Integer,
+        db.ForeignKey (Node.id, ondelete='CASCADE'), index=True)
+    base = db.relationship (Node, foreign_keys=[base_id])
+
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id, ondelete='CASCADE'), index=True)
-    node = db.relationship (Node, backref=db.backref(
+    node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref(
         'node_path', cascade='all, delete-orphan', uselist=False))
 
     uuid_path = db.Column (db.Text (), nullable=False, index=True)
@@ -153,6 +156,7 @@ class NodePath (db.Model):
     def __init__ (self, node, uuid_path, name_path):
 
         self.node = node
+        self.base = node.base
         self.uuid_path = uuid_path
         self.name_path = name_path
 

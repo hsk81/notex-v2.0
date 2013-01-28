@@ -257,7 +257,7 @@ def leaf_read (json=True):
                 if hasattr (NodePath, property):
                     alias = db.aliased (NodePath)
                     column = getattr (alias, property)
-                    query = query.join (alias)
+                    query = query.join (alias, alias.node_id==Node.id)
 
                 query = query.filter (column.op (regex_op) (regex))
 
@@ -275,7 +275,7 @@ def leaf_read (json=True):
                 if hasattr (NodePath, property):
                     alias = db.aliased (NodePath)
                     column = getattr (alias, property)
-                    query = query.join (alias)
+                    query = query.join (alias, alias.node_id==Node.id)
                 if direction.lower () == 'desc':
                     column = column.desc ()
 
