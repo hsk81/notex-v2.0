@@ -153,12 +153,12 @@ class NodePath (db.Model):
 
     ###########################################################################
 
-    def __init__ (self, node, uuid_path, name_path):
+    def __init__ (self, node):
 
         self.node = node
         self.base = node.base
-        self.uuid_path = uuid_path
-        self.name_path = name_path
+        self.uuid_path = node.uuid_path
+        self.name_path = node.name_path
 
     def __repr__ (self):
 

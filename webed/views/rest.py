@@ -59,12 +59,8 @@ def node_create (leafs=True, json=True):
     else:
         node = Node (name, root, mime=mime)
 
-    db.session.begin (nested=True)
     db.session.add (node)
-    db.session.commit ()
-
-    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, node.id))
-    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, node.id))
+    db.session.add (NodePath (node))
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
@@ -209,12 +205,8 @@ def leaf_create (json=True):
     else:
         leaf = Leaf (name, root, mime=mime)
 
-    db.session.begin (nested=True)
     db.session.add (leaf)
-    db.session.commit ()
-
-    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, leaf.id))
-    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, leaf.id))
+    db.session.add (NodePath (leaf))
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
