@@ -101,19 +101,11 @@ class Node (db.Model):
         else:
             return cached_path.uncached (self, field)
 
-    @hybrid_property
     def uuid_path (self):
         return os.path.sep.join (self.get_path (field='uuid'))
-    @uuid_path.expression
-    def uuid_path (cls):
-        return NodePath.uuid_path
 
-    @hybrid_property
     def name_path (self):
         return os.path.sep.join (self.get_path (field='name'))
-    @name_path.expression
-    def name_path (cls):
-        return NodePath.name_path
 
     ###########################################################################
 
@@ -129,7 +121,6 @@ class Node (db.Model):
 
         return cached_size (self, **kwargs)
 
-    @hybrid_property
     def size (self):
         return self.get_size (name='data')
 
@@ -150,7 +141,6 @@ class NodePath (db.Model):
     node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref(
         'node_path', cascade='all, delete-orphan', uselist=False))
 
-    uuid_path = db.Column (db.Text (), nullable=False, index=True)
     name_path = db.Column (db.Text (), nullable=False, index=True)
 
     ###########################################################################
@@ -159,7 +149,6 @@ class NodePath (db.Model):
 
         self.node = node
         self.base = node.base
-        self.uuid_path = node.uuid_path
         self.name_path = node.name_path
 
     def __repr__ (self):
