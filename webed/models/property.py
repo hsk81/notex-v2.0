@@ -21,8 +21,9 @@ class Property (db.Model):
     }
 
     id = db.Column (db.Integer, db.Sequence ('property_id_seq'),
-        primary_key=True)
-    type = db.Column ('type', db.String (24))
+        index=True, primary_key=True)
+    type = db.Column ('type', db.String (16), nullable=False,
+        index=False)
 
     ###########################################################################
 
@@ -43,9 +44,9 @@ class Property (db.Model):
 
     _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
         name = 'uuid')
-    _mime = db.Column (db.String (), nullable=False, index=True,
+    _mime = db.Column (db.String (), nullable=False, index=False,
         name = 'mime')
-    _name = db.Column (db.String (), nullable=False, index=True,
+    _name = db.Column (db.String (), nullable=False, index=False,
         name = 'name')
 
     @hybrid_property

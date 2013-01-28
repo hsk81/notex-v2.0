@@ -18,8 +18,10 @@ import os.path
 class Node (db.Model):
     __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
 
-    id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True)
-    type = db.Column ('type', db.String (16), nullable=False, index=True)
+    id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True,
+        index=True)
+    type = db.Column ('type', db.String (16), nullable=False,
+        index=False)
 
     ###########################################################################
 
@@ -42,9 +44,9 @@ class Node (db.Model):
 
     _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
         name = 'uuid')
-    _mime = db.Column (db.String (), nullable=False, index=True,
+    _mime = db.Column (db.String (), nullable=False, index=False,
         name = 'mime')
-    _name = db.Column (db.Unicode (), nullable=False, index=True,
+    _name = db.Column (db.Unicode (), nullable=False, index=False,
         name = 'name')
 
     ###########################################################################
