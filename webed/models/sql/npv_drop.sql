@@ -1,1 +1,3 @@
-DROP VIEW IF EXISTS node_path_view;
+-------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS node_path_view;
+

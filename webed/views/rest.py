@@ -63,7 +63,8 @@ def node_create (leafs=True, json=True):
     db.session.add (node)
     db.session.commit ()
 
-    db.session.execute ('SELECT npt_insert_node (%d);' % node.id)
+    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, node.id))
+    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, node.id))
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
@@ -145,9 +146,9 @@ def node_update (leafs=True, json=True):
     db.session.add (node)
     db.session.commit ()
 
-    ## TODO: Switch to `npt_delete/insert_root`!
-    db.session.execute ('SELECT npt_delete_base (%d);' % node.base.id)
-    db.session.execute ('SELECT npt_insert_base (%d);' % node.base.id)
+    ## TODO: Switch to `'npt_del/ins_root (%d,%d)' % (bid,rid)`!?
+    db.session.execute ('SELECT npt_delete_base (%d);' % base.id)
+    db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
@@ -212,7 +213,8 @@ def leaf_create (json=True):
     db.session.add (leaf)
     db.session.commit ()
 
-    db.session.execute ('SELECT npt_insert_node (%d);' % leaf.id)
+    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, leaf.id))
+    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, leaf.id))
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
@@ -326,8 +328,8 @@ def leaf_update (json=True):
     db.session.add (leaf)
     db.session.commit ()
 
-    db.session.execute ('SELECT npt_delete_node (%d);' % leaf.id)
-    db.session.execute ('SELECT npt_insert_node (%d);' % leaf.id)
+    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, leaf.id))
+    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, leaf.id))
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))

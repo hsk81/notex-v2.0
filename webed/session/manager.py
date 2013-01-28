@@ -102,6 +102,7 @@ def setup_session ():
                         db.session.rollback ()
                         logger.exception (ex)
 
+        db.session.execute ('SELECT npt_delete_base (%d);' % base.id)
         db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
         db.session.commit ()
     except Exception, ex:
