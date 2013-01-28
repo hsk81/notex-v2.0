@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_node (IN bid integer, IN nid integer)
-  RETURNS void LANGUAGE plpgsql STABLE AS
+  RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
  BEGIN
 DELETE
@@ -15,7 +15,7 @@ ALTER FUNCTION public.npt_delete_node (IN integer, IN integer)
 
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_delete_base (IN bid integer)
-  RETURNS void LANGUAGE plpgsql STABLE AS
+  RETURNS void LANGUAGE plpgsql VOLATILE AS
 $BODY$
  BEGIN
 DELETE
