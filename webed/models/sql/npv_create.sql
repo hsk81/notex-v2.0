@@ -10,24 +10,25 @@ CREATE OR REPLACE FUNCTION node_path_view (IN bid integer)
     LANGUAGE sql STABLE AS
 $BODY$
 WITH RECURSIVE graph (id, root_id, base_id, id_path, uuid_path, name_path) AS (
-SELECT n.id,
-       COALESCE (n.root_id, n.id) AS "coalesce",
-       COALESCE (n.base_id, n.id) AS "coalesce",
-       ARRAY[n.id] AS "array",
-       ARRAY[n.uuid] AS "array",
-       ARRAY[n.name] AS "array"
-  FROM node n
- WHERE COALESCE (n.base_id, n.id) = bid
- UNION
-SELECT n.id,
-       COALESCE (n.root_id, n.id) AS "coalesce",
-       COALESCE (n.base_id, n.id) AS "coalesce",
-       g.id_path||ARRAY[n.id],
-       g.uuid_path||ARRAY[n.uuid],
-       g.name_path||ARRAY[n.name]
-  FROM node n, graph g
- WHERE COALESCE (n.base_id, n.id) = bid
-   AND n.root_id = g.id)
+    SELECT n.id,
+           COALESCE (n.root_id, n.id),
+           COALESCE (n.base_id, n.id),
+           ARRAY[n.id],
+           ARRAY[n.uuid],
+           ARRAY[n.name]
+      FROM node n
+     WHERE COALESCE (n.base_id, n.id) = bid
+
+UNION
+    SELECT n.id,
+           COALESCE (n.root_id, n.id),
+           COALESCE (n.base_id, n.id),
+           g.id_path||ARRAY[n.id],
+           g.uuid_path||ARRAY[n.uuid],
+           g.name_path||ARRAY[n.name]
+      FROM node n, graph g
+     WHERE COALESCE (n.base_id, n.id) = bid
+       AND n.root_id = g.id)
 
 SELECT g.id AS node_id,
        g.root_id,
