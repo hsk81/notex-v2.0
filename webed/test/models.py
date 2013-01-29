@@ -171,7 +171,7 @@ class ExtendedModelsTestCase (BaseTestCase):
 ###############################################################################
 ###############################################################################
 
-class PropertyTestCase (BaseTestCase):
+class PropertyModelsTestCase (BaseTestCase):
 
     def test_property (self):
 
