@@ -19,7 +19,7 @@ class WebedCache (Cache):
 
         kwargs.update (dict (enumerate (args)))
         string = unicode (sorted (kwargs.items ()))
-        hashed = hashlib.sha512 (string)
+        hashed = hashlib.md5 (string)
 
         return hashed.hexdigest ()
 
