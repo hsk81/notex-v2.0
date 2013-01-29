@@ -20,7 +20,6 @@ def db_session__script (path):
         path = os.path.sep.join (path)
 
     with open (path) as file:
-
         sql = file.read ()
         assert sql
 
