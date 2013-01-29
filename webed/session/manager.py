@@ -4,6 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.datastructures import FileStorage
+from sqlalchemy.sql import func, select
 
 from ..app import app
 from ..models import Node
@@ -102,8 +103,8 @@ def setup_session ():
                         db.session.rollback ()
                         logger.exception (ex)
 
-        db.session.execute ('SELECT npt_delete_base (%d);' % base.id)
-        db.session.execute ('SELECT npt_insert_base (%d);' % base.id)
+        db.session.execute (select ([func.npt_delete_base (base.id)]))
+        db.session.execute (select ([func.npt_insert_base (base.id)]))
         db.session.commit ()
     except Exception, ex:
         db.session.rollback ()

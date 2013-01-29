@@ -3,6 +3,8 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from sqlalchemy.sql import func, select
+
 from flask.views import MethodView
 from flask.globals import request
 from flask import Blueprint
@@ -142,8 +144,8 @@ def node_update (leafs=True, json=True):
     db.session.add (node)
     db.session.commit ()
 
-    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, node.id))
-    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, node.id))
+    db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
+    db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
     db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
@@ -319,8 +321,8 @@ def leaf_update (json=True):
     db.session.add (leaf)
     db.session.commit ()
 
-    db.session.execute ('SELECT npt_delete_node (%d,%d);' % (base.id, leaf.id))
-    db.session.execute ('SELECT npt_insert_node (%d,%d);' % (base.id, leaf.id))
+    db.session.execute (select ([func.npt_delete_node (base.id, leaf.id)]))
+    db.session.execute (select ([func.npt_insert_node (base.id, leaf.id)]))
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
