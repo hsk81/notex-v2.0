@@ -142,7 +142,7 @@ class NodePath (db.Model):
 
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id, ondelete='CASCADE'), index=True)
-    node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref(
+    node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref (
         'node_path', cascade='all, delete-orphan', uselist=False))
 
     id_path = db.Column (pg.ARRAY (db.Integer), nullable=False, index=False)
