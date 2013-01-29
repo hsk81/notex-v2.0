@@ -21,7 +21,6 @@ def db_session__script (path):
 
     with open (path) as file:
         sql = file.read ()
-        assert sql
 
     db.session.execute (sql)
 
