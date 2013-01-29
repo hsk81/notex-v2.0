@@ -63,7 +63,7 @@ manager.add_command ('setup-db', DbSetup ())
 ###############################################################################
 
 class DbClear (Command):
-    """Clears database"""
+    """Clear database"""
 
     def run (self):
 
