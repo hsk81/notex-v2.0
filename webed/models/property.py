@@ -22,7 +22,7 @@ class Property (db.Model):
 
     id = db.Column (db.Integer, db.Sequence ('property_id_seq'),
         index=True, primary_key=True)
-    type = db.Column ('type', db.String (16), nullable=False,
+    type = db.Column ('type', db.String (24), nullable=False,
         index=False)
 
     ###########################################################################
