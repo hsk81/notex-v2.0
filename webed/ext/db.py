@@ -18,7 +18,6 @@ def db_session__script (path):
 
     if isinstance (path, list):
         path = os.path.sep.join (path)
-
     with open (path) as file:
         sql = file.read ()
 
