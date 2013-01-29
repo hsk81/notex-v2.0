@@ -20,7 +20,6 @@ setup (
     install_requires=[
         'Flask',
         'Flask-Admin',
-        'Flask-Cache',
         'Flask-DebugToolbar',
         'Flask-Login',
         'Flask-Mail',

@@ -3,16 +3,48 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask.ext.cache import Cache
+from flask import current_app
 from ..app import app
 
+import pylibmc
 import hashlib
 import functools
 
 ###############################################################################
 ###############################################################################
 
-class WebedCache (Cache):
+class WebedCache:
+
+    def __init__ (self, app):
+
+        CACHE_KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
+        assert CACHE_KEY_PREFIX
+        CACHE_DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
+        assert CACHE_DEFAULT_TIMEOUT
+        CACHE_MEMCACHED_SERVERS = app.config['CACHE_MEMCACHED_SERVERS']
+        assert CACHE_MEMCACHED_SERVERS
+
+        app.mc = pylibmc.Client (CACHE_MEMCACHED_SERVERS)
+        app.mc_pool = pylibmc.ThreadMappedPool (app.mc)
+
+    def get (self, *args, **kwargs):
+        with current_app.mc_pool.reserve () as mc:
+            return mc.get (*args, **kwargs)
+
+    def set (self, *args, **kwargs):
+
+        if 'timeout' not in kwargs:
+            kwargs['timeout'] = app.config['CACHE_DEFAULT_TIMEOUT']
+        else:
+            kwargs['timeout'] = int (kwargs['timeout']) if kwargs['timeout'] \
+                else 0
+
+        with current_app.mc_pool.reserve () as mc:
+            return mc.set (*args, **kwargs)
+
+    def delete (self, *args, **kwargs):
+        with current_app.mc_pool.reserve () as mc:
+            return mc.delete (*args, **kwargs)
 
     @staticmethod
     def make_key (*args, **kwargs):
@@ -71,14 +103,14 @@ class WebedCache (Cache):
             def decorated (*fn_args, **fn_kwargs):
 
                 version_key = self.version_key (*args, **kwargs)
-                version = cache.get (version_key) or 0
-                value_key = cache.make_key (version, *args, **kwargs)
-                cached_value = cache.get (value_key)
+                version = self.get (version_key) or 0
+                value_key = self.make_key (version, *args, **kwargs)
+                cached_value = self.get (value_key)
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    cache.set (version_key, version, timeout)
-                    cache.set (value_key, cached_value, timeout)
+                    self.set (version_key, version, timeout=timeout)
+                    self.set (value_key, cached_value, timeout=timeout)
                 return cached_value
 
             decorated.uncached = fn
@@ -89,17 +121,20 @@ class WebedCache (Cache):
 
     def increase_version (self, timeout=None, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        version = cache.get (version_key) or 0
-        cache.set (version_key, version+1, timeout=timeout)
+        version = self.get (version_key) or 0
+        self.set (version_key, version+1, timeout=timeout)
 
     def decrease_version (self, timeout=None, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        version = cache.get (version_key) or 0
-        cache.set (version_key, version-1, timeout=timeout)
+        version = self.get (version_key) or 0
+        self.set (version_key, version-1, timeout=timeout)
 
     @staticmethod
     def version_key (*args, **kwargs):
         return WebedCache.make_key ('version', *args, **kwargs)
+
+###############################################################################
+###############################################################################
 
 cache = WebedCache (app)
 

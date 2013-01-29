@@ -20,7 +20,6 @@ class DefaultConfig:
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = None
 
-    CACHE_TYPE = 'memcached'
     CACHE_KEY_PREFIX = 'webed:'
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
     CACHE_MEMCACHED_SERVERS = ['127.0.0.1']
