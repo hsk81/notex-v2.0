@@ -9,7 +9,7 @@ from sqlalchemy.sql import func, select
 from ..app import app
 from ..models import Node
 from ..ext import db, logger
-from ..util import jsonify, in_rxs
+from ..util import Q, jsonify, in_rxs
 from ..views.io import archive_upload
 
 from datetime import datetime
@@ -43,16 +43,18 @@ class SessionManager:
 
     def cleanup (self, base_uuid):
         """
-        TODO: Queue delete task using a distributed task queue!
+        Cleanup only in production environment (to not slow down development).
         """
-        assert base_uuid
-        ##  base = Q (Node.query).one_or_default (uuid=base_uuid)
-        ##  if base: db.session.delete (base); db.session.commit ()
+        if not app.is_dev ():
+            base = Q (Node.query).one_or_default (uuid=base_uuid)
+            if base: db.session.delete (base); db.session.commit ()
 
     @property
     def authenticated (self):
         """
-        TODO: Implement proper authentication mechanism based on admin login!
+        TODO: Implement proper authentication mechanism based on admin login,
+        since current implementation does not allow to reset the system in
+        production at *all*!
         """
         return app.is_dev ()
 
