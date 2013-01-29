@@ -33,11 +33,11 @@ class WebedCache:
 
     def set (self, *args, **kwargs):
 
-        if 'timeout' not in kwargs:
-            kwargs['timeout'] = app.config['CACHE_DEFAULT_TIMEOUT']
+        if 'timeout' in kwargs:
+            timeout = kwargs.pop ('timeout')
+            kwargs['time'] = int (timeout) if timeout else 0
         else:
-            kwargs['timeout'] = int (kwargs['timeout']) if kwargs['timeout'] \
-                else 0
+            kwargs['time'] = app.config['CACHE_DEFAULT_TIMEOUT']
 
         with current_app.mc_pool.reserve () as mc:
             return mc.set (*args, **kwargs)
