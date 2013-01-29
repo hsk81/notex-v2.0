@@ -26,6 +26,9 @@ class WebedApplication (Flask):
 
     dev = property (is_dev)
 
+###############################################################################
+###############################################################################
+
 app = WebedApplication (__name__)
 app.config.from_object (DefaultConfig)
 
