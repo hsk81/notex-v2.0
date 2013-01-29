@@ -35,5 +35,10 @@ app.config.from_object (DefaultConfig)
 if not app.testing:
     app.config.from_envvar ('WEBED_SETTINGS', silent=False)
 
+@app.errorhandler (Exception)
+def exception_logger (ex):
+    from .ext import logger
+    logger.exception (ex)
+
 ###############################################################################
 ###############################################################################
