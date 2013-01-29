@@ -36,8 +36,8 @@ def execute (source):
 
 ###############################################################################
 
-class DbInit (Command):
-    """Init database tables (with a default admin)"""
+class DbSetup (Command):
+    """Setup database (with a default admin)"""
 
     def get_options (self):
 
@@ -58,12 +58,12 @@ class DbInit (Command):
         db.session.script (['webed', 'models', 'sql', 'npt_delete.sql'])
         db.session.commit ()
 
-manager.add_command ('init-db', DbInit ())
+manager.add_command ('setup-db', DbSetup ())
 
 ###############################################################################
 
-class DbDrop (Command):
-    """Drops database tables"""
+class DbClear (Command):
+    """Clears database"""
 
     def run (self):
 
@@ -72,7 +72,7 @@ class DbDrop (Command):
         db.session.commit ()
         db.drop_all ()
 
-manager.add_command ('drop-db', DbDrop ())
+manager.add_command ('clear-db', DbClear ())
 
 ###############################################################################
 ###############################################################################
