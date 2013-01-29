@@ -12,7 +12,6 @@ class TestConfig (DefaultConfig):
 
     DEBUG = False
     TESTING = True
-
     CSRF_ENABLED = False
 
     SQLALCHEMY_ECHO = False
