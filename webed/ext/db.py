@@ -16,11 +16,9 @@ db.Query.back = db.Query.reset_joinpoint
 
 def db_session__script (path):
 
-    assert path
     if isinstance (path, list):
         path = os.path.sep.join (path)
 
-    assert isinstance (path, str)
     with open (path) as file:
 
         sql = file.read ()
