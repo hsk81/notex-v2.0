@@ -16,7 +16,7 @@ class TestConfig (DefaultConfig):
     CSRF_ENABLED = False
 
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://webed-t@localhost/webed-t'
 
 ###############################################################################
 ###############################################################################

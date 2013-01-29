@@ -18,7 +18,7 @@ class DefaultConfig:
         else bool (in_rxs (socket.getfqdn (), MACH_DEVS))
 
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/webed.db'
+    SQLALCHEMY_DATABASE_URI = None
 
     CACHE_TYPE = 'memcached'
     CACHE_KEY_PREFIX = 'webed:'
