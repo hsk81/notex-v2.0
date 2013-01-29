@@ -4,6 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.datastructures import FileStorage
+from flask.ext.login import current_user
 from sqlalchemy.sql import func, select
 
 from ..app import app
@@ -42,21 +43,13 @@ class SessionManager:
         return jsonify (result) if json else result
 
     def cleanup (self, base_uuid):
-        """
-        Cleanup only in production environment (to not slow down development).
-        """
         if not app.is_dev ():
             base = Q (Node.query).one_or_default (uuid=base_uuid)
             if base: db.session.delete (base); db.session.commit ()
 
     @property
     def authenticated (self):
-        """
-        TODO: Implement proper authentication mechanism based on admin login,
-        since current implementation does not allow to reset the system in
-        production at *all*!
-        """
-        return app.is_dev ()
+        return current_user.is_authenticated () or app.is_dev ()
 
     @property
     def virgin (self):
