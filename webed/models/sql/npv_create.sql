@@ -32,9 +32,6 @@ SELECT g.id AS node_id, g.root_id, g.base_id, g.id_path, g.name_path
  WHERE g.base_id = g.id_path[1];
 $BODY$;
 
-ALTER FUNCTION node_path_view (IN integer)
-      OWNER TO webed;
-
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION node_path_view (IN bid integer, IN rid integer)
     RETURNS TABLE (
@@ -69,7 +66,4 @@ SELECT g.id AS node_id, g.root_id, g.base_id, g.id_path, g.name_path
  WHERE g.base_id = g.id_path[1]
    AND rid = ANY (g.id_path);
 $BODY$;
-
-ALTER FUNCTION node_path_view (IN integer, IN integer)
-      OWNER TO webed;
 

@@ -11,9 +11,6 @@ SELECT nextval ('node_path_id_seq') AS id,
   FROM node_path_view (bid, nid) npv;
 $BODY$;
 
-ALTER FUNCTION public.npt_insert_node (IN integer, IN integer)
-      OWNER TO webed;
-
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION npt_insert_base (IN bid integer)
   RETURNS void LANGUAGE sql VOLATILE AS
@@ -26,7 +23,4 @@ SELECT nextval ('node_path_id_seq') AS id,
        array_to_string (npv.name_path, '/') AS name_path
   FROM node_path_view (bid) npv;
 $BODY$;
-
-ALTER FUNCTION public.npt_insert_base (IN integer)
-      OWNER TO webed;
 
