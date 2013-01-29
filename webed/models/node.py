@@ -36,7 +36,7 @@ class Node (db.Model):
 
     subnodes = db.relationship ('Node',
         cascade='all, delete-orphan', lazy='dynamic',
-        primaryjoin=id==root_id, backref=db.backref ('base', remote_side=id))
+        primaryjoin=id==base_id, backref=db.backref ('base', remote_side=id))
 
     ###########################################################################
 
