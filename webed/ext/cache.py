@@ -27,7 +27,11 @@ class WebedCache:
         assert isinstance (self.CONNECTION_POOL_SIZE, int)
 
         app.mc = pylibmc.Client(self.SERVERS, binary=True,  behaviors={
-            'tcp_nodelay': True, 'ketama': True})
+            'tcp_nodelay': True,
+            'no_block': True,
+            'ketama': True
+        })
+
         app.mc_pool = pylibmc.ClientPool (app.mc, self.CONNECTION_POOL_SIZE)
 
     def get (self, key):
