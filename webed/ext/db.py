@@ -14,6 +14,25 @@ import functools
 
 class WebedOrm (SQLAlchemy):
 
+    def __init__ (self, *args, **kwargs):
+
+        super (WebedOrm, self).__init__ (*args, **kwargs)
+
+        self.session.script = self.script
+        self.session.wrap = self.wrap
+        self.session.nest = self.nest
+
+        self.Query.back = self.Query.reset_joinpoint
+
+    def script (self, path):
+
+        if isinstance (path, list):
+            path = os.path.sep.join (path)
+        with open (path) as file:
+            sql = file.read ()
+
+        db.session.execute (sql)
+
     def wrap (self, unless=None, lest=None):
 
         def decorator (fn):
@@ -60,19 +79,10 @@ class WebedOrm (SQLAlchemy):
             return decorated
         return decorator
 
+###############################################################################
+###############################################################################
+
 db = WebedOrm (app)
-db.Query.back = db.Query.reset_joinpoint
-
-def db_session__script (path):
-
-    if isinstance (path, list):
-        path = os.path.sep.join (path)
-    with open (path) as file:
-        sql = file.read ()
-
-    db.session.execute (sql)
-
-db.session.script = db_session__script
 
 ###############################################################################
 ###############################################################################

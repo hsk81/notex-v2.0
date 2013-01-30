@@ -153,7 +153,7 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-@db.nest ()
+@db.session.nest ()
 def create_prj (path, name, base):
     cache = {path: base}
 
