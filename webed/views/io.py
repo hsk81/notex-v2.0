@@ -4,8 +4,8 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
-from flask.globals import request
 from flask import Blueprint, Response
+from flask.globals import request
 
 from ..app import app
 from ..ext import db, cache, logger
@@ -256,10 +256,10 @@ def archive_download (chunk_size = 256*1024):
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
             response = jsonify (success=True, name=node.name)
-            cache.set (archive_key, content_val, timeout=15) ## refresh
+            cache.touch (archive_key, expiry=15) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
-        cache.set (archive_key, compress (node), timeout=15) ## seconds
+        cache.set (archive_key, compress (node), expiry=15) ## seconds
 
     return response
 

@@ -21,8 +21,9 @@ class DefaultConfig:
     SQLALCHEMY_DATABASE_URI = None
 
     CACHE_KEY_PREFIX = 'webed:'
+    CACHE_SERVERS = ['127.0.0.1']
+    CACHE_CONNECTION_POOL_SIZE = 16
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
-    CACHE_MEMCACHED_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
 

@@ -17,34 +17,36 @@ class WebedCache:
 
     def __init__ (self, app):
 
-        CACHE_KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
-        assert CACHE_KEY_PREFIX
-        CACHE_DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
-        assert CACHE_DEFAULT_TIMEOUT
-        CACHE_MEMCACHED_SERVERS = app.config['CACHE_MEMCACHED_SERVERS']
-        assert CACHE_MEMCACHED_SERVERS
+        self.SERVERS = app.config['CACHE_SERVERS']
+        assert self.SERVERS
+        self.KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
+        assert self.KEY_PREFIX
+        self.DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
+        assert self.DEFAULT_TIMEOUT
+        self.CONNECTION_POOL_SIZE = app.config['CACHE_CONNECTION_POOL_SIZE']
+        assert self.CONNECTION_POOL_SIZE
 
-        app.mc = pylibmc.Client (CACHE_MEMCACHED_SERVERS)
-        app.mc_pool = pylibmc.ThreadMappedPool (app.mc)
+        app.mc = pylibmc.Client(self.SERVERS, binary=True,  behaviors={
+            'tcp_nodelay': True, 'ketama': True})
+        app.mc_pool = pylibmc.ClientPool (app.mc, self.CONNECTION_POOL_SIZE)
 
-    def get (self, *args, **kwargs):
+    def get (self, key):
         with current_app.mc_pool.reserve () as mc:
-            return mc.get (*args, **kwargs)
+            return mc.get (self.KEY_PREFIX+key)
 
-    def set (self, *args, **kwargs):
-
-        if 'timeout' in kwargs:
-            timeout = kwargs.pop ('timeout')
-            kwargs['time'] = int (timeout) if timeout else 0
-        else:
-            kwargs['time'] = app.config['CACHE_DEFAULT_TIMEOUT']
-
+    def set (self, key, value, expiry=None):
         with current_app.mc_pool.reserve () as mc:
-            return mc.set (*args, **kwargs)
+            return mc.set (self.KEY_PREFIX+key, value, time=expiry \
+                if expiry is not None else self.DEFAULT_TIMEOUT)
 
-    def delete (self, *args, **kwargs):
+    def touch (self, key, expiry=None):
         with current_app.mc_pool.reserve () as mc:
-            return mc.delete (*args, **kwargs)
+            return mc.touch (self.KEY_PREFIX+key, time=expiry \
+                if expiry is not None else self.DEFAULT_TIMEOUT)
+
+    def delete (self, key):
+        with current_app.mc_pool.reserve () as mc:
+            return mc.delete (self.KEY_PREFIX+key)
 
     @staticmethod
     def make_key (*args, **kwargs):
@@ -55,16 +57,16 @@ class WebedCache:
 
         return hashed.hexdigest ()
 
-    def cached (self, timeout=None, name=None, session=None, unless=None,
+    def cached (self, expiry=None, name=None, session=None, unless=None,
                 keyfunc=None):
 
         if not callable (keyfunc):
             keyfunc = lambda sid, fn, *args, **kwargs: \
                 self.make_key (sid, name or fn.__name__) ## no (kw)args!
 
-        return self.memoize (timeout, name, session, unless, keyfunc)
+        return self.memoize (expiry, name, session, unless, keyfunc)
 
-    def memoize (self, timeout=None, name=None, session=None, unless=None,
+    def memoize (self, expiry=None, name=None, session=None, unless=None,
                  keyfunc=None):
 
         if session:
@@ -87,16 +89,16 @@ class WebedCache:
 
                 if cached_value is None:
                     cached_value = fn (*args, **kwargs)
-                    self.set (value_key, cached_value, timeout=timeout)
+                    self.set (value_key, cached_value, expiry=expiry)
                 return cached_value
 
             decorated.uncached = fn
-            decorated.timeout = timeout
+            decorated.expiry = expiry
             return decorated
 
         return decorator
 
-    def version (self, timeout=None, *args, **kwargs):
+    def version (self, expiry=None, *args, **kwargs):
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -109,25 +111,33 @@ class WebedCache:
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    self.set (version_key, version, timeout=timeout)
-                    self.set (value_key, cached_value, timeout=timeout)
+                    self.set (version_key, version, expiry=expiry)
+                    self.set (value_key, cached_value, expiry=expiry)
                 return cached_value
 
             decorated.uncached = fn
-            decorated.timeout = timeout
+            decorated.expiry = expiry
             return decorated
 
         return decorator
 
-    def increase_version (self, timeout=None, *args, **kwargs):
-        version_key = self.version_key (*args, **kwargs)
-        version = self.get (version_key) or 0
-        self.set (version_key, version+1, timeout=timeout)
+    def increase_version (self, expiry=None, *args, **kwargs):
+        version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
+        with current_app.mc_pool.reserve () as mc:
+            if version_key in mc:
+                mc.incr (version_key)
+            else:
+                mc.set (version_key, 0, time=expiry \
+                    if expiry is not None else self.DEFAULT_TIMEOUT)
 
-    def decrease_version (self, timeout=None, *args, **kwargs):
-        version_key = self.version_key (*args, **kwargs)
-        version = self.get (version_key) or 0
-        self.set (version_key, version-1, timeout=timeout)
+    def decrease_version (self, expiry=None, *args, **kwargs):
+        version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
+        with current_app.mc_pool.reserve () as mc:
+            if version_key in mc:
+                mc.decr (version_key)
+            else:
+                mc.set (version_key, 0, time=expiry \
+                    if expiry is not None else self.DEFAULT_TIMEOUT)
 
     @staticmethod
     def version_key (*args, **kwargs):
