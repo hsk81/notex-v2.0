@@ -18,13 +18,13 @@ class WebedCache:
     def __init__ (self, app):
 
         self.SERVERS = app.config['CACHE_SERVERS']
-        assert self.SERVERS
+        assert isinstance (self.SERVERS, list)
         self.KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
-        assert self.KEY_PREFIX
+        assert isinstance (self.KEY_PREFIX, str)
         self.DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
-        assert self.DEFAULT_TIMEOUT
+        assert isinstance (self.DEFAULT_TIMEOUT, int)
         self.CONNECTION_POOL_SIZE = app.config['CACHE_CONNECTION_POOL_SIZE']
-        assert self.CONNECTION_POOL_SIZE
+        assert isinstance (self.CONNECTION_POOL_SIZE, int)
 
         app.mc = pylibmc.Client(self.SERVERS, binary=True,  behaviors={
             'tcp_nodelay': True, 'ketama': True})
