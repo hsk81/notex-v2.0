@@ -4,6 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
+from sqlalchemy.sql import func, select
 from flask import Blueprint, Response
 from flask.globals import request
 
@@ -84,7 +85,7 @@ def file_upload ():
 ###############################################################################
 
 @io.route ('/archive-upload/', methods=['POST'])
-def archive_upload (file=None, root=None, skip_commit=None):
+def archive_upload (file=None, base=None, skip_commit=None):
     file = file if file else request.files['file']
 
     if not file:
@@ -95,9 +96,8 @@ def archive_upload (file=None, root=None, skip_commit=None):
         return JSON.encode (dict (success=False, filename=None,
             message='filename invalid'))
 
-    if not root:
-        root = Q (Node.query).one (uuid=app.session_manager.anchor)
-        assert root
+    if not base:
+        base = Q (Node.query).one (uuid=app.session_manager.anchor)
 
     with tempfile.TemporaryFile () as zip_file:
 
@@ -113,11 +113,17 @@ def archive_upload (file=None, root=None, skip_commit=None):
 
         temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
-        create_prj (temp_path, zip_name, root)
+        nodes = create_prj (temp_path, zip_name, base)
         shutil.rmtree (temp_path)
 
     if not skip_commit:
-        db.session.commit ()
+        try:
+            for node in nodes: db.session.execute (
+                select ([func.npt_insert_node (base.id, node.id)]))
+            db.session.commit ()
+        except:
+            db.session.roleback ()
+            raise
 
     return JSON.encode (dict (success=True, filename=file.filename))
 
@@ -151,8 +157,9 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-def create_prj (path, name, root):
-    cache = {path: root}
+@db.session.nest
+def create_prj (path, name, base):
+    cache = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
         root = cache.get (cur_path); assert root
@@ -171,6 +178,8 @@ def create_prj (path, name, root):
             else:
                 leaf, _ = create_bin (cur_path, fn, root, mime=mime)
             db.session.add (leaf)
+
+    return filter (lambda n: n.root == base, cache.values ())
 
 def create_dir (path, name, root, mime):
 

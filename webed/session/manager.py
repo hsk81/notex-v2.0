@@ -66,12 +66,10 @@ class SessionManager:
 ###############################################################################
 ###############################################################################
 
+@db.session.wrap
 def setup_session ():
-
-    db.session.begin (nested=True)
-    base = Node ('root', root=None, mime='application/root')
-    db.session.add (base)
-    db.session.commit ()
+    base = setup_session_base ()
+    assert base and base.id
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
@@ -80,33 +78,29 @@ def setup_session ():
     archive_include = app.config['ARCHIVE_INCLUDE']
     assert isinstance (archive_include, list)
 
-    try:
-        for path, dirnames, filenames in os.walk (archive_path):
-            for filename in sorted (filenames):
+    for path, dirnames, filenames in os.walk (archive_path):
+        for filename in sorted (filenames):
 
-                if in_rxs (filename, archive_exclude): continue
-                if not in_rxs (filename, archive_include): continue
+            if in_rxs (filename, archive_exclude): continue
+            if not in_rxs (filename, archive_include): continue
 
-                with open (os.path.join (path, filename), mode='r') as stream:
+            with open (os.path.join (path, filename), mode='r') as stream:
 
-                    try:
-                        db.session.begin (nested=True)
-                        fs = FileStorage (stream=stream, filename=filename)
-                        archive_upload (file=fs, root=base, skip_commit=True)
-                        db.session.commit ()
-                    except Exception, ex:
-                        db.session.rollback ()
-                        logger.exception (ex)
+                try:
+                    fs = FileStorage (stream=stream, filename=filename)
+                    archive_upload (file=fs, base=base, skip_commit=True)
+                except Exception, ex:
+                    logger.exception (ex) ## no re-raise!
 
-        db.session.execute (select ([func.npt_delete_base (base.id)]))
-        db.session.execute (select ([func.npt_insert_base (base.id)]))
-        db.session.commit ()
-    except Exception, ex:
-        db.session.rollback ()
-        logger.exception (ex)
-        raise
-
+    db.session.execute (select ([func.npt_delete_base (base.id)]))
+    db.session.execute (select ([func.npt_insert_base (base.id)]))
     return base.uuid
+
+@db.session.nest
+def setup_session_base ():
+    base = Node ('root', root=None, mime='application/root')
+    db.session.add (base)
+    return base
 
 ###############################################################################
 ###############################################################################

@@ -25,5 +25,32 @@ def db_session__script (path):
 
 db.session.script = db_session__script
 
+def db_session__wrap (fn):
+    def decorator (*args, **kwargs):
+        try:
+            result = fn (*args, **kwargs)
+            db.session.commit()
+            return result
+        except:
+            db.session.rollback()
+            raise
+    return decorator
+
+db.session.wrap = db_session__wrap
+
+def db_session__nest (fn):
+    def decorator (*args, **kwargs):
+        db.session.begin (nested=True)
+        try:
+            result = fn (*args, **kwargs)
+            db.session.commit()
+            return result
+        except:
+            db.session.rollback()
+            raise
+    return decorator
+
+db.session.nest = db_session__nest
+
 ###############################################################################
 ###############################################################################
