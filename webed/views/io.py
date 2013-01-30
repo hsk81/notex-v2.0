@@ -85,6 +85,7 @@ def file_upload ():
 ###############################################################################
 
 @io.route ('/archive-upload/', methods=['POST'])
+@db.wrap (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
 def archive_upload (file=None, base=None, skip_commit=None):
     file = file if file else request.files['file']
 
@@ -117,13 +118,8 @@ def archive_upload (file=None, base=None, skip_commit=None):
         shutil.rmtree (temp_path)
 
     if not skip_commit:
-        try:
-            for node in nodes: db.session.execute (
-                select ([func.npt_insert_node (base.id, node.id)]))
-            db.session.commit ()
-        except:
-            db.session.roleback ()
-            raise
+        for node in nodes: db.session.execute (
+            select ([func.npt_insert_node (base.id, node.id)]))
 
     return JSON.encode (dict (success=True, filename=file.filename))
 
@@ -157,7 +153,7 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-@db.session.nest
+@db.nest ()
 def create_prj (path, name, base):
     cache = {path: base}
 

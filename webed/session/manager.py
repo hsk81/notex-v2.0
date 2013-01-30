@@ -66,7 +66,7 @@ class SessionManager:
 ###############################################################################
 ###############################################################################
 
-@db.session.wrap
+@db.wrap ()
 def setup_session ():
     base = setup_session_base ()
     assert base and base.id
@@ -96,7 +96,7 @@ def setup_session ():
     db.session.execute (select ([func.npt_insert_base (base.id)]))
     return base.uuid
 
-@db.session.nest
+@db.nest ()
 def setup_session_base ():
     base = Node ('root', root=None, mime='application/root')
     db.session.add (base)

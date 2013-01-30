@@ -7,11 +7,60 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from ..app import app
 
 import os.path
+import functools
 
 ###############################################################################
 ###############################################################################
 
-db = SQLAlchemy (app)
+class WebedOrm (SQLAlchemy):
+
+    def wrap (self, unless=None, lest=None):
+
+        def decorator (fn):
+            @functools.wraps (fn)
+            def decorated (*args, **kwargs):
+
+                if callable (unless) and unless () is True:
+                    return fn (*args, **kwargs)
+                if callable (lest) and lest (*args, **kwargs) is True:
+                    return fn (*args, **kwargs)
+
+                try:
+                    result = fn (*args, **kwargs)
+                    db.session.commit()
+                    return result
+                except:
+                    db.session.rollback()
+                    raise
+
+            return decorated
+        return decorator
+
+    def nest (self, unless=None, lest=None):
+
+        def decorator (fn):
+            @functools.wraps (fn)
+            def decorated (*args, **kwargs):
+
+                if callable (unless) and unless () is True:
+                    return fn (*args, **kwargs)
+                if callable (lest) and lest (*args, **kwargs) is True:
+                    return fn (*args, **kwargs)
+
+                db.session.begin (nested=True)
+
+                try:
+                    result = fn (*args, **kwargs)
+                    db.session.commit()
+                    return result
+                except:
+                    db.session.rollback()
+                    raise
+
+            return decorated
+        return decorator
+
+db = WebedOrm (app)
 db.Query.back = db.Query.reset_joinpoint
 
 def db_session__script (path):
@@ -24,33 +73,6 @@ def db_session__script (path):
     db.session.execute (sql)
 
 db.session.script = db_session__script
-
-def db_session__wrap (fn):
-    def decorator (*args, **kwargs):
-        try:
-            result = fn (*args, **kwargs)
-            db.session.commit()
-            return result
-        except:
-            db.session.rollback()
-            raise
-    return decorator
-
-db.session.wrap = db_session__wrap
-
-def db_session__nest (fn):
-    def decorator (*args, **kwargs):
-        db.session.begin (nested=True)
-        try:
-            result = fn (*args, **kwargs)
-            db.session.commit()
-            return result
-        except:
-            db.session.rollback()
-            raise
-    return decorator
-
-db.session.nest = db_session__nest
 
 ###############################################################################
 ###############################################################################

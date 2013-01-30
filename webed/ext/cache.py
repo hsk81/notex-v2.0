@@ -57,17 +57,17 @@ class WebedCache:
 
         return hashed.hexdigest ()
 
-    def cached (self, expiry=None, name=None, session=None, unless=None,
-                keyfunc=None):
+    def cached (self, expiry=None, name=None, session=None, keyfunc=None,
+                unless=None, lest=None):
 
         if not callable (keyfunc):
             keyfunc = lambda sid, fn, *args, **kwargs: \
                 self.make_key (sid, name or fn.__name__) ## no (kw)args!
 
-        return self.memoize (expiry, name, session, unless, keyfunc)
+        return self.memoize (expiry, name, session, keyfunc, unless, lest)
 
-    def memoize (self, expiry=None, name=None, session=None, unless=None,
-                 keyfunc=None):
+    def memoize (self, expiry=None, name=None, session=None, keyfunc=None,
+                 unless=None, lest=None):
 
         if session:
             sid = session['_id']
@@ -82,6 +82,8 @@ class WebedCache:
             def decorated (*args, **kwargs):
 
                 if callable (unless) and unless () is True:
+                    return fn (*args, **kwargs)
+                if callable (lest) and lest (*args, **kwargs) is True:
                     return fn (*args, **kwargs)
 
                 value_key = keyfunc (sid, name or fn.__name__, *args, **kwargs)
