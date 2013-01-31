@@ -63,28 +63,21 @@ def file_upload ():
     mime = file.mimetype
     assert mime
 
-    if mime.lower () == 'text/plain':
-        TProperty = TextProperty
-        data = file.read ().replace ('\r\n','\n')
-    elif mime.lower ().startswith ('image'):
-        TProperty = TextProperty
-        data = 'data:%s;base64,%s' % (mime, base64.encodestring (file.read ()))
-    else:
-        TProperty = LargeBinaryProperty
-        data = file.read ()
-
     @db.session.nest ()
     def create_leaf (name, root, mime):
-        leaf = Leaf (name, root, mime=mime)
+
+        if mime.lower () == 'text/plain':
+            leaf, _ = create_txt (name, root, mime, file=file)
+        elif mime.lower ().startswith ('image'):
+            leaf, _ = create_img (name, root, mime, file=file)
+        else:
+            leaf, _ = create_bin (name, root, mime, file=file)
+
         db.session.add (leaf)
         return leaf
 
-    leaf = create_leaf (name, root, mime)
-    assert leaf and leaf.id
-
+    leaf = create_leaf (name, root, mime); assert leaf and leaf.id
     db.session.execute (select ([func.npt_insert_node (leaf.base.id,leaf.id)]))
-    property = TProperty ('data', data, leaf, mime=mime)
-    db.session.add (property)
 
     return JSON.encode (dict (success=True))
 
@@ -169,28 +162,32 @@ def create_prj (path, name, base):
 
         for dn in dir_names:
             mime = 'application/' + ('folder' if root.root else 'project')
-            node = create_dir (cur_path, dn, root, mime=mime)
+            node = create_dir (dn, root, mime)
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
             mime = guess_mime (cur_path, fn)
             if mime and mime == 'text/plain':
-                leaf, _ = create_txt (cur_path, fn, root, mime=mime)
+                leaf, _ = create_txt (fn, root, mime, path=cur_path)
             elif mime and mime.startswith ('image'):
-                leaf, _ = create_img (cur_path, fn, root, mime=mime)
+                leaf, _ = create_img (fn, root, mime, path=cur_path)
             else:
-                leaf, _ = create_bin (cur_path, fn, root, mime=mime)
-            db.session.add (leaf)
+                leaf, _ = create_bin (fn, root, mime, path=cur_path)
+            db.session.add (leaf); cache[os.path.join (cur_path, fn)] = leaf
 
     return filter (lambda n: n.root == base, cache.values ())
 
-def create_dir (path, name, root, mime):
+def create_dir (name, root, mime):
 
     return Node (name, root, mime=mime)
 
-def create_txt (path, name, root, mime):
+def create_txt (name, root, mime, path=None, file=None):
+    assert path and not file or not path and file
 
-    with open (os.path.join (path, name)) as file:
+    if path:
+        with open (os.path.join (path, name)) as file:
+            data = file.read ().replace ('\r\n','\n')
+    else:
         data = file.read ().replace ('\r\n','\n')
 
     leaf = Leaf (name, root, mime=mime)
@@ -198,19 +195,29 @@ def create_txt (path, name, root, mime):
 
     return leaf, prop
 
-def create_img (path, name, root, mime):
+def create_img (name, root, mime, path=None, file=None):
+    assert path and not file or not path and file
 
-    with open (os.path.join (path, name)) as file:
-        data = 'data:%s;base64,%s' % (mime, base64.encodestring (file.read ()))
+    if path:
+        with open (os.path.join (path, name)) as file:
+            data = 'data:%s;base64,%s' % (mime, base64.encodestring (
+                file.read ()))
+    else:
+        data = 'data:%s;base64,%s' % (mime, base64.encodestring (
+            file.read ()))
 
     leaf = Leaf (name, root, mime=mime)
     prop = TextProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
-def create_bin (path, name, root, mime):
+def create_bin (name, root, mime, path=None, file=None):
+    assert path and not file or not path and file
 
-    with open (os.path.join (path, name)) as file:
+    if path:
+        with open (os.path.join (path, name)) as file:
+            data = file.read ()
+    else:
         data = file.read ()
 
     leaf = Leaf (name, root, mime=mime)
