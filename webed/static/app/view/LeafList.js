@@ -56,7 +56,7 @@ Ext.define ('Webed.view.LeafList', {
             width: '100%',
 
             minLength: 3,
-            maxLength: 256,
+            maxLength: 32,
 
             initComponent: function () {
                 this.callParent  (arguments);
@@ -72,7 +72,7 @@ Ext.define ('Webed.view.LeafList', {
                     this.setValue ('');
                     var store = this.getStore (); assert (store);
                     store.clearFilter (true); Ext.Function.defer(function() {
-                        store.load (); //fixes firefox timing issue
+                        store.load (); //Firefox timing issue fix!
                     }, 25);
                 }
             },

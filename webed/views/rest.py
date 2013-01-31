@@ -242,7 +242,7 @@ def leaf_read (json=True):
             assert ignore_case is not None
 
             regex_op = '~*' if ignore_case else '~'
-            regex = regex[:256]
+            regex = regex[:32] ## cap long regex
 
             column = getattr (Node, property)
             if column:
