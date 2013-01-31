@@ -3,7 +3,6 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask import current_app
 from ..app import app
 
 import pylibmc
@@ -16,6 +15,7 @@ import functools
 class WebedCache:
 
     def __init__ (self, app):
+        self.app = app
 
         self.SERVERS = app.config['CACHE_SERVERS']
         assert isinstance (self.SERVERS, list)
@@ -26,7 +26,7 @@ class WebedCache:
         self.CONNECTION_POOL_SIZE = app.config['CACHE_CONNECTION_POOL_SIZE']
         assert isinstance (self.CONNECTION_POOL_SIZE, int)
 
-        app.mc = pylibmc.Client(self.SERVERS, binary=True,  behaviors={
+        app.mc = pylibmc.Client(self.SERVERS, binary=True, behaviors={
             'tcp_nodelay': True,
             'no_block': True,
             'ketama': True
@@ -35,21 +35,21 @@ class WebedCache:
         app.mc_pool = pylibmc.ClientPool (app.mc, self.CONNECTION_POOL_SIZE)
 
     def get (self, key):
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             return mc.get (self.KEY_PREFIX+key)
 
     def set (self, key, value, expiry=None):
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             return mc.set (self.KEY_PREFIX+key, value, time=expiry \
                 if expiry is not None else self.DEFAULT_TIMEOUT)
 
     def touch (self, key, expiry=None):
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             return mc.touch (self.KEY_PREFIX+key, time=expiry \
                 if expiry is not None else self.DEFAULT_TIMEOUT)
 
     def delete (self, key):
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             return mc.delete (self.KEY_PREFIX+key)
 
     @staticmethod
@@ -100,8 +100,8 @@ class WebedCache:
 
             decorated.uncached = fn
             decorated.expiry = expiry
-            return decorated
 
+            return decorated
         return decorator
 
     def version (self, expiry=None, *args, **kwargs):
@@ -123,13 +123,13 @@ class WebedCache:
 
             decorated.uncached = fn
             decorated.expiry = expiry
-            return decorated
 
+            return decorated
         return decorator
 
     def increase_version (self, expiry=None, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             if version_key in mc:
                 mc.incr (version_key)
             else:
@@ -138,7 +138,7 @@ class WebedCache:
 
     def decrease_version (self, expiry=None, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
-        with current_app.mc_pool.reserve () as mc:
+        with self.app.mc_pool.reserve () as mc:
             if version_key in mc:
                 mc.decr (version_key)
             else:
