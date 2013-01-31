@@ -141,10 +141,7 @@ def node_update (leafs=True, json=True):
     if node.name != name: node.name = name
     if node.mime != mime: node.mime = mime
 
-    @db.session.nest ()
-    def update_node (): db.session.add (node)
-    update_node ()
-
+    db.session.nest (fn=lambda: db.session.add (node)) ()
     db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
 
@@ -318,10 +315,7 @@ def leaf_update (json=True):
     if mime and leaf.mime != mime: leaf.mime = mime
     if name and leaf.name != name: leaf.name = name
 
-    @db.session.nest ()
-    def update_leaf (): db.session.add (leaf)
-    update_leaf ()
-
+    db.session.nest (fn=lambda: db.session.add (leaf)) ()
     db.session.execute (select ([func.npt_delete_node (base.id, leaf.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, leaf.id)]))
     db.session.commit ()

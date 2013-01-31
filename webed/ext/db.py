@@ -33,7 +33,7 @@ class WebedOrm (SQLAlchemy):
 
         db.session.execute (sql)
 
-    def wrap (self, unless=None, lest=None):
+    def wrap (self, fn=None, unless=None, lest=None):
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -53,9 +53,9 @@ class WebedOrm (SQLAlchemy):
                     raise
 
             return decorated
-        return decorator
+        return decorator (fn) if fn else decorator
 
-    def nest (self, unless=None, lest=None):
+    def nest (self, fn=None, unless=None, lest=None):
 
         def decorator (fn):
             @functools.wraps (fn)
@@ -77,7 +77,7 @@ class WebedOrm (SQLAlchemy):
                     raise
 
             return decorated
-        return decorator
+        return decorator (fn) if fn else decorator
 
 ###############################################################################
 ###############################################################################
