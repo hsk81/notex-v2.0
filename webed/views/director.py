@@ -56,8 +56,12 @@ def reset (json=True):
     protected by an authentication mechanism plus it's only effective once
     every 15 minutes (globally)!
     """
-    if app.session_manager.authenticated: app.session_manager.reset ()
-    result = dict (success=True, timestamp=datetime.now ())
+    if app.session_manager.authenticated:
+        app.session_manager.reset ()
+        result = dict (success=True, timestamp=datetime.now ())
+    else:
+        result = dict (success=False, timestamp=datetime.now ())
+
     return jsonify (result) if json else result
 
 ###############################################################################
