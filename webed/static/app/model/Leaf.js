@@ -21,7 +21,9 @@ Ext.define ('Webed.model.Leaf', {
                 assert (ignore_case != undefined);
 
                 return {
-                    property: property, regex: regex, ignore_case: ignore_case
+                    ignore_case: ignore_case,
+                    property: property,
+                    regex: regex
                 };
             }));
         }
