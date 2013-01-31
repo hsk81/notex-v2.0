@@ -359,6 +359,7 @@ class PropertyApi (MethodView):
 
 rest.add_url_rule ('/property', view_func=PropertyApi.as_view ('properties'))
 
+@db.session.wrap ()
 def property_create (json=True):
 
     if not request.is_xhr:
@@ -390,7 +391,6 @@ def property_create (json=True):
     prop = Type (name, data, node, mime=mime, uuid=uuid)
 
     db.session.add (prop)
-    db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
     return jsonify (result) if json else result
@@ -426,6 +426,7 @@ def property_read (json=True):
     result = dict (success=True, results=map (prop2ext, props))
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def property_update (json=True):
 
     if not request.is_xhr:
@@ -464,11 +465,10 @@ def property_update (json=True):
     if data and prop.data != data: prop.data = data
     if size and prop.size != size: pass ## ignore!
 
-    db.session.commit ()
-
     result = dict (success=True, result=prop2ext (prop))
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def property_delete (json=True):
 
     if not request.is_xhr:
@@ -482,7 +482,6 @@ def property_delete (json=True):
     assert prop
 
     db.session.delete (prop)
-    db.session.commit ()
 
     result = dict (success=True, result=prop2ext (prop))
     return jsonify (result) if json else result
