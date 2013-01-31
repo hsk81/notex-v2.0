@@ -38,13 +38,15 @@ io = Blueprint ('io', __name__)
 ###############################################################################
 
 @io.route ('/file-upload/', methods=['POST'])
+@db.session.wrap ()
 def file_upload ():
 
     if not request.is_xhr:
         request.json = request.args
 
     file = request.files['file']
-    if not file: return JSON.encode (dict (success=False))
+    if not file:
+        return JSON.encode (dict (success=False))
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid
@@ -71,13 +73,18 @@ def file_upload ():
         TProperty = LargeBinaryProperty
         data = file.read ()
 
-    assert data is not None
+    @db.session.nest ()
+    def create_leaf (name, root, mime):
+        leaf = Leaf (name, root, mime=mime)
+        db.session.add (leaf)
+        return leaf
 
-    leaf = Leaf (name, root, mime=mime)
-    db.session.add (leaf)
+    leaf = create_leaf (name, root, mime)
+    assert leaf and leaf.id
+
+    db.session.execute (select ([func.npt_insert_node (leaf.base.id,leaf.id)]))
     property = TProperty ('data', data, leaf, mime=mime)
     db.session.add (property)
-    db.session.commit ()
 
     return JSON.encode (dict (success=True))
 
