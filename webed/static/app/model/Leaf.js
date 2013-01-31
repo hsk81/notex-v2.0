@@ -5,9 +5,7 @@ Ext.define ('Webed.model.Leaf', {
     ],
 
     proxy: {
-        type: 'rest',
-        url: '/leaf',
-        reader: {
+        type: 'rest', url: '/leaf', reader: {
             type: 'json', root: 'results', totalProperty: 'total'
         },
 

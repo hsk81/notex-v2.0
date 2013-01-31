@@ -5,9 +5,7 @@ Ext.define ('Webed.model.Node', {
     ],
 
     proxy: {
-        type: 'rest',
-        url: '/node',
-        reader: {
+        type: 'rest', url: '/node', reader: {
             type: 'json', root: 'results'
         }
     }
