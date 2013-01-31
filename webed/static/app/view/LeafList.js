@@ -68,24 +68,24 @@ Ext.define ('Webed.view.LeafList', {
 
             onTrigger1Click: function () {
                 if (this.search) {
-                    this.setValue ('');
-                    this.getStore ().clearFilter ();
                     this.search = null;
-                    this.updateLayout ();
+                    this.setValue ('');
+                    var store = this.getStore (); assert (store);
+                    store.clearFilter (true); Ext.Function.defer(function() {
+                        store.load (); //fixes firefox timing issue
+                    }, 25);
                 }
             },
 
             onTrigger2Click: function () {
                 var value = this.getValue ();
                 if (this.isValid () && value != this.search) {
-                    this.getStore ().clearFilter ();
-                    this.getStore ().filter ({
+                    this.search = value;
+                    var store = this.getStore (); assert (store);
+                    store.clearFilter (true); store.filter ({
                         property: this.paramName,
                         regex: new RegExp (value, 'i')
                     });
-
-                    this.search = value;
-                    this.updateLayout ();
                 }
             },
 
