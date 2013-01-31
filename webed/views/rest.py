@@ -182,6 +182,7 @@ class LeafApi (MethodView):
 
 rest.add_url_rule ('/leaf', view_func=LeafApi.as_view ('leafs'))
 
+@db.session.wrap ()
 def leaf_create (json=True):
 
     if not request.is_xhr:
@@ -208,7 +209,6 @@ def leaf_create (json=True):
 
     db.session.add (leaf)
     db.session.add (NodePath (leaf))
-    db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
@@ -288,6 +288,7 @@ def leaf_read (json=True):
     result = dict (success=True, results=leaf2exts, total=total)
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def leaf_update (json=True):
 
     if not request.is_xhr:
@@ -317,9 +318,9 @@ def leaf_update (json=True):
     if mime and leaf.mime != mime: leaf.mime = mime
     if name and leaf.name != name: leaf.name = name
 
-    db.session.begin (nested=True)
-    db.session.add (leaf)
-    db.session.commit ()
+    @db.session.nest ()
+    def update_leaf (): db.session.add (leaf)
+    update_leaf ()
 
     db.session.execute (select ([func.npt_delete_node (base.id, leaf.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, leaf.id)]))
@@ -328,6 +329,7 @@ def leaf_update (json=True):
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def leaf_delete (json=True):
 
     if not request.is_xhr:
@@ -341,7 +343,6 @@ def leaf_delete (json=True):
     assert leaf
 
     db.session.delete (leaf)
-    db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
