@@ -37,6 +37,7 @@ class NodeApi (MethodView):
 
 rest.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
+@db.session.wrap ()
 def node_create (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -63,7 +64,6 @@ def node_create (leafs=True, json=True):
 
     db.session.add (node)
     db.session.add (NodePath (node))
-    db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
@@ -111,6 +111,7 @@ def node_read (leafs=True, json=True):
     result = dict (success=True, results=lhs + rhs)
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def node_update (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -146,11 +147,11 @@ def node_update (leafs=True, json=True):
 
     db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
-    db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
+@db.session.wrap ()
 def node_delete (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -165,7 +166,6 @@ def node_delete (leafs=True, json=True):
     assert node
 
     db.session.delete (node)
-    db.session.commit ()
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
