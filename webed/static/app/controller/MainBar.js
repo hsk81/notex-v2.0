@@ -49,11 +49,9 @@ Ext.define ('Webed.controller.MainBar', {
 
         var application = this.application;
         assert (application);
+
         application.fireEvent ('progress-play', this, {
             message: 'Saving'
-        });
-        application.fireEvent ('update_tab', this, {
-            scope: this, callback: callback, record: node
         });
 
         function callback (records, op) {
@@ -64,6 +62,10 @@ Ext.define ('Webed.controller.MainBar', {
             application.fireEvent ('progress-stop', this);
             button.enable ();
         }
+
+        application.fireEvent ('update_tab', this, {
+            scope: this, callback: callback, record: node
+        });
     },
 
     openDocument: function () {
@@ -86,6 +88,12 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok' || !text) return;
 
+                function callback (rec, op) {
+                    if (!rec||!op||!op.success) {
+                        console.error ('[MainBar.addProject]', rec, op);
+                    }
+                }
+
                 this.application.fireEvent ('create_node', {
                     scope: this, callback: callback, with: {
                         root: root,
@@ -93,12 +101,6 @@ Ext.define ('Webed.controller.MainBar', {
                         name: text
                     }
                 });
-
-                function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
-                        console.error ('[MainBar.addProject]', rec, op);
-                    }
-                }
             }
         });
     },
@@ -117,6 +119,12 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok'||!text) return;
 
+                function callback (rec, op) {
+                    if (!rec||!op||!op.success) {
+                        console.error ('[MainBar.addFolder]', rec, op);
+                    }
+                }
+
                 this.application.fireEvent ('create_node', {
                     scope: this, callback: callback, with: {
                         root: root,
@@ -124,12 +132,6 @@ Ext.define ('Webed.controller.MainBar', {
                         name: text
                     }
                 });
-
-                function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
-                        console.error ('[MainBar.addFolder]', rec, op);
-                    }
-                }
             }
         });
     },
@@ -151,17 +153,14 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, callback: function (button, text) {
                 if (button != 'ok'||!text) return;
 
-                application.fireEvent ('create_leaf', {
-                    scope: this, callback: callback, with: {
-                        root: root,
-                        mime: 'text/plain',
-                        name: text,
-                        size: 4
-                    }
-                });
-
                 function callback (leaf, op) {
                     if (leaf && op && op.success) {
+                        function on_set (prop, op) {
+                            if (!prop||!op||!op.success) {
+                                console.error ('[MainBar.addText]', prop, op);
+                            }
+                        }
+
                         application.fireEvent ('set_property', this, {
                             scope: this, callback: on_set, property: [{
                                 node_uuid: leaf.get ('uuid'),
@@ -172,20 +171,19 @@ Ext.define ('Webed.controller.MainBar', {
                                 type: 'TextProperty'
                             }]
                         });
-
-                        function on_set (prop, op) {
-                            if (!prop||!op||!op.success) {
-                                error (prop, op);
-                            }
-                        }
                     } else {
-                        error (leaf, op);
+                        console.error ('[MainBar.addText]', leaf, op);
                     }
                 }
 
-                function error (rec, op) {
-                    console.error ('[MainBar.addText]', rec, op);
-                }
+                application.fireEvent ('create_leaf', {
+                    scope: this, callback: callback, with: {
+                        root: root,
+                        mime: 'text/plain',
+                        name: text,
+                        size: 4
+                    }
+                });
             }
         });
     },
@@ -209,12 +207,6 @@ Ext.define ('Webed.controller.MainBar', {
                     return;
                 }
 
-                application.fireEvent ('update_node', {
-                    scope: this, callback: callback, for: node, to: {
-                        name: text
-                    }
-                });
-
                 function callback (rec, op) {
                     if (rec && op && op.success) {
                         application.fireEvent ('rename_tab', this, {
@@ -227,6 +219,12 @@ Ext.define ('Webed.controller.MainBar', {
                         console.error ('[MainBar.rename]', rec, op);
                     }
                 }
+
+                application.fireEvent ('update_node', {
+                    scope: this, callback: callback, for: node, to: {
+                        name: text
+                    }
+                });
             }
         });
     },
@@ -254,10 +252,6 @@ Ext.define ('Webed.controller.MainBar', {
             scope: this, fn: function (button) {
                 if (button != 'yes') return;
 
-                application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, for: node
-                });
-
                 function callback (rec, op) {
                     if (rec && op && op.success) {
                         application.fireEvent ('delete_tab', this, {
@@ -270,6 +264,10 @@ Ext.define ('Webed.controller.MainBar', {
                         console.error ('[MainBar.destroy]', rec, op);
                     }
                 }
+
+                application.fireEvent ('delete_node', {
+                    scope: this, callback: callback, for: node
+                });
             }
         });
     },
@@ -298,20 +296,6 @@ Ext.define ('Webed.controller.MainBar', {
         var uuid = node.get ('uuid'); assert (uuid);
         var url = '/archive-download/?node_uuid=' + uuid;
 
-        Ext.Ajax.request ({
-            url: url, scope: this, callback: function (opts, status, xhr) {
-                if (status) {
-                    var res = Ext.decode (xhr.responseText);
-                    if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts, res);
-                } else {
-                    onFailure (xhr, opts);
-                }
-
-                application.fireEvent ('progress-stop', this);
-                button.enable ();
-            }
-        });
 
         function onSuccess (xhr, opts) {
             var body = Ext.getBody ();
@@ -341,6 +325,21 @@ Ext.define ('Webed.controller.MainBar', {
         function onFailure (xhr, opts, res) {
             console.error ('[MainBar.exportProject]', xhr, opts, res)
         }
+
+        Ext.Ajax.request ({
+            url: url, scope: this, callback: function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText);
+                    if (res.success) onSuccess (xhr, opts);
+                    else onFailure (xhr, opts, res);
+                } else {
+                    onFailure (xhr, opts);
+                }
+
+                application.fireEvent ('progress-stop', this);
+                button.enable ();
+            }
+        });
    },
 
     ///////////////////////////////////////////////////////////////////////////
