@@ -141,9 +141,9 @@ def node_update (leafs=True, json=True):
     if node.name != name: node.name = name
     if node.mime != mime: node.mime = mime
 
-    db.session.begin (nested=True)
-    db.session.add (node)
-    db.session.commit ()
+    @db.session.nest ()
+    def update_node (): db.session.add (node)
+    update_node ()
 
     db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
