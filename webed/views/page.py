@@ -16,27 +16,27 @@ import director
 ###############################################################################
 ###############################################################################
 
-pager = Blueprint ('pager', __name__)
+page = Blueprint ('page', __name__)
 
 ###############################################################################
 ###############################################################################
 
-@pager.route ('/test/')
+@page.route ('/test/')
 def test ():
     return main (page='home', template='index_test.html')
 
-@pager.route ('/home/')
+@page.route ('/home/')
 def home (): return main (page='home')
-@pager.route ('/overview/')
+@page.route ('/overview/')
 def overview (): return main (page='overview')
-@pager.route ('/tutorial/')
+@page.route ('/tutorial/')
 def tutorial (): return main (page='tutorial')
-@pager.route ('/faq/')
+@page.route ('/faq/')
 def faq (): return main (page='faq')
-@pager.route ('/contact/')
+@page.route ('/contact/')
 def contact (): return main (page='contact')
 
-@pager.route ('/')
+@page.route ('/')
 def main (page='home', template='index.html'):
 
     if not request.args.get ('silent', False):
@@ -58,7 +58,7 @@ def main (page='home', template='index.html'):
 ###############################################################################
 ###############################################################################
 
-app.register_blueprint (pager)
+app.register_blueprint (page)
 
 ###############################################################################
 ###############################################################################
