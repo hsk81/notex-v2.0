@@ -136,7 +136,7 @@ class StringProperty (Property):
         @cache.version (key=[self.uuid, 'size', 'data'])
         def cached_size (self):
             return len (self._data.encode ('utf-8')) \
-                if self._data  is not None else 0
+                if self._data is not None else 0
 
         return cached_size (self)
 
@@ -203,10 +203,22 @@ class LargeBinaryProperty (Property):
         return u'<LargeBinaryProperty@%x: %s>' % (self.id if self.id \
             else 0, self._name)
 
-    def get_data (self):
+    def get_data (self, as_base64=True):
 
-        return 'data:%s;base64,%s' % (self._mime, base64.encodestring (
-            self._data))
+        if not as_base64:
+            return self._data
+
+        @cache.version (key=[self.uuid, 'base64', 'data'])
+        def cached_data (self):
+            return 'data:%s;base64,%s' % (self._mime, base64.encodestring (
+                self._data))
+
+        return cached_data (self)
+
+    def set_data (self, value):
+
+        cache.increase_version (key=[self.uuid, 'base64', 'data'])
+        super (LargeBinaryProperty, self).set_data (value)
 
     def get_size (self):
 
