@@ -95,17 +95,17 @@ class Property (db.Model):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
 
-    def get_data (self):
-
-        return self._data
-
     def set_data (self, value):
 
         for uuid in self.node.get_path ('uuid'):
             cache.increase_version (key=[uuid, 'size', 'data'])
-
         cache.increase_version (key=[self.uuid, 'size', 'data'])
+
         self._data = value
+
+    def get_data (self):
+
+        return self._data
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
@@ -183,42 +183,54 @@ class TextProperty (Property):
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.LargeBinary
 ###############################################################################
 
-class LargeBinaryProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'LargeBinaryProperty'}
+class BinaryProperty (Property):
+    __mapper_args__ = {'polymorphic_identity': 'BinaryProperty'}
 
     large_binary_property_id = db.Column (db.Integer,
-        db.Sequence ('large_binary_property_id_seq'),
+        db.Sequence ('binary_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (LargeBinaryProperty, self).__init__ (name, node, mime=mime \
+        super (BinaryProperty, self).__init__ (name, node, mime=mime \
             if mime else 'application/octet-stream', uuid=uuid)
 
         self.data = data
 
     def __repr__ (self):
 
-        return u'<LargeBinaryProperty@%x: %s>' % (self.id if self.id \
-            else 0, self._name)
-
-    def get_data (self, as_base64=True):
-
-        if not as_base64:
-            return self._data
-
-        @cache.version (key=[self.uuid, 'base64', 'data'])
-        def cached_data (self):
-            return 'data:%s;base64,%s' % (self._mime, base64.encodestring (
-                self._data))
-
-        return cached_data (self)
+        return u'<BinaryProperty@%x: %s>' % (self.id if self.id else 0,
+            self._name)
 
     def set_data (self, value):
 
-        cache.increase_version (key=[self.uuid, 'base64', 'data'])
-        super (LargeBinaryProperty, self).set_data (value)
+        ##
+        ## TODO: Use FS backend, where binary data should be to saved in base64
+        ##       encoding (thus avoiding `base64.encodestring` computation
+        ##       *every* time `binary-property.data` is accessed).
+        ##
+
+        super (BinaryProperty, self).set_data (value)
+
+    def get_data (self):
+
+        ##
+        ## TODO: Use FS backend, where binary data should *already* be saved in
+        ##       base64 encoding (to avoid `base64.encodestring` computation
+        ##       *every* time `binary-property.data` is accessed).
+        ##
+
+        return str ('data:%s;base64,%s' % (self._mime, base64.encodestring (
+            self._data)))
+
+    def del_data (self):
+
+        ##
+        ## TODO: Delete FS backend, binary data (if it exists)
+        ##
+
+        pass
 
     def get_size (self):
 

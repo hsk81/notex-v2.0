@@ -15,7 +15,7 @@ from ..util import Q, JSON, jsonify
 from ..models import Node
 from ..models import Leaf
 from ..models import TextProperty
-from ..models import LargeBinaryProperty
+from ..models import BinaryProperty
 
 import subprocess
 import mimetypes
@@ -201,7 +201,7 @@ def create_bin (name, root, mime, path=None, file=None):
         data = file.read ()
 
     leaf = Leaf (name, root, mime=mime)
-    prop = LargeBinaryProperty ('data', data, leaf, mime=mime)
+    prop = BinaryProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 

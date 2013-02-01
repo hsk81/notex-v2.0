@@ -231,25 +231,26 @@ class PropertyModelsTestCase (BaseTestCase):
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
 
-    def test_large_binary_property (self):
+    def test_binary_property (self):
 
         node = Node ('node', root=None)
         self.db.session.add (node)
 
-        prop = LargeBinaryProperty ('large-binary', data= '...', node=node)
+        prop = BinaryProperty ('binary', data= '...', node=node)
         self.db.session.add (prop)
         self.db.session.commit ()
 
         [prop] = node.props.all ()
 
-        self.assertEqual (type (prop), LargeBinaryProperty)
+        self.assertEqual (type (prop), BinaryProperty)
         self.assertTrue (isinstance (prop, Property))
-        self.assertTrue (isinstance (prop, LargeBinaryProperty))
+        self.assertTrue (isinstance (prop, BinaryProperty))
 
-        self.assertEqual (prop.name, 'large-binary')
-        self.assertEqual (prop.type, 'LargeBinaryProperty')
+        self.assertEqual (prop.name, 'binary')
+        self.assertEqual (prop.type, 'BinaryProperty')
         self.assertEqual (prop.node, node)
-        self.assertEqual (prop.data, u'...')
+        self.assertEqual (prop.data,
+            'data:application/octet-stream;base64,Li4u\n')
         self.assertEqual (type (prop.data), str)
 
 ###############################################################################
