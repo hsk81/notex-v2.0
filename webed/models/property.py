@@ -12,6 +12,8 @@ from node import Node
 from ..ext.db import db
 from ..ext.cache import cache
 
+import base64
+
 ###############################################################################
 ###############################################################################
 
@@ -56,7 +58,6 @@ class Property (db.Model):
     @hybrid_property
     def mime (self):
         return self._mime
-
     @mime.setter
     def mime (self, value):
         self._mime = value
@@ -64,23 +65,16 @@ class Property (db.Model):
     @hybrid_property
     def name (self):
         return self._name
-
     @name.setter
     def name (self, value):
         self._name = value
 
     @hybrid_property
     def data (self):
-        return self._data
-
+        return self.get_data ()
     @data.setter
     def data (self, value):
-
-        for uuid in self.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
-
-        cache.increase_version (key=[self.uuid, 'size', 'data'])
-        self._data = value
+        self.set_data (value)
 
     @hybrid_property
     def size (self):
@@ -100,6 +94,18 @@ class Property (db.Model):
     def __repr__ (self):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
+
+    def get_data (self):
+
+        return self._data
+
+    def set_data (self, value):
+
+        for uuid in self.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
+
+        cache.increase_version (key=[self.uuid, 'size', 'data'])
+        self._data = value
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
@@ -122,7 +128,7 @@ class StringProperty (Property):
 
     def __repr__ (self):
 
-        return u'<StringProperty@%r: %r>' % (self.id if self.id \
+        return u'<StringProperty@%x: %s>' % (self.id if self.id \
             else 0, self._name)
 
     def get_size (self):
@@ -196,6 +202,11 @@ class LargeBinaryProperty (Property):
 
         return u'<LargeBinaryProperty@%x: %s>' % (self.id if self.id \
             else 0, self._name)
+
+    def get_data (self):
+
+        return 'data:%s;base64,%s' % (self._mime, base64.encodestring (
+            self._data))
 
     def get_size (self):
 

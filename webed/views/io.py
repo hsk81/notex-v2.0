@@ -68,8 +68,6 @@ def file_upload ():
 
         if mime.lower () == 'text/plain':
             leaf, _ = create_txt (name, root, mime, file=file)
-        elif mime.lower ().startswith ('image'):
-            leaf, _ = create_img (name, root, mime, file=file)
         else:
             leaf, _ = create_bin (name, root, mime, file=file)
 
@@ -169,8 +167,6 @@ def create_prj (path, name, base):
             mime = guess_mime (cur_path, fn)
             if mime and mime == 'text/plain':
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
-            elif mime and mime.startswith ('image'):
-                leaf, _ = create_img (fn, root, mime, path=cur_path)
             else:
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
             db.session.add (leaf); cache[os.path.join (cur_path, fn)] = leaf
@@ -189,22 +185,6 @@ def create_txt (name, root, mime, path=None, file=None):
             data = file.read ().replace ('\r\n','\n')
     else:
         data = file.read ().replace ('\r\n','\n')
-
-    leaf = Leaf (name, root, mime=mime)
-    prop = TextProperty ('data', data, leaf, mime=mime)
-
-    return leaf, prop
-
-def create_img (name, root, mime, path=None, file=None):
-    assert path and not file or not path and file
-
-    if path:
-        with open (os.path.join (path, name)) as file:
-            data = 'data:%s;base64,%s' % (mime, base64.encodestring (
-                file.read ()))
-    else:
-        data = 'data:%s;base64,%s' % (mime, base64.encodestring (
-            file.read ()))
 
     leaf = Leaf (name, root, mime=mime)
     prop = TextProperty ('data', data, leaf, mime=mime)
