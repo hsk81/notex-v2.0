@@ -86,6 +86,27 @@ class CacheClear (Command):
 manager.add_command ('clear-cache', CacheClear ())
 
 ###############################################################################
+
+class AppReset (Command):
+    """Reset application: Clear cache & DB, and setup DB"""
+
+    def get_options (self):
+
+        return [
+            Option ('-n', '--name', dest='name', default=u'admin'),
+            Option ('-m', '--mail', dest='mail', default=u'admin@mail.net'),
+        ]
+
+    def run (self, name, mail):
+        assert name, mail
+
+        CacheClear ().run ()
+        DbClear ().run ()
+        DbSetup ().run (name=u'admin', mail=u'admin@mail.net')
+
+manager.add_command ('reset', AppReset ())
+
+###############################################################################
 ###############################################################################
 
 if __name__ == '__main__':
