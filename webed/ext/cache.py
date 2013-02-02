@@ -265,11 +265,17 @@ class WebedRedis (WebedCache):
 
     def increase_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        self.app.rd.incr (self.KEY_PREFIX+version_key)
+        self.app.rd.pipeline () \
+            .incr (self.KEY_PREFIX+version_key) \
+            .persist (self.KEY_PREFIX+version_key) \
+            .execute ()
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        self.app.rd.decr (self.KEY_PREFIX+version_key)
+        self.app.rd.pipeline () \
+            .decr (self.KEY_PREFIX+version_key) \
+            .persist (self.KEY_PREFIX+version_key) \
+            .execute ()
 
     def flush_all (self):
         self.app.rd.flushall ()
@@ -277,8 +283,8 @@ class WebedRedis (WebedCache):
 ###############################################################################
 ###############################################################################
 
-cache = WebedRedis (app, servers=app.config['CACHE0_SERVERS'],
-    prefix=app.config['CACHE0_KEY_PREFIX'], db=0)
+cache = WebedMemcached (app, servers=app.config['CACHE0_SERVERS'],
+    prefix=app.config['CACHE0_KEY_PREFIX'])
 
 object_cache = WebedRedis (app, servers=app.config['CACHE1_SERVERS'],
     prefix=app.config['CACHE1_KEY_PREFIX'], db=1)
