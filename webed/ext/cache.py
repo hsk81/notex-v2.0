@@ -189,18 +189,19 @@ class WebedMemcached (WebedCache):
     def increase_version (self, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
         with self.app.mc_pool.reserve () as mc:
-            if version_key in mc:
-                mc.incr (version_key)
+            if version_key not in mc:
+                mc.set (version_key, +1, time=self.INDEFINITE)
             else:
-                mc.set (version_key, 0, time=self.INDEFINITE)
+                mc.incr (version_key)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
         with self.app.mc_pool.reserve () as mc:
-            if version_key in mc:
-                mc.decr (version_key)
+            if version_key not in mc:
+                mc.set (version_key, -1, time=self.INDEFINITE)
             else:
-                mc.set (version_key, 0, time=self.INDEFINITE)
+                mc.set (version_key, int (mc.get (version_key))-1,
+                    time=self.INDEFINITE)
 
     def flush_all (self):
         with self.app.mc_pool.reserve () as mc:
@@ -256,17 +257,11 @@ class WebedRedis (WebedCache):
 
     def increase_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if self.exists (version_key):
-            self.app.rd.incr (self.KEY_PREFIX+version_key)
-        else:
-            self.set (version_key, 0, expiry=self.INDEFINITE)
+        self.app.rd.incr (self.KEY_PREFIX+version_key)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if self.exists (version_key):
-            self.app.rd.decr (self.KEY_PREFIX+version_key)
-        else:
-            self.set (version_key, 0, expiry=self.INDEFINITE)
+        self.app.rd.decr (self.KEY_PREFIX+version_key)
 
     def flush_all (self):
         self.app.rd.flushall ()
