@@ -228,10 +228,10 @@ class WebedRedis (WebedCache):
 
         app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT)
 
-    def get (self, key): ## TODO: JSON.decode & UTF-8!?
+    def get (self, key):
         return JSON.decode (self.app.rd.get (self.KEY_PREFIX+key) or 'null')
 
-    def set (self, key, value, expiry=DEFAULT_TIMEOUT): ## TODO: UTF-8!?
+    def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         self.app.rd.set (self.KEY_PREFIX+key, JSON.encode (value))
         self.expire (key, expiry=expiry)
 

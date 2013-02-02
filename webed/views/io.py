@@ -242,6 +242,7 @@ def archive_download (chunk_size = 256*1024):
     if content_val:
         if request.args.get ('fetch', False):
 
+            content_val = base64.decodestring (content_val)
             content_len = len (content_val)
             content_csz = chunk_size
 
@@ -258,7 +259,8 @@ def archive_download (chunk_size = 256*1024):
             cache.expire (archive_key, expiry=15) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
-        cache.set (archive_key, compress (node), expiry=15) ## seconds
+        cache.set (archive_key, base64.encodestring (compress (node)),
+            expiry=15) ## secs
 
     return response
 
