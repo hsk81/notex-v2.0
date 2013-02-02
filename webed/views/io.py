@@ -255,7 +255,7 @@ def archive_download (chunk_size = 256*1024):
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
             response = jsonify (success=True, name=node.name)
-            cache.touch (archive_key, expiry=15) ## refresh
+            cache.expire (archive_key, expiry=15) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
         cache.set (archive_key, compress (node), expiry=15) ## seconds

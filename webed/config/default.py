@@ -22,7 +22,6 @@ class DefaultConfig:
 
     CACHE_KEY_PREFIX = 'webed:'
     CACHE_SERVERS = ['127.0.0.1']
-    CACHE_CONNECTION_POOL_SIZE = 16
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
 
     LOG_FILE = os.path.join ('..', 'webed.log')

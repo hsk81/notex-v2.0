@@ -4,7 +4,7 @@
 ###############################################################################
 
 from webed.app import app
-from webed.ext import db
+from webed.ext import db, cache
 from webed.util import Q
 from webed.models import User
 
@@ -73,6 +73,17 @@ class DbClear (Command):
         db.drop_all ()
 
 manager.add_command ('clear-db', DbClear ())
+
+###############################################################################
+
+class CacheClear (Command):
+    """Clear cache to delete *all* keys"""
+
+    def run (self):
+
+        cache.flush_all ()
+
+manager.add_command ('clear-cache', CacheClear ())
 
 ###############################################################################
 ###############################################################################

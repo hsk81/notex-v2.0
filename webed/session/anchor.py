@@ -32,9 +32,13 @@ class SessionAnchor (object):
         key, _ = self.get_value_key ()
         return cache.get (key), key
 
-    def set_value (self, value, expiry=None):
+    def set_value (self, value):
         key, _ = self.get_value_key ()
-        cache.set (key, value, expiry=expiry)
+        cache.set (key, value)
+
+    def clear (self):
+        key, _ = self.get_value_key ()
+        cache.delete (key)
 
     ###########################################################################
 
@@ -65,9 +69,9 @@ class SessionAnchor (object):
 
     ###########################################################################
 
-    def reset (self, expiry=None):
+    def reset (self):
         version, key = self.get_version ()
-        cache.set (key, version + 1, expiry=expiry or 0) ## indefinite
+        cache.set (key, version + 1, expiry=cache.INDEFINITE)
         return version
 
     def refresh (self):
