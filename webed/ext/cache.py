@@ -104,7 +104,7 @@ class WebedCache:
 ###############################################################################
 
 class WebedMemcached (WebedCache):
-    INDEFINITE = 0
+    INDEFINITE = 0 ## expiry
 
     def __init__ (self, app):
         self.app = app
@@ -168,7 +168,7 @@ class WebedMemcached (WebedCache):
 ###############################################################################
 
 class WebedRedis (WebedCache):
-    INDEFINITE = None
+    INDEFINITE = None ## expiry
 
     def __init__ (self, app):
         self.app = app
