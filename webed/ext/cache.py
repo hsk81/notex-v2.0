@@ -6,6 +6,7 @@ __author__ = 'hsk81'
 from ..app import app
 from ..util import JSON
 
+import abc
 import redis
 import pylibmc
 import hashlib
@@ -19,16 +20,32 @@ DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
 ###############################################################################
 ###############################################################################
 
-class WebedCache:
+class WebedCache (object):
+    __metaclass__ = abc.ABCMeta
 
-    @staticmethod
-    def make_key (*args, **kwargs):
+    @abc.abstractproperty
+    def INDEFINITE (self): return
+    @abc.abstractproperty
+    def IMMEDIATE (self): return
 
-        kwargs.update (dict (enumerate (args)))
-        string = unicode (sorted (kwargs.items ()))
-        hashed = hashlib.md5 (string)
+    @abc.abstractmethod
+    def get (self, key): return
+    @abc.abstractmethod
+    def set (self, key, value, expiry=DEFAULT_TIMEOUT): pass
+    @abc.abstractmethod
+    def delete (self, key): pass
+    @abc.abstractmethod
+    def expire (self, key, expiry=DEFAULT_TIMEOUT): pass
+    @abc.abstractmethod
+    def exists (self, key): return
+    @abc.abstractmethod
+    def increase_version (self, *args, **kwargs): pass
+    @abc.abstractmethod
+    def decrease_version (self, *args, **kwargs): pass
+    @abc.abstractmethod
+    def flush_all (self): pass
 
-        return hashed.hexdigest ()
+    ###########################################################################
 
     def cached (self, expiry=DEFAULT_TIMEOUT, name=None, session=None,
                 keyfunc=None, unless=None, lest=None):
@@ -98,15 +115,29 @@ class WebedCache:
 
     @staticmethod
     def version_key (*args, **kwargs):
-        return WebedMemcached.make_key ('version', *args, **kwargs)
+        return WebedCache.make_key ('version', *args, **kwargs)
+
+    @staticmethod
+    def make_key (*args, **kwargs):
+
+        kwargs.update (dict (enumerate (args)))
+        string = unicode (sorted (kwargs.items ()))
+        hashed = hashlib.md5 (string)
+
+        return hashed.hexdigest ()
 
 ###############################################################################
 ###############################################################################
 
 class WebedMemcached (WebedCache):
 
-    INDEFINITE = 0
-    IMMEDIATE = None
+    @property
+    def INDEFINITE (self):
+        return 0
+
+    @property
+    def IMMEDIATE (self):
+        return None
 
     def __init__ (self, app):
         self.app = app
@@ -177,8 +208,13 @@ class WebedMemcached (WebedCache):
 
 class WebedRedis (WebedCache):
 
-    INDEFINITE = None
-    IMMEDIATE = 0
+    @property
+    def INDEFINITE (self):
+        return None
+
+    @property
+    def IMMEDIATE (self):
+        return 0
 
     def __init__ (self, app):
         self.app = app
@@ -192,10 +228,10 @@ class WebedRedis (WebedCache):
 
         app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT)
 
-    def get (self, key):
+    def get (self, key): ## TODO: JSON.decode & UTF-8!?
         return JSON.decode (self.app.rd.get (self.KEY_PREFIX+key) or 'null')
 
-    def set (self, key, value, expiry=DEFAULT_TIMEOUT):
+    def set (self, key, value, expiry=DEFAULT_TIMEOUT): ## TODO: UTF-8!?
         self.app.rd.set (self.KEY_PREFIX+key, JSON.encode (value))
         self.expire (key, expiry=expiry)
 
