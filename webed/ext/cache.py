@@ -240,8 +240,16 @@ class WebedRedis (WebedCache):
         return JSON.decode (self.app.rd.get (self.KEY_PREFIX+key) or 'null')
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
-        self.app.rd.set (self.KEY_PREFIX+key, JSON.encode (value))
-        self.expire (key, expiry=expiry)
+        if expiry == self.INDEFINITE:
+            self.app.rd.pipeline () \
+                .set (self.KEY_PREFIX+key, JSON.encode (value)) \
+                .persist (self.KEY_PREFIX+key) \
+                .execute ()
+        else:
+            self.app.rd.pipeline () \
+                .set (self.KEY_PREFIX+key, JSON.encode (value)) \
+                .expire (self.KEY_PREFIX+key, time=expiry) \
+                .execute ()
 
     def delete (self, key):
         self.app.rd.delete (self.KEY_PREFIX+key)
