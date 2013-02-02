@@ -4,7 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from .admin import admin
-from .cache import cache
+from .cache import cache, object_cache
 from .debugtoolbar import debugtoolbar
 from .db import db
 from .logger import logger

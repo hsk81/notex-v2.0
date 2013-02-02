@@ -98,7 +98,8 @@ class MemcachedTestCase (CacheTestCase):
 
     def setUp (self):
         super (MemcachedTestCase, self).setUp ()
-        self.cache = WebedMemcached (app)
+        self.cache = WebedMemcached (app, servers=app.config['CACHE0_SERVERS'],
+            prefix=app.config['CACHE0_KEY_PREFIX'])
 
 ###############################################################################
 ###############################################################################
@@ -107,7 +108,8 @@ class RedisTestCase (CacheTestCase):
 
     def setUp (self):
         super (RedisTestCase, self).setUp ()
-        self.cache = WebedRedis (app)
+        self.cache = WebedRedis (app, servers=app.config['CACHE0_SERVERS'],
+            prefix=app.config['CACHE0_KEY_PREFIX'], db=0)
 
 ###############################################################################
 ###############################################################################

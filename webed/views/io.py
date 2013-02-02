@@ -9,7 +9,7 @@ from flask import Blueprint, Response
 from flask.globals import request
 
 from ..app import app
-from ..ext import db, cache, logger
+from ..ext import db, object_cache, logger
 from ..util import Q, JSON, jsonify
 
 from ..models import Node
@@ -236,8 +236,8 @@ def archive_download (chunk_size = 256*1024):
     node = Q (base.subnodes).one (uuid=node_uuid)
     assert node
 
-    archive_key = cache.make_key (node_uuid, 'archive', 'zip')
-    content_val = cache.get (archive_key)
+    archive_key = object_cache.make_key (node_uuid, 'archive', 'zip')
+    content_val = object_cache.get (archive_key)
 
     if content_val:
         if request.args.get ('fetch', False):
@@ -256,10 +256,10 @@ def archive_download (chunk_size = 256*1024):
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
             response = jsonify (success=True, name=node.name)
-            cache.expire (archive_key, expiry=20) ## refresh
+            object_cache.expire (archive_key, expiry=20) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
-        cache.set (archive_key, base64.encodestring (compress (node)),
+        object_cache.set (archive_key, base64.encodestring (compress (node)),
             expiry=20) ## secs
 
     return response

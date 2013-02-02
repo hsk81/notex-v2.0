@@ -139,14 +139,17 @@ class WebedMemcached (WebedCache):
     def IMMEDIATE (self):
         return None
 
-    def __init__ (self, app):
+    def __init__ (self, app, servers=None, pool_size=None, prefix=None):
         self.app = app
 
-        self.SERVERS = app.config['CACHE_SERVERS']
+        self.SERVERS = servers if servers else \
+            app.config.get ('CACHE_SERVERS', None)
         assert isinstance (self.SERVERS, list)
-        self.KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
+        self.KEY_PREFIX = prefix if prefix else \
+            app.config.get ('CACHE_KEY_PREFIX', None)
         assert isinstance (self.KEY_PREFIX, str)
-        self.POOL_SIZE = app.config.get ('CACHE_POOL_SIZE', 2**8)
+        self.POOL_SIZE = pool_size if pool_size else \
+            app.config.get ('CACHE_POOL_SIZE', 2**8)
         assert isinstance (self.POOL_SIZE, int)
 
         app.mc = pylibmc.Client (self.SERVERS, binary=True, behaviors={
@@ -216,17 +219,21 @@ class WebedRedis (WebedCache):
     def IMMEDIATE (self):
         return 0
 
-    def __init__ (self, app):
+    def __init__ (self, app, servers=None, port=None, prefix=None, db=0):
         self.app = app
 
-        self.SERVERS = app.config['CACHE_SERVERS']
+        self.SERVERS = servers if servers else \
+            app.config.get ('CACHE_SERVERS', None)
         assert isinstance (self.SERVERS, list)
-        self.KEY_PREFIX = app.config['CACHE_KEY_PREFIX']
+        self.KEY_PREFIX = prefix if prefix else \
+            app.config.get ('CACHE_KEY_PREFIX', None)
         assert isinstance (self.KEY_PREFIX, str)
-        self.PORT = app.config.get ('CACHE_PORT', 6379)
+        self.PORT = port if port else \
+            app.config.get ('CACHE_PORT', 6379)
         assert isinstance (self.PORT, int)
 
-        app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT)
+        app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT,
+            db=db)
 
     def get (self, key):
         return JSON.decode (self.app.rd.get (self.KEY_PREFIX+key) or 'null')
@@ -267,7 +274,11 @@ class WebedRedis (WebedCache):
 ###############################################################################
 ###############################################################################
 
-cache = WebedRedis (app)
+cache = WebedRedis (app, servers=app.config['CACHE0_SERVERS'],
+    prefix=app.config['CACHE0_KEY_PREFIX'], db=0)
+
+object_cache = WebedRedis (app, servers=app.config['CACHE1_SERVERS'],
+    prefix=app.config['CACHE1_KEY_PREFIX'], db=1)
 
 ###############################################################################
 ###############################################################################

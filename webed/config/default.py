@@ -20,9 +20,11 @@ class DefaultConfig:
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = None
 
-    CACHE_KEY_PREFIX = 'webed:'
-    CACHE_SERVERS = ['127.0.0.1']
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
+    CACHE0_KEY_PREFIX = 'webed:'
+    CACHE0_SERVERS = ['127.0.0.1']
+    CACHE1_KEY_PREFIX = 'webed-obj:'
+    CACHE1_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
 
