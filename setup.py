@@ -28,7 +28,9 @@ setup (
         'Flask-Psycopg2',
         'flup',
         'ipython',
+        'hiredis',
         'pylibmc',
+        'redis',
         'ujson',
     ]
 )
