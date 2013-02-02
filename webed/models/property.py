@@ -99,8 +99,8 @@ class Property (db.Model):
 
         for uuid in self.node.get_path ('uuid'):
             cache.increase_version (key=[uuid, 'size', 'data'])
-        cache.increase_version (key=[self.uuid, 'size', 'data'])
 
+        cache.increase_version (key=[self.uuid, 'size', 'data'])
         self._data = value
 
     def get_data (self):
