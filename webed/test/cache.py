@@ -6,8 +6,6 @@ __author__ = 'hsk81'
 from base import BaseTestCase
 from ..ext import cache
 
-import time
-
 ###############################################################################
 ###############################################################################
 
@@ -29,13 +27,16 @@ class CacheTestCase (BaseTestCase):
 
     def test_expire (self):
 
-        cache.set ('key', 'value', expiry=1)
-        time.sleep (1.0)
+        cache.set ('key', 'value', expiry=cache.IMMEDIATE)
         value = cache.get ('key')
-        while value:
-            time.sleep (0.001)
-            self.assertIsNotNone (value)
-            value = cache.get ('key')
+        self.assertIsNone (value)
+
+        cache.set ('key', 'value')
+        value = cache.get ('key')
+        self.assertEqual (value, 'value')
+
+        cache.expire ('key', expiry=cache.IMMEDIATE)
+        value = cache.get ('key')
         self.assertIsNone (value)
 
     def test_exists (self):

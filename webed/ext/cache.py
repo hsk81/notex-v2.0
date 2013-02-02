@@ -104,7 +104,9 @@ class WebedCache:
 ###############################################################################
 
 class WebedMemcached (WebedCache):
-    INDEFINITE = 0 ## expiry
+
+    INDEFINITE = 0
+    IMMEDIATE = None
 
     def __init__ (self, app):
         self.app = app
@@ -130,15 +132,21 @@ class WebedMemcached (WebedCache):
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         with self.app.mc_pool.reserve () as mc:
-            return mc.set (self.KEY_PREFIX+key, value, time=expiry)
+            if expiry == self.IMMEDIATE:
+                mc.delete (self.KEY_PREFIX+key)
+            else:
+                mc.set (self.KEY_PREFIX+key, value, time=expiry)
 
     def delete (self, key):
         with self.app.mc_pool.reserve () as mc:
-            return mc.delete (self.KEY_PREFIX+key)
+            mc.delete (self.KEY_PREFIX+key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
         with self.app.mc_pool.reserve () as mc:
-            return mc.touch (self.KEY_PREFIX+key, time=expiry)
+            if expiry == self.IMMEDIATE:
+                mc.delete (self.KEY_PREFIX+key)
+            else:
+                mc.touch (self.KEY_PREFIX+key, time=expiry)
 
     def exists (self, key):
         with self.app.mc_pool.reserve () as mc:
@@ -168,7 +176,9 @@ class WebedMemcached (WebedCache):
 ###############################################################################
 
 class WebedRedis (WebedCache):
-    INDEFINITE = None ## expiry
+
+    INDEFINITE = None
+    IMMEDIATE = 0
 
     def __init__ (self, app):
         self.app = app
