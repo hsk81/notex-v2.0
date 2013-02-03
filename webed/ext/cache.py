@@ -24,9 +24,9 @@ class WebedCache (object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractproperty
-    def INDEFINITE (self): return
+    def NEVER (self): return
     @abc.abstractproperty
-    def IMMEDIATE (self): return
+    def ASAP (self): return
 
     @abc.abstractmethod
     def get (self, key): return
@@ -107,7 +107,7 @@ class WebedCache (object):
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    self.set_number (version_key, version, expiry=self.INDEFINITE)
+                    self.set_number (version_key, version, expiry=self.NEVER)
                     self.set (value_key, cached_value, expiry=expiry)
                 return cached_value
 
@@ -136,11 +136,11 @@ class WebedCache (object):
 class WebedMemcached (WebedCache):
 
     @property
-    def INDEFINITE (self):
+    def NEVER (self):
         return 0
 
     @property
-    def IMMEDIATE (self):
+    def ASAP (self):
         return None
 
     def __init__ (self, app, servers=None, pool_size=None, prefix=None):
@@ -173,7 +173,7 @@ class WebedMemcached (WebedCache):
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         with self.app.mc_pool.reserve () as mc:
-            if expiry == self.IMMEDIATE:
+            if expiry == self.ASAP:
                 mc.delete (self.KEY_PREFIX+key)
             else:
                 mc.set (self.KEY_PREFIX+key, value, time=expiry)
@@ -187,7 +187,7 @@ class WebedMemcached (WebedCache):
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
         with self.app.mc_pool.reserve () as mc:
-            if expiry == self.IMMEDIATE:
+            if expiry == self.ASAP:
                 mc.delete (self.KEY_PREFIX+key)
             else:
                 mc.touch (self.KEY_PREFIX+key, time=expiry)
@@ -200,19 +200,19 @@ class WebedMemcached (WebedCache):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
         with self.app.mc_pool.reserve () as mc:
             if version_key not in mc:
-                mc.set (version_key, +1, time=self.INDEFINITE)
+                mc.set (version_key, +1, time=self.NEVER)
             else:
                 mc.set (version_key, mc.get (version_key)+1,
-                    time=self.INDEFINITE)
+                    time=self.NEVER)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
         with self.app.mc_pool.reserve () as mc:
             if version_key not in mc:
-                mc.set (version_key, -1, time=self.INDEFINITE)
+                mc.set (version_key, -1, time=self.NEVER)
             else:
                 mc.set (version_key, mc.get (version_key)-1,
-                    time=self.INDEFINITE)
+                    time=self.NEVER)
 
     def flush_all (self):
         with self.app.mc_pool.reserve () as mc:
@@ -224,11 +224,11 @@ class WebedMemcached (WebedCache):
 class WebedRedis (WebedCache):
 
     @property
-    def INDEFINITE (self):
+    def NEVER (self):
         return None
 
     @property
-    def IMMEDIATE (self):
+    def ASAP (self):
         return 0
 
     def __init__ (self, app, servers=None, port=None, prefix=None, db=0):
@@ -257,7 +257,7 @@ class WebedRedis (WebedCache):
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
 
-        if expiry == self.INDEFINITE:
+        if expiry == self.NEVER:
             self.app.rd.pipeline () \
                 .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
                 .persist (self.KEY_PREFIX+key) \
@@ -270,7 +270,7 @@ class WebedRedis (WebedCache):
 
     def set_number (self, key, value, expiry=DEFAULT_TIMEOUT):
 
-        if expiry == self.INDEFINITE:
+        if expiry == self.NEVER:
             self.app.rd.pipeline () \
                 .set (self.KEY_PREFIX+key, int (value)) \
                 .persist (self.KEY_PREFIX+key) \
@@ -285,7 +285,7 @@ class WebedRedis (WebedCache):
         self.app.rd.delete (self.KEY_PREFIX+key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
-        if expiry == self.INDEFINITE:
+        if expiry == self.NEVER:
             self.app.rd.persist (self.KEY_PREFIX+key)
         else:
             self.app.rd.expire (self.KEY_PREFIX+key, time=expiry)

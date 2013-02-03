@@ -37,7 +37,7 @@ class CacheTestCase (BaseTestCase):
 
     def test_expire (self):
 
-        self.cache.set ('key', 'value', expiry=self.cache.IMMEDIATE)
+        self.cache.set ('key', 'value', expiry=self.cache.ASAP)
         value = self.cache.get ('key')
         self.assertIsNone (value)
 
@@ -45,7 +45,7 @@ class CacheTestCase (BaseTestCase):
         value = self.cache.get ('key')
         self.assertEqual (value, 'value')
 
-        self.cache.expire ('key', expiry=self.cache.IMMEDIATE)
+        self.cache.expire ('key', expiry=self.cache.ASAP)
         value = self.cache.get ('key')
         self.assertIsNone (value)
 
