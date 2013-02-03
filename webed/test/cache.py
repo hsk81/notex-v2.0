@@ -9,6 +9,9 @@ from ..app import app
 from ..ext.cache import WebedMemcached
 from ..ext.cache import WebedRedis
 
+from uuid import uuid4 as uuid_random
+from random import random
+
 ###############################################################################
 ###############################################################################
 
@@ -66,6 +69,10 @@ class CacheTestCase (BaseTestCase):
         version = self.cache.get (version_key)
         self.assertEqual (version, 2)
 
+        self.cache.increase_version ('version-key')
+        version = self.cache.get (version_key)
+        self.assertEqual (version, 3)
+
         self.cache.delete (version_key)
 
     def test_decrease_version (self):
@@ -81,7 +88,33 @@ class CacheTestCase (BaseTestCase):
         version = self.cache.get (version_key)
         self.assertEqual (version, -2)
 
+        self.cache.decrease_version ('version-key')
+        version = self.cache.get (version_key)
+        self.assertEqual (version, -3)
+
         self.cache.delete (version_key)
+
+    def test_version (self, uuid=uuid_random ()):
+
+        @self.cache.version (key=[uuid, 'key-part-1', 'key-part-2'])
+        def cached_value (self): return random ()
+
+        value_0 = cached_value (self)
+
+        self.cache.increase_version (key=[uuid, 'key-part-1', 'key-part-2'])
+        value_1 = cached_value (self)
+        self.assertNotEqual (value_0, value_1)
+
+        self.cache.decrease_version (key=[uuid, 'key-part-1', 'key-part-2'])
+        value_2 = cached_value (self)
+        self.assertNotEqual (value_1, value_2)
+        self.assertEqual (value_0, value_2)
+
+        self.cache.decrease_version (key=[uuid, 'key-part-1', 'key-part-2'])
+        value_3 = cached_value (self)
+        self.assertNotEqual (value_2, value_3)
+        self.assertNotEqual (value_1, value_3)
+        self.assertNotEqual (value_0, value_3)
 
 ###############################################################################
 ###############################################################################

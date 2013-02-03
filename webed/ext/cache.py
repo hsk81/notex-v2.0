@@ -4,10 +4,10 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from ..app import app
-from ..util import JSON
 
 import abc
 import redis
+import cPickle
 import pylibmc
 import hashlib
 import functools
@@ -192,7 +192,7 @@ class WebedMemcached (WebedCache):
             if version_key not in mc:
                 mc.set (version_key, +1, time=self.INDEFINITE)
             else:
-                mc.set (version_key, int (mc.get (version_key))+1,
+                mc.set (version_key, mc.get (version_key)+1,
                     time=self.INDEFINITE)
 
     def decrease_version (self, *args, **kwargs):
@@ -201,7 +201,7 @@ class WebedMemcached (WebedCache):
             if version_key not in mc:
                 mc.set (version_key, -1, time=self.INDEFINITE)
             else:
-                mc.set (version_key, int (mc.get (version_key))-1,
+                mc.set (version_key, mc.get (version_key)-1,
                     time=self.INDEFINITE)
 
     def flush_all (self):
@@ -238,17 +238,17 @@ class WebedRedis (WebedCache):
             db=db)
 
     def get (self, key):
-        return JSON.decode (self.app.rd.get (self.KEY_PREFIX+key) or 'null')
+        return cPickle.loads (self.app.rd.get (self.KEY_PREFIX+key) or 'N.')
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         if expiry == self.INDEFINITE:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, JSON.encode (value)) \
+                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
                 .persist (self.KEY_PREFIX+key) \
                 .execute ()
         else:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, JSON.encode (value)) \
+                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
                 .expire (self.KEY_PREFIX+key, time=expiry) \
                 .execute ()
 
@@ -266,19 +266,19 @@ class WebedRedis (WebedCache):
 
     def increase_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if self.exists (version_key):
-            version = int (self.get (version_key))
-            self.set (version_key, version+1, expiry=self.INDEFINITE)
-        else:
+        if not self.exists (version_key):
             self.set (version_key, +1, expiry=self.INDEFINITE)
+        else:
+            self.set (version_key, self.get (version_key)+1,
+                expiry=self.INDEFINITE)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if self.exists (version_key):
-            version = int (self.get (version_key))
-            self.set (version_key, version-1, expiry=self.INDEFINITE)
-        else:
+        if not self.exists (version_key):
             self.set (version_key, -1, expiry=self.INDEFINITE)
+        else:
+            self.set (version_key, self.get (version_key)-1,
+                expiry=self.INDEFINITE)
 
     def flush_all (self):
         self.app.rd.flushall ()
@@ -286,7 +286,7 @@ class WebedRedis (WebedCache):
 ###############################################################################
 ###############################################################################
 
-cache = WebedMemcached (app, servers=app.config['CACHE0_SERVERS'],
+cache = WebedRedis (app, servers=app.config['CACHE0_SERVERS'],
     prefix=app.config['CACHE0_KEY_PREFIX'])
 
 object_cache = WebedRedis (app, servers=app.config['CACHE1_SERVERS'],
