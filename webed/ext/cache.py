@@ -239,17 +239,25 @@ class WebedRedis (WebedCache):
 
     def get (self, key):
         value = self.app.rd.get (self.KEY_PREFIX+key)
-        if value: return cPickle.loads (value)
+        if value:
+            try:
+                return int (value)
+            except ValueError:
+                return cPickle.loads (value)
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
+
+        if not isinstance (value, (int, long)):
+            value = cPickle.dumps (value)
+
         if expiry == self.INDEFINITE:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
+                .set (self.KEY_PREFIX+key, value) \
                 .persist (self.KEY_PREFIX+key) \
                 .execute ()
         else:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
+                .set (self.KEY_PREFIX+key, value) \
                 .expire (self.KEY_PREFIX+key, time=expiry) \
                 .execute ()
 
@@ -267,19 +275,11 @@ class WebedRedis (WebedCache):
 
     def increase_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if not self.exists (version_key):
-            self.set (version_key, +1, expiry=self.INDEFINITE)
-        else:
-            self.set (version_key, self.get (version_key)+1,
-                expiry=self.INDEFINITE)
+        self.app.rd.incr (self.KEY_PREFIX+version_key)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        if not self.exists (version_key):
-            self.set (version_key, -1, expiry=self.INDEFINITE)
-        else:
-            self.set (version_key, self.get (version_key)-1,
-                expiry=self.INDEFINITE)
+        self.app.rd.decr (self.KEY_PREFIX+version_key)
 
     def flush_all (self):
         self.app.rd.flushall ()
