@@ -242,7 +242,6 @@ def archive_download (chunk_size = 256*1024):
     if content_val:
         if request.args.get ('fetch', False):
 
-            content_val = base64.decodestring (content_val)
             content_len = len (content_val)
             content_csz = chunk_size
 
@@ -256,11 +255,10 @@ def archive_download (chunk_size = 256*1024):
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
             response = jsonify (success=True, name=node.name)
-            object_cache.expire (archive_key, expiry=20) ## refresh
+            object_cache.expire (archive_key, expiry=60) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
-        object_cache.set (archive_key, base64.encodestring (compress (node)),
-            expiry=20) ## secs
+        object_cache.set (archive_key, compress (node), expiry=60) ## secs
 
     return response
 
