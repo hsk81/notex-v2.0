@@ -21,6 +21,9 @@ class DefaultConfig:
     SQLALCHEMY_DATABASE_URI = None
 
     CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
+    CACHE_DEFAULT_KEY_PREFIX = 'webed:'
+    CACHE_DEFAULT_SERVERS = ['127.0.0.1']
+
     CACHE0_KEY_PREFIX = 'webed:'
     CACHE0_SERVERS = ['127.0.0.1']
     CACHE1_KEY_PREFIX = 'webed-obj:'

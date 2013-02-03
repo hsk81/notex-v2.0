@@ -143,13 +143,13 @@ class WebedMemcached (WebedCache):
         self.app = app
 
         self.SERVERS = servers if servers else \
-            app.config.get ('CACHE_SERVERS', None)
+            app.config.get ('CACHE_DEFAULT_SERVERS', None)
         assert isinstance (self.SERVERS, list)
         self.KEY_PREFIX = prefix if prefix else \
-            app.config.get ('CACHE_KEY_PREFIX', None)
+            app.config.get ('CACHE_DEFAULT_KEY_PREFIX', None)
         assert isinstance (self.KEY_PREFIX, str)
         self.POOL_SIZE = pool_size if pool_size else \
-            app.config.get ('CACHE_POOL_SIZE', 2**8)
+            app.config.get ('CACHE_DEFAULT_POOL_SIZE', 2**8)
         assert isinstance (self.POOL_SIZE, int)
 
         app.mc = pylibmc.Client (self.SERVERS, binary=True, behaviors={
@@ -192,7 +192,8 @@ class WebedMemcached (WebedCache):
             if version_key not in mc:
                 mc.set (version_key, +1, time=self.INDEFINITE)
             else:
-                mc.incr (version_key)
+                mc.set (version_key, int (mc.get (version_key))+1,
+                    time=self.INDEFINITE)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
@@ -224,13 +225,13 @@ class WebedRedis (WebedCache):
         self.app = app
 
         self.SERVERS = servers if servers else \
-            app.config.get ('CACHE_SERVERS', None)
+            app.config.get ('CACHE_DEFAULT_SERVERS', None)
         assert isinstance (self.SERVERS, list)
         self.KEY_PREFIX = prefix if prefix else \
-            app.config.get ('CACHE_KEY_PREFIX', None)
+            app.config.get ('CACHE_DEFAULT_KEY_PREFIX', None)
         assert isinstance (self.KEY_PREFIX, str)
         self.PORT = port if port else \
-            app.config.get ('CACHE_PORT', 6379)
+            app.config.get ('CACHE_DEFAULT_PORT', 6379)
         assert isinstance (self.PORT, int)
 
         app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT,
@@ -265,17 +266,19 @@ class WebedRedis (WebedCache):
 
     def increase_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        self.app.rd.pipeline () \
-            .incr (self.KEY_PREFIX+version_key) \
-            .persist (self.KEY_PREFIX+version_key) \
-            .execute ()
+        if self.exists (version_key):
+            version = int (self.get (version_key))
+            self.set (version_key, version+1, expiry=self.INDEFINITE)
+        else:
+            self.set (version_key, +1, expiry=self.INDEFINITE)
 
     def decrease_version (self, *args, **kwargs):
         version_key = self.version_key (*args, **kwargs)
-        self.app.rd.pipeline () \
-            .decr (self.KEY_PREFIX+version_key) \
-            .persist (self.KEY_PREFIX+version_key) \
-            .execute ()
+        if self.exists (version_key):
+            version = int (self.get (version_key))
+            self.set (version_key, version-1, expiry=self.INDEFINITE)
+        else:
+            self.set (version_key, -1, expiry=self.INDEFINITE)
 
     def flush_all (self):
         self.app.rd.flushall ()
