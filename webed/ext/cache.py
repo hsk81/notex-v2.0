@@ -238,7 +238,8 @@ class WebedRedis (WebedCache):
             db=db)
 
     def get (self, key):
-        return cPickle.loads (self.app.rd.get (self.KEY_PREFIX+key) or 'N.')
+        value = self.app.rd.get (self.KEY_PREFIX+key)
+        if value: return cPickle.loads (value)
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         if expiry == self.INDEFINITE:
