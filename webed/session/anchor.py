@@ -20,7 +20,7 @@ class SessionAnchor (object):
 
     def get_version (self):
         key = self.get_version_key ()
-        return cache.get (key) or 0, key
+        return cache.get_number (key) or 0, key
 
     ###########################################################################
 
@@ -71,7 +71,7 @@ class SessionAnchor (object):
 
     def reset (self):
         version, key = self.get_version ()
-        cache.set (key, version + 1, expiry=cache.INDEFINITE)
+        cache.set_number (key, version + 1, expiry=cache.INDEFINITE)
         return version
 
     def refresh (self):

@@ -107,7 +107,7 @@ class WebedCache (object):
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    self.set_number (version_key, version, expiry=expiry)
+                    self.set_number (version_key, version, expiry=self.INDEFINITE)
                     self.set (value_key, cached_value, expiry=expiry)
                 return cached_value
 
