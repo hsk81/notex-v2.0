@@ -31,7 +31,11 @@ class WebedCache (object):
     @abc.abstractmethod
     def get (self, key): return
     @abc.abstractmethod
+    def get_number (self, key): return
+    @abc.abstractmethod
     def set (self, key, value, expiry=DEFAULT_TIMEOUT): pass
+    @abc.abstractmethod
+    def set_number (self, key, value, expiry=DEFAULT_TIMEOUT): pass
     @abc.abstractmethod
     def delete (self, key): pass
     @abc.abstractmethod
@@ -97,13 +101,13 @@ class WebedCache (object):
             def decorated (*fn_args, **fn_kwargs):
 
                 version_key = self.version_key (*args, **kwargs)
-                version = self.get (version_key) or 0
+                version = self.get_number (version_key) or 0
                 value_key = self.make_key (version, *args, **kwargs)
                 cached_value = self.get (value_key)
 
                 if not cached_value:
                     cached_value = fn (*fn_args, **fn_kwargs)
-                    self.set (version_key, version, expiry=expiry)
+                    self.set_number (version_key, version, expiry=expiry)
                     self.set (value_key, cached_value, expiry=expiry)
                 return cached_value
 
@@ -164,12 +168,18 @@ class WebedMemcached (WebedCache):
         with self.app.mc_pool.reserve () as mc:
             return mc.get (self.KEY_PREFIX+key)
 
+    def get_number (self, key):
+        return self.get (key)
+
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         with self.app.mc_pool.reserve () as mc:
             if expiry == self.IMMEDIATE:
                 mc.delete (self.KEY_PREFIX+key)
             else:
                 mc.set (self.KEY_PREFIX+key, value, time=expiry)
+
+    def set_number (self, key, value, expiry=DEFAULT_TIMEOUT):
+        self.set (key, value, expiry=expiry)
 
     def delete (self, key):
         with self.app.mc_pool.reserve () as mc:
@@ -239,25 +249,35 @@ class WebedRedis (WebedCache):
 
     def get (self, key):
         value = self.app.rd.get (self.KEY_PREFIX+key)
-        if value:
-            try:
-                return int (value)
-            except ValueError:
-                return cPickle.loads (value)
+        if value: return cPickle.loads (value)
+
+    def get_number (self, key):
+        value = self.app.rd.get (self.KEY_PREFIX+key)
+        if value: return int (value)
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
 
-        if not isinstance (value, (int, long)):
-            value = cPickle.dumps (value)
-
         if expiry == self.INDEFINITE:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, value) \
+                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
                 .persist (self.KEY_PREFIX+key) \
                 .execute ()
         else:
             self.app.rd.pipeline () \
-                .set (self.KEY_PREFIX+key, value) \
+                .set (self.KEY_PREFIX+key, cPickle.dumps (value)) \
+                .expire (self.KEY_PREFIX+key, time=expiry) \
+                .execute ()
+
+    def set_number (self, key, value, expiry=DEFAULT_TIMEOUT):
+
+        if expiry == self.INDEFINITE:
+            self.app.rd.pipeline () \
+                .set (self.KEY_PREFIX+key, int (value)) \
+                .persist (self.KEY_PREFIX+key) \
+                .execute ()
+        else:
+            self.app.rd.pipeline () \
+                .set (self.KEY_PREFIX+key, int (value)) \
                 .expire (self.KEY_PREFIX+key, time=expiry) \
                 .execute ()
 

@@ -62,15 +62,15 @@ class CacheTestCase (BaseTestCase):
         self.cache.delete (version_key)
 
         self.cache.increase_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, 1)
 
         self.cache.increase_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, 2)
 
         self.cache.increase_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, 3)
 
         self.cache.delete (version_key)
@@ -81,15 +81,15 @@ class CacheTestCase (BaseTestCase):
         self.cache.delete (version_key)
 
         self.cache.decrease_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, -1)
 
         self.cache.decrease_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, -2)
 
         self.cache.decrease_version ('version-key')
-        version = self.cache.get (version_key)
+        version = self.cache.get_number (version_key)
         self.assertEqual (version, -3)
 
         self.cache.delete (version_key)
