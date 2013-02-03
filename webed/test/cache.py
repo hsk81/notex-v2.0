@@ -56,6 +56,32 @@ class CacheTestCase (BaseTestCase):
         self.assertTrue (exists)
         self.cache.delete ('key')
 
+    def test_increase (self):
+
+        self.cache.increase ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, +1)
+        self.cache.increase ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, +2)
+        self.cache.increase ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, +3)
+        self.cache.delete ('key')
+
+    def test_decrease (self):
+
+        self.cache.decrease ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, -1)
+        self.cache.decrease ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, -2)
+        self.cache.decrease ('key')
+        number = self.cache.get_number ('key')
+        self.assertEqual (number, -3)
+        self.cache.delete ('key')
+
     def test_increase_version (self):
 
         version_key = self.cache.version_key ('version-key')

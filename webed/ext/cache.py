@@ -47,9 +47,9 @@ class WebedCache (object):
     @abc.abstractmethod
     def exists (self, key): return
     @abc.abstractmethod
-    def increase_version (self, *args, **kwargs): pass
+    def increase (self, key): pass
     @abc.abstractmethod
-    def decrease_version (self, *args, **kwargs): pass
+    def decrease (self, key): pass
     @abc.abstractmethod
     def flush_all (self): pass
 
@@ -134,6 +134,12 @@ class WebedCache (object):
 
         return hashed.hexdigest ()
 
+    def increase_version (self, *args, **kwargs):
+        self.increase (self.version_key (*args, **kwargs))
+
+    def decrease_version (self, *args, **kwargs):
+        self.decrease (self.version_key (*args, **kwargs))
+
 ###############################################################################
 ###############################################################################
 
@@ -206,23 +212,21 @@ class WebedMemcached (WebedCache):
         with self.app.mc_pool.reserve () as mc:
             return self.KEY_PREFIX+key in mc
 
-    def increase_version (self, *args, **kwargs):
-        version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
+    def increase (self, key):
+        key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
-            if version_key not in mc:
-                mc.set (version_key, +1, time=self.NEVER)
+            if key not in mc:
+                mc.set (key, +1, time=self.NEVER)
             else:
-                mc.set (version_key, mc.get (version_key)+1,
-                    time=self.NEVER)
+                mc.set (key, mc.get (key)+1, time=self.NEVER)
 
-    def decrease_version (self, *args, **kwargs):
-        version_key = self.KEY_PREFIX+self.version_key (*args, **kwargs)
+    def decrease (self, key):
+        key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
-            if version_key not in mc:
-                mc.set (version_key, -1, time=self.NEVER)
+            if key not in mc:
+                mc.set (key, -1, time=self.NEVER)
             else:
-                mc.set (version_key, mc.get (version_key)-1,
-                    time=self.NEVER)
+                mc.set (key, mc.get (key)-1, time=self.NEVER)
 
     def flush_all (self):
         with self.app.mc_pool.reserve () as mc:
@@ -294,13 +298,11 @@ class WebedRedis (WebedCache):
     def exists (self, key):
         return self.app.rd.exists (self.KEY_PREFIX+key)
 
-    def increase_version (self, *args, **kwargs):
-        version_key = self.version_key (*args, **kwargs)
-        self.app.rd.incr (self.KEY_PREFIX+version_key)
+    def increase (self, key):
+        self.app.rd.incr (self.KEY_PREFIX+key)
 
-    def decrease_version (self, *args, **kwargs):
-        version_key = self.version_key (*args, **kwargs)
-        self.app.rd.decr (self.KEY_PREFIX+version_key)
+    def decrease (self, key):
+        self.app.rd.decr (self.KEY_PREFIX+key)
 
     def flush_all (self):
         self.app.rd.flushall ()
