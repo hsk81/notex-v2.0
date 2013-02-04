@@ -16,7 +16,7 @@ import os.path
 ###############################################################################
 
 class Node (db.Model):
-    __mapper_args__ = {'polymorphic_identity':'node', 'polymorphic_on':'type'}
+    __mapper_args__ = {'polymorphic_identity':'Node', 'polymorphic_on':'type'}
 
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True,
         index=True)
