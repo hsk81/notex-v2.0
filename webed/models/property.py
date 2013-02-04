@@ -219,13 +219,14 @@ class BinaryProperty (Property):
         super (BinaryProperty, self).set_data (value_key)
         self._size = len (value)
 
-        if not object_cache.exists (key=value_key):
-            object_cache.set (expiry=object_cache.NEVER, key=value_key,
-                value='data:%s;base64,%s' % (self._mime, base64.encodestring (
-                    value)))
+        if object_cache.exists (value_key):
+            object_cache.expire (value_key) ## refresh expiry
+        else:
+            object_cache.set (value_key, 'data:%s;base64,%s' % (self._mime,
+                base64.encodestring (value)))
 
         version_key = object_cache.make_key (value_key)
-        version = object_cache.increase (key=version_key)
+        version = object_cache.increase (version_key)
         assert version > 0
 
     def get_data (self):
