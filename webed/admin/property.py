@@ -15,9 +15,10 @@ from webed.models import Property
 class PropertyAdmin (ModelView):
 
     column_list = ('base', 'node', 'name', 'mime', 'uuid', 'type', 'size')
-    column_searchable_list = (Property.mime, Property.name, Property.type)
-    column_filters = (Property.mime, Property.name, Property.type)
-    form_columns = ('node', 'mime', 'name')
+    column_sortable_list = ('name', 'mime', 'uuid', 'type')
+    column_searchable_list = ('name', 'mime', 'type')
+    column_filters = ('name', 'mime', 'type')
+    form_columns = ('node', 'name', 'mime')
 
     def __init__ (self, session):
         super (PropertyAdmin, self).__init__ (Property, session)
