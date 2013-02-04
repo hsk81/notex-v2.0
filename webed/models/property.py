@@ -12,11 +12,9 @@ from node import Node
 
 from ..ext.db import db
 from ..ext.cache import cache, object_cache
-
 from .polymorphic import Polymorphic
 
 import base64
-import hashlib
 
 ###############################################################################
 ###############################################################################
@@ -215,18 +213,18 @@ class BinaryProperty (Property):
 
     def set_data (self, value):
 
-        hash_value = hashlib.md5 (value).hexdigest ()
-        if self._data == hash_value: return
+        value_key = unicode (object_cache.make_key (value))
+        if self._data == value_key: return
 
-        super (BinaryProperty, self).set_data (unicode (hash_value))
+        super (BinaryProperty, self).set_data (value_key)
         self._size = len (value)
 
-        if not object_cache.exists (key=self._data):
-            object_cache.set (expiry=object_cache.NEVER, key=self._data,
+        if not object_cache.exists (key=value_key):
+            object_cache.set (expiry=object_cache.NEVER, key=value_key,
                 value='data:%s;base64,%s' % (self._mime, base64.encodestring (
                     value)))
 
-        version_key = object_cache.make_key (self._data)
+        version_key = object_cache.make_key (value_key)
         version = object_cache.increase (key=version_key)
         assert version > 0
 
