@@ -215,18 +215,16 @@ class WebedMemcached (WebedCache):
     def increase (self, key):
         key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
-            if key not in mc:
-                mc.set (key, +1, time=self.NEVER)
-            else:
-                mc.set (key, mc.get (key)+1, time=self.NEVER)
+            value = mc.get (key)+1 if key in mc else +1
+            mc.set (key, value, time=self.NEVER)
+            return value
 
     def decrease (self, key):
         key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
-            if key not in mc:
-                mc.set (key, -1, time=self.NEVER)
-            else:
-                mc.set (key, mc.get (key)-1, time=self.NEVER)
+            value = mc.get (key)-1 if key in mc else -1
+            mc.set (key, value, time=self.NEVER)
+            return value
 
     def flush_all (self):
         with self.app.mc_pool.reserve () as mc:
@@ -299,10 +297,10 @@ class WebedRedis (WebedCache):
         return self.app.rd.exists (self.KEY_PREFIX+key)
 
     def increase (self, key):
-        self.app.rd.incr (self.KEY_PREFIX+key)
+        return self.app.rd.incr (self.KEY_PREFIX+key)
 
     def decrease (self, key):
-        self.app.rd.decr (self.KEY_PREFIX+key)
+        return self.app.rd.decr (self.KEY_PREFIX+key)
 
     def flush_all (self):
         self.app.rd.flushall ()
