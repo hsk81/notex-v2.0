@@ -96,11 +96,11 @@ class Property (db.Model, Polymorphic):
 
     def set_data (self, value):
 
+        self._data = value
+
         for uuid in self.node.get_path ('uuid'):
             cache.increase_version (key=[uuid, 'size', 'data'])
-
         cache.increase_version (key=[self.uuid, 'size', 'data'])
-        self._data = value
 
     def get_data (self):
 
