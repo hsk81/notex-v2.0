@@ -29,11 +29,11 @@ class WebedCache (object):
     def ASAP (self): return
 
     @abc.abstractmethod
-    def get (self, key): return
+    def get (self, key, expiry=None): return
     @abc.abstractmethod
-    def get_number (self, key): return
+    def get_number (self, key, expiry=None): return
     @abc.abstractmethod
-    def get_value (self, key): return
+    def get_value (self, key, expiry=None): return
     @abc.abstractmethod
     def set (self, key, value, expiry=DEFAULT_TIMEOUT): pass
     @abc.abstractmethod
@@ -174,15 +174,17 @@ class WebedMemcached (WebedCache):
 
         app.mc_pool = pylibmc.ClientPool (app.mc, self.POOL_SIZE)
 
-    def get (self, key):
-        return self.get_value (key)
+    def get (self, key, expiry=None):
+        return self.get_value (key, expiry=expiry)
 
-    def get_number (self, key):
-        return self.get_value (key)
+    def get_number (self, key, expiry=None):
+        return self.get_value (key, expiry=expiry)
 
-    def get_value (self, key):
+    def get_value (self, key, expiry=None):
         with self.app.mc_pool.reserve () as mc:
-            return mc.get (self.KEY_PREFIX+key)
+            value = mc.get (self.KEY_PREFIX+key)
+            if expiry: self.expire (key, expiry=expiry)
+            return value
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         self.set_value (key, value, expiry=expiry)
@@ -259,16 +261,21 @@ class WebedRedis (WebedCache):
         app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT,
             db=db)
 
-    def get (self, key):
-        value = self.get_value (key)
+    def get (self, key, expiry=None):
+        value = self.get_value (key, expiry=expiry)
         if value: return cPickle.loads (value)
 
-    def get_number (self, key):
-        value = self.get_value (key)
+    def get_number (self, key, expiry=None):
+        value = self.get_value (key, expiry=expiry)
         if value: return int (value)
 
-    def get_value (self, key):
-        return self.app.rd.get (self.KEY_PREFIX+key)
+    def get_value (self, key, expiry=None):
+        if not expiry:
+            return self.app.rd.get (self.KEY_PREFIX+key)
+        else:
+            return self.app.rd.pipeline ().get (self.KEY_PREFIX+key) \
+                .expire (self.KEY_PREFIX+key, time=expiry) \
+                .execute ().pop (0)
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
         self.set_value (key, cPickle.dumps (value), expiry=expiry)
@@ -308,6 +315,11 @@ class WebedRedis (WebedCache):
 
     def flush_all (self):
         self.app.rd.flushall ()
+
+###############################################################################
+###############################################################################
+
+WebedCache.DEFAULT_TIMEOUT = DEFAULT_TIMEOUT
 
 ###############################################################################
 ###############################################################################
