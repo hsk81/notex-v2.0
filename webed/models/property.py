@@ -203,7 +203,7 @@ class BinaryProperty (Property):
         hash_value = hashlib.md5 (value).hexdigest ()
         if self._data == hash_value: return
 
-        self._data = '%s' % hash_value
+        self._data = unicode (hash_value)
         self._size = len (value)
 
         if not object_cache.exists (key=self._data):
@@ -222,8 +222,28 @@ class BinaryProperty (Property):
 
         return object_cache.get (key=self._data)
 
-    _data = db.Column (db.String, nullable=True)
+    _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
+
+###############################################################################
+###############################################################################
+
+from sqlalchemy import event
+
+def on_property_delete (mapper, connection, target):
+
+    for uuid in target.node.get_path ('uuid'):
+        cache.increase_version (key=[uuid, 'size', 'data'])
+
+event.listen (Property, 'after_delete', on_property_delete, propagate=True)
+
+def on_binary_property_delete (mapper, connection, target):
+
+    version_key = object_cache.make_key (target._data)
+    version = object_cache.decrease (key=version_key)
+    if version == 0: object_cache.delete (key=target._data)
+
+event.listen (BinaryProperty, 'after_delete', on_binary_property_delete)
 
 ###############################################################################
 ###############################################################################
