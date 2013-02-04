@@ -237,7 +237,7 @@ def archive_download (chunk_size = 256*1024):
     assert node
 
     archive_key = object_cache.make_key (node_uuid, 'archive', 'zip')
-    content_val = object_cache.get (archive_key)
+    content_val = object_cache.get_value (archive_key)
 
     if content_val:
         if request.args.get ('fetch', False):
@@ -258,7 +258,7 @@ def archive_download (chunk_size = 256*1024):
             object_cache.expire (archive_key, expiry=60) ## refresh
     else:
         response = jsonify (success=True, name=node.name)
-        object_cache.set (archive_key, compress (node), expiry=60) ## secs
+        object_cache.set_value (archive_key, compress (node), expiry=60) ##[s]
 
     return response
 
