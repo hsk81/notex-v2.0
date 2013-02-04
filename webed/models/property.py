@@ -10,10 +10,12 @@ from uuid import uuid4 as uuid_random
 from node import Node
 
 from ..ext.db import db
-from ..ext.cache import cache
+from ..ext.cache import cache, object_cache
+
 from .polymorphic import Polymorphic
 
 import base64
+import hashlib
 
 ###############################################################################
 ###############################################################################
@@ -198,43 +200,30 @@ class BinaryProperty (Property):
 
     def set_data (self, value):
 
-        ##
-        ## TODO: Use FS backend, where binary data should be to saved in base64
-        ##       encoding (thus avoiding `base64.encodestring` computation
-        ##       *every* time `binary-property.data` is accessed).
-        ##
+        hash_value = hashlib.md5 (value).hexdigest ()
+        if self._data == hash_value: return
 
-        super (BinaryProperty, self).set_data (value)
+        self._data = '%s' % hash_value
+        self._size = len (value)
+
+        if not object_cache.exists (key=self._data):
+            object_cache.set (expiry=object_cache.NEVER, key=self._data,
+                value='data:%s;base64,%s' % (self._mime, base64.encodestring (
+                    value)))
+
+        version_key = object_cache.make_key (self._data)
+        version = object_cache.increase (key=version_key)
+        assert version > 0
+
+        for uuid in self.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
 
     def get_data (self):
 
-        ##
-        ## TODO: Use FS backend, where binary data should *already* be saved in
-        ##       base64 encoding (to avoid `base64.encodestring` computation
-        ##       *every* time `binary-property.data` is accessed).
-        ##
+        return object_cache.get (key=self._data)
 
-        return str ('data:%s;base64,%s' % (self._mime, base64.encodestring (
-            self._data)))
-
-    def del_data (self):
-
-        ##
-        ## TODO: Delete FS backend, binary data (if it exists)
-        ##
-
-        pass
-
-    def get_size (self):
-
-        @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (self):
-            return len (self._data) if self._data is not None else 0
-
-        return cached_size (self)
-
-    _data = db.Column (db.LargeBinary, name='data')
-    _size = property (get_size)
+    _data = db.Column (db.String, nullable=True)
+    _size = db.Column (db.Integer, nullable=False, default=0)
 
 ###############################################################################
 ###############################################################################
