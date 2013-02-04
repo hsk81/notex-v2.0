@@ -220,8 +220,8 @@ class BinaryProperty (Property):
         self._size = len (value)
 
         if not object_cache.exists (value_key):
-            object_cache.set (value_key, 'data:%s;base64,%s' % (self._mime,
-                base64.encodestring (value)), object_cache.NEVER)
+            object_cache.set_value (value_key, 'data:%s;base64,%s' % (
+                self._mime, base64.encodestring (value)), object_cache.NEVER)
 
         version_key = object_cache.make_key (value_key)
         version = object_cache.increase (version_key)
@@ -229,7 +229,7 @@ class BinaryProperty (Property):
 
     def get_data (self):
 
-        return object_cache.get (key=self._data)
+        return object_cache.get_value (key=self._data)
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
