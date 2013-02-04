@@ -231,7 +231,8 @@ class BinaryProperty (Property):
 
     def get_data (self):
 
-        return object_cache.get (key=self._data)
+        return object_cache.get (
+            key=self._data, expiry=object_cache.DEFAULT_TIMEOUT) ## refresh
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
