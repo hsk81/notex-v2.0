@@ -284,10 +284,8 @@ def compress (root):
 
         if leaf.mime == 'text/plain':
             data = prop.data.replace ('\n','\r\n').encode ('utf-8')
-        elif leaf.mime.startswith ('image'):
-            data = base64.decodestring (prop.data.split (',')[1])
         else:
-            data = prop.data
+            data = base64.decodestring (prop.data.split (',')[1])
 
         assert data is not None
         path = os.path.join (leaf_path, leaf.name)
