@@ -220,6 +220,13 @@ class BinaryProperty (Property):
         self._size = len (value)
 
         if not object_cache.exists (value_key):
+
+            ##
+            ## TODO: Save data *also* to file system based backend **and** use
+            ##       `object-cache`, but do *not* cache forever but simply with
+            ##       the default timeout!
+            ##
+
             object_cache.set_value (value_key, 'data:%s;base64,%s' % (
                 self._mime, base64.encodestring (value)), object_cache.NEVER)
 
@@ -229,6 +236,12 @@ class BinaryProperty (Property):
 
     def get_data (self):
 
+        ##
+        ## TODO: (1) Try to lookup from `object-cache`, if not possible then
+        ##       (2) lookup from file system based backend;
+        ##       (3) if step (2) executed, then refresh `object-cache`!
+        ##
+
         return object_cache.get_value (key=self._data)
 
     _data = db.Column (db.String, name='data')
@@ -236,6 +249,10 @@ class BinaryProperty (Property):
 
     @staticmethod
     def on_delete (mapper, connection, target):
+
+        ##
+        ## TODO: Remove *also* file system backend entry (unlink file)!
+        ##
 
         version_key = object_cache.make_key (target._data)
         version = object_cache.decrease (key=version_key)
