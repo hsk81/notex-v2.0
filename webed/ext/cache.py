@@ -47,9 +47,9 @@ class WebedCache (object):
     @abc.abstractmethod
     def exists (self, key): return
     @abc.abstractmethod
-    def increase (self, key): pass
+    def increase (self, key, expiry=DEFAULT_TIMEOUT): pass
     @abc.abstractmethod
-    def decrease (self, key): pass
+    def decrease (self, key, expiry=DEFAULT_TIMEOUT): pass
     @abc.abstractmethod
     def flush_all (self): pass
 
@@ -212,18 +212,18 @@ class WebedMemcached (WebedCache):
         with self.app.mc_pool.reserve () as mc:
             return self.KEY_PREFIX+key in mc
 
-    def increase (self, key):
+    def increase (self, key, expiry=DEFAULT_TIMEOUT):
         key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
             value = mc.get (key)+1 if key in mc else +1
-            mc.set (key, value, time=self.NEVER)
+            mc.set (key, value, time=expiry)
             return value
 
-    def decrease (self, key):
+    def decrease (self, key, expiry=DEFAULT_TIMEOUT):
         key = self.KEY_PREFIX+key
         with self.app.mc_pool.reserve () as mc:
             value = mc.get (key)-1 if key in mc else -1
-            mc.set (key, value, time=self.NEVER)
+            mc.set (key, value, time=expiry)
             return value
 
     def flush_all (self):
@@ -296,11 +296,15 @@ class WebedRedis (WebedCache):
     def exists (self, key):
         return self.app.rd.exists (self.KEY_PREFIX+key)
 
-    def increase (self, key):
-        return self.app.rd.incr (self.KEY_PREFIX+key)
+    def increase (self, key, expiry=DEFAULT_TIMEOUT):
+        return self.app.rd.pipeline ().incr (self.KEY_PREFIX+key) \
+            .expire (self.KEY_PREFIX+key, time=expiry) \
+            .execute ().pop (0)
 
-    def decrease (self, key):
-        return self.app.rd.decr (self.KEY_PREFIX+key)
+    def decrease (self, key, expiry=DEFAULT_TIMEOUT):
+        return self.app.rd.pipeline ().decr (self.KEY_PREFIX+key) \
+            .expire (self.KEY_PREFIX+key, time=expiry) \
+            .execute ().pop (0)
 
     def flush_all (self):
         self.app.rd.flushall ()
