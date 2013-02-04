@@ -5,6 +5,7 @@ __author__ = 'hsk81'
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects import postgres as pg
+from sqlalchemy import event
 
 from uuid import uuid4 as uuid_random
 from node import Node
@@ -104,6 +105,20 @@ class Property (db.Model, Polymorphic):
     def get_data (self):
 
         return self._data
+
+    @staticmethod
+    def on_delete (mapper, connection, target):
+
+        for uuid in target.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
+
+    @classmethod
+    def register (cls):
+        event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
+
+###############################################################################
+
+Property.register () ## events
 
 ###############################################################################
 # http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
@@ -225,25 +240,20 @@ class BinaryProperty (Property):
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
 
+    @staticmethod
+    def on_delete (mapper, connection, target):
+
+        version_key = object_cache.make_key (target._data)
+        version = object_cache.decrease (key=version_key)
+        if version == 0: object_cache.delete (key=target._data)
+
+    @classmethod
+    def register (cls):
+        event.listen (cls, 'after_delete', cls.on_delete)
+
 ###############################################################################
-###############################################################################
 
-from sqlalchemy import event
-
-def on_property_delete (mapper, connection, target):
-
-    for uuid in target.node.get_path ('uuid'):
-        cache.increase_version (key=[uuid, 'size', 'data'])
-
-event.listen (Property, 'after_delete', on_property_delete, propagate=True)
-
-def on_binary_property_delete (mapper, connection, target):
-
-    version_key = object_cache.make_key (target._data)
-    version = object_cache.decrease (key=version_key)
-    if version == 0: object_cache.delete (key=target._data)
-
-event.listen (BinaryProperty, 'after_delete', on_binary_property_delete)
+BinaryProperty.register () ## events
 
 ###############################################################################
 ###############################################################################
