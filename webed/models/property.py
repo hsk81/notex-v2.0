@@ -218,7 +218,7 @@ class BinaryProperty (Property):
         hash_value = hashlib.md5 (value).hexdigest ()
         if self._data == hash_value: return
 
-        self._data = unicode (hash_value)
+        super (BinaryProperty, self).set_data (unicode (hash_value))
         self._size = len (value)
 
         if not object_cache.exists (key=self._data):
@@ -229,9 +229,6 @@ class BinaryProperty (Property):
         version_key = object_cache.make_key (self._data)
         version = object_cache.increase (key=version_key)
         assert version > 0
-
-        for uuid in self.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
 
     def get_data (self):
 
