@@ -20,8 +20,6 @@ class Node (db.Model, Polymorphic):
 
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True,
         index=True)
-    type = db.Column ('type', db.String (16), nullable=False,
-        index=False)
 
     ###########################################################################
 
