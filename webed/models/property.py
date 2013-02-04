@@ -11,21 +11,17 @@ from node import Node
 
 from ..ext.db import db
 from ..ext.cache import cache
+from .polymorphic import Polymorphic
 
 import base64
 
 ###############################################################################
 ###############################################################################
 
-class Property (db.Model):
-    __mapper_args__ = {
-        'polymorphic_identity':'Property', 'polymorphic_on':'type'
-    }
+class Property (db.Model, Polymorphic):
 
     id = db.Column (db.Integer, db.Sequence ('property_id_seq'),
         index=True, primary_key=True)
-    type = db.Column ('type', db.String (24), nullable=False,
-        index=False)
 
     ###########################################################################
 
@@ -112,7 +108,6 @@ class Property (db.Model):
 ###############################################################################
 
 class StringProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'StringProperty'}
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'),
@@ -148,7 +143,6 @@ class StringProperty (Property):
 ###############################################################################
 
 class TextProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'TextProperty'}
 
     text_property_id = db.Column (db.Integer,
         db.Sequence ('text_property_id_seq'),
@@ -184,7 +178,6 @@ class TextProperty (Property):
 ###############################################################################
 
 class BinaryProperty (Property):
-    __mapper_args__ = {'polymorphic_identity': 'BinaryProperty'}
 
     large_binary_property_id = db.Column (db.Integer,
         db.Sequence ('binary_property_id_seq'),

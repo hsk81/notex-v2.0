@@ -9,14 +9,14 @@ from uuid import uuid4 as uuid_random
 
 from ..ext.db import db
 from ..ext.cache import cache
+from .polymorphic import Polymorphic
 
 import os.path
 
 ###############################################################################
 ###############################################################################
 
-class Node (db.Model):
-    __mapper_args__ = {'polymorphic_identity':'Node', 'polymorphic_on':'type'}
+class Node (db.Model, Polymorphic):
 
     id = db.Column (db.Integer, db.Sequence ('node_id_seq'), primary_key=True,
         index=True)
@@ -99,6 +99,7 @@ class Node (db.Model):
         else:
             return cached_path.uncached (self, field)
 
+    @hybrid_property
     def uuid_path (self):
         return os.path.sep.join (self.get_path (field='uuid'))
 
@@ -123,6 +124,7 @@ class Node (db.Model):
 
         return cached_size (self, **kwargs)
 
+    @hybrid_property
     def size (self):
         return self.get_size (name='data')
 

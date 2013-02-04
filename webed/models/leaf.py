@@ -12,7 +12,6 @@ import os.path
 ###############################################################################
 
 class Leaf (Node):
-    __mapper_args__ = {'polymorphic_identity': 'Leaf'}
 
     leaf_id = db.Column (db.Integer, db.Sequence ('leaf_id_seq'),
         db.ForeignKey ('node.id', ondelete='CASCADE'),
