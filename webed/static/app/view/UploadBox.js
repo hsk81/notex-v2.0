@@ -16,11 +16,11 @@ Ext.define ('Webed.view.UploadBox', {
 
     buttons: [{
         text: 'Upload',
-        iconCls : 'icon-tick-16',
+        iconCls: 'icon-tick-16',
         action: 'confirm'
     },{
-        text : 'Cancel',
-        iconCls : 'icon-cross-16',
+        text: 'Cancel',
+        iconCls: 'icon-cross-16',
         action: 'cancel'
     }]
 });
