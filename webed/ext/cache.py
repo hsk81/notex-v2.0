@@ -90,6 +90,7 @@ class WebedCache (object):
                 if cached_value is None:
                     cached_value = fn (*args, **kwargs)
                     self.set (value_key, cached_value, expiry=expiry)
+
                 return cached_value
 
             decorated.uncached = fn
@@ -113,6 +114,7 @@ class WebedCache (object):
                     cached_value = fn (*fn_args, **fn_kwargs)
                     self.set_number (version_key, version, expiry=self.NEVER)
                     self.set (value_key, cached_value, expiry=expiry)
+
                 return cached_value
 
             decorated.uncached = fn
