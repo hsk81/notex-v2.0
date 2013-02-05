@@ -38,7 +38,7 @@ io = Blueprint ('io', __name__)
 ###############################################################################
 
 @io.route ('/file-upload/', methods=['POST'])
-@db.session.wrap ()
+@db.wrap ()
 def file_upload ():
 
     if not request.is_xhr:
@@ -63,7 +63,7 @@ def file_upload ():
     mime = file.mimetype
     assert mime
 
-    @db.session.nest ()
+    @db.wrap ()
     def create_leaf (name, root, mime):
 
         if mime.lower ().startswith ('text'):
@@ -151,7 +151,7 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-@db.session.nest ()
+@db.wrap ()
 def create_prj (path, name, base):
     cache = {path: base}
 

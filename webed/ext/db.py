@@ -19,9 +19,6 @@ class WebedOrm (SQLAlchemy):
         super (WebedOrm, self).__init__ (*args, **kwargs)
 
         self.session.script = self.script
-        self.session.wrap = self.wrap
-        self.session.nest = self.nest
-
         self.Query.back = self.Query.reset_joinpoint
 
     def script (self, path):

@@ -37,7 +37,7 @@ class NodeApi (MethodView):
 
 rest.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 
-@db.session.wrap ()
+@db.wrap ()
 def node_create (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -111,7 +111,7 @@ def node_read (leafs=True, json=True):
     result = dict (success=True, results=lhs + rhs)
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def node_update (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -141,14 +141,14 @@ def node_update (leafs=True, json=True):
     if node.name != name: node.name = name
     if node.mime != mime: node.mime = mime
 
-    db.session.nest (fn=lambda: db.session.add (node)) ()
+    db.nest (fn=lambda: db.session.add (node)) ()
     db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def node_delete (leafs=True, json=True):
 
     if not request.is_xhr:
@@ -179,7 +179,7 @@ class LeafApi (MethodView):
 
 rest.add_url_rule ('/leaf', view_func=LeafApi.as_view ('leafs'))
 
-@db.session.wrap ()
+@db.wrap ()
 def leaf_create (json=True):
 
     if not request.is_xhr:
@@ -285,7 +285,7 @@ def leaf_read (json=True):
     result = dict (success=True, results=leaf2exts, total=total)
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def leaf_update (json=True):
 
     if not request.is_xhr:
@@ -315,7 +315,7 @@ def leaf_update (json=True):
     if mime and leaf.mime != mime: leaf.mime = mime
     if name and leaf.name != name: leaf.name = name
 
-    db.session.nest (fn=lambda: db.session.add (leaf)) ()
+    db.nest (fn=lambda: db.session.add (leaf)) ()
     db.session.execute (select ([func.npt_delete_node (base.id, leaf.id)]))
     db.session.execute (select ([func.npt_insert_node (base.id, leaf.id)]))
     db.session.commit ()
@@ -323,7 +323,7 @@ def leaf_update (json=True):
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def leaf_delete (json=True):
 
     if not request.is_xhr:
@@ -353,7 +353,7 @@ class PropertyApi (MethodView):
 
 rest.add_url_rule ('/property', view_func=PropertyApi.as_view ('properties'))
 
-@db.session.wrap ()
+@db.wrap ()
 def property_create (json=True):
 
     if not request.is_xhr:
@@ -420,7 +420,7 @@ def property_read (json=True):
     result = dict (success=True, results=map (prop2ext, props))
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def property_update (json=True):
 
     if not request.is_xhr:
@@ -462,7 +462,7 @@ def property_update (json=True):
     result = dict (success=True, result=prop2ext (prop))
     return jsonify (result) if json else result
 
-@db.session.wrap ()
+@db.wrap ()
 def property_delete (json=True):
 
     if not request.is_xhr:
