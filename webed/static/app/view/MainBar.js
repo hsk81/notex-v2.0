@@ -5,7 +5,8 @@ Ext.define ('Webed.view.MainBar', {
     requires: [
         'Ext.button.Split',
         'Ext.container.ButtonGroup',
-        'Webed.view.UploadBox'
+        'Webed.view.UploadBox',
+        'Webed.view.DeleteBox'
     ],
 
     items: [{

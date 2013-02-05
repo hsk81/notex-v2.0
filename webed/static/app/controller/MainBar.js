@@ -233,43 +233,7 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     destroy: function () {
-        var node = this.get_selection ();
-        assert (node); if (node.isRoot ()) return;
-        var uuid = node.get ('uuid');
-        assert (uuid);
-
-        var application = this.application;
-        assert (application);
-
-        message.confirm ({
-            title: 'Delete',
-
-            msg: Ext.String.format (
-                'Are you sure, do you want to delete <i>{0}</i>?',
-                node.get ('name')
-            ),
-
-            scope: this, fn: function (button) {
-                if (button != 'yes') return;
-
-                function callback (rec, op) {
-                    if (rec && op && op.success) {
-                        application.fireEvent ('delete_tab', this, {
-                            record: rec
-                        });
-                        application.fireEvent ('reload_leaf', this, {
-                            record: rec
-                        });
-                    } else {
-                        console.error ('[MainBar.destroy]', rec, op);
-                    }
-                }
-
-                application.fireEvent ('delete_node', {
-                    scope: this, callback: callback, for: node
-                });
-            }
-        });
+        Ext.create ('Webed.view.DeleteBox').show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
