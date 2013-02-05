@@ -66,7 +66,7 @@ def file_upload ():
     @db.session.nest ()
     def create_leaf (name, root, mime):
 
-        if mime.lower () == 'text/plain':
+        if mime.lower ().startswith ('text'):
             leaf, _ = create_txt (name, root, mime, file=file)
         else:
             leaf, _ = create_bin (name, root, mime, file=file)
@@ -165,7 +165,7 @@ def create_prj (path, name, base):
 
         for fn in file_names:
             mime = guess_mime (cur_path, fn)
-            if mime and mime == 'text/plain':
+            if mime and mime.lower ().startswith ('text'):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
             else:
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
@@ -282,7 +282,7 @@ def compress (root):
         prop = Q (leaf.props).one (name='data')
         assert prop
 
-        if leaf.mime == 'text/plain':
+        if leaf.mime.lower ().startswith ('text'):
             data = prop.data.replace ('\n','\r\n').encode ('utf-8')
         else:
             data = base64.decodestring (prop.data.split (',')[1])
