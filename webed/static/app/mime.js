@@ -40,7 +40,7 @@ var MIME = function () {
     });
 
     function to_icon (mime, suffix) {
-        for (var key in map2icon) { //TODO: replace for (.. in ..)!?
+        for (var key in map2icon) {
             if (mime.match (key)) return map2icon[key] + (suffix ? suffix:'');
         } return null;
     }
@@ -57,12 +57,12 @@ var MIME = function () {
         '*': 'document'
     }
 
-    $.each (tmp2title, function (key, value) { //TODO: replace $.each!?
+    $.each (tmp2title, function (key, value) {
         map2title['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
     });
 
     function to_title (mime) {
-        for (var key in map2title) { //TODO: replace for (.. in ..)!?
+        for (var key in map2title) {
             if (mime.match (key)) return map2title[key];
         } return null;
     }
