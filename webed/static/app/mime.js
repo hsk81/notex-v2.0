@@ -39,6 +39,11 @@ var MIME = function () {
         map2icon['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
     });
 
+    /**
+     * TODO: Replace O(n) operation with O(1) to improve performance w.r.t. re-
+     *       gex matching!
+     */
+
     function to_icon (mime, suffix) {
         for (var key in map2icon) {
             if (mime.match (key)) return map2icon[key] + (suffix ? suffix:'');
@@ -60,6 +65,11 @@ var MIME = function () {
     $.each (tmp2title, function (key, value) {
         map2title['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
     });
+
+    /**
+     * TODO: Replace O(n) operation with O(1) to improve performance w.r.t. re-
+     *       gex matching!
+     */
 
     function to_title (mime) {
         for (var key in map2title) {
