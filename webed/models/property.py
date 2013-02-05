@@ -10,10 +10,13 @@ from sqlalchemy import event
 from uuid import uuid4 as uuid_random
 from node import Node
 
+from ..app import app
 from ..ext.db import db
 from ..ext.cache import cache, object_cache
+
 from .polymorphic import Polymorphic
 
+import os
 import base64
 
 ###############################################################################
@@ -220,15 +223,14 @@ class BinaryProperty (Property):
         self._size = len (value)
 
         if not object_cache.exists (value_key):
+            value = 'data:%s;base64,%s' % (self._mime, base64.encodestring (
+                value))
 
-            ##
-            ## TODO: Save data *also* to file system based backend **and** use
-            ##       `object-cache`, but do *not* cache forever but simply with
-            ##       the default timeout!
-            ##
-
-            object_cache.set_value (value_key, 'data:%s;base64,%s' % (
-                self._mime, base64.encodestring (value)), object_cache.NEVER)
+            path_to = os.path.join (app.config['FS_DATA'], value_key)
+            with open (path_to, 'w') as file: file.write (value)
+            object_cache.set_value (value_key, value)
+        else:
+            object_cache.expire (value_key) ## refresh
 
         version_key = object_cache.make_key (value_key)
         version = object_cache.increase (version_key)
@@ -236,13 +238,13 @@ class BinaryProperty (Property):
 
     def get_data (self):
 
-        ##
-        ## TODO: (1) Try to lookup from `object-cache`, if not possible then
-        ##       (2) lookup from file system based backend;
-        ##       (3) if step (2) executed, then refresh `object-cache`!
-        ##
+        value = object_cache.get_value (key=self._data)
+        if value is None:
+            path_to = os.path.join (app.config['FS_DATA'], self._data)
+            with open (path_to, 'r') as file: value = file.read ()
+            object_cache.set_value (self._data, value)
 
-        return object_cache.get_value (key=self._data)
+        return value
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
@@ -250,13 +252,12 @@ class BinaryProperty (Property):
     @staticmethod
     def on_delete (mapper, connection, target):
 
-        ##
-        ## TODO: Remove *also* file system backend entry (unlink file)!
-        ##
-
         version_key = object_cache.make_key (target._data)
         version = object_cache.decrease (key=version_key)
-        if version == 0: object_cache.delete (key=target._data)
+        if version <= 0:
+            path_to = os.path.join (app.config['FS_DATA'], target._data)
+            if os.path.exists (path_to): os.unlink (path_to)
+            object_cache.delete (key=target._data)
 
     @classmethod
     def register (cls):

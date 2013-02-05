@@ -48,6 +48,14 @@ class DefaultConfig:
     ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 
     ##
+    ## FS_ROOT is the root path for the file system backend, whereas FS_DATA
+    ## point to the data part of it.
+    ##
+
+    FS_ROOT = os.path.join (os.path.sep, 'var', 'lib', 'webed')
+    FS_DATA = os.path.join (FS_ROOT, 'data')
+
+    ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since
     ## it can be quite annoying it has been disabled.
     ##
