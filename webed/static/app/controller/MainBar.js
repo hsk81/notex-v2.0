@@ -233,7 +233,18 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     destroy: function () {
-        Ext.create ('Webed.view.DeleteBox').show ();
+        var node = this.get_selection ();
+        assert (node);
+
+        if (!node.isRoot ()) {
+            var deleteBox = Ext.create ('Webed.view.DeleteBox', {
+                title: Ext.String.format ('Delete {0}', node.getTitle (true)),
+                iconCls: node.get ('iconCls'),
+                node: node
+            });
+
+            deleteBox.show ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -244,7 +255,9 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     exportProject: function (button) {
-        var node = this.get_selection (); assert (node);
+        var node = this.get_selection ();
+        assert (node);
+
         while (node.parentNode != null && node.parentNode.parentNode != null) {
             node = node.parentNode;
         }

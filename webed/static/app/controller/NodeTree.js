@@ -184,9 +184,9 @@ Ext.define ('Webed.controller.NodeTree', {
         var node = {
             root_uuid: args.with.root.get ('uuid'),
             uuid: args.with.uuid||UUID.random (),
-            uuid_path: args.with.root.get ('uuid_path'),
+            uuid_path: args.with.root.get ('uuid_path').slice (0),
             name: args.with.name,
-            name_path: args.with.root.get ('name_path'),
+            name_path: args.with.root.get ('name_path').slice (0),
             mime: args.with.mime,
             size: args.with.size||0
         }
