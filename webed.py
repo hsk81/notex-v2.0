@@ -3,12 +3,15 @@
 ###############################################################################
 ###############################################################################
 
-from webed.app import app
-from webed.ext import db, cache
-from webed.util import Q
-from webed.models import User
-
 from flask.ext.script import Manager, Command, Option
+
+from webed.util import Q
+from webed.app import app
+from webed.models import User
+from webed.ext import db, cache
+
+import os
+import shutil
 
 ###############################################################################
 ###############################################################################
@@ -80,6 +83,10 @@ class CacheClear (Command):
     """Clear cache to delete *all* keys"""
 
     def run (self):
+
+        path = app.config['FS_CACHE']
+        if os.path.exists (path): shutil.rmtree (path)
+        os.mkdir (path)
 
         cache.flush_all ()
 

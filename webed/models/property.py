@@ -226,7 +226,7 @@ class BinaryProperty (Property):
             value = 'data:%s;base64,%s' % (self._mime, base64.encodestring (
                 value))
 
-            path_to = os.path.join (app.config['FS_DATA'], value_key)
+            path_to = os.path.join (app.config['FS_CACHE'], value_key)
             with open (path_to, 'w') as file: file.write (value)
             object_cache.set_value (value_key, value)
         else:
@@ -240,7 +240,7 @@ class BinaryProperty (Property):
 
         value = object_cache.get_value (key=self._data)
         if value is None:
-            path_to = os.path.join (app.config['FS_DATA'], self._data)
+            path_to = os.path.join (app.config['FS_CACHE'], self._data)
             with open (path_to, 'r') as file: value = file.read ()
             object_cache.set_value (self._data, value)
 

@@ -53,7 +53,7 @@ class DefaultConfig:
     ##
 
     FS_ROOT = os.path.join (os.path.sep, 'var', 'lib', 'webed')
-    FS_DATA = os.path.join (FS_ROOT, 'data')
+    FS_CACHE = os.path.join (FS_ROOT, 'cache')
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since
