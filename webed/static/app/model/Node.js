@@ -10,27 +10,16 @@ Ext.define ('Webed.model.Node', {
         }
     },
 
-    isProject: function () {
-        var mime = this.get ('mime'); return (mime)
-            ? mime.match (/^application\/project/) : false;
-    },
-
-    isFolder: function () {
-        var mime = this.get ('mime'); return (mime)
-            ? mime.match (/^application\/folder/) : false;
-    },
-
     getTitle: function (capitalize) {
-        var title = (function (node) {
-            if (node.isProject ()) return 'Project';
-            else if (node.isFolder ()) return 'Folder';
-            else return 'Document';
-        })(this);
+        var mime = this.get ('mime');
+        assert (mime);
+        var title = MIME.to_title (mime);
+        assert (title);
 
         if (capitalize) {
-            return title;
+            return title.slice (0,1).toUpperCase () + title.slice (1);
         } else {
-            return title.toLowerCase ();
+            return title;
         }
     }
 });
