@@ -30,7 +30,7 @@ class WebedOrm (SQLAlchemy):
 
         db.session.execute (sql)
 
-    def wrap (self, fn=None, unless=None, lest=None):
+    def commit (self, fn=None, unless=None, lest=None):
 
         def decorator (fn):
             @functools.wraps (fn)

@@ -66,7 +66,7 @@ class SessionManager:
 ###############################################################################
 ###############################################################################
 
-@db.wrap ()
+@db.commit ()
 def setup_session ():
     base = setup_session_base ()
     assert base and base.id

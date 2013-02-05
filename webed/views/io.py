@@ -38,7 +38,7 @@ io = Blueprint ('io', __name__)
 ###############################################################################
 
 @io.route ('/file-upload/', methods=['POST'])
-@db.wrap ()
+@db.commit ()
 def file_upload ():
 
     if not request.is_xhr:
@@ -63,7 +63,7 @@ def file_upload ():
     mime = file.mimetype
     assert mime
 
-    @db.wrap ()
+    @db.commit ()
     def create_leaf (name, root, mime):
 
         if mime.lower ().startswith ('text'):
@@ -83,7 +83,7 @@ def file_upload ():
 ###############################################################################
 
 @io.route ('/archive-upload/', methods=['POST'])
-@db.wrap (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
+@db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
 def archive_upload (file=None, base=None, skip_commit=None):
     file = file if file else request.files['file']
 
@@ -151,7 +151,7 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-@db.wrap ()
+@db.commit ()
 def create_prj (path, name, base):
     cache = {path: base}
 
