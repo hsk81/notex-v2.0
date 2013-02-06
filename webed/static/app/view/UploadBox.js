@@ -48,12 +48,10 @@ Ext.define ('Webed.view.FileUploadBox', {
             xtype: 'filefield',
             vtype: 'file',
             allowBlank: false,
-            name: 'file',
-            emptyText: 'Select file ..',
             buttonText: '',
-            buttonConfig: {
-                iconCls: 'icon-folder-16'
-            }
+            buttonConfig: {iconCls: 'icon-folder-16'},
+            emptyText: 'Select file ..',
+            name: 'file'
         }]
     }]
 });
@@ -81,12 +79,10 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
             xtype: 'filefield',
             vtype: 'zipArchive',
             allowBlank: false,
-            name: 'file',
-            emptyText: 'Select ZIP archive ..',
             buttonText: '',
-            buttonConfig: {
-                iconCls: 'icon-folder-16'
-            }
+            buttonConfig: {iconCls: 'icon-folder-16'},
+            emptyText: 'Select ZIP archive ..',
+            name: 'file'
         }]
     }]
 });
