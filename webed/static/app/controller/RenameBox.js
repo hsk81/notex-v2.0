@@ -38,7 +38,7 @@ Ext.define ('Webed.controller.RenameBox', {
         var textfield = view.down ('textfield');
         assert (textfield);
 
-        textfield.focus (true, 250);
+        textfield.focus (true, 125);
     },
 
     show: function () {
