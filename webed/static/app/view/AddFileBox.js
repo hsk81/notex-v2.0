@@ -7,7 +7,7 @@ Ext.define ('Webed.view.AddFileBox', {
     ],
 
     border: false,
-    iconCls: 'icon-page_white-16',
+    iconCls: 'icon-page_white_add-16',
     layout: 'fit',
     modal: true,
     resizable: false,
