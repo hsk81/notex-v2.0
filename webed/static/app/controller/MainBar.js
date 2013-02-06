@@ -21,8 +21,8 @@ Ext.define ('Webed.controller.MainBar', {
             'main-bar menuitem[action=add-folder]': {
                 click: this.addFolder
             },
-            'main-bar menuitem[action=add-text]': {
-                click: this.addText
+            'main-bar menuitem[action=add-file]': {
+                click: this.addFile
             },
             'main-bar button[action=rename]': {
                 click: this.rename
@@ -116,56 +116,15 @@ Ext.define ('Webed.controller.MainBar', {
         addFolderBox.show ();
     },
 
-    addText: function () {
-        var root = this.get_selection ();
-        assert (root);
+    addFile: function () {
+        var node = this.get_selection ();
+        assert (node);
 
-        if (root.get ('leaf')) {
-            assert (root.parentNode);
-            root = root.parentNode;
-        }
-
-        var application = this.application;
-        assert (application);
-
-        message.prompt ({
-            title: 'Add Text', msg: 'Enter a name:', value: 'file.txt',
-            scope: this, callback: function (button, text) {
-                if (button != 'ok'||!text) return;
-
-                function callback (leaf, op) {
-                    if (leaf && op && op.success) {
-                        function on_set (prop, op) {
-                            if (!prop||!op||!op.success) {
-                                console.error ('[MainBar.addText]', prop, op);
-                            }
-                        }
-
-                        application.fireEvent ('set_property', this, {
-                            scope: this, callback: on_set, property: [{
-                                node_uuid: leaf.get ('uuid'),
-                                name: 'data',
-                                data: '....',
-                                size: 4,
-                                mime: 'text/plain',
-                                type: 'TextProperty'
-                            }]
-                        });
-                    } else {
-                        console.error ('[MainBar.addText]', leaf, op);
-                    }
-                }
-
-                application.fireEvent ('create_leaf', {
-                    scope: this, callback: callback, with: {
-                        root: root,
-                        mime: 'text/plain',
-                        name: text,
-                        size: 4
-                    }
-                });
-            }
+        var addFileBox = Ext.create ('Webed.view.AddFileBox', {
+            node: node
         });
+
+        addFileBox.show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////

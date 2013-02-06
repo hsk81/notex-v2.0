@@ -8,7 +8,8 @@ Ext.define ('Webed.view.MainBar', {
         'Webed.view.UploadBox',
         'Webed.view.DeleteBox',
         'Webed.view.RenameBox',
-        'Webed.view.AddFolderBox'
+        'Webed.view.AddFolderBox',
+        'Webed.view.AddFileBox'
     ],
 
     items: [{
@@ -54,9 +55,9 @@ Ext.define ('Webed.view.MainBar', {
                     text : 'Folder',
                     action: 'add-folder'
                 },{
-                    iconCls : 'icon-page-16',
-                    text : 'Plain Text',
-                    action: 'add-text'
+                    iconCls : 'icon-page_white-16',
+                    text : 'Document',
+                    action: 'add-file'
                 }]
             }
         },{

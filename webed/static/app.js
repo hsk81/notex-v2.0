@@ -31,7 +31,8 @@ Ext.application ({
         'ArchiveUploadBox',
         'DeleteBox',
         'RenameBox',
-        'AddFolderBox'
+        'AddFolderBox',
+        'AddFileBox'
     ],
 
     paths: {
