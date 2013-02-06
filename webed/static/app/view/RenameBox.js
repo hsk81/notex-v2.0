@@ -29,7 +29,7 @@ Ext.define ('Webed.view.RenameBox', {
 
     buttons: [{
         text: 'Rename',
-        iconCls: 'icon-pencil-16',
+        iconCls: 'icon-tick-16',
         action: 'confirm'
     },{
         text: 'Cancel',
