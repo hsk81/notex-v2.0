@@ -14,10 +14,10 @@ Ext.define ('Webed.controller.FileUploadBox', {
     init: function () {
         this.control ({
             'file-upload-box button[action=confirm]': {
-                click: this.confirmUpload
+                click: this.confirm
             },
             'file-upload-box button[action=cancel]': {
-                click: this.cancelUpload
+                click: this.cancel
             },
             'file-upload-box form filefield': {
                 change: this.change

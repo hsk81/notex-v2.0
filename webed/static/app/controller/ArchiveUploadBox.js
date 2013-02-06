@@ -14,10 +14,10 @@ Ext.define ('Webed.controller.ArchiveUploadBox', {
     init: function () {
         this.control ({
             'archive-upload-box button[action=confirm]': {
-                click: this.confirmUpload
+                click: this.confirm
             },
             'archive-upload-box button[action=cancel]': {
-                click: this.cancelUpload
+                click: this.cancel
             },
             'archive-upload-box form filefield': {
                 change: this.change

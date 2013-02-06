@@ -24,7 +24,7 @@ Ext.define ('Webed.controller.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    confirmUpload: function () {
+    confirm: function () {
         var view = this.getUploadBox ();
         assert (view);
         var panel = view.down ('form');
@@ -64,7 +64,7 @@ Ext.define ('Webed.controller.UploadBox', {
         }
     },
 
-    cancelUpload: function () {
+    cancel: function () {
         var view = this.getUploadBox ();
         assert (view); view.destroy ();
     }
