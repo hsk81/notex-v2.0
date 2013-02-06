@@ -64,6 +64,10 @@ Ext.define ('Webed.controller.RenameBox', {
         var node = view.node;
         assert (node);
 
+        if (!textfield.isValid ()) {
+            return;
+        }
+
         function callback (rec, op) {
             if (rec && op && op.success) {
                 application.fireEvent ('rename_tab', this, {
