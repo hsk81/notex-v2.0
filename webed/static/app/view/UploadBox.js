@@ -26,7 +26,7 @@ Ext.define ('Webed.view.UploadBox', {
 });
 
 Ext.apply (Ext.form.field.VTypes, {
-    fileText: "File expected",
+    fileText: "Document expected",
     fileMask: /\w\d\s\./i,
     file: function (value, field) {
         return /^.+$/i.test (value);
@@ -37,7 +37,7 @@ Ext.define ('Webed.view.FileUploadBox', {
     extend: 'Webed.view.UploadBox',
     alias: 'widget.file-upload-box',
     iconCls: 'icon-folder_page-16',
-    title: 'Upload File',
+    title: 'Upload Document',
 
     items: [{
         xtype: 'form',
@@ -50,7 +50,7 @@ Ext.define ('Webed.view.FileUploadBox', {
             allowBlank: false,
             buttonText: '',
             buttonConfig: {iconCls: 'icon-folder-16'},
-            emptyText: 'Select file ..',
+            emptyText: 'Select document ..',
             name: 'file'
         }]
     }]
