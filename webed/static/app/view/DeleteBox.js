@@ -22,6 +22,7 @@ Ext.define ('Webed.view.DeleteBox', {
         items: [{
             xtype: 'textfield',
             readOnly: true,
+            tabIndex: -1,
             width: '100%'
         }]
     }],

@@ -21,9 +21,9 @@ Ext.define ('Webed.view.RenameBox', {
 
         items: [{
             xtype: 'textfield',
-            width: '100%',
             allowBlank: false,
-            enableKeyEvents: true
+            enableKeyEvents: true,
+            width: '100%'
         }]
     }],
 
