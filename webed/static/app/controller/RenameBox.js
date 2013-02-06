@@ -20,13 +20,13 @@ Ext.define ('Webed.controller.RenameBox', {
                 click: this.cancel
             },
             'rename-box textfield': {
+                afterrender: this.afterrender,
                 keypress: this.keypress,
                 keydown: this.keydown,
                 focus: this.focus,
                 blur: this.blur
             },
             'rename-box': {
-                afterrender: this.afterrender,
                 show: this.show
             }
         });
@@ -55,14 +55,12 @@ Ext.define ('Webed.controller.RenameBox', {
         if (textfield.autofocus) textfield.focus (true, 25);
     },
 
-    afterrender: function () {
-        var view = this.getRenameBox ();
-        assert (view);
-        var textfield = view.down ('textfield');
-        assert (textfield);
-
+    afterrender: function (textfield) {
         textfield.focus (true, 25);
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     show: function () {
         var view = this.getRenameBox ();
