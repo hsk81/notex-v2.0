@@ -5,11 +5,12 @@ Ext.define ('Webed.view.MainBar', {
     requires: [
         'Ext.button.Split',
         'Ext.container.ButtonGroup',
-        'Webed.view.UploadBox',
+        'Webed.view.AddFileBox',
+        'Webed.view.AddFolderBox',
+        'Webed.view.AddProjectBox',
         'Webed.view.DeleteBox',
         'Webed.view.RenameBox',
-        'Webed.view.AddFolderBox',
-        'Webed.view.AddFileBox'
+        'Webed.view.UploadBox'
     ],
 
     items: [{

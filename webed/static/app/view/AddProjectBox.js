@@ -1,17 +1,17 @@
-Ext.define ('Webed.view.AddFileBox', {
+Ext.define ('Webed.view.AddProjectBox', {
     extend: 'Ext.window.Window',
-    alias: 'widget.add-file-box',
+    alias: 'widget.add-project-box',
 
     requires: [
         'Ext.form.Panel'
     ],
 
     border: false,
-    iconCls: 'icon-page_white_add-16',
+    iconCls: 'icon-report_add-16',
     layout: 'fit',
     modal: true,
     resizable: false,
-    title: 'Add Document',
+    title: 'Add Project',
     width: 320,
 
     items: [{
@@ -24,7 +24,7 @@ Ext.define ('Webed.view.AddFileBox', {
             xtype: 'textfield',
             allowBlank: false,
             enableKeyEvents: true,
-            emptyText: 'Enter document name ..',
+            emptyText: 'Enter project name ..',
             width: '100%'
         }]
     }],

@@ -80,29 +80,14 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addProject: function () {
-        var root = Ext.getStore ('Nodes').getRootNode ();
-        assert (root);
+        var node = Ext.getStore ('Nodes').getRootNode ();
+        assert (node);
 
-        message.prompt ({
-            title: 'Add Project', msg: 'Enter a name:', value: 'Project',
-            scope: this, callback: function (button, text) {
-                if (button != 'ok' || !text) return;
-
-                function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
-                        console.error ('[MainBar.addProject]', rec, op);
-                    }
-                }
-
-                this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, with: {
-                        root: root,
-                        mime: 'application/project',
-                        name: text
-                    }
-                });
-            }
+        var addProjectBox = Ext.create ('Webed.view.AddProjectBox', {
+            node: node
         });
+
+        addProjectBox.show ();
     },
 
     addFolder: function () {

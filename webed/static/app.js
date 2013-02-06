@@ -18,21 +18,22 @@ Ext.application ({
     stores: ['Nodes', 'Leafs', 'Properties'],
 
     controllers: [
-        'Property',
-        'PropertyGrid',
-        'Node',
-        'NodeTree',
+        'AddFileBox',
+        'AddFolderBox',
+        'AddProjectBox',
+        'ArchiveUploadBox',
+        'ContentTabs',
+        'DeleteBox',
+        'FileUploadBox',
         'Leaf',
         'LeafList',
         'MainBar',
-        'ContentTabs',
-        'StatusBar',
-        'FileUploadBox',
-        'ArchiveUploadBox',
-        'DeleteBox',
+        'Node',
+        'NodeTree',
+        'Property',
+        'PropertyGrid',
         'RenameBox',
-        'AddFolderBox',
-        'AddFileBox'
+        'StatusBar'
     ],
 
     paths: {
