@@ -29,7 +29,8 @@ Ext.application ({
         'StatusBar',
         'FileUploadBox',
         'ArchiveUploadBox',
-        'DeleteBox'
+        'DeleteBox',
+        'RenameBox'
     ],
 
     paths: {

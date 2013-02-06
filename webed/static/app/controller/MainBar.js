@@ -193,40 +193,17 @@ Ext.define ('Webed.controller.MainBar', {
 
     rename: function () {
         var node = this.get_selection ();
-        assert (node); if (node.isRoot ()) return;
-        var uuid = node.get ('uuid');
-        assert (uuid);
+        assert (node);
 
-        var application = this.application;
-        assert (application);
+        if (!node.isRoot ()) {
+            var renameBox = Ext.create ('Webed.view.RenameBox', {
+                title: Ext.String.format ('Rename {0}', node.getTitle (true)),
+                iconCls: node.get ('iconCls'),
+                node: node
+            });
 
-        message.prompt ({
-            title: 'Rename', value: node.get ('name'),
-            scope: this, fn: function (button, text) {
-                if (button!='ok' || text==node.get ('name') || text=='') {
-                    return;
-                }
-
-                function callback (rec, op) {
-                    if (rec && op && op.success) {
-                        application.fireEvent ('rename_tab', this, {
-                            record: rec
-                        });
-                        application.fireEvent ('reload_leaf', this, {
-                            record: rec
-                        });
-                    } else {
-                        console.error ('[MainBar.rename]', rec, op);
-                    }
-                }
-
-                application.fireEvent ('update_node', {
-                    scope: this, callback: callback, for: node, to: {
-                        name: text
-                    }
-                });
-            }
-        });
+            renameBox.show ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
