@@ -24,7 +24,7 @@ Ext.define ('Webed.view.AddFolderBox', {
             xtype: 'textfield',
             allowBlank: false,
             enableKeyEvents: true,
-            emptyText: 'enter name',
+            emptyText: 'Enter name ..',
             width: '100%'
         }]
     }],
