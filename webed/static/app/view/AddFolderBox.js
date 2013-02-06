@@ -18,7 +18,7 @@ Ext.define ('Webed.view.AddFolderBox', {
         xtype: 'form',
         layout: 'fit',
         width: '100%',
-        bodyPadding: '4',
+        bodyPadding: '4px',
 
         items: [{
             xtype: 'textfield',

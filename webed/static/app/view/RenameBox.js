@@ -17,7 +17,7 @@ Ext.define ('Webed.view.RenameBox', {
     items: [{
         xtype: 'form',
         layout: 'fit',
-        bodyPadding: '4',
+        bodyPadding: '4px',
 
         items: [{
             xtype: 'textfield',

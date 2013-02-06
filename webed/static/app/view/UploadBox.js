@@ -42,7 +42,7 @@ Ext.define ('Webed.view.FileUploadBox', {
     items: [{
         xtype: 'form',
         layout: 'fit',
-        bodyPadding: '4',
+        bodyPadding: '4px',
 
         items: [{
             xtype: 'filefield',
@@ -73,7 +73,7 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
     items: [{
         xtype: 'form',
         layout: 'fit',
-        bodyPadding: '4',
+        bodyPadding: '4px',
 
         items: [{
             xtype: 'filefield',
