@@ -13,9 +13,18 @@ Ext.define ('Webed.controller.RenameBox', {
 
     init: function () {
         this.control ({
-            'rename-box button[action=confirm]': {click: this.confirm},
-            'rename-box button[action=cancel]': {click: this.cancel},
-            'rename-box textfield': {keypress: this.keypress},
+            'rename-box button[action=confirm]': {
+                click: this.confirm
+            },
+            'rename-box button[action=cancel]': {
+                click: this.cancel
+            },
+            'rename-box textfield': {
+                keypress: this.keypress,
+                keydown: this.keydown,
+                focus: this.focus,
+                blur: this.blur
+            },
             'rename-box': {
                 afterrender: this.afterrender,
                 show: this.show
@@ -26,10 +35,24 @@ Ext.define ('Webed.controller.RenameBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    keydown: function (textfield, event) {
+        if (event.getCharCode () == Ext.EventObject.TAB) {
+            textfield.autofocus = false;
+        }
+    },
+
     keypress: function (textfield, event) {
-        if (event.getCharCode() == Ext.EventObject.ENTER) {
+        if (event.getCharCode () == Ext.EventObject.ENTER) {
             this.confirm ();
         }
+    },
+
+    focus: function (textfield, event) {
+        textfield.autofocus = true;
+    },
+
+    blur: function (textfield, event) {
+        if (textfield.autofocus) textfield.focus (true, 25);
     },
 
     afterrender: function () {
@@ -38,7 +61,7 @@ Ext.define ('Webed.controller.RenameBox', {
         var textfield = view.down ('textfield');
         assert (textfield);
 
-        textfield.focus (true, 125);
+        textfield.focus (true, 25);
     },
 
     show: function () {
