@@ -15,6 +15,7 @@ Ext.define ('Webed.controller.RenameBox', {
         this.control ({
             'rename-box button[action=confirm]': {click: this.confirm},
             'rename-box button[action=cancel]': {click: this.cancel},
+            'rename-box textfield': {keypress: this.keypress},
             'rename-box': {
                 afterrender: this.afterrender,
                 show: this.show
@@ -25,13 +26,19 @@ Ext.define ('Webed.controller.RenameBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    keypress: function (textfield, event) {
+        if (event.getCharCode() == Ext.EventObject.ENTER) {
+            this.confirm ();
+        }
+    },
+
     afterrender: function () {
         var view = this.getRenameBox ();
         assert (view);
         var textfield = view.down ('textfield');
         assert (textfield);
 
-        textfield.focus (true, 100);
+        textfield.focus (true, 250);
     },
 
     show: function () {
