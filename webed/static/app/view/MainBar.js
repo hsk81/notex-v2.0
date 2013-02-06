@@ -7,7 +7,8 @@ Ext.define ('Webed.view.MainBar', {
         'Ext.container.ButtonGroup',
         'Webed.view.UploadBox',
         'Webed.view.DeleteBox',
-        'Webed.view.RenameBox'
+        'Webed.view.RenameBox',
+        'Webed.view.AddFolderBox'
     ],
 
     items: [{

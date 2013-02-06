@@ -106,34 +106,14 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addFolder: function () {
-        var root = this.get_selection ();
-        assert (root);
+        var node = this.get_selection ();
+        assert (node);
 
-        if (root.isLeaf ()) {
-            assert (root.parentNode);
-            root = root.parentNode;
-        }
-
-        message.prompt ({
-            title: 'Add Folder', msg: 'Enter a name:', value: 'folder',
-            scope: this, callback: function (button, text) {
-                if (button != 'ok'||!text) return;
-
-                function callback (rec, op) {
-                    if (!rec||!op||!op.success) {
-                        console.error ('[MainBar.addFolder]', rec, op);
-                    }
-                }
-
-                this.application.fireEvent ('create_node', {
-                    scope: this, callback: callback, with: {
-                        root: root,
-                        mime: 'application/folder',
-                        name: text
-                    }
-                });
-            }
+        var addFolderBox = Ext.create ('Webed.view.AddFolderBox', {
+            node: node
         });
+
+        addFolderBox.show ();
     },
 
     addText: function () {
