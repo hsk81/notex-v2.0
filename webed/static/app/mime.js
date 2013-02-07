@@ -103,10 +103,7 @@ var MIME = function () {
         is_text: is_text,
         is_image: is_image,
         to_icon: to_icon,
-        to_title: to_title,
-
-        m2i: function () { return map2icon; },
-        m2i_cache: function () { return map2icon_cache; }
+        to_title: to_title
     };
 
     ///////////////////////////////////////////////////////////////////////////
