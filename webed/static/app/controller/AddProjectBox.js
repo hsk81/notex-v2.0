@@ -19,11 +19,8 @@ Ext.define ('Webed.controller.AddProjectBox', {
             'add-project-box button[action=cancel]': {
                 click: this.cancel
             },
-            'add-project-box textfield': {
+            'add-project-box textfield[name=name]': {
                 afterrender: this.afterrender,
-                keypress: this.keypress,
-                keydown: this.keydown,
-                focus: this.focus,
                 blur: this.blur
             }
         });
@@ -32,27 +29,15 @@ Ext.define ('Webed.controller.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    keydown: function (textfield, event) {
-        if (event.getCharCode () == Ext.EventObject.TAB) {
+    blur: function (textfield, event) {
+        if (textfield.autofocus) {
+            textfield.focus (true, 25);
             textfield.autofocus = false;
         }
     },
 
-    keypress: function (textfield, event) {
-        if (event.getCharCode () == Ext.EventObject.ENTER) {
-            this.confirm ();
-        }
-    },
-
-    focus: function (textfield, event) {
-        textfield.autofocus = true;
-    },
-
-    blur: function (textfield, event) {
-        if (textfield.autofocus) textfield.focus (true, 25);
-    },
-
     afterrender: function (textfield) {
+        textfield.autofocus = true;
         textfield.focus (true, 25);
     },
 
@@ -64,14 +49,16 @@ Ext.define ('Webed.controller.AddProjectBox', {
         assert (application);
         var view = this.getAddProjectBox ();
         assert (view);
-        var textfield = view.down ('textfield');
-        assert (textfield);
         var node = view.node;
         assert (node);
 
-        if (!textfield.isValid ()) {
-            return;
-        }
+        var textfield = view.down ('textfield[name=name]');
+        assert (textfield);
+        var combobox = view.down ('combobox[name=mime]');
+        assert (combobox);
+
+        if (!textfield.isValid ()) return;
+        if (!combobox.isValid ()) return;
 
         function callback (rec, op) {
             if (!rec||!op||!op.success) {
@@ -81,7 +68,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
 
         this.application.fireEvent ('create_node', {
             scope: this, callback: callback, with: {
-                mime: 'application/project',
+                mime: combobox.getValue (),
                 name: textfield.getValue (),
                 root: node
             }
