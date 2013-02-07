@@ -9,10 +9,10 @@ Ext.define ('Webed.view.LeafList', {
     ],
 
     columns: [{
-        flex: 2,
-        text: 'Path',
         dataIndex: 'name_path',
+        flex: 5,
         sortable: true,
+        text: 'Path',
         renderer: function (value, meta, record) {
             if (value) {
                 if (value.length > 1) value = value.slice (1);
@@ -22,11 +22,11 @@ Ext.define ('Webed.view.LeafList', {
             }
         }
     },{
-        flex: 2,
-        text: 'Name',
         dataIndex: 'name',
+        flex: 5,
         hidden: true,
         sortable: true,
+        text: 'Name',
         renderer: function (value, meta, record) {
             var path = record.get ('name_path');
             if (path)  {
@@ -36,13 +36,19 @@ Ext.define ('Webed.view.LeafList', {
             return value;
         }
     },{
-        flex: 1,
-        text: 'Size',
+        dataIndex: 'mime',
+        flex: 4,
+        hidden: true,
+        text: 'Mime',
+        sortable: true
+    },{
+        align: 'right',
         dataIndex: 'size',
-        xtype: 'numbercolumn',
+        flex: 2,
         renderer: Ext.util.Format.fileSize,
         sortable: false,
-        align: 'right'
+        text: 'Size',
+        xtype: 'numbercolumn'
     }],
 
     dockedItems: [{
