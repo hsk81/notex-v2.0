@@ -25,6 +25,7 @@ Ext.define ('Webed.view.AddFileBox', {
             allowBlank: false,
             enableKeyEvents: true,
             emptyText: 'Enter document name ..',
+            value: 'file.txt',
             width: '100%'
         }]
     }],
