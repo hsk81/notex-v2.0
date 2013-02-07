@@ -10,7 +10,7 @@ from flask.globals import request
 
 from ..app import app
 from ..ext import db, object_cache, logger
-from ..util import Q, JSON, jsonify
+from ..util import Q, JSON
 
 from ..models import Node
 from ..models import Leaf
@@ -84,7 +84,7 @@ def file_upload ():
 
 @io.route ('/archive-upload/', methods=['POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def archive_upload (file=None, base=None, skip_commit=None):
+def archive_upload (file=None, base=None, skip_commit=None, json=True):
     file = file if file else request.files['file']
 
     if not file:
@@ -119,7 +119,11 @@ def archive_upload (file=None, base=None, skip_commit=None):
         for node in nodes: db.session.execute (
             select ([func.npt_insert_node (base.id, node.id)]))
 
-    return JSON.encode (dict (success=True, filename=file.filename))
+    if not json:
+        return dict (success=True, filename=file.filename, nodes=nodes)
+    else:
+        return JSON.encode (dict (success=True, filename=file.filename,
+            nodes=map (lambda node:node.uuid, nodes)))
 
 ###############################################################################
 
@@ -254,10 +258,10 @@ def archive_download (chunk_size = 256*1024):
             response.headers ['Content-Disposition'] = \
                 'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
         else:
-            response = jsonify (success=True, name=node.name)
+            response = JSON.encode (dict (success=True, name=node.name))
             object_cache.expire (archive_key, expiry=60) ## refresh
     else:
-        response = jsonify (success=True, name=node.name)
+        response = JSON.encode (dict (success=True, name=node.name))
         object_cache.set_value (archive_key, compress (node), expiry=60) ##[s]
 
     return response

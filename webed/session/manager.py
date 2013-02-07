@@ -92,6 +92,8 @@ def setup_session ():
                 except Exception, ex:
                     logger.exception (ex) ## no re-raise!
 
+        break ## check only first level
+
     db.session.execute (select ([func.npt_delete_base (base.id)]))
     db.session.execute (select ([func.npt_insert_base (base.id)]))
     return base.uuid
