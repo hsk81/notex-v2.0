@@ -25,6 +25,7 @@ Ext.define ('Webed.view.LeafList', {
         flex: 2,
         text: 'Name',
         dataIndex: 'name',
+        hidden: true,
         sortable: true,
         renderer: function (value, meta, record) {
             var path = record.get ('name_path');
@@ -33,7 +34,7 @@ Ext.define ('Webed.view.LeafList', {
                 meta.tdAttr = 'data-qtip="' + path.join ('/') + '"';
             }
             return value;
-        }, hidden: true
+        }
     },{
         flex: 1,
         text: 'Size',
