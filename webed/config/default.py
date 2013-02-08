@@ -30,6 +30,7 @@ class DefaultConfig:
     CACHE1_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
+    NIX_FILE = os.path.join (os.sep, 'tmp', 'webed-wsgi.sock')
 
     ##
     ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who
