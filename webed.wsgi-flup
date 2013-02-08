@@ -13,7 +13,8 @@ import os
 
 if __name__ == '__main__':
 
-    path = '/tmp/webed-wsgi.sock'; os.remove (path)
+    path = '/tmp/webed-wsgi.sock'
+    if os.path.exists (path): os.remove (path)
     WSGIServer (app, bindAddress=path).run ()
 
 ###############################################################################
