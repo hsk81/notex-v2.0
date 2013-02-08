@@ -199,8 +199,8 @@ Ext.define ('Webed.controller.MainBar', {
             form.dom.submit ();
         }
 
-        function onFailure (xhr, opts, res) {
-            console.error ('[MainBar.exportProject]', xhr, opts, res)
+        function onFailure (xhr, opts) {
+            console.error ('[MainBar.exportProject]', xhr, opts);
         }
 
         Ext.Ajax.request ({
@@ -208,7 +208,7 @@ Ext.define ('Webed.controller.MainBar', {
                 if (status) {
                     var res = Ext.decode (xhr.responseText);
                     if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts, res);
+                    else onFailure (xhr, opts);
                 } else {
                     onFailure (xhr, opts);
                 }
