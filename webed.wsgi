@@ -6,12 +6,15 @@
 from flup.server.fcgi import WSGIServer
 from webed.app import app
 
+import os
+
 ###############################################################################
 ###############################################################################
 
 if __name__ == '__main__':
 
-    WSGIServer (app, bindAddress='/tmp/webed-fcgi.sock').run ()
+    path = '/tmp/webed-wsgi.sock'; os.remove (path)
+    WSGIServer (app, bindAddress=path).run ()
 
 ###############################################################################
 ###############################################################################

@@ -28,6 +28,8 @@ setup (
         'Flask-Psycopg2',
         'flup',
         'gevent',
+        'gevent-fastcgi',
+        'zope.interface',
         'ipython',
         'hiredis',
         'pylibmc',
