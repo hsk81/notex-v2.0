@@ -101,7 +101,8 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (uuid);
         var path = record.get ('uuid_path');
         assert (path);
-        var path = Ext.clone (path);
+
+        path = Ext.clone (path);
         assert (path);
 
         var view = this.getNodeTree ();
@@ -116,11 +117,11 @@ Ext.define ('Webed.controller.NodeTree', {
         // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
         path.unshift (''); path.pop ();
         // ['','00..00','bb..bb''] => /00..00/bb..bb
-        var path = path.join ('/');
+        path = path.join ('/');
         if (path) {
             view.expandPath (path, 'uuid', '/', function (success, node) {
                 if (success) {
-                    var node = node.findChild ('uuid', uuid, true);
+                    node = node.findChild ('uuid', uuid, true);
                     if (node) semo.select (node);
                 }
             }, this);
