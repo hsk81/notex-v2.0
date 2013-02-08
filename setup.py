@@ -27,6 +27,7 @@ setup (
         'Flask-SQLAlchemy',
         'Flask-Psycopg2',
         'flup',
+        'gevent',
         'ipython',
         'hiredis',
         'pylibmc',
