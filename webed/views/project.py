@@ -45,8 +45,9 @@ def setup_project (mime, json=True):
     if not json:
         return dict (success=True, mime=mime, nodes=result.nodes)
     else:
-        return JSON.encode (dict (success=True, mime=mime, nodes=map (
-            lambda node:node.uuid, result.nodes)))
+        return JSON.encode (dict (success=True, mime=mime, nodes=
+            map (lambda node:dict (uuid=node.uuid, uuid_path=node.uuid_path),
+                result.nodes)))
 
 ###############################################################################
 ###############################################################################

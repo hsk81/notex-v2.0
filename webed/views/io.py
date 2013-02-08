@@ -122,8 +122,9 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
     if not json:
         return dict (success=True, filename=file.filename, nodes=nodes)
     else:
-        return JSON.encode (dict (success=True, filename=file.filename,
-            nodes=map (lambda node:node.uuid, nodes)))
+        return JSON.encode (dict (success=True, filename=file.filename, nodes=
+            map (lambda node:dict (uuid=node.uuid, uuid_path=node.uuid_path),
+                nodes)))
 
 ###############################################################################
 
