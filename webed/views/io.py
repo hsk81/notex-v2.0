@@ -115,9 +115,8 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
         nodes = create_prj (temp_path, zip_name, base)
         shutil.rmtree (temp_path)
 
-    if not skip_commit:
-        for node in nodes: db.session.execute (
-            select ([func.npt_insert_node (base.id, node.id)]))
+    for node in nodes: db.session.execute (
+        select ([func.npt_insert_node (base.id, node.id)]))
 
     if not json:
         return dict (success=True, filename=file.filename, nodes=nodes)
@@ -156,7 +155,7 @@ def extract (zip_file, path):
 
 ###############################################################################
 
-@db.commit ()
+@db.nest ()
 def create_prj (path, name, base):
     cache = {path: base}
 
