@@ -80,14 +80,7 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addProject: function () {
-        var node = Ext.getStore ('Nodes').getRootNode ();
-        assert (node);
-
-        var addProjectBox = Ext.create ('Webed.view.AddProjectBox', {
-            node: node
-        });
-
-        addProjectBox.show ();
+        Ext.create ('Webed.view.AddProjectBox').show ();
     },
 
     addFolder: function () {

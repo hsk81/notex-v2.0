@@ -152,7 +152,8 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    refresh: function () {
+    refresh: function (source, args) {
+        if (source == this) return;
 
         var node = this.get_selection ();
         assert (node);
@@ -160,19 +161,22 @@ Ext.define ('Webed.controller.NodeTree', {
         assert (view);
         var base = view.getRootNode ();
         assert (base);
-        var base = base.removeAll (false);
-        assert (base);
         var store = this.getNodesStore ();
         assert (store);
 
         var table = view.getView ();
-        assert (table);
-        table.el.mask ('Loading...');
+        assert (table); table.el.mask ('Loading ..');
 
-        store.load ({callback: function (recs, op, success) {
-            this.set_selection (node);
-            table.el.unmask ();
-        }, node: base, scope: this});
+        base = base.removeAll (false);
+        assert (base);
+
+        store.load ({node: base, scope: this, callback: function (recs, op) {
+            if (args && args.callback && args.callback.call) {
+                args.callback.call (args.scope||this, recs, op);
+            } else {
+                this.set_selection (node);
+            } table.el.unmask ();
+        }});
     },
 
     ///////////////////////////////////////////////////////////////////////////
