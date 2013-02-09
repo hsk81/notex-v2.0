@@ -25,11 +25,11 @@ project = Blueprint ('project', __name__)
 
 @project.route ('/setup-project/', methods=['GET', 'POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def setup_project (conf=None, mime=None, skip_commit=None, json=True):
+def setup_project (conf=None, skip_commit=None, json=True):
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
-    mime = request.args.get ('mime', mime)
+    mime = get_for ('mime', conf)
     assert mime
 
     if mime == 'application/project+latex':
@@ -54,8 +54,7 @@ def setup_project (conf=None, mime=None, skip_commit=None, json=True):
         return dict (success=True, mime=mime, nodes=result['nodes'])
     else:
         return JSON.encode (dict (success=True, mime=mime, nodes=
-            map (lambda node:dict (uuid=node.uuid, uuid_path=node.uuid_path),
-                result['nodes'])))
+            map (lambda node:dict (uuid=node.uuid), result['nodes'])))
 
 ###############################################################################
 ###############################################################################
@@ -64,16 +63,22 @@ def setup_latex (node, conf=None):
 
     name = get_for ('name', conf)
     assert name; node.name = name
+    mime = get_for ('mime', conf)
+    assert mime; node.mime = mime
 
 def setup_rest (node, conf=None):
 
     name = get_for ('name', conf)
     assert name; node.name = name
+    mime = get_for ('mime', conf)
+    assert mime; node.mime = mime
 
 def setup_default (node, conf=None):
 
     name = get_for ('name', conf)
     assert name; node.name = name
+    mime = get_for ('mime', conf)
+    assert mime; node.mime = mime
 
 ###############################################################################
 ###############################################################################
