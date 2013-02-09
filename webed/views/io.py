@@ -107,22 +107,48 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
             return JSON.encode (dict (success=False, filename=file.filename,
                 message='ZIP format expected'))
 
-        zip_name = secure_filename (file.filename)
-        zip_name = os.path.splitext (zip_name)[0]
+        zip_name = get_name (file.filename)
+        zip_mime = get_mime (file.filename)
 
         temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
-        nodes = create_prj (temp_path, zip_name, base)
+        nodes = create_prj (temp_path, zip_name, base, zip_mime)
         shutil.rmtree (temp_path)
 
-    for node in nodes: db.session.execute (
-        select ([func.npt_insert_node (base.id, node.id)]))
+    if not skip_commit:
+        for node in nodes: db.session.execute (
+            select ([func.npt_insert_node (base.id, node.id)]))
 
     if not json:
         return dict (success=True, filename=file.filename, nodes=nodes)
     else:
         return JSON.encode (dict (success=True, filename=file.filename,
             nodes=map (lambda node:dict (uuid=node.uuid), nodes)))
+
+###############################################################################
+
+def get_name (filename):
+
+    try:
+        zip_name = os.path.splitext (filename)[0]
+        zip_name = zip_name.split ('[')[0]
+    except Exception, ex:
+        logger.exception (ex)
+        zip_name = ''
+
+    return zip_name.strip ()
+
+def get_mime (filename):
+
+    try:
+        zip_mime = os.path.splitext (filename)[0]
+        zip_mime = zip_mime.split ('[')[1].split (']')[0]
+        zip_mime = zip_mime.replace ('!', '/')
+    except Exception, ex:
+        logger.exception (ex)
+        zip_mime = 'application/project'
+
+    return zip_mime.strip ()
 
 ###############################################################################
 
@@ -155,14 +181,14 @@ def extract (zip_file, path):
 ###############################################################################
 
 @db.nest ()
-def create_prj (path, name, base):
+def create_prj (path, name, base, mime):
     cache = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
         root = cache.get (cur_path); assert root
 
         for dn in dir_names:
-            mime = 'application/' + ('folder' if root.root else 'project')
+            mime = 'application/folder' if root.root else mime
             node = create_dir (dn, root, mime)
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
