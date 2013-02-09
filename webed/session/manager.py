@@ -92,8 +92,8 @@ def setup_session ():
                         skip_commit=True, json=False)
 
                     for node in result['nodes']:
-                        mime = filename.split (' ')[1].split ('.')[0]
-                        node.mime = mime.replace ('|','/')
+                        mime = filename.split ('[')[1].split (']')[0]
+                        node.mime = mime.replace ('!','/')
 
                 except Exception, ex:
                     logger.exception (ex) ## no re-raise!

@@ -255,7 +255,8 @@ def archive_download (chunk_size = 256*1024):
             response = Response (next_chunk (content_len, content_csz))
             response.headers ['Content-Length'] = content_len
             response.headers ['Content-Disposition'] = \
-                'attachment;filename="%s.zip"' % node.name.encode ("utf-8")
+                'attachment;filename="%s [%s].zip"' % (
+                    node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
         else:
             response = JSON.encode (dict (success=True, name=node.name))
             object_cache.expire (archive_key, expiry=60) ## refresh
