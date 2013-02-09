@@ -88,7 +88,13 @@ def setup_session ():
 
                 try:
                     fs = FileStorage (stream=stream, filename=filename)
-                    archive_upload (file=fs, base=base, skip_commit=True)
+                    result = archive_upload (file=fs, base=base,
+                        skip_commit=True, json=False)
+
+                    for node in result['nodes']:
+                        mime = filename.split (' ')[1].split ('.')[0]
+                        node.mime = mime.replace ('|','/')
+
                 except Exception, ex:
                     logger.exception (ex) ## no re-raise!
 
