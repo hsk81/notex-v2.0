@@ -10,6 +10,7 @@ from flask import Blueprint
 from ..app import app
 from ..ext import db
 from ..util import JSON
+
 from .io import archive_upload
 
 import os.path
@@ -24,13 +25,10 @@ project = Blueprint ('project', __name__)
 
 @project.route ('/setup-project/', methods=['GET', 'POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def setup_project (name=None, mime=None, skip_commit=None, json=True):
+def setup_project (conf=None, mime=None, skip_commit=None, json=True):
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
-
-    name = request.args.get ('name', name)
-    assert name
     mime = request.args.get ('mime', mime)
     assert mime
 
@@ -50,8 +48,7 @@ def setup_project (name=None, mime=None, skip_commit=None, json=True):
     with open (path_to) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (file=fs, skip_commit=True, json=False)
-        for node in result['nodes']: node.name = name
-        setup_details (result['nodes'])
+        for node in result['nodes']: setup_details (node, conf)
 
     if not json:
         return dict (success=True, mime=mime, nodes=result['nodes'])
@@ -63,14 +60,30 @@ def setup_project (name=None, mime=None, skip_commit=None, json=True):
 ###############################################################################
 ###############################################################################
 
-def setup_latex (nodes):
-    assert isinstance (nodes, list)
+def setup_latex (node, conf=None):
 
-def setup_rest (nodes):
-    assert isinstance (nodes, list)
+    name = get_for ('name', conf)
+    assert name; node.name = name
 
-def setup_default (nodes):
-    assert isinstance (nodes, list)
+def setup_rest (node, conf=None):
+
+    name = get_for ('name', conf)
+    assert name; node.name = name
+
+def setup_default (node, conf=None):
+
+    name = get_for ('name', conf)
+    assert name; node.name = name
+
+###############################################################################
+###############################################################################
+
+def get_for (key, conf, default=None):
+
+    if conf:
+        return conf[key] if key in conf else default
+    else:
+        return request.args.get (key, default)
 
 ###############################################################################
 ###############################################################################
