@@ -27,9 +27,8 @@ Ext.define ('Webed.view.Viewport', {
                 tooltip: '<p>Refresh</p>',
                 action: 'node-tree:refresh'
             },{
-                type: 'gear',
-                tooltip: '<p>Settings</p>',
-                action: 'node-tree:settings'
+                type: 'help',
+                tooltip: '<p>Project Tree</p>'
             }],
 
             layout: 'border',
@@ -49,11 +48,10 @@ Ext.define ('Webed.view.Viewport', {
                 tools: [{
                     type: 'refresh',
                     tooltip: '<p>Refresh</p>',
-                    action: 'refresh'
+                    action: 'leaf-list:refresh'
                 },{
-                    type: 'gear',
-                    tooltip: '<p>Settings</p>',
-                    action: 'settings'
+                    type: 'help',
+                    tooltip: '<p>Document List</p>'
                 }]
             }]
         },{

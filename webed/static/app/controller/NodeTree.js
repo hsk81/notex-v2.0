@@ -16,8 +16,9 @@ Ext.define ('Webed.controller.NodeTree', {
 
     init: function () {
         this.control ({
-            'tool[action=node-tree:refresh]': { click: this.refresh },
-            'tool[action=node-tree:settings]': { click: this.settings },
+            'tool[action=node-tree:refresh]': {
+                click: this.refresh
+            },
             'node-tree': {
                 afterrender: this.select_base,
                 itemclick: this.itemclick

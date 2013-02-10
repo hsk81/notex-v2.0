@@ -16,8 +16,9 @@ Ext.define ('Webed.controller.LeafList', {
 
     init: function () {
         this.control ({
-            'leaf-list tool[action=refresh]': { click: this.refresh },
-            'leaf-list tool[action=settings]': { click: this.settings },
+            'leaf-list tool[action=leaf-list:refresh]': {
+                click: this.refresh
+            },
             'leaf-list': {
                 itemclick: this.itemclick,
                 expand: this.expand
@@ -31,13 +32,6 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.on ({
             reload_leaf: this.reload_leaf, scope: this
         });
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    settings: function () {
-        console.debug ('[LeafList.settings]');
     },
 
     ///////////////////////////////////////////////////////////////////////////
