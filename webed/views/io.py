@@ -139,7 +139,7 @@ def get_project_mime (filename):
         zip_mime = zip_mime.replace ('!', '/')
 
         lhs, rhs = zip_mime.split ('/')
-        if not lhs or not lhs.startswith ('application'): zip_mime = None
+        if not lhs or lhs != 'application': zip_mime = None
         if not rhs or not rhs.startswith ('project'): zip_mime = None
 
     except ValueError: zip_mime = None
