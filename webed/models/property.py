@@ -255,7 +255,7 @@ class BinaryProperty (Property):
         version_key = object_cache.make_key (target._data)
         version = object_cache.decrease (key=version_key)
         if version <= 0:
-            path_to = os.path.join (app.config['FS_DATA'], target._data)
+            path_to = os.path.join (app.config['FS_CACHE'], target._data)
             if os.path.exists (path_to): os.unlink (path_to)
             object_cache.delete (key=target._data)
 
