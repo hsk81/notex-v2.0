@@ -107,12 +107,12 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
             return JSON.encode (dict (success=False, filename=file.filename,
                 message='ZIP format expected'))
 
-        zip_mime = get_mime (file.filename)
-        assert zip_mime
+        prj_mime = get_project_mime (file.filename)
+        assert prj_mime
 
         temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
-        nodes = create_prj (temp_path, base, zip_mime)
+        nodes = create_prj (temp_path, base, prj_mime)
         shutil.rmtree (temp_path)
 
     if not skip_commit:
@@ -127,16 +127,20 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
 
 ###############################################################################
 
-def get_mime (filename):
-
+def get_project_mime (filename):
+    """
+    Returns `mime` which should be encoded in `filename`; if it is *not* then
+    it looks, if the `mime` has been provided as a request argument; otherwise
+    simply `application/project` is returned.
+    """
     try:
         zip_mime = os.path.splitext (filename)[0]
         zip_mime = zip_mime.split ('[')[-1].split (']')[0]
         zip_mime = zip_mime.replace ('!', '/')
 
-        app,type = zip_mime.split ('/')
-        if app != 'application': zip_mime = None
-        if not type: zip_mime = None
+        lhs, rhs = zip_mime.split ('/')
+        if not lhs or not lhs.startswith ('application'): zip_mime = None
+        if not rhs or not rhs.startswith ('project'): zip_mime = None
 
     except ValueError: zip_mime = None
     except IndexError: zip_mime = None
