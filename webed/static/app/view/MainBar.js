@@ -38,7 +38,7 @@ Ext.define ('Webed.view.MainBar', {
         title: 'Manage',
         columns: 3,
         items: [{
-            text : 'Add',
+            text : 'New',
             iconCls : 'icon-add-16',
             xtype :'splitbutton',
             tooltip : '<b>Add</b><br/>Add a new project, folder or file',
