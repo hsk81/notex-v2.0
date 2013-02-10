@@ -26,6 +26,7 @@ import urllib
 import shutil
 import errno
 import os
+import re
 
 from cStringIO import StringIO
 
@@ -138,12 +139,11 @@ def get_project_mime (filename):
         zip_mime = zip_mime.split ('[')[-1].split (']')[0]
         zip_mime = zip_mime.replace ('!', '/')
 
-        lhs, rhs = zip_mime.split ('/')
-        if not lhs or lhs != 'application': zip_mime = None
-        if not rhs or not rhs.startswith ('project'): zip_mime = None
+        if not re.match (r'^application/project(\+\w+)?$', zip_mime):
+            zip_mime = None
 
-    except ValueError: zip_mime = None
-    except IndexError: zip_mime = None
+    except IndexError:
+        zip_mime = None
     except Exception, ex:
         logger.debug (ex)
         zip_mime = None
