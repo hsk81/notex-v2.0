@@ -107,12 +107,12 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
             return JSON.encode (dict (success=False, filename=file.filename,
                 message='ZIP format expected'))
 
-        zip_name = get_name (file.filename)
         zip_mime = get_mime (file.filename)
+        assert zip_mime
 
         temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
-        nodes = create_prj (temp_path, zip_name, base, zip_mime)
+        nodes = create_prj (temp_path, base, zip_mime)
         shutil.rmtree (temp_path)
 
     if not skip_commit:
@@ -127,26 +127,25 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
 
 ###############################################################################
 
-def get_name (filename):
-
-    try:
-        zip_name = os.path.splitext (filename)[0]
-        zip_name = zip_name.split ('[')[0]
-    except Exception, ex:
-        logger.exception (ex)
-        zip_name = ''
-
-    return zip_name.strip ()
-
 def get_mime (filename):
 
     try:
         zip_mime = os.path.splitext (filename)[0]
-        zip_mime = zip_mime.split ('[')[1].split (']')[0]
+        zip_mime = zip_mime.split ('[')[-1].split (']')[0]
         zip_mime = zip_mime.replace ('!', '/')
+
+        app,type = zip_mime.split ('/')
+        if app != 'application': zip_mime = None
+        if not type: zip_mime = None
+
+    except ValueError: zip_mime = None
+    except IndexError: zip_mime = None
     except Exception, ex:
-        logger.exception (ex)
-        zip_mime = 'application/project'
+        logger.debug (ex)
+        zip_mime = None
+
+    if not zip_mime: zip_mime = request.args.get ('mime', None)
+    if not zip_mime: zip_mime = 'application/project'
 
     return zip_mime.strip ()
 
@@ -181,7 +180,7 @@ def extract (zip_file, path):
 ###############################################################################
 
 @db.nest ()
-def create_prj (path, name, base, mime):
+def create_prj (path, base, mime):
     cache = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):

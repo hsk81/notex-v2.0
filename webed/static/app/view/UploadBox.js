@@ -72,7 +72,7 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
 
     items: [{
         xtype: 'form',
-        layout: 'fit',
+        layout: 'vbox',
         bodyPadding: '4px',
 
         items: [{
@@ -82,7 +82,16 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
             buttonText: '',
             buttonConfig: {iconCls: 'icon-folder-16'},
             emptyText: 'Select ZIP archive ..',
-            name: 'file'
+            name: 'file',
+            width: '100%'
+        },{
+            xtype: 'add-project-box-mime',
+            allowBlank: true,
+            emptyText: 'Select type ..',
+            name: 'mime',
+            style: 'margin: 0;',
+            value: 'application/project',
+            width: '100%'
         }]
     }]
 });

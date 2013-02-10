@@ -29,12 +29,17 @@ Ext.define ('Webed.controller.ArchiveUploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_url: function () {
-        return '/archive-upload';
-    },
+        var view = this.getUploadBox ();
+        assert (view);
+        var combobox = view.down ('combobox[name=mime]');
+        assert (combobox);
+        var mime = combobox.getValue ();
 
-    get_root: function () {
-        var nodes = this.application.getStore ('Nodes');
-        assert (nodes); return nodes.getRootNode ();
+        if (mime) return Ext.String.format ('/archive-upload/?mime={0}',
+            encodeURIComponent (mime)
+        );
+
+        return Ext.String.format ('/archive-upload/');
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -31,25 +31,13 @@ Ext.define ('Webed.controller.UploadBox', {
         assert (panel);
         var form = panel.getForm ();
         assert (form);
-
-        var url = this.get_url ();
-        assert (url);
-        var root = this.get_root ();
-        assert (root);
-
-        if (root.isLeaf ()) {
-            assert (root.parentNode); root = root.parentNode;
-        }
-
-        var root_uuid = root.get ('uuid');
-        assert (root_uuid);
         var app = this.application;
         assert (app);
 
         if (form.isValid ()) {
             form.submit ({
-                url: Ext.String.format ('{0}/?root_uuid={1}', url, root_uuid),
-                waitMsg: 'Uploading your file..',
+                url: this.get_url (),
+                waitMsg: 'Uploading file ..',
 
                 success: function () {
                     assert (view); view.destroy ();

@@ -17,7 +17,6 @@ Ext.define ('Webed.view.AddProjectBox', {
     items: [{
         xtype: 'form',
         layout: 'vbox',
-        width: '100%',
         bodyPadding: '4px',
 
         items: [{
@@ -32,7 +31,7 @@ Ext.define ('Webed.view.AddProjectBox', {
             xtype: 'add-project-box-mime',
             name: 'mime',
             allowBlank: false,
-            emptyText: 'Select project type ..',
+            emptyText: 'Select type ..',
             style: 'margin: 0;',
             value: 'application/project',
             width: '100%'
@@ -62,7 +61,7 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
         fields: ['mime', 'name'],
         data : [{
             'mime':'application/project',
-            'name':'Empty'
+            'name':'Default'
         },{
             'mime':'application/project+rest',
             'name':'reStructuredText'
@@ -81,7 +80,6 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
         '<div class="x-boundlist-item">{name}',
         '<div class="w-boundlist-item-rhs">{mime}</div>',
         '</div>',
-        '</tpl>'),
-
-    emptyText: 'Project type ..'
+        '</tpl>'
+    )
 });
