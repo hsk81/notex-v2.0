@@ -41,7 +41,7 @@ Ext.define ('Webed.view.MainBar', {
             text : 'New',
             iconCls : 'icon-add-16',
             xtype :'splitbutton',
-            tooltip : '<b>Add</b><br/>Add a new project, folder or file',
+            tooltip : '<b>New</b><br/>Add a new project, folder or file',
             action: 'add',
             menu : {
                 xtype : 'menu',
