@@ -47,7 +47,7 @@ Ext.define ('Webed.controller.MainBar', {
 
     afterrender: function () {
         this.keyMap = Ext.create ('Webed.controller.MainBar.KeyMap', {
-            target: Ext.getDoc (), controller: this
+            controller: this
         });
     },
 
@@ -238,12 +238,16 @@ Ext.define ('Webed.controller.MainBar', {
 Ext.define ('Webed.controller.MainBar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
+    config: {
+        target: Ext.getDoc (),
+        controller: null
+    },
+
     constructor: function (config) {
         this.callParent (arguments);
-        this.controller = config.controller;
-        assert (this.controller);
-        this.target = config.target;
+        this.initConfig (config);
         assert (this.target);
+        assert (this.controller);
     },
 
     binding: [{
