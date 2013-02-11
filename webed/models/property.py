@@ -227,7 +227,8 @@ class BinaryProperty (Property):
                 value))
 
             path_to = os.path.join (app.config['FS_CACHE'], value_key)
-            with open (path_to, 'w') as file: file.write (value)
+            if not os.path.exists (path_to):
+                with open (path_to, 'w') as file: file.write (value)
             object_cache.set_value (value_key, value)
         else:
             object_cache.expire (value_key) ## refresh
