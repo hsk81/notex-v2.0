@@ -1,3 +1,6 @@
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 Ext.define ('Webed.controller.LeafList', {
     extend: 'Ext.app.Controller',
 
@@ -20,6 +23,7 @@ Ext.define ('Webed.controller.LeafList', {
                 click: this.refresh
             },
             'leaf-list': {
+                afterrender: this.afterrender,
                 itemclick: this.itemclick,
                 expand: this.expand
             }
@@ -32,6 +36,35 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.on ({
             reload_leaf: this.reload_leaf, scope: this
         });
+    },
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    afterrender: function () {
+        this.keyMap = Ext.create ('Webed.controller.LeafList.KeyMap', {
+            controller: this
+        });
+    },
+
+    itemclick: function (view, record, item, index, e, eOpts) {
+        this.application.fireEvent ('create_tab', this, {
+            record: record
+        });
+        this.application.fireEvent ('select_node', this, {
+            record: record
+        });
+    },
+
+    expand: function (panel, eOpts) {
+        var store = this.getLeafsStore ();
+        assert (store);
+        var total = store.getTotalCount ();
+        assert (total >= 0);
+        if (total == 0) {
+            store.load ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -115,33 +148,55 @@ Ext.define ('Webed.controller.LeafList', {
         assert (store);
 
         store.load ();
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    itemclick: function (view, record, item, index, e, eOpts) {
-        this.application.fireEvent ('create_tab', this, {
-            record: record
-        });
-        this.application.fireEvent ('select_node', this, {
-            record: record
-        });
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    expand: function (panel, eOpts) {
-        var store = this.getLeafsStore ();
-        assert (store);
-        var total = store.getTotalCount ();
-        assert (total >= 0);
-        if (total == 0) {
-            store.load ();
-        }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Ext.define ('Webed.controller.LeafList.KeyMap', {
+    extend: 'Ext.util.KeyMap',
+
+    config: {
+        target: Ext.getDoc (),
+        controller: null
+    },
+
+    constructor: function () {
+        this.callParent (arguments);
+        assert (this.target);
+        assert (this.controller);
+    },
+
+    binding: [{
+        key: Ext.EventObject.F10,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var controller = this.getController ();
+            assert (controller);
+            var view = controller.getLeafList ();
+            assert (view);
+
+            function focus () {
+                var triggerfield = view.down ('triggerfield');
+                assert (triggerfield); triggerfield.focus (25);
+            }
+
+            if (view.getCollapsed () == 'bottom') {
+                function on_expand () {
+                    focus (); view.un ('expand', on_expand);
+                }
+
+                view.on ('expand', on_expand);
+                view.expand ();
+            } else {
+                focus ();
+            }
+        }
+    }],
+
+    getController: function () { return this.controller; }
+});
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
