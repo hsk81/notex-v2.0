@@ -41,7 +41,7 @@ Ext.define ('Webed.view.MainBar', {
             text : 'New',
             iconCls : 'icon-add-16',
             xtype :'splitbutton',
-            tooltip : '<b>New</b><br/>Add a new project, folder or document',
+            tooltip : '<b>New</b><br/>Add a new project, folder or file',
             action: 'add',
             menu : {
                 xtype : 'menu',
@@ -60,7 +60,7 @@ Ext.define ('Webed.view.MainBar', {
                 },{
                     iconCls : 'icon-page_white-16',
                     text : 'Document',
-                    tooltip : '<b>New</b><div class="w-shortcut">[ALT+D]</div><br/>Add a new document',
+                    tooltip : '<b>New</b><div class="w-shortcut">[ALT+D]</div><br/>Add a new file',
                     action: 'add-file'
                 }]
             }

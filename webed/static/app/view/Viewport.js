@@ -28,7 +28,7 @@ Ext.define ('Webed.view.Viewport', {
                 action: 'node-tree:refresh'
             },{
                 type: 'help',
-                tooltip: '<p>Project Tree</p>'
+                tooltip: '<div>Project Tree&nbsp;<div class="w-shortcut">[F9]</div></div>'
             }],
 
             layout: 'border',
@@ -51,7 +51,7 @@ Ext.define ('Webed.view.Viewport', {
                     action: 'leaf-list:refresh'
                 },{
                     type: 'help',
-                    tooltip: '<p>Document List</p>'
+                    tooltip: '<div>Document List&nbsp;<div class="w-shortcut">[F10]</div></div>'
                 }]
             }]
         },{
