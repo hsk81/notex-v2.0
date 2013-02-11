@@ -4,6 +4,7 @@ Ext.Loader.setPath ({
 });
 
 Ext.require ('Ext.app.Application');
+Ext.require ('Ext.form.field.VTypes');
 Ext.require ('Ext.data.writer.Json');
 Ext.require ('Ext.data.reader.Json');
 Ext.require ('Ext.XTemplate');
