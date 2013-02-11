@@ -238,6 +238,14 @@ Ext.define ('Webed.controller.MainBar', {
 Ext.define ('Webed.controller.MainBar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
+    constructor: function (config) {
+        this.callParent (arguments);
+        this.controller = config.controller;
+        assert (this.controller);
+        this.target = config.target;
+        assert (this.target);
+    },
+
     binding: [{
         key: 's',
         ctrl: true,
