@@ -6,6 +6,8 @@ Ext.Loader.setPath ({
 Ext.require ('Ext.app.Application');
 Ext.require ('Ext.data.writer.Json');
 Ext.require ('Ext.data.reader.Json');
+Ext.require ('Ext.XTemplate');
+
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
 Ext.require ('Webed.store.Properties');

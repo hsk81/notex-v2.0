@@ -160,7 +160,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { load ('application/project'); });
+        runs (function () { load ('application/folder'); });
     });
 
     it ('should read leafs', function () {
@@ -217,7 +217,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { update ('application/project'); });
+        runs (function () { update ('application/folder'); });
     });
 
     it ('should update a leaf', function () {
@@ -276,7 +276,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { destroy ('application/project'); });
+        runs (function () { destroy ('application/folder'); });
     });
 
     it ('should delete a leaf', function () {
