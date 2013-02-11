@@ -25,7 +25,7 @@ Ext.define ('Webed.view.UploadBox', {
     }]
 });
 
-Ext.apply (Ext.form.field.VTypes, {
+Ext.apply ('Ext.form.field.VTypes', {
     fileText: "Document expected",
     fileMask: /\w\d\s\./i,
     file: function (value, field) {
@@ -56,7 +56,7 @@ Ext.define ('Webed.view.FileUploadBox', {
     }]
 });
 
-Ext.apply (Ext.form.field.VTypes, {
+Ext.apply ('Ext.form.field.VTypes', {
     zipArchiveText: "ZIP Archive expected",
     zipArchiveMask: /\w\d\s\./i,
     zipArchive: function (value, field) {
