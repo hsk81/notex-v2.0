@@ -20,7 +20,7 @@ Ext.define ('Webed.controller.NodeTree', {
                 click: this.refresh
             },
             'node-tree': {
-                afterrender: this.select_base,
+                afterrender: this.afterrender,
                 itemclick: this.itemclick
             }
         });
@@ -60,6 +60,14 @@ Ext.define ('Webed.controller.NodeTree', {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+
+    afterrender: function () {
+        this.keyMap = Ext.create ('Webed.controller.NodeTree.KeyMap', {
+            controller: this
+        });
+
+        this.select_base ();
+    },
 
     itemclick: function (view, record, item, index, e, eOpts) {
         this.application.fireEvent ('create_tab', this, {
@@ -385,7 +393,42 @@ Ext.define ('Webed.controller.NodeTree', {
     delete_leaf: function (args) {
         return this.delete_node (args);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Ext.define ('Webed.controller.NodeTree.KeyMap', {
+    extend: 'Ext.util.KeyMap',
+
+    config: {
+        target: Ext.getDoc (),
+        controller: null
+    },
+
+    constructor: function () {
+        this.callParent (arguments);
+        assert (this.target);
+        assert (this.controller);
+    },
+
+    binding: [{
+        key: Ext.EventObject.F9,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var controller = this.getController ();
+            assert (controller);
+            var view = controller.getNodeTree ();
+            assert (view);
+            var panel = view.up ('panel');
+            assert (panel);
+
+            panel.toggleCollapse ();
+        }
+    }],
+
+    getController: function () { return this.controller; }
+});
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
