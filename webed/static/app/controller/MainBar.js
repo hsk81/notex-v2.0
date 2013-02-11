@@ -243,9 +243,8 @@ Ext.define ('Webed.controller.MainBar.KeyMap', {
         controller: null
     },
 
-    constructor: function (config) {
+    constructor: function () {
         this.callParent (arguments);
-        this.initConfig (config);
         assert (this.target);
         assert (this.controller);
     },
