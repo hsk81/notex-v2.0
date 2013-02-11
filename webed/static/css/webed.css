@@ -337,4 +337,9 @@ body {
     vertical-align: middle;
 }
 
+.w-shortcut {
+    float:right;
+    color: grey;
+}
+
 /*****************************************************************************/

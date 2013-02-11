@@ -35,7 +35,19 @@ Ext.define ('Webed.controller.MainBar', {
             },
             'main-bar button[action=export-project]': {
                 click: this.exportProject
+            },
+            'main-bar': {
+                afterrender: this.afterrender
             }
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    afterrender: function () {
+        this.keyMap = Ext.create ('Webed.controller.MainBar.KeyMap', {
+            target: Ext.getDoc (), controller: this
         });
     },
 
@@ -218,7 +230,86 @@ Ext.define ('Webed.controller.MainBar', {
     get_selection: function () {
         return this.application.get_selection ();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Ext.define ('Webed.controller.MainBar.KeyMap', {
+    extend: 'Ext.util.KeyMap',
+
+    binding: [{
+        key: 's',
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var buttonQuery = 'main-bar button[action=save-document]';
+            var button = Ext.ComponentQuery.query (buttonQuery).pop ();
+            assert (button); this.getController ().saveDocument (button);
+        }
+    },{
+        key: 'o',
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().openDocument ();
+        }
+    },{
+        key: 'p',
+        alt: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().addProject ();
+        }
+    },{
+        key: 'f',
+        alt: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().addFolder ();
+        }
+    },{
+        key: 'd',
+        alt: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().addFile ();
+        }
+    },{
+        key: Ext.EventObject.F2,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().rename ();
+        }
+    },{
+        key: Ext.EventObject.DELETE,
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().destroy ();
+        }
+    },{
+        key: 'i',
+        ctrl: true,
+        shift: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            this.getController ().importProject ();
+        }
+    },{
+        key: 'e',
+        ctrl: true,
+        shift: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var buttonQuery = 'main-bar button[action=export-project]';
+            var button = Ext.ComponentQuery.query (buttonQuery).pop ();
+            assert (button); this.getController ().exportProject (button);
+        }
+    }],
+
+    getController: function () { return this.controller; }
+});
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
