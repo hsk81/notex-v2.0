@@ -44,22 +44,26 @@ Function.prototype.partial = function () {
         for (var index in names) union.push (args[names[index]]);
         return func.apply (this, union);
     }
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 var and = function (object, callback, scope) {
     for (var key in object) {
-        if (!callback.call (scope||this, key, object[key])) return false;
+        if (object.hasOwnProperty (key)) {
+            if (!callback.call (scope||this, key, object[key])) return false;
+        }
     } return true;
-}
+};
 
 var or = function (object, callback, scope) {
     for (var key in object) {
-        if (callback.call (scope||this, key, object[key])) return true;
+        if (object.hasOwnProperty (key)) {
+            if (callback.call (scope||this, key, object[key])) return true;
+        }
     } return false;
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
