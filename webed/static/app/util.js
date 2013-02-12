@@ -34,14 +34,16 @@ Function.prototype.partial = function () {
         rhs = str.indexOf (')'),
         names = str.slice (lhs, rhs).match (/([^\s,]+)/g);
 
-    var index = 0; names.every (function (value) {
-        if (value in args == false) { negs[index++] = value; } return true;
+    var i = 0; names.every (function (value) {
+        if (value in args == false) negs[i++] = value; return true;
     });
 
     return function () {
         var union = [];
-        for (var index in arguments) args[negs[index]] = arguments[index];
-        for (var index in names) union.push (args[names[index]]);
+        for (var i in arguments)
+            if (arguments.hasOwnProperty (i)) args[negs[i]] = arguments[i];
+        for (var j in names)
+            if (names.hasOwnProperty (j)) union.push (args[names[j]]);
         return func.apply (this, union);
     }
 };
