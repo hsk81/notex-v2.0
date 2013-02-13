@@ -59,8 +59,8 @@ class WebedCache (object):
                 keyfunc=None, unless=None, lest=None):
 
         if not callable (keyfunc):
-            keyfunc = lambda sid, fn, *args, **kwargs:\
-            self.make_key (sid, name or fn.__name__) ## no (kw)args!
+            keyfunc = lambda sid, fn, *args, **kwargs: \
+                self.make_key (sid, name or fn.__name__) ## no (kw)args!
 
         return self.memoize (expiry, name, session, keyfunc, unless, lest)
 
