@@ -68,7 +68,7 @@ class WebedCache (object):
                  keyfunc=None, unless=None, lest=None):
 
         if session:
-            sid = session['_id']
+            sid = session.get ('_id'), session.get ('_token')
         else:
             sid = None
 
