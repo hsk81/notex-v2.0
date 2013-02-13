@@ -28,7 +28,7 @@ class SessionAnchor (object):
         sid = hashlib.md5 (self._sid).hexdigest ()
         token = hashlib.md5 (self._token).hexdigest ()
 
-        return '%s&%s@%d' % (sid, token, version)
+        return str ((sid, token, version))
 
     ###########################################################################
 

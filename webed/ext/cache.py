@@ -67,11 +67,6 @@ class WebedCache (object):
     def memoize (self, expiry=DEFAULT_TIMEOUT, name=None, session=None,
                  keyfunc=None, unless=None, lest=None):
 
-        if session:
-            sid = session.get ('_id'), session.get ('_token')
-        else:
-            sid = None
-
         if not callable (keyfunc):
             keyfunc = self.make_key
 
@@ -84,7 +79,12 @@ class WebedCache (object):
                 if callable (lest) and lest (*args, **kwargs) is True:
                     return fn (*args, **kwargs)
 
-                value_key = keyfunc (sid, name or fn.__name__, *args, **kwargs)
+                if session:
+                    s2t = session.get ('_id'), session.get ('_token')
+                else:
+                    s2t = None
+
+                value_key = keyfunc (s2t, name or fn.__name__, *args, **kwargs)
                 cached_value = self.get (value_key)
 
                 if cached_value is None:
