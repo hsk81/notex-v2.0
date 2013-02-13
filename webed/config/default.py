@@ -7,6 +7,7 @@ import os
 import socket
 
 from ..util import in_rxs
+from datetime import timedelta
 
 ###############################################################################
 ###############################################################################
@@ -20,7 +21,8 @@ class DefaultConfig:
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = None
 
-    CACHE_DEFAULT_TIMEOUT = 3600 * 72 ## 3d
+    PERMANENT_SESSION_LIFETIME = timedelta (days=7) ## session expires after!
+    CACHE_DEFAULT_TIMEOUT = int (PERMANENT_SESSION_LIFETIME.total_seconds ())
     CACHE_DEFAULT_KEY_PREFIX = 'webed:'
     CACHE_DEFAULT_SERVERS = ['127.0.0.1']
 

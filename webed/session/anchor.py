@@ -5,18 +5,35 @@ __author__ = 'hsk81'
 
 from ..ext.cache import cache
 
+import uuid
+import hashlib
+
 ###############################################################################
 ###############################################################################
 
 class SessionAnchor (object):
 
     def __init__ (self, session):
+
+        if not session.get ('_token'):
+            session['_token'] = hashlib.md5 (unicode (uuid.uuid4 ())).digest ()
+            session.permanent = True
+
         self._sid = session['_id']
+        self._token = session['_token']
+
+    def __repr__ (self):
+
+        version, _ = self.get_version ()
+        sid = hashlib.md5 (self._sid).hexdigest ()
+        token = hashlib.md5 (self._token).hexdigest ()
+
+        return '%s&%s@%d' % (sid, token, version)
 
     ###########################################################################
 
     def get_version_key (self):
-        return cache.make_key ('version', self._sid)
+        return cache.make_key ('version')
 
     def get_version (self):
         key = self.get_version_key ()
@@ -26,7 +43,7 @@ class SessionAnchor (object):
 
     def get_value_key (self):
         version, _ = self.get_version ()
-        return cache.make_key (version, self._sid), version
+        return cache.make_key (version, self._sid, self._token), version
 
     def get_value (self):
         key, _ = self.get_value_key ()
@@ -62,6 +79,10 @@ class SessionAnchor (object):
     @property
     def sid (self):
         return self._sid
+
+    @property
+    def token (self):
+        return self._token
 
     @property
     def initialized (self):

@@ -59,10 +59,6 @@ class SessionManager:
     def anchor (self):
         return self._anchor.value
 
-    @property
-    def sid (self):
-        return self._anchor.sid
-
 ###############################################################################
 ###############################################################################
 

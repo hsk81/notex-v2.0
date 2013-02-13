@@ -1,3 +1,4 @@
+
 __author__ = 'hsk81'
 
 ###############################################################################
@@ -9,6 +10,7 @@ from flask import Blueprint
 
 from ..app import app
 from ..ext import cache
+from ..session.anchor import SessionAnchor
 
 import sys
 import director
@@ -40,7 +42,7 @@ def contact (): return main (page='contact')
 def main (page='home', template='index.html'):
 
     if not request.args.get ('silent', False):
-        print >> sys.stderr, "Session ID: %r" % session['_id']
+        print >> sys.stderr, "Session: %r" % SessionAnchor (session)
 
     if 'reset' in request.args:
         director.reset (json=False)
