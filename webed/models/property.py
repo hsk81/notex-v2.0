@@ -12,7 +12,7 @@ from node import Node
 
 from ..app import app
 from ..ext.db import db
-from ..ext.cache import cache, object_cache
+from ..ext.cache import cache
 
 from .polymorphic import Polymorphic
 
@@ -216,36 +216,30 @@ class BinaryProperty (Property):
 
     def set_data (self, value):
 
-        value_key = unicode (object_cache.make_key (value))
+        value_key = unicode (cache.make_key (value))
         if self._data == value_key: return
+
+        if self._data:
+            BinaryProperty.on_delete (None, None, target=self)
 
         super (BinaryProperty, self).set_data (value_key)
         self._size = len (value)
 
-        if not object_cache.exists (value_key):
-            value = 'data:%s;base64,%s' % (self._mime, base64.encodestring (
-                value))
+        value = 'data:%s;base64,%s' % (self._mime, base64.encodestring (
+            value))
 
-            path_to = os.path.join (app.config['FS_CACHE'], value_key)
-            if not os.path.exists (path_to):
-                with open (path_to, 'w') as file: file.write (value)
-            object_cache.set_value (value_key, value)
-        else:
-            object_cache.expire (value_key) ## refresh
+        path_to = os.path.join (app.config['FS_CACHE'], value_key)
+        if not os.path.exists (path_to):
+            with open (path_to, 'w') as file: file.write (value)
 
-        version_key = object_cache.make_key (value_key)
-        version = object_cache.increase (version_key)
+        version_key = cache.make_key (value_key)
+        version = cache.increase (version_key)
         assert version > 0
 
     def get_data (self):
 
-        value = object_cache.get_value (key=self._data)
-        if value is None:
-            path_to = os.path.join (app.config['FS_CACHE'], self._data)
-            with open (path_to, 'r') as file: value = file.read ()
-            object_cache.set_value (self._data, value)
-
-        return value
+        path_to = os.path.join (app.config['FS_CACHE'], self._data)
+        with open (path_to, 'r') as file: return file.read ()
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
@@ -253,12 +247,11 @@ class BinaryProperty (Property):
     @staticmethod
     def on_delete (mapper, connection, target):
 
-        version_key = object_cache.make_key (target._data)
-        version = object_cache.decrease (key=version_key)
+        version_key = cache.make_key (target._data)
+        version = cache.decrease (key=version_key)
         if version <= 0:
             path_to = os.path.join (app.config['FS_CACHE'], target._data)
             if os.path.exists (path_to): os.unlink (path_to)
-            object_cache.delete (key=target._data)
 
     @classmethod
     def register (cls):
