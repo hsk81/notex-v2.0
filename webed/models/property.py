@@ -95,6 +95,8 @@ class Property (db.Model, Polymorphic):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
 
+    ###########################################################################
+
     @staticmethod
     def on_delete (mapper, connection, target):
 
@@ -122,6 +124,8 @@ class StringProperty (Property):
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
 
+    ###########################################################################
+
     def set_data (self, value):
 
         for uuid in self.node.get_path ('uuid'):
@@ -133,6 +137,8 @@ class StringProperty (Property):
     def get_data (self):
 
         return self._data
+
+    ###########################################################################
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
@@ -158,6 +164,8 @@ class ExternalProperty (Property):
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
+
+    ###########################################################################
 
     def set_data (self, value):
 
@@ -189,6 +197,8 @@ class ExternalProperty (Property):
     def encode (self, value): return value
     def decode (self, value): return value
 
+    ###########################################################################
+
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (ExternalProperty, self).__init__ (name, node, mime=mime \
@@ -200,6 +210,8 @@ class ExternalProperty (Property):
 
         return u'<ExternalProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
+
+    ###########################################################################
 
     @staticmethod
     def on_delete (mapper, connection, target):
