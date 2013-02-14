@@ -243,7 +243,7 @@ class Base64Property (ExternalProperty):
 
     def decode (self, value):
 
-        return value ## keep encoding!
+        return value ## keep b64 encoding!
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
