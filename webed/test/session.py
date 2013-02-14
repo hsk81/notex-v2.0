@@ -34,21 +34,21 @@ class SessionAnchorTestCase (BaseTestCase):
 
         version, key = anchor.get_version ()
         self.assertEqual (key, version_key)
-        self.assertEqual (version, 0)
+        self.assertGreaterEqual (version, 0)
 
     def test_get_value_key (self):
         anchor = self.init_anchor ()
 
         value_key, version = anchor.get_value_key ()
         self.assertIsNotNone (value_key)
-        self.assertEqual (version, 0)
+        self.assertGreaterEqual (version, 0)
 
     def test_get_value (self):
         anchor = self.init_anchor ()
 
         value_key, version = anchor.get_value_key ()
         self.assertIsNotNone (value_key)
-        self.assertEqual (version, 0)
+        self.assertGreaterEqual (version, 0)
 
         anchor.clear ()
 
@@ -61,7 +61,7 @@ class SessionAnchorTestCase (BaseTestCase):
 
         value_key, version = anchor.get_value_key ()
         self.assertIsNotNone (value_key)
-        self.assertEqual (version, 0)
+        self.assertGreaterEqual (version, 0)
 
         anchor.set_value ('value')
 
