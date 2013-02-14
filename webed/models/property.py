@@ -95,18 +95,6 @@ class Property (db.Model, Polymorphic):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
 
-    def set_data (self, value):
-
-        self._data = value
-
-        for uuid in self.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
-        cache.increase_version (key=[self.uuid, 'size', 'data'])
-
-    def get_data (self):
-
-        return self._data
-
     @staticmethod
     def on_delete (mapper, connection, target):
 
@@ -131,29 +119,32 @@ class StringProperty (Property):
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
+    _data = db.Column (db.String, name='data')
+    _size = db.Column (db.Integer, nullable=False, default=0)
+
+    def set_data (self, value):
+
+        for uuid in self.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
+
+        self._data = value
+        self._size = len (value) if value else 0
+
+    def get_data (self):
+
+        return self._data
+
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (StringProperty, self).__init__ (name, node,
             mime=mime if mime else 'text/plain', uuid=uuid)
 
-        self.data = data
+        self.set_data (data)
 
     def __repr__ (self):
 
         return u'<StringProperty@%x: %s>' % (self.id if self.id \
             else 0, self._name)
-
-    def get_size (self):
-
-        @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (self):
-            return len (self._data.encode ('utf-8')) \
-                if self._data is not None else 0
-
-        return cached_size (self)
-
-    _data = db.Column (db.String, name='data')
-    _size = property (get_size)
 
 ###############################################################################
 ###############################################################################
@@ -165,17 +156,8 @@ class ExternalProperty (Property):
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
-    def __init__ (self, name, data, node, mime=None, uuid=None):
-
-        super (ExternalProperty, self).__init__ (name, node, mime=mime \
-            if mime else 'application/octet-stream', uuid=uuid)
-
-        self.data = data
-
-    def __repr__ (self):
-
-        return u'<ExternalProperty@%x: %s>' % (self.id if self.id else 0,
-            self._name)
+    _data = db.Column (db.String, name='data')
+    _size = db.Column (db.Integer, nullable=False, default=0)
 
     def set_data (self, value):
 
@@ -185,8 +167,11 @@ class ExternalProperty (Property):
         if self._data:
             ExternalProperty.on_delete (None, None, target=self)
 
-        super (ExternalProperty, self).set_data (value_key)
-        self._size = len (value)
+        for uuid in self.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
+
+        self._data = value_key
+        self._size = len (value) if value else 0
 
         path_to = os.path.join (app.config['FS_CACHE'], value_key)
         if not os.path.exists (path_to):
@@ -204,8 +189,17 @@ class ExternalProperty (Property):
     def encode (self, value): return value
     def decode (self, value): return value
 
-    _data = db.Column (db.String, name='data')
-    _size = db.Column (db.Integer, nullable=False, default=0)
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (ExternalProperty, self).__init__ (name, node, mime=mime \
+            if mime else 'application/octet-stream', uuid=uuid)
+
+        self.set_data (data)
+
+    def __repr__ (self):
+
+        return u'<ExternalProperty@%x: %s>' % (self.id if self.id else 0,
+            self._name)
 
     @staticmethod
     def on_delete (mapper, connection, target):
