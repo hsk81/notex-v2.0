@@ -158,40 +158,6 @@ class StringProperty (Property):
 ###############################################################################
 ###############################################################################
 
-class TextProperty (Property):
-
-    text_property_id = db.Column (db.Integer,
-        db.Sequence ('text_property_id_seq'),
-        db.ForeignKey ('property.id', ondelete='CASCADE'),
-        primary_key=True)
-
-    def __init__ (self, name, data, node, mime=None, uuid=None):
-
-        super (TextProperty, self).__init__ (name, node, mime=mime \
-            if mime else 'text/plain', uuid=uuid)
-
-        self.data = data
-
-    def __repr__ (self):
-
-        return u'<TextProperty@%x: %s>' % (self.id if self.id \
-            else 0, self._name)
-
-    def get_size (self):
-
-        @cache.version (key=[self.uuid, 'size', 'data'])
-        def cached_size (self):
-            return len (self._data.encode ('utf-8')) \
-                if self._data is not None else 0
-
-        return cached_size (self)
-
-    _data = db.Column (db.String, name='data')
-    _size = property (get_size)
-
-###############################################################################
-###############################################################################
-
 class ExternalProperty (Property):
 
     large_external_property_id = db.Column (db.Integer,
@@ -224,8 +190,7 @@ class ExternalProperty (Property):
 
         path_to = os.path.join (app.config['FS_CACHE'], value_key)
         if not os.path.exists (path_to):
-            with open (path_to, 'w') as file:
-                file.write (self.encode (value))
+            with open (path_to, 'w') as file: file.write (self.encode (value))
 
         version_key = cache.make_key (value_key)
         version = cache.increase (version_key)
@@ -282,6 +247,32 @@ class Base64Property (ExternalProperty):
     def __repr__ (self):
 
         return u'<Base64Property@%x: %s>' % (self.id if self.id else 0,
+            self._name)
+
+class TextProperty (ExternalProperty):
+
+    def encode (self, value):
+
+        try:
+            return value.encode ('utf-8')
+        except ValueError:
+            return value
+
+    def decode (self, value):
+
+        try:
+            return value.decode ('utf-8')
+        except ValueError:
+            return value
+
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (TextProperty, self).__init__ (name, data, node, mime=mime \
+            if mime else 'text/plain', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<TextProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
 
 ###############################################################################
