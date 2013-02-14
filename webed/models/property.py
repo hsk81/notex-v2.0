@@ -122,7 +122,6 @@ class Property (db.Model, Polymorphic):
 Property.register () ## events
 
 ###############################################################################
-# http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.String
 ###############################################################################
 
 class StringProperty (Property):
@@ -157,7 +156,6 @@ class StringProperty (Property):
     _size = property (get_size)
 
 ###############################################################################
-# http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.Text
 ###############################################################################
 
 class TextProperty (Property):
@@ -192,26 +190,25 @@ class TextProperty (Property):
     _size = property (get_size)
 
 ###############################################################################
-# http://docs.sqlalchemy.org/../types.html#sqlalchemy.types.LargeBinary
 ###############################################################################
 
-class BinaryProperty (Property):
+class ExternalProperty (Property):
 
-    large_binary_property_id = db.Column (db.Integer,
-        db.Sequence ('binary_property_id_seq'),
+    large_external_property_id = db.Column (db.Integer,
+        db.Sequence ('external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (BinaryProperty, self).__init__ (name, node, mime=mime \
+        super (ExternalProperty, self).__init__ (name, node, mime=mime \
             if mime else 'application/octet-stream', uuid=uuid)
 
         self.data = data
 
     def __repr__ (self):
 
-        return u'<BinaryProperty@%x: %s>' % (self.id if self.id else 0,
+        return u'<ExternalProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
 
     def set_data (self, value):
@@ -220,17 +217,15 @@ class BinaryProperty (Property):
         if self._data == value_key: return
 
         if self._data:
-            BinaryProperty.on_delete (None, None, target=self)
+            ExternalProperty.on_delete (None, None, target=self)
 
-        super (BinaryProperty, self).set_data (value_key)
+        super (ExternalProperty, self).set_data (value_key)
         self._size = len (value)
-
-        value = 'data:%s;base64,%s' % (self._mime, base64.encodestring (
-            value))
 
         path_to = os.path.join (app.config['FS_CACHE'], value_key)
         if not os.path.exists (path_to):
-            with open (path_to, 'w') as file: file.write (value)
+            with open (path_to, 'w') as file:
+                file.write (self.encode (value))
 
         version_key = cache.make_key (value_key)
         version = cache.increase (version_key)
@@ -239,7 +234,10 @@ class BinaryProperty (Property):
     def get_data (self):
 
         path_to = os.path.join (app.config['FS_CACHE'], self._data)
-        with open (path_to, 'r') as file: return file.read ()
+        with open (path_to, 'r') as file: return self.decode (file.read ())
+
+    def encode (self, value): return value
+    def decode (self, value): return value
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
@@ -255,11 +253,36 @@ class BinaryProperty (Property):
 
     @classmethod
     def register (cls):
-        event.listen (cls, 'after_delete', cls.on_delete)
+        event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
 
 ###############################################################################
 
-BinaryProperty.register () ## events
+ExternalProperty.register () ## events
+
+###############################################################################
+###############################################################################
+
+class Base64Property (ExternalProperty):
+
+    def encode (self, value):
+
+        if value:
+            return 'data:%s;base64,%s' % (
+                self._mime, base64.encodestring (value))
+
+    def decode (self, value):
+
+        return value ## keep encoding!
+
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (Base64Property, self).__init__ (name, data, node, mime=mime \
+            if mime else 'application/octet-stream', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<Base64Property@%x: %s>' % (self.id if self.id else 0,
+            self._name)
 
 ###############################################################################
 ###############################################################################

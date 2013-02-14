@@ -231,23 +231,23 @@ class PropertyModelsTestCase (BaseTestCase):
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
 
-    def test_binary_property (self):
+    def test_base64_property (self):
 
         node = Node ('node', root=None)
         self.db.session.add (node)
 
-        prop = BinaryProperty ('binary', data= '...', node=node)
+        prop = Base64Property ('base64', data= '...', node=node)
         self.db.session.add (prop)
         self.db.session.commit ()
 
         [prop] = node.props.all ()
 
-        self.assertEqual (type (prop), BinaryProperty)
+        self.assertEqual (type (prop), Base64Property)
         self.assertTrue (isinstance (prop, Property))
-        self.assertTrue (isinstance (prop, BinaryProperty))
+        self.assertTrue (isinstance (prop, Base64Property))
 
-        self.assertEqual (prop.name, 'binary')
-        self.assertEqual (prop.type, 'BinaryProperty')
+        self.assertEqual (prop.name, 'base64')
+        self.assertEqual (prop.type, 'Base64Property')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data,
             'data:application/octet-stream;base64,Li4u\n')

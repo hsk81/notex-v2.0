@@ -15,7 +15,7 @@ from ..util import Q, JSON
 from ..models import Node
 from ..models import Leaf
 from ..models import TextProperty
-from ..models import BinaryProperty
+from ..models import Base64Property
 
 import subprocess
 import mimetypes
@@ -233,7 +233,7 @@ def create_bin (name, root, mime, path=None, file=None):
         data = file.read ()
 
     leaf = Leaf (name, root, mime=mime)
-    prop = BinaryProperty ('data', data, leaf, mime=mime)
+    prop = Base64Property ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
