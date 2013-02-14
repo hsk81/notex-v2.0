@@ -32,7 +32,7 @@ class RestTestCase (BaseTestCase):
 
         _, nodes = self.test_node_root ()
         node = Linq (nodes) \
-            .filter (lambda el: el['mime'] == 'application/project') \
+            .filter (lambda el:el['mime'].startswith ('application/project')) \
             .first ()
 
         self.assert_node (node)
@@ -51,7 +51,7 @@ class RestTestCase (BaseTestCase):
 
         _, nodes = self.test_node_root ()
         node = Linq (nodes) \
-            .filter (lambda el: el['mime'] == 'application/project') \
+            .filter (lambda el:el['mime'].startswith ('application/project')) \
             .first ()
 
         self.assert_node (node)
@@ -64,7 +64,7 @@ class RestTestCase (BaseTestCase):
 
         _, nodes = self.test_node_root ()
         node = Linq (nodes) \
-            .filter (lambda el: el['mime'] == 'application/project') \
+            .filter (lambda el:el['mime'].startswith ('application/project')) \
             .first ()
 
         self.assert_node (node)
@@ -78,7 +78,7 @@ class RestTestCase (BaseTestCase):
 
         _, nodes = self.test_node_root ()
         node = Linq (nodes) \
-            .filter (lambda el: el['mime'] == 'application/project') \
+            .filter (lambda el:el['mime'].startswith ('application/project')) \
             .first ()
 
         self.assert_node (node)
@@ -108,7 +108,7 @@ class RestTestCase (BaseTestCase):
 
         _, nodes = self.test_node_root ()
         node = Linq (nodes) \
-            .filter (lambda el: el['mime'] == 'application/project') \
+            .filter (lambda el:el['mime'].startswith ('application/project')) \
             .first ()
 
         self.assert_node (node)
