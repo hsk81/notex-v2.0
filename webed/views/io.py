@@ -288,10 +288,10 @@ def archive_download (chunk_size = 256*1024):
                     node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
         else:
             response = JSON.encode (dict (success=True, name=node.name))
-            object_cache.expire (archive_key, expiry=60) ## refresh
+            object_cache.expire (archive_key, expiry=90) ## refresh
     else:
         response = JSON.encode (dict (success=True, name=node.name))
-        object_cache.set_value (archive_key, compress (node), expiry=60) ##[s]
+        object_cache.set_value (archive_key, compress (node), expiry=90) ##[s]
 
     return response
 
