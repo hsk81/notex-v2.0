@@ -88,11 +88,11 @@ Ext.define ('Webed.controller.AddFileBox', {
 
                 application.fireEvent ('set_property', this, {
                     scope: this, callback: on_set, property: [{
-                        data: '....',
+                        data: '....\n',
                         mime: 'text/plain',
                         node_uuid: leaf.get ('uuid'),
                         name: 'data',
-                        size: 4,
+                        size: 5,
                         type: 'TextProperty'
                     }]
                 });
@@ -106,7 +106,7 @@ Ext.define ('Webed.controller.AddFileBox', {
                 mime: 'text/plain',
                 name: textfield.getValue (),
                 root: node,
-                size: 4
+                size: 5
             }
         });
 

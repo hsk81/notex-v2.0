@@ -101,7 +101,7 @@ class WebedOrm (object):
                 if callable (lest) and lest (*args, **kwargs) is True:
                     return fn (*args, **kwargs)
 
-                db.session.begin (nested=True)
+                self.session.begin (nested=True)
 
                 try:
                     result = fn (*args, **kwargs)
