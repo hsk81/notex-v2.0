@@ -157,7 +157,7 @@ class StringProperty (Property):
 
 class ExternalProperty (Property):
 
-    large_external_property_id = db.Column (db.Integer,
+    external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
@@ -234,6 +234,7 @@ ExternalProperty.register () ## events
 ###############################################################################
 
 class Base64Property (ExternalProperty):
+    __tablename__ = None
 
     def encode (self, value):
 
@@ -256,6 +257,7 @@ class Base64Property (ExternalProperty):
             self._name)
 
 class TextProperty (ExternalProperty):
+    __tablename__ = None
 
     def encode (self, value):
 

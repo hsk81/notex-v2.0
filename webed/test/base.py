@@ -28,11 +28,12 @@ class BaseTestCase (unittest.TestCase):
 
     def tearDown (self):
 
-        self.db.session.remove ()
         self.db.session.script (['webed', 'models', 'sql', 'npv_drop.sql'])
         self.db.session.script (['webed', 'models', 'sql', 'npt_drop.sql'])
         self.db.session.commit ()
         self.db.drop_all ()
+
+        self.db.scoped_session.remove ()
 
 ###############################################################################
 ###############################################################################

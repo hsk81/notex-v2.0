@@ -3,23 +3,19 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, orm
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
+
 from ..app import app
 
+import re
 import os.path
 import functools
 
 ###############################################################################
 ###############################################################################
 
-class WebedOrm (SQLAlchemy):
-
-    def __init__ (self, *args, **kwargs):
-
-        super (WebedOrm, self).__init__ (*args, **kwargs)
-
-        self.session.script = self.script
-        self.Query.back = self.Query.reset_joinpoint
+class WebedSession (orm.Session):
 
     def script (self, path):
 
@@ -28,7 +24,47 @@ class WebedOrm (SQLAlchemy):
         with open (path) as file:
             sql = file.read ()
 
-        db.session.execute (sql)
+        self.execute (sql)
+
+class WebedQuery (orm.Query):
+
+    orm.Query.back = orm.Query.reset_joinpoint
+
+class WebedBase (object):
+
+    @declared_attr
+    def __tablename__ (cls):
+        return cls.convert (cls.__name__)
+
+    rx_1st_cap = re.compile ('(.)([A-Z][a-z]+)')
+    rx_all_cap = re.compile ('([a-z0-9])([A-Z])')
+
+    @classmethod
+    def convert (cls, value):
+        value = cls.rx_1st_cap.sub (r'\1_\2', value)
+        value = cls.rx_all_cap.sub (r'\1_\2', value)
+        return value.lower()
+
+    query_class = WebedQuery
+    query = None
+
+class WebedOrm (object):
+
+    def __init__ (self, app):
+
+        echo = app.config.get ('SQLALCHEMY_ECHO', False)
+        uri = app.config.get ('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:')
+
+        self.engine = create_engine (uri, echo=echo)
+        self.session_maker = orm.sessionmaker (self.engine, WebedSession)
+        self.scoped_session = orm.scoped_session (self.session_maker)
+
+        self.Model = declarative_base (cls=WebedBase)
+        self.Model.query = self.scoped_session.query_property (query_cls=WebedQuery)
+
+    @property
+    def session (self):
+        return self.scoped_session ()
 
     def commit (self, fn=None, unless=None, lest=None):
 
@@ -43,10 +79,10 @@ class WebedOrm (SQLAlchemy):
 
                 try:
                     result = fn (*args, **kwargs)
-                    db.session.commit()
+                    self.session.commit ()
                     return result
                 except:
-                    db.session.rollback()
+                    self.session.rollback ()
                     raise
 
             return decorated
@@ -67,14 +103,28 @@ class WebedOrm (SQLAlchemy):
 
                 try:
                     result = fn (*args, **kwargs)
-                    db.session.commit()
+                    self.session.commit ()
                     return result
                 except:
-                    db.session.rollback()
+                    self.session.rollback ()
                     raise
 
             return decorated
         return decorator (fn) if fn else decorator
+
+    def create_all (self):
+        self.Model.metadata.create_all (self.engine)
+
+    def drop_all (self):
+        self.Model.metadata.drop_all (self.engine)
+
+    def __getattr__ (self, item):
+        import sqlalchemy
+
+        try:
+            return getattr (sqlalchemy, item)
+        except AttributeError:
+            return getattr (sqlalchemy.orm, item)
 
 ###############################################################################
 ###############################################################################
