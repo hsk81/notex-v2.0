@@ -116,7 +116,7 @@ Property.register () ## events
 
 class StringProperty (Property):
 
-    text_property_id = db.Column (db.Integer,
+    string_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
