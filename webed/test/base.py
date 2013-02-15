@@ -33,7 +33,7 @@ class BaseTestCase (unittest.TestCase):
         self.db.session.commit ()
         self.db.drop_all ()
 
-        self.db.scoped_session.remove ()
+        self.db.session_manager.remove ()
 
 ###############################################################################
 ###############################################################################

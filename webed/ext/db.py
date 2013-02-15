@@ -58,15 +58,20 @@ class WebedOrm (object):
 
         self.engine = create_engine (uri, echo=echo)
         self.session_maker = orm.sessionmaker (self.engine, WebedSession)
-        self.scoped_session = orm.scoped_session (self.session_maker)
+        self.session_manager = orm.scoped_session (self.session_maker)
 
         self.Model = declarative_base (cls=WebedBase)
         self.Model.query = \
-            self.scoped_session.query_property (query_cls=WebedQuery)
+            self.session_manager.query_property (query_cls=WebedQuery)
+
+        @app.teardown_appcontext
+        def on_teardown (response):
+            self.session_manager.remove ()
+            return response
 
     @property
     def session (self):
-        return self.scoped_session ()
+        return self.session_manager ()
 
     def commit (self, fn=None, unless=None, lest=None):
 
