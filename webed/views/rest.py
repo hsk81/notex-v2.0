@@ -411,7 +411,7 @@ def property_read (json=True):
     node_uuid = request.args.get ('node_uuid', None)
     if node_uuid:
         query = base.subprops.join (Node, Property.node) \
-            .filter (Node.uuid==node_uuid).back ()
+            .filter (Node.uuid==node_uuid)
     else:
         query = base.subprops
 
