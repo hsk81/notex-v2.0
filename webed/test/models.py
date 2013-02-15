@@ -104,7 +104,7 @@ class NodeEx (Node):
 
     def __repr__ (self):
 
-        return u'<NodeEx @ %r: %r>' % (self.id, self.name)
+        return u'<NodeEx @ %r>' % self.id
 
 class LeafEx (Leaf):
     __mapper_args__ = {'polymorphic_identity': 'leaf-ex'}
@@ -119,7 +119,7 @@ class LeafEx (Leaf):
 
     def __repr__ (self):
 
-        return u'<LeafEx @ %r: %r>' % (self.id, self.name)
+        return u'<LeafEx @ %r>' % self.id
 
 ###############################################################################
 ###############################################################################
