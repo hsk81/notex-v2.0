@@ -62,17 +62,6 @@ class Property (db.Model, Polymorphic):
     def name (self, value):
         self._name = value
 
-    @hybrid_property
-    def data (self):
-        return self.get_data ()
-    @data.setter
-    def data (self, value):
-        self.set_data (value)
-
-    @hybrid_property
-    def size (self):
-        return self._size
-
     ###########################################################################
 
     def __init__ (self, name, node, mime=None, uuid=None):
@@ -88,41 +77,43 @@ class Property (db.Model, Polymorphic):
 
         return u'<Property@%x: %s>' % (self.id if self.id else 0, self._name)
 
-    ###########################################################################
-
-    @staticmethod
-    def on_delete (mapper, connection, target):
-
-        for uuid in target.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
-
-    @classmethod
-    def register (cls):
-        event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
-
-###############################################################################
-
-Property.register () ## events
-
 ###############################################################################
 ###############################################################################
 
-class StringProperty (Property):
+class DataMixin (object):
+
+    _data = db.Column (db.String, name='data')
+    _size = db.Column (db.Integer, nullable=False, default=0)
+
+    @hybrid_property
+    def data (self):
+        return self.get_data ()
+    @data.setter
+    def data (self, value):
+        self.set_data (value)
+
+    def get_data (self):
+        raise NotImplementedError ('override')
+    def set_data (self, value):
+        raise NotImplementedError ('override')
+
+    @hybrid_property
+    def size (self):
+        return self._size
+
+###############################################################################
+###############################################################################
+
+class StringProperty (Property, DataMixin):
 
     string_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
-    _data = db.Column (db.String, name='data')
-    _size = db.Column (db.Integer, nullable=False, default=0)
-
     ###########################################################################
 
     def set_data (self, value):
-
-        for uuid in self.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
 
         self._data = value
         self._size = len (value) if value else 0
@@ -135,8 +126,8 @@ class StringProperty (Property):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (StringProperty, self).__init__ (name, node,
-            mime=mime if mime else 'text/plain', uuid=uuid)
+        super (StringProperty, self).__init__ (name, node, mime=mime \
+            if mime else 'text/plain', uuid=uuid)
 
         self.set_data (data)
 
@@ -148,15 +139,12 @@ class StringProperty (Property):
 ###############################################################################
 ###############################################################################
 
-class ExternalProperty (Property):
+class ExternalProperty (Property, DataMixin):
 
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
-
-    _data = db.Column (db.String, name='data')
-    _size = db.Column (db.Integer, nullable=False, default=0)
 
     ###########################################################################
 
@@ -208,6 +196,9 @@ class ExternalProperty (Property):
 
     @staticmethod
     def on_delete (mapper, connection, target):
+
+        for uuid in target.node.get_path ('uuid'):
+            cache.increase_version (key=[uuid, 'size', 'data'])
 
         version_key = cache.make_key (target._data)
         version = cache.decrease (key=version_key)
