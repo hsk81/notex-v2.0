@@ -4,7 +4,6 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
-from sqlalchemy.sql import func, select
 from flask import Blueprint, Response
 from flask.globals import request
 
@@ -76,7 +75,8 @@ def file_upload ():
         return leaf
 
     leaf = create_leaf (name, root, mime); assert leaf and leaf.id
-    db.session.execute (select ([func.npt_insert_node (leaf.base.id,leaf.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
+        leaf.base.id,leaf.id)]))
 
     return JSON.encode (dict (success=True))
 
@@ -118,7 +118,7 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
 
     if not skip_commit:
         for node in nodes: db.session.execute (
-            select ([func.npt_insert_node (base.id, node.id)]))
+            db.sql.select ([db.sql.func.npt_insert_node (base.id, node.id)]))
 
     if not json:
         return dict (success=True, filename=file.filename, nodes=nodes)

@@ -37,8 +37,8 @@ class WebedBase (object):
     def __tablename__ (cls):
         return cls.convert (cls.__name__)
 
-    rx_1st_cap = re.compile ('(.)([A-Z][a-z]+)')
-    rx_all_cap = re.compile ('([a-z0-9])([A-Z])')
+    rx_1st_cap = re.compile (r'(.)([A-Z][a-z]+)')
+    rx_all_cap = re.compile (r'([a-z0-9])([A-Z])')
 
     @classmethod
     def convert (cls, value):
@@ -61,7 +61,8 @@ class WebedOrm (object):
         self.scoped_session = orm.scoped_session (self.session_maker)
 
         self.Model = declarative_base (cls=WebedBase)
-        self.Model.query = self.scoped_session.query_property (query_cls=WebedQuery)
+        self.Model.query = \
+            self.scoped_session.query_property (query_cls=WebedQuery)
 
     @property
     def session (self):

@@ -3,8 +3,6 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from sqlalchemy.sql import func, select
-
 from flask.views import MethodView
 from flask.globals import request
 from flask import Blueprint
@@ -142,8 +140,10 @@ def node_update (leafs=True, json=True):
     if node.mime != mime: node.mime = mime
 
     db.nest (fn=lambda: db.session.add (node)) ()
-    db.session.execute (select ([func.npt_delete_node (base.id, node.id)]))
-    db.session.execute (select ([func.npt_insert_node (base.id, node.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
+        base.id, node.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
+        base.id, node.id)]))
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
@@ -247,7 +247,7 @@ def leaf_read (json=True):
             column = getattr (Node, property)
             if column:
                 if hasattr (NodePath, property):
-                    alias = db.aliased (NodePath)
+                    alias = db.orm.aliased (NodePath)
                     column = getattr (alias, property)
                     query = query.join (alias, alias.node_id==Node.id)
 
@@ -265,7 +265,7 @@ def leaf_read (json=True):
             column = getattr (Node, property)
             if column:
                 if hasattr (NodePath, property):
-                    alias = db.aliased (NodePath)
+                    alias = db.orm.aliased (NodePath)
                     column = getattr (alias, property)
                     query = query.join (alias, alias.node_id==Node.id)
                 if direction.lower () == 'desc':
@@ -316,8 +316,10 @@ def leaf_update (json=True):
     if name and leaf.name != name: leaf.name = name
 
     db.nest (fn=lambda: db.session.add (leaf)) ()
-    db.session.execute (select ([func.npt_delete_node (base.id, leaf.id)]))
-    db.session.execute (select ([func.npt_insert_node (base.id, leaf.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
+        base.id, leaf.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
+        base.id, leaf.id)]))
     db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
