@@ -31,16 +31,9 @@ class Property (db.Model, Polymorphic):
 
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id,ondelete='CASCADE'), index=True, nullable=False)
-    base_id = db.Column (db.Integer,
-        db.ForeignKey (Node.id,ondelete='CASCADE'), index=True, nullable=False)
 
     node = db.orm.relationship (Node, backref=db.orm.backref ('props',
-        cascade='all, delete-orphan', lazy='dynamic'),
-        primaryjoin='Node.id==Property.node_id')
-
-    base = db.orm.relationship (Node, backref=db.orm.backref ('subprops',
-        cascade='all, delete-orphan', lazy='dynamic'),
-        primaryjoin='Node.id==Property.base_id')
+        cascade='all, delete-orphan', lazy='dynamic'))
 
     ###########################################################################
 
