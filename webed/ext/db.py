@@ -53,10 +53,11 @@ class WebedOrm (object):
 
     def __init__ (self, app):
 
-        echo = app.config.get ('SQLALCHEMY_ECHO', False)
-        uri = app.config.get ('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:')
+        self.echo = app.config.get ('SQLALCHEMY_ECHO', False)
+        self.uri = app.config.get ('SQLALCHEMY_DATABASE_URI',
+            'sqlite:///:memory:')
 
-        self.engine = create_engine (uri, echo=echo)
+        self.engine = create_engine (self.uri, echo=self.echo)
         self.session_maker = orm.sessionmaker (self.engine, WebedSession)
         self.session_manager = orm.scoped_session (self.session_maker)
 
@@ -68,6 +69,10 @@ class WebedOrm (object):
         def on_teardown (response):
             self.session_manager.remove ()
             return response
+
+    def __repr__(self):
+
+        return u'<WebedOrm: engine=%r>' % self.uri
 
     @property
     def session (self):
