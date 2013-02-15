@@ -93,9 +93,10 @@ class DataMixin (object):
         self.set_data (value)
 
     def get_data (self):
-        raise NotImplementedError ('override')
+        return self._data
     def set_data (self, value):
-        raise NotImplementedError ('override')
+        self._data = value
+        self._size = len (value) if value else 0
 
     @hybrid_property
     def size (self):
@@ -110,17 +111,6 @@ class StringProperty (Property, DataMixin):
         db.Sequence ('string_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
-
-    ###########################################################################
-
-    def set_data (self, value):
-
-        self._data = value
-        self._size = len (value) if value else 0
-
-    def get_data (self):
-
-        return self._data
 
     ###########################################################################
 
@@ -148,6 +138,11 @@ class ExternalProperty (Property, DataMixin):
 
     ###########################################################################
 
+    def get_data (self):
+
+        path_to = os.path.join (app.config['FS_CACHE'], self._data)
+        with open (path_to, 'r') as file: return self.decode (file.read ())
+
     def set_data (self, value):
 
         value_key = unicode (cache.make_key (value))
@@ -170,13 +165,8 @@ class ExternalProperty (Property, DataMixin):
         version = cache.increase (version_key)
         assert version > 0
 
-    def get_data (self):
-
-        path_to = os.path.join (app.config['FS_CACHE'], self._data)
-        with open (path_to, 'r') as file: return self.decode (file.read ())
-
-    def encode (self, value): return value
     def decode (self, value): return value
+    def encode (self, value): return value
 
     ###########################################################################
 
