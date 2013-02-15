@@ -11,6 +11,7 @@ from ..app import app
 import re
 import os.path
 import functools
+import sqlalchemy
 
 ###############################################################################
 ###############################################################################
@@ -119,12 +120,7 @@ class WebedOrm (object):
         self.Model.metadata.drop_all (self.engine)
 
     def __getattr__ (self, item):
-        import sqlalchemy
-
-        try:
-            return getattr (sqlalchemy, item)
-        except AttributeError:
-            return getattr (sqlalchemy.orm, item)
+        return getattr (sqlalchemy, item)
 
 ###############################################################################
 ###############################################################################

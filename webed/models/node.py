@@ -28,13 +28,13 @@ class Node (db.Model, Polymorphic):
     base_id = db.Column (db.Integer, db.ForeignKey (id, ondelete='CASCADE'),
         index=True)
 
-    nodes = db.relationship ('Node',
-        cascade='all, delete-orphan', lazy='dynamic',
-        primaryjoin=id==root_id, backref=db.backref ('root', remote_side=id))
+    nodes = db.orm.relationship ('Node',
+        cascade='all, delete-orphan', lazy='dynamic', primaryjoin=id==root_id,
+        backref=db.orm.backref ('root', remote_side=id))
 
-    subnodes = db.relationship ('Node',
-        cascade='all, delete-orphan', lazy='dynamic',
-        primaryjoin=id==base_id, backref=db.backref ('base', remote_side=id))
+    subnodes = db.orm.relationship ('Node',
+        cascade='all, delete-orphan', lazy='dynamic', primaryjoin=id==base_id,
+        backref=db.orm.backref ('base', remote_side=id))
 
     ###########################################################################
 
@@ -136,12 +136,13 @@ class NodePath (db.Model):
 
     base_id = db.Column (db.Integer,
         db.ForeignKey (Node.id, ondelete='CASCADE'), index=True)
-    base = db.relationship (Node, foreign_keys=[base_id])
+    base = db.orm.relationship (Node, foreign_keys=[base_id])
 
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id, ondelete='CASCADE'), index=True)
-    node = db.relationship (Node, foreign_keys=[node_id], backref=db.backref (
-        'node_path', cascade='all, delete-orphan', uselist=False))
+    node = db.orm.relationship (Node, foreign_keys=[node_id],
+        backref=db.orm.backref ('node_path', cascade='all, delete-orphan',
+            uselist=False))
 
     id_path = db.Column (pg.ARRAY (db.Integer), nullable=False, index=False)
     name_path = db.Column (db.Text (), nullable=False, index=True)
