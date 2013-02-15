@@ -21,12 +21,8 @@ import __builtin__
 ###############################################################################
 ###############################################################################
 
-def get_subprops (self, alias=db.orm.aliased (Node)):
-
-    return db.session.query (Property).join (alias.props) \
-        .filter (alias.base==self)
-
-Node.subprops = __builtin__.property (get_subprops)
+Node.subprops = __builtin__.property (lambda self, alias=db.orm.aliased (Node):
+    db.session.query (Property).join (alias.props).filter (alias.base==self))
 
 ###############################################################################
 ###############################################################################
