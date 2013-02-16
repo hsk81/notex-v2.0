@@ -23,8 +23,8 @@ class ModelsTestCase (BaseTestCase):
         return [base, info, node, leaf]
 
     def commit (self, objects):
-        self.db.session.add_all (objects)
-        self.db.session.commit ()
+        db.session.add_all (objects)
+        db.session.commit ()
 
     def test (self):
         base, info, node, leaf = self.create ()
@@ -74,10 +74,10 @@ class ModelsTestCase (BaseTestCase):
     def test_delete (self):
         base, info, node, leaf = self.create ()
 
-        self.db.session.add_all ([base, info, node, leaf])
-        self.db.session.commit ()
-        self.db.session.delete (base)
-        self.db.session.commit ()
+        db.session.add_all ([base, info, node, leaf])
+        db.session.commit ()
+        db.session.delete (base)
+        db.session.commit ()
 
         base = Node.query.get (base.id)
         self.assertIsNone (base)
@@ -129,24 +129,24 @@ class ExtendedModelsTestCase (BaseTestCase):
     def test_polymorphic (self):
 
         base = Node ('base', root=None)
-        self.db.session.add (base)
+        db.session.add (base)
 
         leaf = LeafEx ('leaf-l0', root=base)
-        self.db.session.add (leaf)
+        db.session.add (leaf)
         node = NodeEx ('node-l0', root=base)
-        self.db.session.add (node)
+        db.session.add (node)
 
         leaf = Leaf ('leaf-l1', root=node)
-        self.db.session.add (leaf)
+        db.session.add (leaf)
         node = Node ('node-l1', root=node)
-        self.db.session.add (node)
+        db.session.add (node)
 
         leaf = LeafEx ('leaf-l2', root=node)
-        self.db.session.add (leaf)
+        db.session.add (leaf)
         node = NodeEx ('node-l2', root=node)
-        self.db.session.add (node)
+        db.session.add (node)
 
-        self.db.session.commit ()
+        db.session.commit ()
 
         [leaf] = base.leafs.all ()
         self.assertEqual (type (leaf), LeafEx)
@@ -176,11 +176,11 @@ class PropertyModelsTestCase (BaseTestCase):
     def test_property (self):
 
         node = Node ('node', root=None)
-        self.db.session.add (node)
+        db.session.add (node)
 
         prop = Property ('property', node=node)
-        self.db.session.add (prop)
-        self.db.session.commit ()
+        db.session.add (prop)
+        db.session.commit ()
 
         [prop] = node.props.all ()
 
@@ -192,11 +192,11 @@ class PropertyModelsTestCase (BaseTestCase):
     def test_string_property (self):
 
         node = Node ('node', root=None)
-        self.db.session.add (node)
+        db.session.add (node)
 
         prop = StringProperty ('string', data=u'...', node=node)
-        self.db.session.add (prop)
-        self.db.session.commit ()
+        db.session.add (prop)
+        db.session.commit ()
 
         [prop] = node.props.all ()
 
@@ -213,11 +213,11 @@ class PropertyModelsTestCase (BaseTestCase):
     def test_text_property (self):
 
         node = Node ('node', root=None)
-        self.db.session.add (node)
+        db.session.add (node)
 
         prop = TextProperty ('text', data=u'...', node=node)
-        self.db.session.add (prop)
-        self.db.session.commit ()
+        db.session.add (prop)
+        db.session.commit ()
 
         [prop] = node.props.all ()
 
@@ -234,11 +234,11 @@ class PropertyModelsTestCase (BaseTestCase):
     def test_base64_property (self):
 
         node = Node ('node', root=None)
-        self.db.session.add (node)
+        db.session.add (node)
 
         prop = Base64Property ('base64', data= '...', node=node)
-        self.db.session.add (prop)
-        self.db.session.commit ()
+        db.session.add (prop)
+        db.session.commit ()
 
         [prop] = node.props.all ()
 

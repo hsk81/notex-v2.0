@@ -14,6 +14,18 @@ import unittest
 
 class BaseTestCase (unittest.TestCase):
 
+    def __call__ (self, result=None):
+
+        self._setUp()
+        super (BaseTestCase, self).__call__(result)
+        self._tearDown()
+
+    def _setUp (self):
+
+        self.app = app.test_client ()
+        self.ctx = app.test_request_context()
+        self.ctx.push ()
+
     def setUp (self):
 
         app.config.from_object (TestConfig)
@@ -24,8 +36,6 @@ class BaseTestCase (unittest.TestCase):
         db.session.script (['webed', 'models', 'sql', 'npt_delete.sql'])
         db.session.commit ()
 
-        self.app = app.test_client ()
-
     def tearDown (self):
 
         db.session.script (['webed', 'models', 'sql', 'npv_drop.sql'])
@@ -34,6 +44,10 @@ class BaseTestCase (unittest.TestCase):
         db.drop_all ()
 
         db.session_manager.remove ()
+
+    def _tearDown (self):
+
+        self.ctx.pop ()
 
 ###############################################################################
 ###############################################################################
