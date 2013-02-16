@@ -171,7 +171,7 @@ class WebedMemcached (WebedCache):
     def init_app (self, app, servers=None, prefix=None, pool_size=None):
 
         app.config.setdefault ('CACHE_DEFAULT_SERVERS', ['127.0.0.1'])
-        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'webed:')
+        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'cache:')
         app.config.setdefault ('CACHE_DEFAULT_POOL_SIZE', 2**8)
 
         self.SERVERS = servers \
@@ -289,7 +289,7 @@ class WebedRedis (WebedCache):
     def init_app (self, app, servers=None, prefix=None, port=None, db=None):
 
         app.config.setdefault ('CACHE_DEFAULT_SERVERS', ['127.0.0.1'])
-        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'webed:')
+        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'cache:')
         app.config.setdefault ('CACHE_DEFAULT_PORT', 6379)
         app.config.setdefault ('CACHE_DEFAULT_DB', 0)
 
