@@ -152,9 +152,14 @@ class NodePath (db.Model):
     def __init__ (self, node):
 
         self.node = node
+        assert self.node
         self.base = node.base
+        assert self.base
         self.id_path = node.get_path (field='id')
+        assert self.id_path and len (self.id_path) > 0
+        for id in self.id_path: assert id is not None
         self.name_path = node.name_path
+        assert self.name_path is not None
 
     def __repr__ (self):
 
