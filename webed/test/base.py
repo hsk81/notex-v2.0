@@ -23,7 +23,7 @@ class BaseTestCase (unittest.TestCase):
     def _setUp (self):
 
         self.app = app.test_client ()
-        self.ctx = app.test_request_context()
+        self.ctx = app.test_request_context ()
         self.ctx.push ()
 
     def setUp (self):
