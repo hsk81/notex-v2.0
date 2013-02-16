@@ -3,6 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from flask import _app_ctx_stack as stack
 from ..app import app
 
 import abc
@@ -15,7 +16,7 @@ import functools
 ###############################################################################
 ###############################################################################
 
-DEFAULT_TIMEOUT = app.config['CACHE_DEFAULT_TIMEOUT']
+DEFAULT_TIMEOUT = app.config.get ('CACHE_DEFAULT_TIMEOUT')
 
 ###############################################################################
 ###############################################################################
@@ -145,18 +146,29 @@ class WebedCache (object):
 ###############################################################################
 ###############################################################################
 
+DEFAULT_TIMEOUT = app.config.get ('CACHE_DEFAULT_TIMEOUT', 0)
+
+###############################################################################
+###############################################################################
+
 class WebedMemcached (WebedCache):
 
     @property
     def NEVER (self):
         return 0
-
     @property
     def ASAP (self):
         return None
 
-    def __init__ (self, app, servers=None, pool_size=None, prefix=None):
-        self.app = app
+    def __init__ (self, app, servers=None, prefix=None, pool_size=None):
+
+        if app is not None:
+            self.app = app
+            self.init_app (self.app, servers, prefix, pool_size)
+        else:
+            self.app = None
+
+    def init_app (self, app, servers=None, prefix=None, pool_size=None):
 
         self.SERVERS = servers if servers else \
             app.config.get ('CACHE_DEFAULT_SERVERS', None)
@@ -168,14 +180,6 @@ class WebedMemcached (WebedCache):
             app.config.get ('CACHE_DEFAULT_POOL_SIZE', 2**8)
         assert isinstance (self.POOL_SIZE, int)
 
-        app.mc = pylibmc.Client (self.SERVERS, binary=True, behaviors={
-            'tcp_nodelay': True,
-            'no_block': True,
-            'ketama': True
-        })
-
-        app.mc_pool = pylibmc.ClientPool (app.mc, self.POOL_SIZE)
-
     def get (self, key, expiry=None):
         return self.get_value (key, expiry=expiry)
 
@@ -183,7 +187,7 @@ class WebedMemcached (WebedCache):
         return self.get_value (key, expiry=expiry)
 
     def get_value (self, key, expiry=None):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             value = mc.get (self.KEY_PREFIX+key)
             if expiry: self.expire (key, expiry=expiry)
             return value
@@ -195,44 +199,68 @@ class WebedMemcached (WebedCache):
         self.set_value (key, value, expiry=expiry)
 
     def set_value (self, key, value, expiry=DEFAULT_TIMEOUT):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             if expiry == self.ASAP:
                 mc.delete (self.KEY_PREFIX+key)
             else:
                 mc.set (self.KEY_PREFIX+key, value, time=expiry)
 
     def delete (self, key):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             mc.delete (self.KEY_PREFIX+key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             if expiry == self.ASAP:
                 mc.delete (self.KEY_PREFIX+key)
             else:
                 mc.touch (self.KEY_PREFIX+key, time=expiry)
 
     def exists (self, key):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             return self.KEY_PREFIX+key in mc
 
     def increase (self, key, expiry=DEFAULT_TIMEOUT):
         key = self.KEY_PREFIX+key
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             value = mc.get (key)+1 if key in mc else +1
-            mc.set (key, value, time=expiry)
+            if expiry == self.ASAP: mc.delete (key)
+            else: mc.set (key, value, time=expiry)
             return value
 
     def decrease (self, key, expiry=DEFAULT_TIMEOUT):
         key = self.KEY_PREFIX+key
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             value = mc.get (key)-1 if key in mc else -1
-            mc.set (key, value, time=expiry)
+            if expiry == self.ASAP: mc.delete (key)
+            else: mc.set (key, value, time=expiry)
             return value
 
     def flush_all (self):
-        with self.app.mc_pool.reserve () as mc:
+        with self.connection.reserve () as mc:
             mc.flush_all ()
+
+    ###########################################################################
+
+    @property
+    def connection (self):
+        ctx = stack.top
+        if ctx is not None:
+            if not hasattr (ctx, 'memcached'):
+                ctx.memcached = self.connect ()
+            return ctx.memcached
+
+    def connect (self):
+        mc = pylibmc.Client (self.SERVERS, binary=True, behaviors={
+            'tcp_nodelay': True, 'no_block': True, 'ketama': True
+        })
+
+        return pylibmc.ClientPool (mc, self.POOL_SIZE)
+
+###############################################################################
+###############################################################################
+
+DEFAULT_TIMEOUT = app.config.get ('CACHE_DEFAULT_TIMEOUT', None)
 
 ###############################################################################
 ###############################################################################
@@ -242,13 +270,19 @@ class WebedRedis (WebedCache):
     @property
     def NEVER (self):
         return None
-
     @property
     def ASAP (self):
         return 0
 
-    def __init__ (self, app, servers=None, port=None, prefix=None, db=0):
-        self.app = app
+    def __init__ (self, app, servers=None, prefix=None, port=None, db=None):
+
+        if app is not None:
+            self.app = app
+            self.init_app (self.app, servers, prefix, port, db)
+        else:
+            self.app = None
+
+    def init_app (self, app, servers=None, prefix=None, port=None, db=None):
 
         self.SERVERS = servers if servers else \
             app.config.get ('CACHE_DEFAULT_SERVERS', None)
@@ -259,9 +293,9 @@ class WebedRedis (WebedCache):
         self.PORT = port if port else \
             app.config.get ('CACHE_DEFAULT_PORT', 6379)
         assert isinstance (self.PORT, int)
-
-        app.rd = redis.StrictRedis (host=self.SERVERS[0], port=self.PORT,
-            db=db)
+        self.DB = db if db else \
+            app.config.get ('CACHE_DEFAULT_DB', 0)
+        assert isinstance (self.DB, int)
 
     def get (self, key, expiry=None):
         value = self.get_value (key, expiry=expiry)
@@ -273,9 +307,9 @@ class WebedRedis (WebedCache):
 
     def get_value (self, key, expiry=None):
         if not expiry:
-            return self.app.rd.get (self.KEY_PREFIX+key)
+            return self.connection.get (self.KEY_PREFIX+key)
         else:
-            return self.app.rd.pipeline ().get (self.KEY_PREFIX+key) \
+            return self.connection.pipeline ().get (self.KEY_PREFIX+key) \
                 .expire (self.KEY_PREFIX+key, time=expiry) \
                 .execute ().pop (0)
 
@@ -287,41 +321,60 @@ class WebedRedis (WebedCache):
 
     def set_value (self, key, value, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            self.app.rd.pipeline ().set (self.KEY_PREFIX+key, value) \
+            self.connection.pipeline ().set (self.KEY_PREFIX+key, value) \
                 .persist (self.KEY_PREFIX+key).execute ()
         else:
-            self.app.rd.pipeline ().set (self.KEY_PREFIX+key, value) \
+            self.connection.pipeline ().set (self.KEY_PREFIX+key, value) \
                 .expire (self.KEY_PREFIX+key, time=expiry).execute ()
 
     def delete (self, key):
-        self.app.rd.delete (self.KEY_PREFIX+key)
+        self.connection.delete (self.KEY_PREFIX+key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            self.app.rd.persist (self.KEY_PREFIX+key)
+            self.connection.persist (self.KEY_PREFIX+key)
         else:
-            self.app.rd.expire (self.KEY_PREFIX+key, time=expiry)
+            self.connection.expire (self.KEY_PREFIX+key, time=expiry)
 
     def exists (self, key):
-        return self.app.rd.exists (self.KEY_PREFIX+key)
+        return self.connection.exists (self.KEY_PREFIX+key)
 
     def increase (self, key, expiry=DEFAULT_TIMEOUT):
-        return self.app.rd.pipeline ().incr (self.KEY_PREFIX+key) \
-            .expire (self.KEY_PREFIX+key, time=expiry) \
-            .execute ().pop (0)
+        if expiry == self.NEVER:
+            return self.connection.pipeline ().incr (self.KEY_PREFIX+key) \
+                .persist (self.KEY_PREFIX+key) \
+                .execute ().pop (0)
+        else:
+            return self.connection.pipeline ().incr (self.KEY_PREFIX+key) \
+                .expire (self.KEY_PREFIX+key, time=expiry) \
+                .execute ().pop (0)
 
     def decrease (self, key, expiry=DEFAULT_TIMEOUT):
-        return self.app.rd.pipeline ().decr (self.KEY_PREFIX+key) \
-            .expire (self.KEY_PREFIX+key, time=expiry) \
-            .execute ().pop (0)
+        if expiry == self.NEVER:
+            return self.connection.pipeline ().decr (self.KEY_PREFIX+key) \
+                .persist (self.KEY_PREFIX+key) \
+                .execute ().pop (0)
+        else:
+            return self.connection.pipeline ().decr (self.KEY_PREFIX+key) \
+                .expire (self.KEY_PREFIX+key, time=expiry) \
+                .execute ().pop (0)
 
     def flush_all (self):
-        self.app.rd.flushall ()
+        self.connection.flushall ()
 
-###############################################################################
-###############################################################################
+    ###########################################################################
 
-WebedCache.DEFAULT_TIMEOUT = DEFAULT_TIMEOUT
+    @property
+    def connection (self):
+        ctx = stack.top
+        if ctx is not None:
+            if not hasattr (ctx, 'redis'):
+                ctx.redis = self.connect ()
+            return ctx.redis
+
+    def connect (self):
+        return redis.StrictRedis (host=self.SERVERS[0], port=self.PORT,
+            db=self.DB)
 
 ###############################################################################
 ###############################################################################
