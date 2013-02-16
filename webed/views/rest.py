@@ -60,8 +60,11 @@ def node_create (leafs=True, json=True):
     else:
         node = Node (name, root, mime=mime)
 
-    db.session.add (node)
-    db.session.add (NodePath (node))
+    db.nest (fn=lambda: db.session.add (node)) ()
+    db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
+        base.id, node.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
+        base.id, node.id)]))
 
     result = dict (success=True, result=node2ext (node, leafs=leafs))
     return jsonify (result) if json else result
@@ -204,8 +207,12 @@ def leaf_create (json=True):
     else:
         leaf = Leaf (name, root, mime=mime)
 
-    db.session.add (leaf)
-    db.session.add (NodePath (leaf))
+    db.nest (fn=lambda: db.session.add (leaf)) ()
+    db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
+        base.id, leaf.id)]))
+    db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
+        base.id, leaf.id)]))
+    db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
@@ -320,7 +327,6 @@ def leaf_update (json=True):
         base.id, leaf.id)]))
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
         base.id, leaf.id)]))
-    db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
