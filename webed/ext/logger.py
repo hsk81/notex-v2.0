@@ -13,15 +13,26 @@ from ..app import app
 ###############################################################################
 ###############################################################################
 
-class Logger:
+class Logger (object):
 
     def __init__ (self, app):
 
-        log_file = os.path.join (app.root_path, app.config['LOG_FILE'])
-        assert log_file
+        if app is not None:
+            self.app = app
+            self.init_app (self.app)
+        else:
+            self.app = None
+
+    def init_app (self, app, log_file=None):
+
+        app.config.setdefault ('LOG_FILE', 'logger.log')
+        self.LOG_FILE = log_file if log_file else app.config['LOG_FILE']
+        assert self.LOG_FILE
+        self.LOG_PATH = os.path.join (app.root_path, self.LOG_FILE)
+        assert self.LOG_PATH
 
         file_handler = logging.handlers.RotatingFileHandler (
-            log_file, maxBytes=1024*512, backupCount=16
+            self.LOG_PATH, maxBytes=1024*512, backupCount=16
         )
 
         file_handler.setFormatter (logging.Formatter (
@@ -33,6 +44,7 @@ class Logger:
         app.logger.setLevel (logging.DEBUG)
 
     def __getattr__ (self, attr):
+
         return getattr (current_app.logger, attr)
 
 ###############################################################################
