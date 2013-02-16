@@ -392,7 +392,7 @@ def property_create (json=True):
     assert Type.mro ().pop (0) is not Property
     prop = Type (name, data, node, mime=mime, uuid=uuid)
 
-    db.session.add (prop)
+    db.nest (fn=lambda: db.session.add (prop))
 
     result = dict (success=True, result=prop2ext (prop))
     return jsonify (result) if json else result
