@@ -23,8 +23,6 @@ class DefaultConfig:
 
     PERMANENT_SESSION_LIFETIME = timedelta (days=7) ## session expires after!
     CACHE_DEFAULT_TIMEOUT = int (PERMANENT_SESSION_LIFETIME.total_seconds ())
-    CACHE_DEFAULT_KEY_PREFIX = 'webed:'
-    CACHE_DEFAULT_SERVERS = ['127.0.0.1']
 
     CACHE0_KEY_PREFIX = 'webed:'
     CACHE0_SERVERS = ['127.0.0.1']

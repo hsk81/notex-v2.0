@@ -170,14 +170,18 @@ class WebedMemcached (WebedCache):
 
     def init_app (self, app, servers=None, prefix=None, pool_size=None):
 
-        self.SERVERS = servers if servers else \
-            app.config.get ('CACHE_DEFAULT_SERVERS', None)
+        app.config.setdefault ('CACHE_DEFAULT_SERVERS', ['127.0.0.1'])
+        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'webed:')
+        app.config.setdefault ('CACHE_DEFAULT_POOL_SIZE', 2**8)
+
+        self.SERVERS = servers \
+            if servers else app.config['CACHE_DEFAULT_SERVERS']
         assert isinstance (self.SERVERS, list)
-        self.KEY_PREFIX = prefix if prefix else \
-            app.config.get ('CACHE_DEFAULT_KEY_PREFIX', None)
+        self.KEY_PREFIX = prefix \
+            if prefix else app.config['CACHE_DEFAULT_KEY_PREFIX']
         assert isinstance (self.KEY_PREFIX, str)
-        self.POOL_SIZE = pool_size if pool_size else \
-            app.config.get ('CACHE_DEFAULT_POOL_SIZE', 2**8)
+        self.POOL_SIZE = pool_size \
+            if pool_size else app.config['CACHE_DEFAULT_POOL_SIZE']
         assert isinstance (self.POOL_SIZE, int)
 
     def get (self, key, expiry=None):
@@ -284,17 +288,22 @@ class WebedRedis (WebedCache):
 
     def init_app (self, app, servers=None, prefix=None, port=None, db=None):
 
-        self.SERVERS = servers if servers else \
-            app.config.get ('CACHE_DEFAULT_SERVERS', None)
+        app.config.setdefault ('CACHE_DEFAULT_SERVERS', ['127.0.0.1'])
+        app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'webed:')
+        app.config.setdefault ('CACHE_DEFAULT_PORT', 6379)
+        app.config.setdefault ('CACHE_DEFAULT_DB', 0)
+
+        self.SERVERS = servers \
+            if servers else app.config['CACHE_DEFAULT_SERVERS']
         assert isinstance (self.SERVERS, list)
-        self.KEY_PREFIX = prefix if prefix else \
-            app.config.get ('CACHE_DEFAULT_KEY_PREFIX', None)
+        self.KEY_PREFIX = prefix \
+            if prefix else app.config['CACHE_DEFAULT_KEY_PREFIX']
         assert isinstance (self.KEY_PREFIX, str)
-        self.PORT = port if port else \
-            app.config.get ('CACHE_DEFAULT_PORT', 6379)
+        self.PORT = port \
+            if port else app.config['CACHE_DEFAULT_PORT']
         assert isinstance (self.PORT, int)
-        self.DB = db if db else \
-            app.config.get ('CACHE_DEFAULT_DB', 0)
+        self.DB = db \
+            if db else app.config['CACHE_DEFAULT_DB']
         assert isinstance (self.DB, int)
 
     def get (self, key, expiry=None):
