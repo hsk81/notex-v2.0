@@ -51,13 +51,27 @@ class WebedBase (object):
 
 class WebedOrm (object):
 
-    def __init__ (self, app):
+    def __init__ (self, app, uri=None, echo=None):
 
-        self.echo = app.config.get ('SQLALCHEMY_ECHO', False)
-        self.uri = app.config.get ('SQLALCHEMY_DATABASE_URI',
-            'sqlite:///:memory:')
+        if app is not None:
+            self.app = app
+            self.init_app (self.app)
+        else:
+            self.app = None
 
-        self.engine = create_engine (self.uri, echo=self.echo)
+    def init_app (self, app, uri=None, echo=None):
+
+        app.config.setdefault ('SQLALCHEMY_ECHO', False)
+        app.config.setdefault ('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:')
+
+        self.ECHO = echo \
+            if echo is not None else app.config['SQLALCHEMY_ECHO']
+        assert self.ECHO is not None
+        self.URI = uri \
+            if uri is not None else app.config['SQLALCHEMY_DATABASE_URI']
+        assert self.URI
+
+        self.engine = create_engine (self.URI, echo=self.ECHO)
         self.session_maker = orm.sessionmaker (self.engine, WebedSession)
         self.session_manager = orm.scoped_session (self.session_maker)
 
@@ -66,13 +80,12 @@ class WebedOrm (object):
             self.session_manager.query_property (query_cls=WebedQuery)
 
         @app.teardown_appcontext
-        def on_teardown (response):
+        def on_teardown (exception):
             self.session_manager.remove ()
-            return response
 
     def __repr__(self):
 
-        return u'<WebedOrm: engine=%r>' % self.uri
+        return u'<WebedOrm: engine=%r>' % self.URI
 
     @property
     def session (self):
