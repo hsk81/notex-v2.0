@@ -61,6 +61,7 @@ def node_create (leafs=True, json=True):
         node = Node (name, root, mime=mime)
 
     db.nest (fn=lambda: db.session.add (node)) ()
+    db.nest (fn=lambda: db.session.add (NodePath (node))) ()
     db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
         base.id, node.id)]))
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
@@ -212,7 +213,6 @@ def leaf_create (json=True):
         base.id, leaf.id)]))
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
         base.id, leaf.id)]))
-    db.session.commit ()
 
     result = dict (success=True, result=leaf2ext (leaf))
     return jsonify (result) if json else result
