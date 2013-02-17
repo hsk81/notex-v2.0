@@ -233,7 +233,7 @@ def leaf_read (json=True):
     root_uuid = request.args.get ('root_uuid', None)
     if root_uuid:
         root = Q (Node.query).one (uuid=root_uuid)
-        query = root.leafs ## TODO: root.subleafs!?
+        query = root.leafs ## TODO: subleafs?
     else:
         query = base.subleafs
 
@@ -389,7 +389,7 @@ def property_create (json=True):
 
     Type = getattr (sys.modules[__name__], type)
     assert issubclass (Type, Property)
-    assert Type.mro ().pop (0) is not Property
+    assert issubclass (TextProperty, DataPropertyMixin)
     prop = Type (name, data, node, mime=mime, uuid=uuid)
 
     db.nest (fn=lambda: db.session.add (prop))
@@ -418,8 +418,8 @@ def property_read (json=True):
 
     node_uuid = request.args.get ('node_uuid', None)
     if node_uuid:
-        query = base.subprops.join (Node, Property.node) \
-            .filter (Node.uuid==node_uuid).back ()
+        node = Q (base.subnodes).one (uuid=node_uuid)
+        query = node.props ## TODO: subprops?
     else:
         query = base.subprops
 

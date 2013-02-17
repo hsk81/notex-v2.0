@@ -31,9 +31,13 @@ class Property (db.Model, Polymorphic):
 
     node_id = db.Column (db.Integer,
         db.ForeignKey (Node.id,ondelete='CASCADE'), index=True, nullable=False)
+    base_id = db.Column (db.Integer,
+        db.ForeignKey (Node.id,ondelete='CASCADE'), index=True, nullable=False)
 
     node = db.orm.relationship (Node, backref=db.orm.backref ('props',
-        cascade='all, delete-orphan', lazy='dynamic'))
+        cascade='all, delete-orphan', lazy='dynamic'), foreign_keys=[node_id])
+    base = db.orm.relationship (Node, backref=db.orm.backref ('subprops',
+        cascade='all, delete-orphan', lazy='dynamic'), foreign_keys=[base_id])
 
     ###########################################################################
 
@@ -80,7 +84,7 @@ class Property (db.Model, Polymorphic):
 ###############################################################################
 ###############################################################################
 
-class DataMixin (object):
+class DataPropertyMixin (object):
 
     _data = db.Column (db.String, name='data')
     _size = db.Column (db.Integer, nullable=False, default=0)
@@ -105,7 +109,7 @@ class DataMixin (object):
 ###############################################################################
 ###############################################################################
 
-class StringProperty (Property, DataMixin):
+class StringProperty (Property, DataPropertyMixin):
 
     string_property_id = db.Column (db.Integer,
         db.Sequence ('string_property_id_seq'),
@@ -129,7 +133,7 @@ class StringProperty (Property, DataMixin):
 ###############################################################################
 ###############################################################################
 
-class ExternalProperty (Property, DataMixin):
+class ExternalProperty (Property, DataPropertyMixin):
 
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
