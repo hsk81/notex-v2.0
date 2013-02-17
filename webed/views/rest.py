@@ -61,7 +61,6 @@ def node_create (leafs=True, json=True):
         node = Node (name, root, mime=mime)
 
     db.nest (fn=lambda: db.session.add (node)) ()
-    db.nest (fn=lambda: db.session.add (NodePath (node))) ()
     db.session.execute (db.sql.select ([db.sql.func.npt_delete_node (
         base.id, node.id)]))
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
