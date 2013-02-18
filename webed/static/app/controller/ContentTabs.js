@@ -103,50 +103,57 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        var tab = this.get_tab (uuid);
-        var tab = tab ? tab : view.add ({
-            record: record,
-            title: name,
-            closable: true,
-            iconCls: iconCls,
-            layout: 'fit',
+        var tab = this.get_tab (uuid, true);
+        if (tab == undefined) {
+            tab = view.add ({
+                autoDestroy: false,
+                record: record,
+                title: name,
+                closable: true,
+                iconCls: iconCls,
+                layout: 'fit',
 
-            items: [{
-                xtype: 'textarea',
-                listeners: {
-                    beforerender: function (ta, eOpts) {
+                items: [{
+                    xtype: 'code-area',
+                    listeners: {
+                        afterrender: function (ta) {
+                            var panel = ta.up ('panel'); assert (panel);
+                            panel.setLoading ('Loading ..', true);
 
-                        app.fireEvent ('get_property', this, {
-                            callback: on_get, scope: this, property: [{
-                                node_uuid: uuid, name: 'data'
-                            }]
-                        });
+                            app.fireEvent ('get_property', this, {
+                                callback: on_get, scope: this, property: [{
+                                    node_uuid: uuid, name: 'data'
+                                }]
+                            });
 
-                        function on_get (props) {
-                            assert (props && props.length > 0);
+                            function on_get (props) {
+                                assert (props && props.length > 0);
 
-                            var data = props[0].get ('data');
-                            assert (data || data == '');
-                            ta.setValue (data);
+                                var data = props[0].get ('data');
+                                assert (data || data == '');
+                                ta.setValue (data);
 
-                            if (callback && callback.call) {
-                                callback.call (scope||this, props);
+                                CodeMirror.fromTextArea (ta.inputEl.dom, {
+                                    autoClearEmptyLines: true,
+                                    lineWrapping: true,
+                                    lineNumbers: true,
+                                    value: data
+                                });
+
+                                if (callback && callback.call) {
+                                    callback.call (scope||this, props);
+                                }
+
+                                var panel = ta.up ('panel'); assert (panel);
+                                panel.setLoading (false);
                             }
-
-                            setTimeout (function() {
-                                if (ta.el) ta.el.unmask ();
-                            }, 75);
                         }
-                    },
-
-                    afterrender: function (ta, eOpts) {
-                        if (!ta.getValue ()) setTimeout (function() {
-                            ta.el.mask ('Loading...');
-                        }, 25);
                     }
-                }
-            }]
-        });
+                }]
+            });
+
+            this.set_tab (uuid, tab);
+        }
 
         view.setActiveTab (tab);
     },
@@ -329,8 +336,26 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    get_tab: function (uuid) {
+    set_tab: function (uuid, tab) {
         assert (uuid);
+        assert (tab);
+
+        if (!this.tab_cache) {
+            this.tab_cache = [];
+        }
+
+        if (!this.tab_cache[uuid]) {
+            this.tab_cache[uuid] = tab;
+        }
+    },
+
+    get_tab: function (uuid, skip_cache) {
+        assert (uuid);
+
+        if (this.tab_cache && !skip_cache) {
+            var tab = this.tab_cache[uuid];
+            if (tab) return tab;
+        }
 
         var view = this.getContentTabs ();
         assert (view);

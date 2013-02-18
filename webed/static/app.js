@@ -25,6 +25,7 @@ Ext.application ({
         'AddFolderBox',
         'AddProjectBox',
         'ArchiveUploadBox',
+        'CodeArea',
         'ContentTabs',
         'DeleteBox',
         'FileUploadBox',

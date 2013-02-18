@@ -3,7 +3,7 @@ Ext.define ('Webed.view.ContentTabs', {
     alias: 'widget.content-tabs',
 
     requires: [
-        'Ext.form.field.TextArea',
+        'Webed.form.field.CodeArea',
         'Ext.layout.container.Absolute'
     ],
 

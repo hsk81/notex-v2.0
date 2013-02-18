@@ -7,14 +7,19 @@
           href="{{ url_for('static', filename='ico/favicon.ico') }}">
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/reset.css') }}" />
+
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/webed.css') }}" />
+          href="{{ url_for('static', filename='lib/extjs/resources/css/ext-all.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
+
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/menu.css') }}" />
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/icons-16.css') }}" />
+          href="{{ url_for('static', filename='css/webed.css') }}" />
+
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='lib/extjs/resources/css/ext-all.css') }}" />
+          href="{{ url_for('static', filename='css/icons-16.css') }}" />
 </head>
 
 <body>
@@ -33,6 +38,10 @@
     {% endif %}
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/codemirror/lib/codemirror.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/codemirror/mode/rst/rst.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='app/assert.js') }}"></script>
     <script type="text/javascript"
