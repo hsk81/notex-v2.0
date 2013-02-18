@@ -49,10 +49,14 @@ class DbSetup (Command):
             Option ('-m', '--mail', dest='mail', default=u'admin@mail.net'),
         ]
 
-    def run (self, name, mail):
+    def run (self, *args, **kwargs):
         db.create_all ()
 
-        assert name, mail
+        name = kwargs['name']
+        assert name
+        mail = kwargs['mail']
+        assert mail
+
         user = Q (User.query).one_or_default (mail=mail)
         if not user: db.session.add (User (name=name, mail=mail))
 
@@ -104,12 +108,16 @@ class AppReset (Command):
             Option ('-m', '--mail', dest='mail', default=u'admin@mail.net'),
         ]
 
-    def run (self, name, mail):
-        assert name, mail
+    def run (self, *args, **kwargs):
+
+        name = kwargs['name']
+        assert name
+        mail = kwargs['mail']
+        assert mail
 
         CacheClear ().run ()
         DbClear ().run ()
-        DbSetup ().run (name=u'admin', mail=u'admin@mail.net')
+        DbSetup ().run (name=name, mail=mail)
 
 manager.add_command ('reset', AppReset ())
 
