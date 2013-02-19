@@ -209,7 +209,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                                 tag: 'img', src: data
                             },
                             listeners: {
-                                render: function () { center (panel); }
+                                render: function () { center (panel, 1); }
                             }
                         });
 
@@ -223,29 +223,33 @@ Ext.define ('Webed.controller.ContentTabs', {
             }
         });
 
-        function center (panel, stop) {
+        function center (panel, ms, stop) {
+            if (ms && ms > 0) {
+                return Ext.defer (function () { center (panel,0,stop); }, ms);
+            }
+
             var inner = panel.down ('box');
-            if (inner) {
+            if (inner || stop>=1) {
                 var outer = panel.body;
-                if (outer) {
+                if (outer || stop>=2) {
                     var W = outer.getWidth ();
                     var H = outer.getHeight ();
                     var w = inner.getWidth ();
                     var h = inner.getHeight ();
 
-                    if (w>0 && h>0 || stop) {
+                    if (w>0 && h>0 || stop>=3) {
                         var innerDx = (W - w) / 2.0;
                         var innerDy = (H - h) / 2.0;
 
                         inner.setPosition (innerDx, innerDy);
                     } else {
-                        Ext.defer (function () { center (panel, true); }, 10)
+                        center (panel, 10, 3);
                     }
                 } else {
-                    Ext.defer (function () { center (panel); }, 10)
+                    center (panel, 10, 2);
                 }
             } else {
-                Ext.defer (function () { center (panel); }, 10)
+                center (panel, 10, 1);
             }
         }
 
