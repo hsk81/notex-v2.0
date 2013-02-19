@@ -29,6 +29,7 @@
 
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
+
     {% if debug %}
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/extjs/ext-dev.js') }}"></script>
@@ -36,12 +37,15 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/extjs/ext-all.js') }}"></script>
     {% endif %}
+
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
+
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/codemirror/lib/codemirror.js') }}"></script>
     <script type="text/javascript"
-            src="{{ url_for('static', filename='lib/codemirror/mode/rst/rst.js') }}"></script>
+            src="{{ url_for('static', filename='lib/codemirror/addon/selection/active-line.js') }}"></script>
+
     <script type="text/javascript"
             src="{{ url_for('static', filename='app/assert.js') }}"></script>
     <script type="text/javascript"
