@@ -72,7 +72,7 @@ Ext.define ('Webed.view.Viewport', {
             }],
 
             bbar: {
-                xtype: 'status-bar'
+                xtype: 'webed-statusbar'
             }
         }]
     }],

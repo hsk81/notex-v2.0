@@ -14,8 +14,18 @@ Ext.define ('Webed.controller.StatusBar', {
     init: function () {
 
         this.control ({
-            'statusbar progressbar' : {
+            'webed-statusbar-progressbar' : {
                 update: this.pb_update
+            },
+            'webed-statusbar-theme' : {
+                select: function (combo, records, eOpts) {
+                    var areas = Ext.ComponentQuery.query ('code-area');
+                    areas.forEach (function (area) {
+                        Ext.defer (function () {
+                            area.codemirror.setOption ('theme', combo.getValue ().slice ());
+                        }, 25);
+                    });
+                }
             }
         });
 

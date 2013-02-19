@@ -4,24 +4,26 @@ Ext.Loader.setPath ({
 
 Ext.define ('Webed.view.StatusBar', {
     extend: 'Ext.ux.statusbar.StatusBar',
-    alias: 'widget.status-bar',
+    alias: 'widget.webed-statusbar',
     text: 'WebEd',
     items: [{
-        xtype: 'statusbar.progressbar'
+        xtype: 'webed-statusbar-progressbar'
     },'-',{
-        xtype: 'statusbar.infobutton'
+        xtype: 'webed-statusbar-infobutton'
     },'-',{
-        xtype: 'statusbar.spellcheck'
+        xtype: 'webed-statusbar-spellcheck'
+    },'-',{
+        xtype: 'webed-statusbar-theme'
     },'-',{
         text: '100%'
     },{
-        xtype: 'statusbar.slider'
+        xtype: 'webed-statusbar-slider'
     }]
 });
 
-Ext.define ('Webed.view.statusBar.SpellCheck', {
+Ext.define ('Webed.view.StatusBar.SpellCheck', {
     extend: 'Ext.form.field.ComboBox',
-    alias: 'widget.statusbar.spellcheck',
+    alias: 'widget.webed-statusbar-spellcheck',
 
     store: {
         fields: ['lang', 'name'],
@@ -41,9 +43,59 @@ Ext.define ('Webed.view.statusBar.SpellCheck', {
     emptyText: 'Spell check language ..'
 });
 
+Ext.define ('Webed.view.StatusBar.Theme', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.webed-statusbar-theme',
+
+    store: {
+        fields: ['theme', 'name'],
+        data : [{
+            'theme':'default', 'name':'Default'
+        },{
+            'theme':'ambiance', 'name':'Ambiance'
+        },{
+            'theme':'ambiance-mobile', 'name':'Ambiance Mobile'
+        },{
+            'theme':'blackboard', 'name':'Blackboard'
+        },{
+            'theme':'cobalt', 'name':'Cobalt'
+        },{
+            'theme':'eclipse', 'name':'Eclipse'
+        },{
+            'theme':'elegant', 'name':'Elegant'
+        },{
+            'theme':'erlang-dark', 'name':'Erlang Dark'
+        },{
+            'theme':'lesser-dark', 'name':'Lesser Dark'
+        },{
+            'theme':'monokai', 'name':'Monokai'
+        },{
+            'theme':'neat', 'name':'Neat'
+        },{
+            'theme':'night', 'name':'Night'
+        },{
+            'theme':'rubyblue', 'name':'Rubyblue'
+        },{
+            'theme':'solarized', 'name':'Solarized'
+        },{
+            'theme':'twilight', 'name':'Twilight'
+        },{
+            'theme':'vibrant-ink', 'name':'Vibrant Ink'
+        },{
+            'theme':'xq-dark', 'name':'XQ Dark'
+        }]
+    },
+
+    queryMode: 'local',
+    displayField: 'name',
+    valueField: 'theme',
+
+    emptyText: 'Editor theme ..'
+});
+
 Ext.define ('Webed.view.statusBar.ProgressBar', {
     extend: 'Ext.ProgressBar',
-    alias: 'widget.statusbar.progressbar',
+    alias: 'widget.webed-statusbar-progressbar',
 
     width: 256,
     value: 0.0,
@@ -60,7 +112,7 @@ Ext.define ('Webed.view.statusBar.ProgressBar', {
 
 Ext.define ('Webed.view.statusBar.InfoButton', {
     extend: 'Ext.Button',
-    alias: 'widget.statusbar.infobutton',
+    alias: 'widget.webed-statusbar-infobutton',
 
     tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
     text: '',
@@ -70,7 +122,7 @@ Ext.define ('Webed.view.statusBar.InfoButton', {
 
 Ext.define ('Webed.view.statusBar.Slider', {
     extend: 'Ext.slider.Single',
-    alias: 'widget.statusbar.slider',
+    alias: 'widget.webed-statusbar-slider',
 
     width : 128,
     increment : 25,
