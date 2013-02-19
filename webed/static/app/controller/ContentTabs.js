@@ -190,7 +190,9 @@ Ext.define ('Webed.controller.ContentTabs', {
             title: name,
 
             listeners: {
-                afterrender: function (panel) {
+                render: function (panel) {
+                    panel.setLoading ('Loading ..');
+
                     app.fireEvent ('get_property', this, {
                         callback: on_get, scope: this, property: [{
                             node_uuid: uuid, name: 'data'
@@ -205,6 +207,9 @@ Ext.define ('Webed.controller.ContentTabs', {
                         panel.add ({
                             xtype: 'box', autoEl: {
                                 tag: 'img', src: data
+                            },
+                            listeners: {
+                                render: function () { center (panel); }
                             }
                         });
 
@@ -212,16 +217,8 @@ Ext.define ('Webed.controller.ContentTabs', {
                             callback.call (scope||this, props);
                         }
 
-                        setTimeout (function() { panel.el.unmask (); }, 75);
+                        panel.setLoading (false);
                     }
-                },
-
-                afterlayout: function (panel) {
-                    if (!panel.down ('box')) setTimeout (function() {
-                        panel.el.mask ('Loading...');
-                    }, 25);
-
-                    setTimeout (function() { center (panel); }, 10);
                 }
             }
         });
@@ -242,13 +239,13 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                         inner.setPosition (innerDx, innerDy);
                     } else {
-                        setTimeout (function () { center (panel, true); }, 10);
+                        Ext.defer (function () { center (panel, true); }, 10)
                     }
                 } else {
-                    setTimeout (function () { center (panel); }, 10);
+                    Ext.defer (function () { center (panel); }, 10)
                 }
             } else {
-                setTimeout (function () { center (panel); }, 10);
+                Ext.defer (function () { center (panel); }, 10)
             }
         }
 
