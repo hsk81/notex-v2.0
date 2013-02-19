@@ -103,10 +103,9 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        var tab = this.get_tab (uuid, true);
+        var tab = this.get_tab (uuid);
         if (tab == undefined) {
             tab = view.add ({
-                autoDestroy: false,
                 record: record,
                 title: name,
                 closable: true,
@@ -116,9 +115,8 @@ Ext.define ('Webed.controller.ContentTabs', {
                 items: [{
                     xtype: 'code-area',
                     listeners: {
-                        afterrender: function (ta) {
-                            var panel = ta.up ('panel'); assert (panel);
-                            panel.setLoading ('Loading ..', true);
+                        render: function (ta) {
+                            ta.setLoading ('Loading ..');
 
                             app.fireEvent ('get_property', this, {
                                 callback: on_get, scope: this, property: [{
@@ -133,26 +131,35 @@ Ext.define ('Webed.controller.ContentTabs', {
                                 assert (data || data == '');
                                 ta.setValue (data);
 
-                                CodeMirror.fromTextArea (ta.inputEl.dom, {
-                                    autoClearEmptyLines: true,
-                                    lineWrapping: true,
-                                    lineNumbers: true,
-                                    value: data
-                                });
-
                                 if (callback && callback.call) {
                                     callback.call (scope||this, props);
                                 }
 
-                                var panel = ta.up ('panel'); assert (panel);
-                                panel.setLoading (false);
+                                ta.setLoading (false);
                             }
                         }
                     }
-                }]
-            });
+                }],
 
-            this.set_tab (uuid, tab);
+                listeners: {
+                    afterlayout: function (panel) {
+                        var height = panel.getHeight ();
+                        assert (typeof (height) == 'number');
+
+                        var rule = '.CodeMirror';
+                        var property = 'height';
+                        var value = height - 2 + 'px';
+
+                        var result = Ext.util.CSS.updateRule (
+                            rule, property, value
+                        );
+
+                        assert (result);
+                        var ca = panel.child ('code-area');
+                        assert (ca); ca.updateLayout ();
+                    }
+                }
+            });
         }
 
         view.setActiveTab (tab);
@@ -276,7 +283,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var uuid = record.get ('uuid');
         assert (uuid);
 
-        var ta = tab.child ('textarea');
+        var ta = tab.child ('code-area');
         assert (ta);
         var data = ta.getValue ();
         assert (data);
@@ -336,26 +343,8 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    set_tab: function (uuid, tab) {
+    get_tab: function (uuid) {
         assert (uuid);
-        assert (tab);
-
-        if (!this.tab_cache) {
-            this.tab_cache = [];
-        }
-
-        if (!this.tab_cache[uuid]) {
-            this.tab_cache[uuid] = tab;
-        }
-    },
-
-    get_tab: function (uuid, skip_cache) {
-        assert (uuid);
-
-        if (this.tab_cache && !skip_cache) {
-            var tab = this.tab_cache[uuid];
-            if (tab) return tab;
-        }
 
         var view = this.getContentTabs ();
         assert (view);
