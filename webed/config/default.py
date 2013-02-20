@@ -51,7 +51,7 @@ class DefaultConfig:
     ## stores *user defined* mime to file extensions combinations.
     ##
 
-    MIMETYPES_PATHS = ['./mime.types']
+    MIMETYPES_PATHS = ['/etc/mime.types', './mime.types']
 
     ##
     ## At session setup data is required: ARCHIVE_PATH is the path to the
