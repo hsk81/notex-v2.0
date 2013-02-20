@@ -8,6 +8,7 @@ Ext.define ('Webed.form.field.CodeArea', {
     config: {
         options: {
             autoClearEmptyLines: true,
+            autofocus: true,
             lineNumbers: true,
             lineWrapping: true,
             matchBrackets: true,
