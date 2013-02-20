@@ -107,7 +107,7 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var modeInfo = CodeMirror.modeInfo.filter (function (mi) {
             return mi.mime == mime;
-        }).pop (0);
+        }).pop ();
 
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
