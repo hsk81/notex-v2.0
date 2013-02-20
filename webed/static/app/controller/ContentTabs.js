@@ -112,8 +112,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                 iconCls: iconCls,
                 layout: 'fit',
 
-                items: [{
-                    xtype: 'code-area',
+                items: [Ext.create ('Webed.form.field.CodeArea', {
                     listeners: {
                         render: function (ta) {
                             ta.setLoading ('Loading ..');
@@ -139,7 +138,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                             }
                         }
                     }
-                }],
+                })],
 
                 listeners: {
                     afterlayout: function (panel) {

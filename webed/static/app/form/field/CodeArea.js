@@ -5,11 +5,19 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    options: {
-        autoClearEmptyLines: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        styleActiveLine: true,
+    config: {
+        options: {
+            autoClearEmptyLines: true,
+            lineNumbers: true,
+            lineWrapping: true,
+            matchBrackets: true,
+            styleActiveLine: true
+        }
+    },
+
+    constructor: function (config) {
+        this.callParent (arguments);
+        this.initConfig (Ext.Object.merge (this.config, config||{}));
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -21,7 +29,7 @@ Ext.define ('Webed.form.field.CodeArea', {
         } else {
             if (this.inputEl && this.inputEl.dom) {
                 this.codemirror = CodeMirror.fromTextArea (this.inputEl.dom,
-                    this.options
+                    this.getOptions ()
                 );
 
                 this.codemirror.setValue (value);
@@ -42,13 +50,13 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    updateLayout: function (options) {
+    updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
         } else {
             if (this.inputEl && this.inputEl.dom) {
                 this.codemirror = CodeMirror.fromTextArea (this.inputEl.dom,
-                    this.options
+                    this.getOptions ()
                 );
             } else {
                 this.callParent (arguments);
