@@ -241,7 +241,9 @@ def create_bin (name, root, mime, path=None, file=None):
 
 def guess_mime (path, name):
 
-    if not mimetypes.inited: mimetypes.init ()
+    if not mimetypes.inited:
+        paths = app.config.get ('MIMETYPE_PATHs', ['./mime.types'])
+        mimetypes.init (mimetypes.knownfiles + paths)
     mime, _ = mimetypes.guess_type (name)
 
     if not mime:

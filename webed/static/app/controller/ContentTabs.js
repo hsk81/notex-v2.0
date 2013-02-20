@@ -93,6 +93,8 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         var uuid = record.get ('uuid');
         assert (uuid);
+        var mime = record.get ('mime');
+        assert (mime);
         var name = record.get ('name');
         assert (name);
         var iconCls = record.get ('iconCls');
@@ -102,6 +104,10 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (view);
         var app = this.application;
         assert (app);
+
+        var modeInfo = CodeMirror.modeInfo.filter (function (mi) {
+            return mi.mime == mime;
+        }).pop (0);
 
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
@@ -113,9 +119,12 @@ Ext.define ('Webed.controller.ContentTabs', {
                 layout: 'fit',
 
                 items: [Ext.create ('Webed.form.field.CodeArea', {
+                    options: {
+                        mode: modeInfo ? modeInfo.mode : undefined
+                    },
                     listeners: {
-                        render: function (ta) {
-                            ta.setLoading ('Loading ..');
+                        render: function (ca) {
+                            ca.setLoading ('Loading ..');
 
                             app.fireEvent ('get_property', this, {
                                 callback: on_get, scope: this, property: [{
@@ -128,16 +137,16 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                                 var data = props[0].get ('data');
                                 assert (data || data == '');
-                                ta.setValue (data);
+                                ca.setValue (data);
 
                                 if (callback && callback.call) {
                                     callback.call (scope||this, props);
                                 }
 
-                                ta.setLoading (false);
+                                ca.setLoading (false);
                             }
                         }
-                    }
+                    },
                 })],
 
                 listeners: {

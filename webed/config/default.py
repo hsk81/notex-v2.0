@@ -21,7 +21,7 @@ class DefaultConfig:
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = None
 
-    PERMANENT_SESSION_LIFETIME = timedelta (days=7) ## session expires after!
+    PERMANENT_SESSION_LIFETIME = timedelta (days=14) ## session expires after!
     CACHE_DEFAULT_TIMEOUT = int (PERMANENT_SESSION_LIFETIME.total_seconds ())
 
     CACHE0_KEY_PREFIX = 'webed:'
@@ -33,11 +33,25 @@ class DefaultConfig:
     NIX_FILE = os.path.join (os.sep, 'tmp', 'webed-wsgi.sock')
 
     ##
-    ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who
-    ## are in charge of processing feedback mails.
+    ## Debug Toolbar: Disables/enables the interception of redirection; since
+    ## it can be quite annoying it has been disabled.
     ##
 
-    DEFAULT_MAIL_RECEIVERS = []
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+    ##
+    ## Override secret key in production environment using value from the
+    ## *production.py* file to ensure proper security.
+    ##
+
+    SECRET_KEY = '000000000000000000000000000000000000000='
+
+    ##
+    ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
+    ## stores *user defined* mime to file extensions combinations.
+    ##
+
+    MIMETYPES_PATHs = ['./mime.types']
 
     ##
     ## At session setup data is required: ARCHIVE_PATH is the path to the
@@ -57,18 +71,11 @@ class DefaultConfig:
     FS_CACHE = os.path.join (FS_ROOT, 'cache')
 
     ##
-    ## Debug Toolbar: Disables/enables the interception of redirection; since
-    ## it can be quite annoying it has been disabled.
+    ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who
+    ## are in charge of processing feedback mails.
     ##
 
-    DEBUG_TB_INTERCEPT_REDIRECTS = False
-
-    ##
-    ## Override secret key in production environment using value from the
-    ## *production.py* file to ensure proper security.
-    ##
-
-    SECRET_KEY = '000000000000000000000000000000000000000='
+    DEFAULT_MAIL_RECEIVERS = []
 
     ##
     ## If a node has more than MAX_NODE_SIZE **immediate** sub-nodes (nodes and

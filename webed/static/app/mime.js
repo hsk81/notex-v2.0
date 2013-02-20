@@ -32,9 +32,9 @@ var MIME = function () {
         'application/project\\+rest': 'icon-report_rest',
         'application/project': 'icon-report',
         'image/*': 'icon-picture',
-        'text/plain':'icon-page',
-        '*/*': 'icon-bullet_white',
-        '*': 'icon-bullet_white'
+        'text/*':'icon-page',
+        '*/*': 'icon-page_white',
+        '*': 'icon-page_white'
     };
 
     $.each (tmp2icon, function (key, value) {
