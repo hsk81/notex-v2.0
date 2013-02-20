@@ -34,7 +34,6 @@ Ext.define ('Webed.form.field.CodeArea', {
 
                 var mode = this.codemirror.options.mode;
                 if (mode) CodeMirror.autoLoadMode (this.codemirror, mode);
-
                 this.codemirror.setValue (value);
             } else {
                 this.callParent (arguments);
