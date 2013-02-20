@@ -146,7 +146,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                                 ca.setLoading (false);
                             }
                         }
-                    },
+                    }
                 })],
 
                 listeners: {
