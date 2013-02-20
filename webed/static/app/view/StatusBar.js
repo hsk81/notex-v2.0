@@ -13,8 +13,6 @@ Ext.define ('Webed.view.StatusBar', {
     },'-',{
         xtype: 'webed-statusbar-spellcheck'
     },'-',{
-        xtype: 'webed-statusbar-theme'
-    },'-',{
         text: '100%'
     },{
         xtype: 'webed-statusbar-slider'
@@ -41,56 +39,6 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     valueField: 'lang',
 
     emptyText: 'Spell check language ..'
-});
-
-Ext.define ('Webed.view.StatusBar.Theme', {
-    extend: 'Ext.form.field.ComboBox',
-    alias: 'widget.webed-statusbar-theme',
-
-    store: {
-        fields: ['theme', 'name'],
-        data : [{
-            'theme':'default', 'name':'Default'
-        },{
-            'theme':'ambiance', 'name':'Ambiance'
-        },{
-            'theme':'ambiance-mobile', 'name':'Ambiance Mobile'
-        },{
-            'theme':'blackboard', 'name':'Blackboard'
-        },{
-            'theme':'cobalt', 'name':'Cobalt'
-        },{
-            'theme':'eclipse', 'name':'Eclipse'
-        },{
-            'theme':'elegant', 'name':'Elegant'
-        },{
-            'theme':'erlang-dark', 'name':'Erlang Dark'
-        },{
-            'theme':'lesser-dark', 'name':'Lesser Dark'
-        },{
-            'theme':'monokai', 'name':'Monokai'
-        },{
-            'theme':'neat', 'name':'Neat'
-        },{
-            'theme':'night', 'name':'Night'
-        },{
-            'theme':'rubyblue', 'name':'Rubyblue'
-        },{
-            'theme':'solarized', 'name':'Solarized'
-        },{
-            'theme':'twilight', 'name':'Twilight'
-        },{
-            'theme':'vibrant-ink', 'name':'Vibrant Ink'
-        },{
-            'theme':'xq-dark', 'name':'XQ Dark'
-        }]
-    },
-
-    queryMode: 'local',
-    displayField: 'name',
-    valueField: 'theme',
-
-    emptyText: 'Editor theme ..'
 });
 
 Ext.define ('Webed.view.statusBar.ProgressBar', {
