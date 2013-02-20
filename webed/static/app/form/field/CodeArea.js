@@ -20,13 +20,14 @@ Ext.define ('Webed.form.field.CodeArea', {
         this.callParent (arguments);
         this.initConfig (Ext.Object.merge (this.config, config||{}));
 
-        if (config && config.mime) {
+        var mime = this.getMime ();
+        if (mime) {
             var modeInfos = CodeMirror.modeInfo.filter (function (mi) {
-                return mi.mime == config.mime;
+                return mi.mime == mime;
             });
 
             var modeInfo = modeInfos.pop ();
-            if (modeInfo) this.config.options.mode = modeInfo.mode;
+            if (modeInfo) this.getOptions ().mode = modeInfo.mode;
         }
     },
 
