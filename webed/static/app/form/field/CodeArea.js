@@ -13,12 +13,21 @@ Ext.define ('Webed.form.field.CodeArea', {
             lineWrapping: true,
             matchBrackets: true,
             styleActiveLine: true
-        }
+        }, mime: undefined
     },
 
     constructor: function (config) {
         this.callParent (arguments);
         this.initConfig (Ext.Object.merge (this.config, config||{}));
+
+        if (config && config.mime) {
+            var modeInfos = CodeMirror.modeInfo.filter (function (mi) {
+                return mi.mime == config.mime;
+            });
+
+            var modeInfo = modeInfos.pop ();
+            if (modeInfo) this.config.options.mode = modeInfo.mode;
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -33,7 +42,7 @@ Ext.define ('Webed.form.field.CodeArea', {
                     this.getOptions ()
                 );
 
-                var mode = this.codemirror.options.mode;
+                var mode = this.getOptions ().mode;
                 if (mode) CodeMirror.autoLoadMode (this.codemirror, mode);
                 this.codemirror.setValue (value);
             } else {
@@ -62,7 +71,7 @@ Ext.define ('Webed.form.field.CodeArea', {
                     this.getOptions ()
                 );
 
-                var mode = this.codemirror.options.mode;
+                var mode = this.getOptions ().mode;
                 if (mode) CodeMirror.autoLoadMode (this.codemirror, mode);
             } else {
                 this.callParent (arguments);

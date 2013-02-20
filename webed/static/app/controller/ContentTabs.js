@@ -105,10 +105,6 @@ Ext.define ('Webed.controller.ContentTabs', {
         var app = this.application;
         assert (app);
 
-        var modeInfo = CodeMirror.modeInfo.filter (function (mi) {
-            return mi.mime == mime;
-        }).pop ();
-
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
             tab = view.add ({
@@ -119,10 +115,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                 layout: 'fit',
 
                 items: [Ext.create ('Webed.form.field.CodeArea', {
-                    options: {
-                        mode: modeInfo ? modeInfo.mode : undefined
-                    },
-                    listeners: {
+                    mime: mime, listeners: {
                         render: function (ca) {
                             ca.setLoading ('Loading ..');
 
