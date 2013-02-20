@@ -20,21 +20,21 @@ Ext.define ('Webed.view.AddProjectBox', {
         bodyPadding: '4px',
 
         items: [{
-            xtype: 'textfield',
             allowBlank: false,
             enableKeyEvents: true,
             emptyText: 'Enter project name ..',
             name: 'name',
             value: 'Project',
-            width: '100%'
+            width: '100%',
+            xtype: 'textfield'
         },{
-            xtype: 'add-project-box-mime',
-            name: 'mime',
             allowBlank: false,
             emptyText: 'Select type ..',
+            name: 'mime',
             style: 'margin: 0;',
             value: 'application/project',
-            width: '100%'
+            width: '100%',
+            xtype: 'add-project-box-mime'
         }]
     }],
 

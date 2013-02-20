@@ -19,11 +19,8 @@ Ext.define ('Webed.controller.AddFileBox', {
             'add-file-box button[action=cancel]': {
                 click: this.cancel
             },
-            'add-file-box textfield': {
+            'add-file-box textfield[name=name]': {
                 afterrender: this.afterrender,
-                keypress: this.keypress,
-                keydown: this.keydown,
-                focus: this.focus,
                 blur: this.blur
             }
         });
@@ -32,27 +29,15 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    keydown: function (textfield, event) {
-        if (event.getCharCode () == Ext.EventObject.TAB) {
+    blur: function (textfield, event) {
+        if (textfield.autofocus) {
+            textfield.focus (true, 25);
             textfield.autofocus = false;
         }
     },
 
-    keypress: function (textfield, event) {
-        if (event.getCharCode () == Ext.EventObject.ENTER) {
-            this.confirm ();
-        }
-    },
-
-    focus: function (textfield, event) {
-        textfield.autofocus = true;
-    },
-
-    blur: function (textfield, event) {
-        if (textfield.autofocus) textfield.focus (true, 25);
-    },
-
     afterrender: function (textfield) {
+        textfield.autofocus = true;
         textfield.focus (true, 25);
     },
 
@@ -64,14 +49,22 @@ Ext.define ('Webed.controller.AddFileBox', {
         assert (application);
         var view = this.getAddFileBox ();
         assert (view);
-        var textfield = view.down ('textfield');
+
+        var textfield = view.down ('textfield[name=name]');
         assert (textfield);
+        var combobox = view.down ('combobox[name=mime]');
+        assert (combobox);
+
+        if (!textfield.isValid ()) return;
+        var name = textfield.getValue ();
+        assert (name);
+
+        if (!combobox.isValid ()) return;
+        var mime = combobox.getValue ();
+        assert (mime);
+
         var node = view.node;
         assert (node);
-
-        if (!textfield.isValid ()) {
-            return;
-        }
 
         if (node.isLeaf ()) {
             assert (node.parentNode);
@@ -89,7 +82,7 @@ Ext.define ('Webed.controller.AddFileBox', {
                 application.fireEvent ('set_property', this, {
                     scope: this, callback: on_set, property: [{
                         data: '....\n',
-                        mime: 'text/plain',
+                        mime: mime,
                         node_uuid: leaf.get ('uuid'),
                         name: 'data',
                         size: 5,
@@ -103,8 +96,8 @@ Ext.define ('Webed.controller.AddFileBox', {
 
         application.fireEvent ('create_leaf', {
             scope: this, callback: callback, with: {
-                mime: 'text/plain',
-                name: textfield.getValue (),
+                mime: mime,
+                name: name,
                 root: node,
                 size: 5
             }

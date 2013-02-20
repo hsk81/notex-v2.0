@@ -16,17 +16,25 @@ Ext.define ('Webed.view.AddFileBox', {
 
     items: [{
         xtype: 'form',
-        layout: 'fit',
-        width: '100%',
+        layout: 'vbox',
         bodyPadding: '4px',
 
         items: [{
-            xtype: 'textfield',
             allowBlank: false,
             enableKeyEvents: true,
             emptyText: 'Enter document name ..',
+            name: 'name',
             value: 'file.txt',
-            width: '100%'
+            width: '100%',
+            xtype: 'textfield'
+        },{
+            allowBlank: false,
+            emptyText: 'Select type ..',
+            name: 'mime',
+            style: 'margin: 0;',
+            value: 'text/plain',
+            width: '100%',
+            xtype: 'add-file-box-mime'
         }]
     }],
 
@@ -39,4 +47,39 @@ Ext.define ('Webed.view.AddFileBox', {
         iconCls: 'icon-cross-16',
         action: 'cancel'
     }]
+});
+
+Ext.define ('Webed.view.AddFileBoxMime', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.add-file-box-mime',
+
+    requires: [
+        'Ext.XTemplate'
+    ],
+
+    store: {
+        fields: ['mime', 'name'],
+        data : [{
+            'mime':'text/plain',
+            'name':'Plain Text'
+        },{
+            'mime':'text/x-rst',
+            'name':'reStructuredText'
+        },{
+            'mime':'text/x-yaml',
+            'name':'YAML configuration'
+        }]
+    },
+
+    queryMode: 'local',
+    displayField: 'name',
+    valueField: 'mime',
+
+    tpl: Ext.create ('Ext.XTemplate',
+        '<tpl for=".">',
+        '<div class="x-boundlist-item">{name}',
+        '<div class="w-boundlist-item-rhs">{mime}</div>',
+        '</div>',
+        '</tpl>'
+    )
 });
