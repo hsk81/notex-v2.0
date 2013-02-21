@@ -288,7 +288,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var ta = tab.child ('code-area');
         assert (ta);
         var data = ta.getValue ();
-        assert (data);
+        assert (data != null);
 
         this.application.fireEvent ('get_property', this, {
             callback: on_get, scope: this, property: [{
