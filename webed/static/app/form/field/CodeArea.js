@@ -27,7 +27,11 @@ Ext.define ('Webed.form.field.CodeArea', {
             });
 
             var modeInfo = modeInfos.pop ();
-            if (modeInfo) this.getOptions ().mode = modeInfo.mode;
+            if (modeInfo && modeInfo.mode == 'yaml') {
+                this.getOptions ().mode = 'yaml-plus';
+            } else if (modeInfo) {
+                this.getOptions ().mode = modeInfo.mode;
+            }
         }
     },
 
@@ -39,12 +43,8 @@ Ext.define ('Webed.form.field.CodeArea', {
             this.codemirror.setValue (value);
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = CodeMirror.fromTextArea (this.inputEl.dom,
-                    this.getOptions ()
-                );
-
-                var mode = this.getOptions ().mode;
-                if (mode) CodeMirror.autoLoadMode (this.codemirror, mode);
+                this.codemirror = this.mirror (
+                    this.inputEl.dom, this.getOptions ());
                 this.codemirror.setValue (value);
             } else {
                 this.callParent (arguments);
@@ -60,24 +60,30 @@ Ext.define ('Webed.form.field.CodeArea', {
         }
     },
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = CodeMirror.fromTextArea (this.inputEl.dom,
-                    this.getOptions ()
-                );
-
-                var mode = this.getOptions ().mode;
-                if (mode) CodeMirror.autoLoadMode (this.codemirror, mode);
+                this.codemirror = this.mirror (
+                    this.inputEl.dom, this.getOptions ());
             } else {
                 this.callParent (arguments);
             }
         }
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    mirror: function (ta, options) {
+        var codemirror = CodeMirror.fromTextArea (ta, options);
+
+        if (options.mode) {
+            CodeMirror.autoLoadMode (codemirror, options.mode);
+        }
+
+        return codemirror;
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -53,6 +53,8 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='lib/codemirror/addon/mode/loadmode.js') }}"></script>
     <script type="text/javascript"
+            src="{{ url_for('static', filename='lib/codemirror/addon/mode/overlay.js') }}"></script>
+    <script type="text/javascript"
             src="{{ url_for('static', filename='lib/codemirror/mode/meta.js') }}"></script>
     <script type="text/javascript">
         CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
