@@ -27,10 +27,15 @@ Ext.define ('Webed.form.field.CodeArea', {
             });
 
             var modeInfo = modeInfos.pop ();
-            if (modeInfo && modeInfo.mode == 'yaml') {
-                this.getOptions ().mode = 'yaml-plus';
-            } else if (modeInfo) {
-                this.getOptions ().mode = modeInfo.mode;
+            if (modeInfo) {
+                switch (modeInfo.mode) {
+                    case 'yaml':
+                        this.getOptions ().mode = 'yaml-plus'; break;
+                    case 'rst':
+                        this.getOptions ().mode = 'rst-plus'; break;
+                    default:
+                        this.getOptions ().mode = modeInfo.mode;
+                }
             }
         }
     },
