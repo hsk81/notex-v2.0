@@ -377,4 +377,16 @@ body {
     text-decoration: underline;
 }
 
+.CodeMirror .cm-rest-uri {
+    color: #000088;
+}
+
+.CodeMirror .cm-rest-footnote {
+    color: #008800;
+}
+
+.CodeMirror .cm-rest-replace {
+    color: #000088;
+}
+
 /*****************************************************************************/
