@@ -369,12 +369,17 @@ body {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=) no-repeat right;
 }
 
-.CodeMirror .cm-yaml-tag-dollar, .cm-yaml-tag-bracket, .cm-yaml-tag {
+.CodeMirror .cm-yaml-tag-dollar {
+    color: #221199;
+}
+
+.CodeMirror .cm-yaml-tag-bracket {
     color: #221199;
 }
 
 .CodeMirror .cm-yaml-tag {
     text-decoration: underline;
+    color: #221199;
 }
 
 .CodeMirror .cm-rest-uri {
@@ -387,6 +392,16 @@ body {
 
 .CodeMirror .cm-rest-replace {
     color: #000088;
+}
+
+.CodeMirror .cm-rest-link-head {
+    text-decoration: underline;
+}
+.CodeMirror .cm-rest-link-text {
+    text-decoration: underline;
+}
+.CodeMirror .cm-rest-link-tail {
+    text-decoration: none;
 }
 
 /*****************************************************************************/
