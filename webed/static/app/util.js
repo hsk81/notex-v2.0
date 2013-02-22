@@ -2,19 +2,49 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * A simple implementation to format strings: E.g. `'{0}'.format ('alpha')`.
+ */
+
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace (/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined' ? args[number] : match;
+        });
+    };
+}
+
+if (!String.format) {
+    String.format = function () {
+
+        var args = Array.prototype.slice.call (arguments);
+        var self = args.shift ();
+
+        return self.replace (/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined' ? args[number] : match;
+        });
+    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * Allows not only to bind *all* arguments (except last one), but it enables
  * actually to bind *any* consecutive, initial arguments.
  */
 
-Function.prototype.curry = function () {
-    var slice = Array.prototype.slice,
-        args = slice.call (arguments),
-        func = this;
+if (!Function.prototype.curry == undefined) {
+    Function.prototype.curry = function () {
+        var slice = Array.prototype.slice,
+            args = slice.call (arguments),
+            func = this;
 
-    return function () {
-        return func.apply (this, args.concat (slice.call (arguments)));
+        return function () {
+            return func.apply (this, args.concat (slice.call (arguments)));
+        };
     };
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,29 +54,31 @@ Function.prototype.curry = function () {
  * approach is more flexible if initial arguments are to be left unbound.
  */
 
-Function.prototype.partial = function () {
-    var args = (arguments.length > 0) ? arguments[0] : {},
-        negs = {},
-        func = this;
+if (!Function.prototype.partial == undefined) {
+    Function.prototype.partial = function () {
+        var args = (arguments.length > 0) ? arguments[0] : {},
+            negs = {},
+            func = this;
 
-    var str = func.toString (),
-        lhs = str.indexOf ('(') + 1,
-        rhs = str.indexOf (')'),
-        names = str.slice (lhs, rhs).match (/([^\s,]+)/g);
+        var str = func.toString (),
+            lhs = str.indexOf ('(') + 1,
+            rhs = str.indexOf (')'),
+            names = str.slice (lhs, rhs).match (/([^\s,]+)/g);
 
-    var i = 0; names.every (function (value) {
-        if (value in args == false) negs[i++] = value; return true;
-    });
+        var i = 0; names.every (function (value) {
+            if (value in args == false) negs[i++] = value; return true;
+        });
 
-    return function () {
-        var union = [];
-        for (var i in arguments)
-            if (arguments.hasOwnProperty (i)) args[negs[i]] = arguments[i];
-        for (var j in names)
-            if (names.hasOwnProperty (j)) union.push (args[names[j]]);
-        return func.apply (this, union);
-    }
-};
+        return function () {
+            var union = [];
+            for (var i in arguments)
+                if (arguments.hasOwnProperty (i)) args[negs[i]] = arguments[i];
+            for (var j in names)
+                if (names.hasOwnProperty (j)) union.push (args[names[j]]);
+            return func.apply (this, union);
+        }
+    };
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
