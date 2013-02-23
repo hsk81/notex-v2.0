@@ -382,26 +382,12 @@ body {
     color: #221199;
 }
 
-.CodeMirror .cm-rest-uri {
-    color: #000088;
+.CodeMirror .cm-footnote {
+    color: #009900;
 }
 
-.CodeMirror .cm-rest-footnote {
-    color: #008800;
-}
-
-.CodeMirror .cm-rest-replace {
-    color: #000088;
-}
-
-.CodeMirror .cm-rest-link-head {
-    text-decoration: underline;
-}
-.CodeMirror .cm-rest-link-text {
-    text-decoration: underline;
-}
-.CodeMirror .cm-rest-link-tail {
-    text-decoration: none;
+.CodeMirror .cm-citation {
+    color: #009900;
 }
 
 /*****************************************************************************/
