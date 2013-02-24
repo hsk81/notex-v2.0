@@ -38,7 +38,7 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     displayField: 'name',
     valueField: 'lang',
 
-    emptyText: 'Spell check language ..'
+    emptyText: 'Language ..'
 });
 
 Ext.define ('Webed.view.statusBar.ProgressBar', {
