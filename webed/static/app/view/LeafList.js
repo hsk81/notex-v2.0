@@ -56,7 +56,7 @@ Ext.define ('Webed.view.LeafList', {
         dock: 'bottom',
         items: [{
             xtype: 'triggerfield',
-            emptyText: 'Search by name and/or regex ..',
+            emptyText: 'Search name or regex ..',
             paramName : 'name_path',
             trigger1Cls: Ext.baseCSSPrefix + 'form-clear-trigger',
             trigger2Cls: Ext.baseCSSPrefix + 'form-search-trigger',
