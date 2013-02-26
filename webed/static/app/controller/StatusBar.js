@@ -33,17 +33,10 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     ss_change: function (self, value) {
-        var rule = '.CodeMirror';
-        var property = 'font-size';
-        var value_percent = value + '%';
-
-        var result = Ext.util.CSS.updateRule (rule, property, value_percent);
-        assert (result);
-
         var cas = Ext.ComponentQuery.query ('code-area');
-        cas.forEach (function (ca) { ca.updateLayout (); });
+        cas.forEach (function (ca) { ca.setFontSize (value); });
         var size_button = this.getSizeButton ();
-        assert (size_button); size_button.setText (value_percent);
+        assert (size_button); size_button.setText (value + '%');
     },
 
     pb_update: function (self) {

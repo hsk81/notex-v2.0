@@ -63,6 +63,11 @@ Ext.define ('Webed.form.field.CodeArea', {
         }
     },
 
+    setFontSize: function (value) {
+        Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
+        this.updateLayout ();
+    },
+
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
