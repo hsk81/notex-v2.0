@@ -22,43 +22,69 @@ Ext.define ('Webed.controller.StatusBar', {
     init: function () {
 
         this.control ({
-            'webed-statusbar-progressbar': {update: this.pb_update},
-            'webed-statusbar-sizebutton': {click: this.sz_click},
+            'webed-statusbar-progressbar': {update: this.progress_update},
+            'webed-statusbar-sizebutton': {click: this.size_click},
+            'webed-statusbar-infobutton': {click: this.info_click},
             'webed-statusbar-slider': {
-                change: this.ss_change,
-                afterrender: this.ss_afterrender
+                change: this.slider_change,
+                afterrender: this.slider_afterrender
             }
         });
 
-        this.application.on ({'progress-play': this.pb_play, scope: this});
-        this.application.on ({'progress-stop': this.pb_stop, scope: this});
+        this.application.on ({
+            'progress-play': this.progress_play, scope: this});
+        this.application.on ({
+            'progress-stop': this.progress_stop, scope: this});
     },
 
-    sz_click: function () {
+    size_click: function () {
         var slider = this.getSlider ();
         assert (slider); slider.setValue (100);
     },
 
-    ss_afterrender: function (self) {
+    info_click: function (self) {
+
+        var tabs = Ext.ComponentQuery.query ('content-tabs').pop ();
+        assert (tabs);
+
+        var tab = tabs.getActiveTab ();
+        if (tab) {
+            var ca = tab.down ('code-area');
+            if (ca) {
+                var value = ca.getValue ();
+                if (value) {
+                    self.setText (String.format ('{0}:{1}:{2}',
+                        value.split (/\n/).length,
+                        value.split (/\s+[^\s+$]/).length,
+                        value.length
+                    ));
+                } else {
+                    self.setText ('1:0:0');
+                }
+            }
+        }
+    },
+
+    slider_afterrender: function (self) {
         var value = Ext.util.Cookies.get ('editor.font-size');
         if (value) self.setValue (value, false);
     },
 
-    ss_change: function (self, value) {
+    slider_change: function (self, value) {
         Webed.form.field.CodeArea.setFontSize (value);
         var size_button = this.getSizeButton ();
         assert (size_button); size_button.setText (value + '%');
         Ext.util.Cookies.set ('editor.font-size', value);
     },
 
-    pb_update: function (self) {
+    progress_update: function (self) {
         self.total += self.interval;
         var total = Ext.util.Format.number (self.total / 1000.0, '0.000');
         var text = Ext.String.format ('{0} .. {1} [s]', self.message, total);
         self.updateText (text);
     },
 
-    pb_play: function (source, args) {
+    progress_play: function (source, args) {
         var progressbar = this.getProgressbar ();
         assert (progressbar);
         if (progressbar.hidden) progressbar.show ();
@@ -71,7 +97,7 @@ Ext.define ('Webed.controller.StatusBar', {
         }, args));
     },
 
-    pb_stop: function (source) {
+    progress_stop: function (source) {
         var progressbar = this.getProgressbar ();
         assert (progressbar);
         progressbar.reset (true);

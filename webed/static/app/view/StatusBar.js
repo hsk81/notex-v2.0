@@ -39,9 +39,10 @@ Ext.define ('Webed.view.statusBar.ProgressBar', {
 Ext.define ('Webed.view.statusBar.InfoButton', {
     extend: 'Ext.Button',
     alias: 'widget.webed-statusbar-infobutton',
-    tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
+    tooltip:
+        '<b>Line</b>:<b>Char</b> or <b>Lines</b>:<b>Words</b>:<b>Chars</b>',
     text: '',
-    width: 64
+    minWidth: 64
 });
 
 Ext.define ('Webed.view.StatusBar.SpellCheck', {
