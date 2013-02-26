@@ -45,8 +45,9 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     cursor: function (self, cursor) {
-
         var button = this.getInfoButton ();
+        assert (button);
+
         if (button.getWidth () > button.minWidth) {
             button.setText ('{0}:{1}'.format (cursor.line+1, cursor.ch+1));
         } else {
@@ -62,7 +63,6 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     info_click: function (self) {
-
         var viewport = self.up ('viewport');
         assert (viewport);
         var tabs = viewport.down ('content-tabs');
