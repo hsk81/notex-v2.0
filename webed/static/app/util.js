@@ -2,6 +2,103 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * string sprintf (string format , [mixed arg1 [, mixed arg2 [ ,...]]]);
+ */
+
+var sprintf = (function () {
+
+    var repeat = function (value, times) {
+        for (var output=[]; times>0; output[--times]=value) {}
+        return output.join ('');
+    };
+
+    var rx0 = /^[^\x25]+/,
+        rx1 = /^\x25{2}/,
+        rx2 = /^\x25(?:(\d+)\$)?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/,
+        rx3 = /[^s]/,
+        rx4 = /[def]/;
+
+    return function () {
+        var i=0, a, arg=arguments[i++], output=[], match, p, c, x, s='';
+
+        while (arg) {
+            if (match = rx0.exec (arg)) {
+                output.push (match[0]);
+            } else
+
+            if (match = rx1.exec (arg)) {
+                output.push ('%');
+            } else
+
+            if (match = rx2.exec (arg)) {
+
+                if (((a=arguments[match[1]||i++]) == null)||(a == undefined)) {
+                    throw ('insufficient arguments');
+                }
+
+                if (rx3.test (match[7]) && (typeof (a) != 'number')) {
+                    throw ('invalid argument:' + typeof (a));
+                }
+
+                switch (match[7]) {
+                    case 'b':
+                        a = a.toString (2);
+                        break;
+                    case 'c':
+                        a = String.fromCharCode (a);
+                        break;
+                    case 'd':
+                        a = parseInt (a);
+                        break;
+                    case 'e':
+                        a = match[6] ? a.toExponential (match[6])
+                                     : a.toExponential ();
+                        break;
+                    case 'f':
+                        a = match[6] ? parseFloat (a).toFixed (match[6])
+                                     : parseFloat (a);
+                        break;
+                    case 'o':
+                        a = a.toString (8);
+                        break;
+                    case 's':
+                        a = ((a=String (a)) && match[6]
+                            ? a.substring (0, match[6]) : a);
+                        break;
+                    case 'u':
+                        a = Math.abs (a);
+                        break;
+                    case 'x':
+                        a = a.toString (16);
+                        break;
+                    case 'X':
+                        a = a.toString (16).toUpperCase ();
+                        break;
+                }
+
+                a = (rx4.test (match[7]) && match[2] && a>=0 ? '+'+ a : a);
+                c = match[3] ? match[3]=='0' ? '0' : match[3].charAt (1) : ' ';
+                x = match[5] - String (a).length - s.length;
+                p = match[5] ? repeat (c, x) : '';
+
+                output.push(s + (match[4] ? a + p : p + a));
+            }
+
+            else {
+                throw ('unknown error');
+            }
+
+            arg = arg.substring (match[0].length);
+        }
+
+        return output.join ('');
+    }
+})();
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * A simple implementation to format strings: E.g. `'{0}'.format ('alpha')`.
  */
 
