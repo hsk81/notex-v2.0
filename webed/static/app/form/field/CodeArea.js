@@ -26,6 +26,9 @@ Ext.define ('Webed.form.field.CodeArea', {
         }
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     constructor: function (config) {
         this.callParent (arguments);
         this.initConfig (Ext.Object.merge (this.config, config||{}));
@@ -46,6 +49,21 @@ Ext.define ('Webed.form.field.CodeArea', {
                 }
             }
         }
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    mirror: function (ta, options) {
+        var editor = CodeMirror.fromTextArea (ta, options);
+        if (options.mode) CodeMirror.autoLoadMode (editor, options.mode);
+
+        var me = this;
+        editor.on ('cursorActivity', function (self) {
+            me.fireEvent ('cursor', me, self.getCursor ());
+        });
+
+        return editor;
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -74,6 +92,22 @@ Ext.define ('Webed.form.field.CodeArea', {
         }
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    setHeight: function (value) {
+        Webed.form.field.CodeArea.setHeight (value);
+        this.updateLayout ();
+    },
+
+    setFontSize: function (value) {
+        Webed.form.field.CodeArea.setFontSize (value);
+        this.updateLayout ();
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
@@ -86,34 +120,6 @@ Ext.define ('Webed.form.field.CodeArea', {
                 this.callParent (arguments);
             }
         }
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    mirror: function (ta, options) {
-        var editor = CodeMirror.fromTextArea (ta, options);
-        if (options.mode) CodeMirror.autoLoadMode (editor, options.mode);
-
-        var me = this;
-        editor.on ('cursorActivity', function (self) {
-            me.fireEvent ('cursor', me, self.getCursor ());
-        });
-
-        return editor;
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    setHeight: function (value) {
-        Webed.form.field.CodeArea.setHeight (value);
-        this.updateLayout ();
-    },
-
-    setFontSize: function (value) {
-        Webed.form.field.CodeArea.setFontSize (value);
-        this.updateLayout ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
