@@ -4,7 +4,7 @@ function AssertException (message) {
 
 AssertException.prototype.toString = function () {
     return 'AssertException: ' + this.message;
-}
+};
 
 function assert (expression, message) {
     if (!expression) {

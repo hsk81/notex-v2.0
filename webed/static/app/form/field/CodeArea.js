@@ -31,8 +31,6 @@ Ext.define ('Webed.form.field.CodeArea', {
                 switch (modeInfo.mode) {
                     case 'yaml':
                         this.getOptions ().mode = 'yaml-plus'; break;
-                    case 'rst':
-                        this.getOptions ().mode = 'rst-plus'; break;
                     default:
                         this.getOptions ().mode = modeInfo.mode;
                 }
