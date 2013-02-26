@@ -5,7 +5,11 @@ Ext.define ('Webed.controller.StatusBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     refs: [{
-        selector: 'statusbar progressbar', ref: 'progressbar'
+        selector: 'statusbar webed-statusbar-progressbar', ref: 'progressbar'
+    },{
+        selector: 'statusbar webed-statusbar-sizebutton', ref: 'sizeButton'
+    },{
+        selector: 'statusbar webed-statusbar-slider', ref: 'slider'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -14,13 +18,32 @@ Ext.define ('Webed.controller.StatusBar', {
     init: function () {
 
         this.control ({
-            'webed-statusbar-progressbar' : {
-                update: this.pb_update
-            }
+            'webed-statusbar-progressbar': {update: this.pb_update},
+            'webed-statusbar-sizebutton': {click: this.sz_click},
+            'webed-statusbar-slider': {change: this.ss_change},
         });
 
         this.application.on ({'progress-play': this.pb_play, scope: this});
         this.application.on ({'progress-stop': this.pb_stop, scope: this});
+    },
+
+    sz_click: function (self) {
+        var slider = this.getSlider ();
+        assert (slider); slider.setValue (100);
+    },
+
+    ss_change: function (self, value) {
+        var rule = '.CodeMirror';
+        var property = 'font-size';
+        var value_percent = value + '%';
+
+        var result = Ext.util.CSS.updateRule (rule, property, value_percent);
+        assert (result);
+
+        var cas = Ext.ComponentQuery.query ('code-area');
+        cas.forEach (function (ca) { ca.updateLayout (); });
+        var size_button = this.getSizeButton ();
+        assert (size_button); size_button.setText (value_percent);
     },
 
     pb_update: function (self) {

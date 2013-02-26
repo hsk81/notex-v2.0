@@ -149,10 +149,10 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                         var rule = '.CodeMirror';
                         var property = 'height';
-                        var value = height - 2 + 'px';
+                        var value_pixel = height - 2 + 'px';
 
                         var result = Ext.util.CSS.updateRule (
-                            rule, property, value
+                            rule, property, value_pixel
                         );
 
                         assert (result);

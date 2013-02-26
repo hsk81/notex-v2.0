@@ -13,10 +13,35 @@ Ext.define ('Webed.view.StatusBar', {
     },'-',{
         xtype: 'webed-statusbar-spellcheck'
     },'-',{
-        text: '100%'
+        xtype: 'webed-statusbar-sizebutton'
     },{
         xtype: 'webed-statusbar-slider'
     }]
+});
+
+Ext.define ('Webed.view.statusBar.ProgressBar', {
+    extend: 'Ext.ProgressBar',
+    alias: 'widget.webed-statusbar-progressbar',
+
+    width: 256,
+    value: 0.0,
+    hidden: true,
+
+    interval: 125, //[ms]
+    increment: 80, // #segments
+
+    total: 0, //[ms]
+    setTotal: function (value) { this.total = value; },
+    message: 'Processing',
+    setMessage: function (value) { this.message = value; }
+});
+
+Ext.define ('Webed.view.statusBar.InfoButton', {
+    extend: 'Ext.Button',
+    alias: 'widget.webed-statusbar-infobutton',
+    tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
+    text: '',
+    width: 64
 });
 
 Ext.define ('Webed.view.StatusBar.SpellCheck', {
@@ -41,40 +66,25 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     emptyText: 'Language ..'
 });
 
-Ext.define ('Webed.view.statusBar.ProgressBar', {
-    extend: 'Ext.ProgressBar',
-    alias: 'widget.webed-statusbar-progressbar',
-
-    width: 256,
-    value: 0.0,
-    hidden: true,
-
-    interval: 125, //[ms]
-    increment: 80, // #segments
-
-    total: 0, //[ms]
-    setTotal: function (value) { this.total = value; },
-    message: 'Processing',
-    setMessage: function (value) { this.message = value; }
-});
-
-Ext.define ('Webed.view.statusBar.InfoButton', {
+Ext.define ('Webed.view.statusBar.SizeButton', {
     extend: 'Ext.Button',
-    alias: 'widget.webed-statusbar-infobutton',
-
-    tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
-    text: '',
-    disabled: true,
-    width: 64
+    alias: 'widget.webed-statusbar-sizebutton',
+    tooltip: 'Font Size',
+    text: '100%',
+    width: 48
 });
 
 Ext.define ('Webed.view.statusBar.Slider', {
     extend: 'Ext.slider.Single',
     alias: 'widget.webed-statusbar-slider',
 
+    tipText: function (thumb) {
+        return 'Font Size: {0}%'.format (thumb.value);
+    },
+
     width : 128,
     increment : 25,
     value : 100,
-    minValue : 50,
-    maxValue : 150
+    minValue : 25,
+    maxValue : 175
 });
