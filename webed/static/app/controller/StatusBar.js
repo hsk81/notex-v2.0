@@ -4,6 +4,10 @@ Ext.define ('Webed.controller.StatusBar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    requires: [
+        'Ext.util.Cookies'
+    ],
+
     refs: [{
         selector: 'statusbar webed-statusbar-progressbar', ref: 'progressbar'
     },{
@@ -20,7 +24,10 @@ Ext.define ('Webed.controller.StatusBar', {
         this.control ({
             'webed-statusbar-progressbar': {update: this.pb_update},
             'webed-statusbar-sizebutton': {click: this.sz_click},
-            'webed-statusbar-slider': {change: this.ss_change}
+            'webed-statusbar-slider': {
+                change: this.ss_change,
+                afterrender: this.ss_afterrender
+            }
         });
 
         this.application.on ({'progress-play': this.pb_play, scope: this});
@@ -32,10 +39,16 @@ Ext.define ('Webed.controller.StatusBar', {
         assert (slider); slider.setValue (100);
     },
 
+    ss_afterrender: function (self) {
+        var value = Ext.util.Cookies.get ('editor.font-size');
+        if (value) self.setValue (value, false);
+    },
+
     ss_change: function (self, value) {
         Webed.form.field.CodeArea.setFontSize (value);
         var size_button = this.getSizeButton ();
         assert (size_button); size_button.setText (value + '%');
+        Ext.util.Cookies.set ('editor.font-size', value);
     },
 
     pb_update: function (self) {
