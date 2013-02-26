@@ -33,8 +33,7 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     ss_change: function (self, value) {
-        var cas = Ext.ComponentQuery.query ('code-area');
-        cas.forEach (function (ca) { ca.setFontSize (value); });
+        Webed.form.field.CodeArea.setFontSize (value);
         var size_button = this.getSizeButton ();
         assert (size_button); size_button.setText (value + '%');
     },
