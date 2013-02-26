@@ -146,18 +146,8 @@ Ext.define ('Webed.controller.ContentTabs', {
                     afterlayout: function (panel) {
                         var height = panel.getHeight ();
                         assert (typeof (height) == 'number');
-
-                        var rule = '.CodeMirror';
-                        var property = 'height';
-                        var value_pixel = height - 2 + 'px';
-
-                        var result = Ext.util.CSS.updateRule (
-                            rule, property, value_pixel
-                        );
-
-                        assert (result);
                         var ca = panel.child ('code-area');
-                        assert (ca); ca.updateLayout ();
+                        assert (ca); ca.setHeight (height-2);
                     }
                 }
             });

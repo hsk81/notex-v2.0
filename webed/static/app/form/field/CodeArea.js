@@ -17,10 +17,12 @@ Ext.define ('Webed.form.field.CodeArea', {
     },
 
     statics: {
+        setHeight: function (value) {
+            Ext.util.CSS.updateRule ('.CodeMirror', 'height', value + 'px');
+        },
+
         setFontSize: function (value) {
             Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
-            var cas = Ext.ComponentQuery.query ('code-area');
-            cas.forEach (function (ca) { ca.updateLayout (); });
         }
     },
 
@@ -99,6 +101,19 @@ Ext.define ('Webed.form.field.CodeArea', {
         });
 
         return editor;
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    setHeight: function (value) {
+        Webed.form.field.CodeArea.setHeight (value);
+        this.updateLayout ();
+    },
+
+    setFontSize: function (value) {
+        Webed.form.field.CodeArea.setFontSize (value);
+        this.updateLayout ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
