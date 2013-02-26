@@ -9,11 +9,13 @@ Ext.define ('Webed.controller.StatusBar', {
     ],
 
     refs: [{
-        selector: 'statusbar webed-statusbar-progressbar', ref: 'progressbar'
+        selector: 'webed-statusbar-progressbar', ref: 'progressbar'
     },{
-        selector: 'statusbar webed-statusbar-sizebutton', ref: 'sizeButton'
+        selector: 'webed-statusbar-infobutton', ref: 'infoButton'
     },{
-        selector: 'statusbar webed-statusbar-slider', ref: 'slider'
+        selector: 'webed-statusbar-sizebutton', ref: 'sizeButton'
+    },{
+        selector: 'webed-statusbar-slider', ref: 'slider'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -25,9 +27,14 @@ Ext.define ('Webed.controller.StatusBar', {
             'webed-statusbar-progressbar': {update: this.progress_update},
             'webed-statusbar-sizebutton': {click: this.size_click},
             'webed-statusbar-infobutton': {click: this.info_click},
+
             'webed-statusbar-slider': {
                 change: this.slider_change,
                 afterrender: this.slider_afterrender
+            },
+
+            'code-area': {
+                cursor: this.cursor
             }
         });
 
@@ -35,6 +42,18 @@ Ext.define ('Webed.controller.StatusBar', {
             'progress-play': this.progress_play, scope: this});
         this.application.on ({
             'progress-stop': this.progress_stop, scope: this});
+    },
+
+    cursor: function (self, cursor) {
+
+        var button = this.getInfoButton ();
+        if (button.getWidth () > button.minWidth) {
+            button.setText ('{0}:{1}'.format (cursor.line+1, cursor.ch+1));
+        } else {
+            button.suspendLayouts ();
+            button.setText ('{0}:{1}'.format (cursor.line+1, cursor.ch+1));
+            button.resumeLayouts ();
+        }
     },
 
     size_click: function () {

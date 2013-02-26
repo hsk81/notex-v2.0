@@ -21,12 +21,6 @@ Ext.define ('Webed.form.field.CodeArea', {
             Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
             var cas = Ext.ComponentQuery.query ('code-area');
             cas.forEach (function (ca) { ca.updateLayout (); });
-        },
-
-        mirror: function (ta, options) {
-            var editor = CodeMirror.fromTextArea (ta, options);
-            if (options.mode) CodeMirror.autoLoadMode (editor, options.mode);
-            return editor;
         }
     },
 
@@ -60,7 +54,7 @@ Ext.define ('Webed.form.field.CodeArea', {
             this.codemirror.setValue (value);
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = Webed.form.field.CodeArea.mirror (
+                this.codemirror = this.mirror (
                     this.inputEl.dom, this.getOptions ()
                 );
                 this.codemirror.setValue (value);
@@ -83,13 +77,28 @@ Ext.define ('Webed.form.field.CodeArea', {
             this.codemirror.refresh ();
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = Webed.form.field.CodeArea.mirror (
+                this.codemirror = this.mirror (
                     this.inputEl.dom, this.getOptions ()
                 );
             } else {
                 this.callParent (arguments);
             }
         }
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    mirror: function (ta, options) {
+        var editor = CodeMirror.fromTextArea (ta, options);
+        if (options.mode) CodeMirror.autoLoadMode (editor, options.mode);
+
+        var me = this;
+        editor.on ('cursorActivity', function (self) {
+            me.fireEvent ('cursor', me, self.getCursor ());
+        });
+
+        return editor;
     }
 
     ///////////////////////////////////////////////////////////////////////////
