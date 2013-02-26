@@ -31,7 +31,7 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         this.application.on ({
             rename_tab: this.rename_tab, scope: this
-        })
+        });
 
         this.application.on ({
             delete_tab: this.delete_tab, scope: this
@@ -226,31 +226,31 @@ Ext.define ('Webed.controller.ContentTabs', {
 
         function center (panel, ms, stop) {
             if (ms && ms > 0) {
-                return Ext.defer (function () { center (panel,0,stop); }, ms);
-            }
+                Ext.defer (function () { center (panel, 0, stop); }, ms);
+            } else {
+                var inner = panel.down ('box');
+                if (inner || stop>=1) {
+                    var outer = panel.body;
+                    if (outer || stop>=2) {
+                        var W = outer.getWidth ();
+                        var H = outer.getHeight ();
+                        var w = inner.getWidth ();
+                        var h = inner.getHeight ();
 
-            var inner = panel.down ('box');
-            if (inner || stop>=1) {
-                var outer = panel.body;
-                if (outer || stop>=2) {
-                    var W = outer.getWidth ();
-                    var H = outer.getHeight ();
-                    var w = inner.getWidth ();
-                    var h = inner.getHeight ();
+                        if (w>0 && h>0 || stop>=3) {
+                            var innerDx = (W - w) / 2.0;
+                            var innerDy = (H - h) / 2.0;
 
-                    if (w>0 && h>0 || stop>=3) {
-                        var innerDx = (W - w) / 2.0;
-                        var innerDy = (H - h) / 2.0;
-
-                        inner.setPosition (innerDx, innerDy);
+                            inner.setPosition (innerDx, innerDy);
+                        } else {
+                            center (panel, 10, 3);
+                        }
                     } else {
-                        center (panel, 10, 3);
+                        center (panel, 10, 2);
                     }
                 } else {
-                    center (panel, 10, 2);
+                    center (panel, 10, 1);
                 }
-            } else {
-                center (panel, 10, 1);
             }
         }
 
