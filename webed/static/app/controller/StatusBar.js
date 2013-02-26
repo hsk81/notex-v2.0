@@ -20,14 +20,14 @@ Ext.define ('Webed.controller.StatusBar', {
         this.control ({
             'webed-statusbar-progressbar': {update: this.pb_update},
             'webed-statusbar-sizebutton': {click: this.sz_click},
-            'webed-statusbar-slider': {change: this.ss_change},
+            'webed-statusbar-slider': {change: this.ss_change}
         });
 
         this.application.on ({'progress-play': this.pb_play, scope: this});
         this.application.on ({'progress-stop': this.pb_stop, scope: this});
     },
 
-    sz_click: function (self) {
+    sz_click: function () {
         var slider = this.getSlider ();
         assert (slider); slider.setValue (100);
     },
