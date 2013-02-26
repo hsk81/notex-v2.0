@@ -48,11 +48,15 @@ Ext.define ('Webed.controller.StatusBar', {
         var button = this.getInfoButton ();
         assert (button);
 
+        var text = (cursor)
+            ? '{0}:{1}'.format (cursor.line+1, cursor.ch+1)
+            : null;
+
         if (button.getWidth () > button.minWidth) {
-            button.setText ('{0}:{1}'.format (cursor.line+1, cursor.ch+1));
+            button.setText (text);
         } else {
             button.suspendLayouts ();
-            button.setText ('{0}:{1}'.format (cursor.line+1, cursor.ch+1));
+            button.setText (text);
             button.resumeLayouts ();
         }
     },

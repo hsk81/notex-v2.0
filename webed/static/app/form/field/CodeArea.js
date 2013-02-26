@@ -62,6 +62,12 @@ Ext.define ('Webed.form.field.CodeArea', {
         editor.on ('cursorActivity', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
         });
+        editor.on ('focus', function (self) {
+            me.fireEvent ('cursor', me, self.getCursor ());
+        });
+        editor.on ('blur', function (self) {
+            me.fireEvent ('cursor', me, null);
+        });
 
         return editor;
     },
@@ -120,6 +126,16 @@ Ext.define ('Webed.form.field.CodeArea', {
                 this.callParent (arguments);
             }
         }
+    },
+
+    focus: function (selectText, delay) {
+        if (this.codemirror) {
+            Ext.defer (function () {
+                this.codemirror.focus ();
+            }, delay, this);
+        } else {
+            this.callParent (arguments);
+        } return this;
     }
 
     ///////////////////////////////////////////////////////////////////////////

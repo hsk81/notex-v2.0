@@ -148,6 +148,11 @@ Ext.define ('Webed.controller.ContentTabs', {
                         assert (typeof (height) == 'number');
                         var ca = panel.child ('code-area');
                         assert (ca); ca.setHeight (height-2);
+                    },
+
+                    activate: function (panel) {
+                        var ca = panel.child ('code-area');
+                        assert (ca); ca.focus (true, 125);
                     }
                 }
             });
