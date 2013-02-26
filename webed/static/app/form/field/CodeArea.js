@@ -65,9 +65,6 @@ Ext.define ('Webed.form.field.CodeArea', {
         editor.on ('focus', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
         });
-        editor.on ('blur', function (self) {
-            me.fireEvent ('cursor', me, null);
-        });
 
         return editor;
     },

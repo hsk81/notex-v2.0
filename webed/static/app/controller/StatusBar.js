@@ -59,8 +59,6 @@ Ext.define ('Webed.controller.StatusBar', {
                 button.setText (text);
                 button.resumeLayouts ();
             }
-        } else {
-            if (!button.getText ()) button.setText ('');
         }
     },
 
@@ -81,6 +79,7 @@ Ext.define ('Webed.controller.StatusBar', {
             if (ca) {
                 var value = ca.getValue ();
                 if (value) {
+                    self.disable ();
                     var lines = value.split (/\n/).length;
                     var words = value.split (/\s+[^\s+$]/).length;
                     var chars = value.length;
@@ -88,6 +87,8 @@ Ext.define ('Webed.controller.StatusBar', {
                     self.setText (String.format ('{0}:{1}:{2}',
                         lines, words, chars
                     ));
+
+                    self.enable ();
                 } else {
                     self.setText ('1:0:0');
                 }
