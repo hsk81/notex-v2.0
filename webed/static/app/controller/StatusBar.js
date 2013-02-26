@@ -63,7 +63,9 @@ Ext.define ('Webed.controller.StatusBar', {
 
     info_click: function (self) {
 
-        var tabs = Ext.ComponentQuery.query ('content-tabs').pop ();
+        var viewport = self.up ('viewport');
+        assert (viewport);
+        var tabs = viewport.down ('content-tabs');
         assert (tabs);
 
         var tab = tabs.getActiveTab ();
