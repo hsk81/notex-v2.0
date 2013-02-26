@@ -48,16 +48,19 @@ Ext.define ('Webed.controller.StatusBar', {
         var button = this.getInfoButton ();
         assert (button);
 
-        var text = (cursor)
-            ? '{0}:{1}'.format (cursor.line+1, cursor.ch+1)
-            : null;
+        if (cursor) {
+            var text = '{0}:{1}'.format (cursor.line+1, cursor.ch+1);
+            assert (text);
 
-        if (button.getWidth () > button.minWidth) {
-            button.setText (text);
+            if (button.getWidth () > button.minWidth) {
+                button.setText (text);
+            } else {
+                button.suspendLayouts ();
+                button.setText (text);
+                button.resumeLayouts ();
+            }
         } else {
-            button.suspendLayouts ();
-            button.setText (text);
-            button.resumeLayouts ();
+            if (!button.getText ()) button.setText ('');
         }
     },
 
@@ -78,10 +81,12 @@ Ext.define ('Webed.controller.StatusBar', {
             if (ca) {
                 var value = ca.getValue ();
                 if (value) {
+                    var lines = value.split (/\n/).length;
+                    var words = value.split (/\s+[^\s+$]/).length;
+                    var chars = value.length;
+
                     self.setText (String.format ('{0}:{1}:{2}',
-                        value.split (/\n/).length,
-                        value.split (/\s+[^\s+$]/).length,
-                        value.length
+                        lines, words, chars
                     ));
                 } else {
                     self.setText ('1:0:0');
