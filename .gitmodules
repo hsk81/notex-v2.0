@@ -16,3 +16,6 @@
 [submodule "webed/static/lib/jquery.git"]
 	path = webed/static/lib/jquery.git
 	url = https://github.com/hsk81/jquery-standalone.git
+[submodule "webed/static/lib/typojs.git"]
+	path = webed/static/lib/typojs.git
+	url = git@github.com:hsk81/Typo.js.git
