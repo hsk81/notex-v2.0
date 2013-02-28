@@ -347,9 +347,11 @@ def dictionary_download (filename, chunk_size=256 * 1024):
     path = os.path.join (app.config['TYPO_DICT_PATH'], filename)
     assert os.path.exists (path)
 
-    content_val = open (path).read ()
-    content_len = len (content_val)
-    content_csz = chunk_size
+    with open (path) as file:
+
+        content_val = file.read ()
+        content_len = len (content_val)
+        content_csz = chunk_size
 
     def next_chunk (length, size):
         for index in range (0, length, size):
