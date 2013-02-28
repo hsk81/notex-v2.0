@@ -23,6 +23,18 @@ Ext.define ('Webed.form.field.CodeArea', {
 
         setFontSize: function (value) {
             Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
+        },
+
+        getTypoEngine: function () {
+            return Webed.form.field.CodeArea.typo_engine;
+        },
+
+        setTypoEngine: function (value) {
+            Webed.form.field.CodeArea.typo_engine = value;
+            Ext.ComponentQuery.query ('code-area').forEach (function (ca) {
+                ca.codemirror.removeOverlay (ca.spellChecker);
+                if (value) ca.codemirror.addOverlay (ca.spellChecker);
+            });
         }
     },
 
@@ -66,7 +78,38 @@ Ext.define ('Webed.form.field.CodeArea', {
             me.fireEvent ('cursor', me, self.getCursor ());
         });
 
+        this.spellChecker = this.getSpellChecker ();
+        editor.addOverlay (this.spellChecker);
         return editor;
+    },
+
+    getSpellChecker: function () {
+        var rx_word_bas = "!\"'#$%&()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
+        var rx_word_ext = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
+        var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾";
+        var rx_word_sub = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎";
+        var rx_word_xxx = "≈≡×";
+        var rx_word = new RegExp ("^[^{0}{1}{2}{3}{4}\\d\\s]{2,}".format (
+            rx_word_bas, rx_word_ext, rx_word_sup, rx_word_sub, rx_word_xxx
+        ));
+
+        return {
+            token: function (stream) {
+
+                if (stream.match (rx_word) &&
+                    Webed.form.field.CodeArea.getTypoEngine () &&
+                    !Webed.form.field.CodeArea.getTypoEngine ().check (
+                        stream.current ()))
+
+                    return "spell-error"; //CSS class: cm-spell-error
+
+                while (stream.next () != null) {
+                    if (stream.match (rx_word, false)) return null;
+                }
+
+                return null;
+            }
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////

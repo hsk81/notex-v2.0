@@ -64,7 +64,7 @@ Ext.define ('Webed.controller.StatusBar', {
 
     lingua_change: function (self, newValue, oldValue) {
         if (oldValue && !newValue) {
-            Webed.form.field.CodeArea.typo_engine = null;
+            Webed.form.field.CodeArea.setTypoEngine (null);
             Ext.util.Cookies.set ('lingua', undefined);
         }
     },
@@ -85,9 +85,8 @@ Ext.define ('Webed.controller.StatusBar', {
         worker.onmessage = function (event) {
 
             if (event.data) {
-                Webed.form.field.CodeArea.typo_engine = assert (
-                    Typo.prototype.load (event.data)
-                );
+                var typo_engine = assert (Typo.prototype.load (event.data));
+                Webed.form.field.CodeArea.setTypoEngine (typo_engine);
 
                 statusbar.setStatus ({
                     text: 'Dictionary: ready', clear: true
