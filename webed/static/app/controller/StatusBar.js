@@ -72,7 +72,6 @@ Ext.define ('Webed.controller.StatusBar', {
     lingua_select: function (self, records) {
 
         var controller = this;
-        var statusbar = assert (this.getStatusbar ());
 
         var record = assert (records.pop ());
         var lingua = assert (record.get ('lingua'));
@@ -87,22 +86,12 @@ Ext.define ('Webed.controller.StatusBar', {
             if (event.data) {
                 var typo_engine = assert (Typo.prototype.load (event.data));
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
-
-                statusbar.setStatus ({
-                    text: 'Dictionary: ready', clear: true
-                });
-
                 Ext.util.Cookies.set ('lingua', lingua);
-            } else {
-                self.reset (); statusbar.setStatus ({
-                    text: 'Dictionary: not ready', clear: true
-                });
             }
 
             controller.progress_stop (controller);
         };
 
-        statusbar.showBusy ({text: 'Please wait ..'});
         this.progress_play (this, {message: 'Loading'});
 
         worker.postMessage ({
