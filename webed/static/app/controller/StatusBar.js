@@ -75,8 +75,7 @@ Ext.define ('Webed.controller.StatusBar', {
 
         var record = assert (records.pop ());
         var lingua = assert (record.get ('lingua'));
-        var charset_aff = assert (record.get ('charset_aff'));
-        var charset_dic = assert (record.get ('charset_dic'));
+        var charset = assert (record.get ('charset'));
 
         var worker_path = 'static/app/controller/StatusBar.worker.js';
         var worker = new Worker (worker_path);
@@ -95,7 +94,9 @@ Ext.define ('Webed.controller.StatusBar', {
         this.progress_play (this, {message: 'Loading'});
 
         worker.postMessage ({
-            lingua: lingua, charset_aff: charset_aff, charset_dic: charset_dic
+            lingua: lingua,
+            charset_aff: record.get ('charset_aff') || charset,
+            charset_dic: record.get ('charset_dic') || charset
         });
     },
 

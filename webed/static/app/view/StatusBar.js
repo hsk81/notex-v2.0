@@ -51,22 +51,127 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 
     store: {
         fields: [
-            'lingua', 'name', 'charset_aff', 'charset_dic'
+            'lingua', 'name', 'charset', 'charset_aff', 'charset_dic'
         ],
         data : [{
+            lingua: 'ar_ANY',
+            charset: 'UTF-8',
+            name: "Al-ʻarabīyah: Intl"
+        },{
+            lingua: 'de_AT',
+            charset: 'ISO8859-15',
+            name: 'Deutsch: Österreich'
+        },{
+            lingua: 'de_BE',
+            charset: 'ISO8859-15',
+            name: 'Deutsch: Belgien'
+        },{
+            lingua: 'de_BE',
+            charset: 'ISO8859-15',
+            name: 'Deutsch: Schweiz'
+        },{
             lingua: 'de_DE',
-            charset_aff: 'ISO8859-15',
-            charset_dic: 'ISO8859-15',
+            charset: 'ISO8859-15',
             name: 'Deutsch: Deutschland'
         },{
+            lingua: 'de_LI',
+            charset: 'ISO8859-15',
+            name: 'Deutsch: Lichtenstein'
+        },{
+            lingua: 'de_LU',
+            charset: 'ISO8859-15',
+            name: 'Deutsch: Luxemburg'
+        },{
+            lingua: 'en_AG',
+            charset: 'ISO8859-15',
+            name: 'English: Antigua And Barbuda'
+        },{
+            lingua: 'en_AU',
+            charset: 'ISO8859-15',
+            name: 'English: Australia'
+        },{
+            lingua: 'en_BS',
+            charset: 'ISO8859-15',
+            name: 'English: Bahamas'
+        },{
+            lingua: 'en_BW',
+            charset: 'ISO8859-15',
+            name: 'English: Botswana'
+        },{
+            lingua: 'en_BZ',
+            charset: 'ISO8859-15',
+            name: 'English: Belize'
+        },{
+            lingua: 'en_CA',
+            charset: 'UTF-8',
+            name: 'English: Canada'
+        },{
+            lingua: 'en_DK',
+            charset: 'ISO8859-15',
+            name: 'English: Denmark'
+        },{
+            lingua: 'en_GB',
+            charset: 'ISO8859-15',
+            name: 'English: United Kingdom'
+        },{
+            lingua: 'en_GH',
+            charset: 'ISO8859-15',
+            name: 'English: Ghana'
+        },{
+            lingua: 'en_HK',
+            charset: 'ISO8859-15',
+            name: 'English: Hong Kong'
+        },{
+            lingua: 'en_IE',
+            charset: 'ISO8859-15',
+            name: 'English: Ireland'
+        },{
+            lingua: 'en_IN',
+            charset: 'ISO8859-15',
+            name: 'English: India'
+        },{
+            lingua: 'en_JM',
+            charset: 'ISO8859-15',
+            name: 'English: Jamaica'
+        },{
+            lingua: 'en_NA',
+            charset: 'ISO8859-15',
+            name: 'English: Namibia'
+        },{
+            lingua: 'en_NG',
+            charset: 'ISO8859-15',
+            name: 'English: Nigeria'
+        },{
+            lingua: 'en_NZ',
+            charset: 'ISO8859-15',
+            name: 'English: New Zealand'
+        },{
+            lingua: 'en_PH',
+            charset: 'UTF-8',
+            name: 'English: Philippines'
+        },{
+            lingua: 'en_SG',
+            charset: 'ISO8859-15',
+            name: 'English: Singapore'
+        },{
+            lingua: 'en_TT',
+            charset: 'ISO8859-15',
+            name: 'English: Trinidad And Tobago'
+        },{
             lingua: 'en_US',
-            charset_aff: 'UTF-8',
-            charset_dic: 'UTF-8',
+            charset: 'UTF-8',
             name: 'English: United States'
         },{
+            lingua: 'en_ZA',
+            charset: 'ISO8859-15',
+            name: 'English: South Africa'
+        },{
+            lingua: 'en_ZW',
+            charset: 'ISO8859-15',
+            name: 'English: Zimbabwe'
+        },{
             lingua: 'tr_TR',
-            charset_aff: 'UTF-8',
-            charset_dic: 'UTF-8',
+            charset: 'UTF-8',
             name: 'Türkçe: Türkiye'
         }]
     },
