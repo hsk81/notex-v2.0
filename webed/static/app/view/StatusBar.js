@@ -53,125 +53,275 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
         fields: [
             'lingua', 'name', 'charset', 'charset_aff', 'charset_dic'
         ],
-        data : [{
+        data: [{
             lingua: 'ar_ANY',
-            charset: 'UTF-8',
-            name: "Al-ʻarabīyah: Intl"
+            charset: 'utf-8',
+            name: 'Al-ʻarabīyah: INTL'
         },{
             lingua: 'de_AT',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Österreich'
         },{
             lingua: 'de_BE',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Belgien'
         },{
-            lingua: 'de_BE',
-            charset: 'ISO8859-15',
+            lingua: 'de_CH',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Schweiz'
         },{
             lingua: 'de_DE',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Deutschland'
         },{
             lingua: 'de_LI',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Lichtenstein'
         },{
             lingua: 'de_LU',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'Deutsch: Luxemburg'
         },{
             lingua: 'en_AG',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Antigua And Barbuda'
         },{
             lingua: 'en_AU',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Australia'
         },{
             lingua: 'en_BS',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Bahamas'
         },{
             lingua: 'en_BW',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Botswana'
         },{
             lingua: 'en_BZ',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Belize'
         },{
             lingua: 'en_CA',
-            charset: 'UTF-8',
+            charset: 'us-ascii',
             name: 'English: Canada'
         },{
             lingua: 'en_DK',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Denmark'
         },{
             lingua: 'en_GB',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: United Kingdom'
         },{
             lingua: 'en_GH',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Ghana'
         },{
             lingua: 'en_HK',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Hong Kong'
         },{
             lingua: 'en_IE',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Ireland'
         },{
             lingua: 'en_IN',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: India'
         },{
             lingua: 'en_JM',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Jamaica'
         },{
             lingua: 'en_NA',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Namibia'
         },{
             lingua: 'en_NG',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Nigeria'
         },{
             lingua: 'en_NZ',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: New Zealand'
         },{
             lingua: 'en_PH',
-            charset: 'UTF-8',
+            charset: 'us-ascii',
             name: 'English: Philippines'
         },{
             lingua: 'en_SG',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Singapore'
         },{
             lingua: 'en_TT',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Trinidad And Tobago'
         },{
             lingua: 'en_US',
-            charset: 'UTF-8',
+            charset: 'us-ascii',
             name: 'English: United States'
         },{
             lingua: 'en_ZA',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: South Africa'
         },{
             lingua: 'en_ZW',
-            charset: 'ISO8859-15',
+            charset: 'iso-8859-1',
             name: 'English: Zimbabwe'
         },{
+            lingua: 'es_ANY',
+            charset: 'iso-8859-1',
+            name: 'Español: INTL'
+        },{
+            lingua: 'es_AR',
+            charset: 'iso-8859-1',
+            name: 'Español: Argentina'
+        },{
+            lingua: 'es_BO',
+            charset: 'iso-8859-1',
+            name: 'Español: Bolivia'
+        },{
+            lingua: 'es_CL',
+            charset: 'iso-8859-1',
+            name: 'Español: Chile'
+        },{
+            lingua: 'es_CO',
+            charset: 'iso-8859-1',
+            name: 'Español: Colombia'
+        },{
+            lingua: 'es_CR',
+            charset: 'iso-8859-1',
+            name: 'Español: Costa Rica'
+        },{
+            lingua: 'es_CU',
+            charset: 'iso-8859-1',
+            name: 'Español: Cuba'
+        },{
+            lingua: 'es_DO',
+            charset: 'iso-8859-1',
+            name: 'Español: La República Dominicana'
+        },{
+            lingua: 'es_EC',
+            charset: 'iso-8859-1',
+            name: 'Español: Ecuador'
+        },{
+            lingua: 'es_ES',
+            charset: 'iso-8859-1',
+            name: 'Español: España'
+        },{
+            lingua: 'es_GT',
+            charset: 'iso-8859-1',
+            name: 'Español: Guatemala'
+        },{
+            lingua: 'es_HN',
+            charset: 'iso-8859-1',
+            name: 'Español: Honduras'
+        },{
+            lingua: 'es_MX',
+            charset: 'iso-8859-1',
+            name: 'Español: México'
+        },{
+            lingua: 'es_NI',
+            charset: 'iso-8859-1',
+            name: 'Español: Nicaragua'
+        },{
+            lingua: 'es_PA',
+            charset: 'iso-8859-1',
+            name: 'Español: Panamá'
+        },{
+            lingua: 'es_PE',
+            charset: 'iso-8859-1',
+            name: 'Español: Perú'
+        },{
+            lingua: 'es_PR',
+            charset: 'iso-8859-1',
+            name: 'Español: Puerto Rico'
+        },{
+            lingua: 'es_PY',
+            charset: 'iso-8859-1',
+            name: 'Español: Paraguay'
+        },{
+            lingua: 'es_SV',
+            charset: 'iso-8859-1',
+            name: 'Español: El Salvador'
+        },{
+            lingua: 'es_UY',
+            charset: 'iso-8859-1',
+            name: 'Español: Uruguay'
+        },{
+            lingua: 'es_VE',
+            charset: 'iso-8859-1',
+            name: 'Español: Venezuela'
+        },{
+            lingua: 'fr_BE',
+            charset: 'utf-8',
+            name: 'Français: Belgique'
+        },{
+            lingua: 'fr_CA',
+            charset: 'utf-8',
+            name: 'Français: Canada'
+        },{
+            lingua: 'fr_CH',
+            charset: 'utf-8',
+            name: 'Français: La Suisse'
+        },{
+            lingua: 'fr_FR',
+            charset: 'utf-8',
+            name: 'Français: France'
+        },{
+            lingua: 'fr_LU',
+            charset: 'utf-8',
+            name: 'Français: Luxembourg'
+        },{
+            lingua: 'he_IL',
+            charset: 'utf-8',
+            name: 'ʿIvrit: ישראל'
+        },{
+            lingua: 'hu_HU',
+            charset: 'utf-8',
+            charaff: 'unknown-8bit',
+            name: 'Magyar: Magyarország'
+        },{
+            lingua: 'it_CH',
+            charset: 'iso-8859-1',
+            name: 'Italiana: Svizzera'
+        },{
+            lingua: 'it_IT',
+            charset: 'iso-8859-1',
+            name: 'Italiana: Italia'
+        },{
+            lingua: 'la_ANY',
+            charset: 'us-ascii',
+            charaff: 'iso-8859-1',
+            name: 'Latīna: INTL'
+        },{
+            lingua: 'nl_AW',
+            charset: 'utf-8',
+            name: 'Nederlands: Aruba'
+        },{
+            lingua: 'nl_BE',
+            charset: 'utf-8',
+            name: 'Nederlands: België'
+        },{
+            lingua: 'nl_NL',
+            charset: 'utf-8',
+            name: 'Nederlands: Nederland'
+        },{
+            lingua: 'pl_PL',
+            charset: 'iso-8859-1',
+            name: 'Polszczyzna: Polska'
+        },{
+            lingua: 'ro_RO',
+            charset: 'utf-8',
+            name: 'Română: România'
+        },{
+            lingua: 'ru_RU',
+            charset: 'iso-8859-1',
+            name: 'Русский: Россия'
+        },{
             lingua: 'tr_TR',
-            charset: 'UTF-8',
+            charset: 'utf-8',
             name: 'Türkçe: Türkiye'
         }]
     },
@@ -179,7 +329,8 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     queryMode: 'local',
     displayField: 'name',
     valueField: 'lingua',
-    emptyText: 'Language ..'
+    emptyText: 'Language ..',
+    width: 256
 });
 
 Ext.define ('Webed.view.statusBar.SizeButton', {
@@ -198,9 +349,9 @@ Ext.define ('Webed.view.statusBar.Slider', {
         return 'Font Size: {0}%'.format (thumb.value);
     },
 
-    width : 128,
-    increment : 25,
-    value : 100,
-    minValue : 25,
-    maxValue : 175
+    width: 128,
+    increment: 25,
+    value: 100,
+    minValue: 25,
+    maxValue: 175
 });
