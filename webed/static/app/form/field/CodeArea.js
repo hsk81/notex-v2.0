@@ -84,6 +84,7 @@ Ext.define ('Webed.form.field.CodeArea', {
     },
 
     getSpellChecker: function () {
+
         var rx_word_bas = "!\"'#$%&()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
         var rx_word_ext = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
         var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾";
@@ -101,7 +102,7 @@ Ext.define ('Webed.form.field.CodeArea', {
                     !Webed.form.field.CodeArea.getTypoEngine ().check (
                         stream.current ()))
 
-                    return "spell-error"; //CSS class: cm-spell-error
+                    return "spell-error"; //CSS: cm-spell-error
 
                 while (stream.next () != null) {
                     if (stream.match (rx_word, false)) return null;
