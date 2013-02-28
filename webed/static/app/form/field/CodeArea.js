@@ -99,15 +99,12 @@ Ext.define ('Webed.form.field.CodeArea', {
 
                 if (stream.match (rx_word) &&
                     Webed.form.field.CodeArea.getTypoEngine () &&
-                    !Webed.form.field.CodeArea.getTypoEngine ().check (
+                   !Webed.form.field.CodeArea.getTypoEngine ().check (
                         stream.current ()))
 
                     return "spell-error"; //CSS: cm-spell-error
 
-                while (stream.next () != null) {
-                    if (stream.match (rx_word, false)) return null;
-                }
-
+                stream.next ();
                 return null;
             }
         }
