@@ -5,13 +5,13 @@ Ext.Loader.setPath ({
 Ext.define ('Webed.view.StatusBar', {
     extend: 'Ext.ux.statusbar.StatusBar',
     alias: 'widget.webed-statusbar',
-    text: 'WebEd',
+    defaultText: 'WebEd',
     items: [{
         xtype: 'webed-statusbar-progressbar'
     },'-',{
         xtype: 'webed-statusbar-infobutton'
     },'-',{
-        xtype: 'webed-statusbar-spellcheck'
+        xtype: 'webed-statusbar-lingua'
     },'-',{
         xtype: 'webed-statusbar-sizebutton'
     },{
@@ -47,23 +47,33 @@ Ext.define ('Webed.view.statusBar.InfoButton', {
 
 Ext.define ('Webed.view.StatusBar.SpellCheck', {
     extend: 'Ext.form.field.ComboBox',
-    alias: 'widget.webed-statusbar-spellcheck',
+    alias: 'widget.webed-statusbar-lingua',
 
     store: {
-        fields: ['lang', 'name'],
+        fields: [
+            'lingua', 'name', 'charset_aff', 'charset_dic'
+        ],
         data : [{
-            "lang":"en_US", "name":"English: United States"
+            lingua: 'de_DE',
+            charset_aff: 'ISO8859-15',
+            charset_dic: 'ISO8859-15',
+            name: 'Deutsch: Deutschland'
         },{
-            "lang":"de_CH", "name":"German: Switzerland"
+            lingua: 'en_US',
+            charset_aff: 'UTF-8',
+            charset_dic: 'UTF-8',
+            name: 'English: United States'
         },{
-            "lang":"tr_TR", "name":"Turkish: Turkey"
+            lingua: 'tr_TR',
+            charset_aff: 'UTF-8',
+            charset_dic: 'UTF-8',
+            name: 'Türkçe: Türkiye'
         }]
     },
 
     queryMode: 'local',
     displayField: 'name',
-    valueField: 'lang',
-
+    valueField: 'lingua',
     emptyText: 'Language ..'
 });
 
