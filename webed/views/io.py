@@ -76,7 +76,7 @@ def file_upload ():
 
     leaf = create_leaf (name, root, mime); assert leaf and leaf.id
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
-        leaf.base.id,leaf.id)]))
+        leaf.base.id, leaf.id)]))
 
     return JSON.encode (dict (success=True))
 
@@ -188,7 +188,8 @@ def create_prj (path, base, mime):
     cache = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
-        root = cache.get (cur_path); assert root
+        root = cache.get (cur_path)
+        assert root
 
         for dn in dir_names:
             mime = 'application/folder' if root.root else mime
@@ -201,7 +202,8 @@ def create_prj (path, base, mime):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
             else:
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
-            db.session.add (leaf); cache[os.path.join (cur_path, fn)] = leaf
+            db.session.add (leaf)
+            cache[os.path.join (cur_path, fn)] = leaf
 
     return filter (lambda n: n.root == base, cache.values ())
 
@@ -259,7 +261,7 @@ def guess_mime (path, name):
 ###############################################################################
 
 @io.route ('/archive-download/', methods=['GET', 'POST'])
-def archive_download (chunk_size = 256*1024):
+def archive_download (chunk_size=256 * 1024):
 
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
@@ -279,7 +281,7 @@ def archive_download (chunk_size = 256*1024):
 
             def next_chunk (length, size):
                 for index in range (0, length, size):
-                    yield content_val[index:index+size]
+                    yield content_val[index:index + size]
 
             response = Response (next_chunk (content_len, content_csz))
             response.headers ['Content-Length'] = content_len
@@ -316,7 +318,7 @@ def compress (root):
         assert prop
 
         if leaf.mime.lower ().startswith ('text'):
-            data = prop.data.replace ('\n','\r\n').encode ('utf-8')
+            data = prop.data.replace ('\n', '\r\n').encode ('utf-8')
         else:
             data = base64.decodestring (prop.data.split (',')[1])
 
@@ -335,6 +337,30 @@ def compress (root):
     str_buffer.close ()
 
     return content_val
+
+###############################################################################
+###############################################################################
+
+@io.route ('/dictionaries/<filename>', methods=['GET'])
+def dictionary_download (filename, chunk_size=256 * 1024):
+
+    path = os.path.join (app.config['TYPO_DICT_PATH'], filename)
+    assert os.path.exists (path)
+
+    content_val = open (path).read ()
+    content_len = len (content_val)
+    content_csz = chunk_size
+
+    def next_chunk (length, size):
+        for index in range (0, length, size):
+            yield content_val[index:index + size]
+
+    response = Response (next_chunk (content_len, content_csz))
+    response.headers ['Content-Length'] = content_len
+    response.headers ['Content-Disposition'] = \
+        'attachment;filename="%s"' % filename
+
+    return response
 
 ###############################################################################
 ###############################################################################

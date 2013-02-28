@@ -54,6 +54,14 @@ class DefaultConfig:
     MIMETYPES_PATHS = ['/etc/mime.types', './mime.types']
 
     ##
+    ## TYPO_PATH is the path to the `typojs` sub-module, and TYPO_DICT_PATH
+    ## leads to the `hunspell` dictionaries.
+    ##
+
+    TYPO_PATH = os.path.join ('webed', 'static', 'lib', 'typojs')
+    TYPO_DICT_PATH = os.path.join (TYPO_PATH, 'typo', 'dictionaries')
+
+    ##
     ## At session setup data is required: ARCHIVE_PATH is the path to the
     ## archives, which will be imported on the first visit.
     ##
