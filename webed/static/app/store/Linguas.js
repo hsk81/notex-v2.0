@@ -370,13 +370,15 @@ Ext.define ('Webed.store.Linguas', {
         charset: 'utf-8',
         name: '한국의',
         country: '북한',
-        flag: 'flag_north_korea'
+        flag: 'flag_north_korea',
+        disabled: true
     },{
         lingua: 'ko_SKR',
         charset: 'utf-8',
         name: '한국의',
         country: '대한민국',
-        flag: 'flag_south_korea'
+        flag: 'flag_south_korea',
+        disabled: true
     },{
         lingua: 'la_ANY',
         charset: 'utf-8',
