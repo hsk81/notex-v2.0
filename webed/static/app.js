@@ -1,17 +1,23 @@
-Ext.Loader.setConfig ({enabled: true});
-Ext.Loader.setPath ({
-    'Ext': '../static/lib/extjs/src', 'Webed': '../static/app'
+Ext.Loader.setConfig ({
+    enabled: true
 });
 
-Ext.require ('Ext.form.field.VTypes');
-Ext.require ('Ext.data.writer.Json');
-Ext.require ('Ext.data.reader.Json');
-Ext.require ('Ext.XTemplate');
+Ext.Loader.setPath ({
+    'Ext': '../static/lib/extjs/src',
+    'Webed': '../static/app'
+});
 
-Ext.require ('Webed.store.Nodes');
-Ext.require ('Webed.store.Leafs');
-Ext.require ('Webed.store.Properties');
-Ext.require ('Webed.view.Viewport');
+Ext.require ([
+    'Ext.form.field.VTypes',
+    'Ext.data.writer.Json',
+    'Ext.data.reader.Json',
+    'Ext.XTemplate',
+
+    'Webed.store.Nodes',
+    'Webed.store.Leafs',
+    'Webed.store.Properties',
+    'Webed.view.Viewport'
+]);
 
 Ext.application ({
     name: 'Webed',

@@ -56,279 +56,358 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
         data: [{
             lingua: 'ar_ANY',
             charset: 'utf-8',
-            name: 'Al-ʻarabīyah: INTL'
+            name: 'Al-ʻarabīyah',
+            country: 'INTL'
         },{
             lingua: 'de_AT',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Österreich'
+            name: 'Deutsch',
+            country: 'Österreich'
         },{
             lingua: 'de_BE',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Belgien'
+            name: 'Deutsch',
+            country: 'Belgien'
         },{
             lingua: 'de_CH',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Schweiz'
+            name: 'Deutsch',
+            country: 'Schweiz'
         },{
             lingua: 'de_DE',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Deutschland'
+            name: 'Deutsch',
+            country: 'Deutschland'
         },{
             lingua: 'de_LI',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Lichtenstein'
+            name: 'Deutsch',
+            country: 'Lichtenstein'
         },{
             lingua: 'de_LU',
             charset: 'iso-8859-1',
-            name: 'Deutsch: Luxemburg'
+            name: 'Deutsch',
+            country: 'Luxemburg'
         },{
             lingua: 'en_AG',
             charset: 'iso-8859-1',
-            name: 'English: Antigua And Barbuda'
+            name: 'English',
+            country: 'Antigua And Barbuda'
         },{
             lingua: 'en_AU',
             charset: 'iso-8859-1',
-            name: 'English: Australia'
+            name: 'English',
+            country: 'Australia'
         },{
             lingua: 'en_BS',
             charset: 'iso-8859-1',
-            name: 'English: Bahamas'
+            name: 'English',
+            country: 'Bahamas'
         },{
             lingua: 'en_BW',
             charset: 'iso-8859-1',
-            name: 'English: Botswana'
+            name: 'English',
+            country: 'Botswana'
         },{
             lingua: 'en_BZ',
             charset: 'iso-8859-1',
-            name: 'English: Belize'
+            name: 'English',
+            country: 'Belize'
         },{
             lingua: 'en_CA',
             charset: 'us-ascii',
-            name: 'English: Canada'
+            name: 'English',
+            country: 'Canada'
         },{
             lingua: 'en_DK',
             charset: 'iso-8859-1',
-            name: 'English: Denmark'
+            name: 'English',
+            country: 'Denmark'
         },{
             lingua: 'en_GB',
             charset: 'iso-8859-1',
-            name: 'English: United Kingdom'
+            name: 'English',
+            country: 'United Kingdom'
         },{
             lingua: 'en_GH',
             charset: 'iso-8859-1',
-            name: 'English: Ghana'
+            name: 'English',
+            country: 'Ghana'
         },{
             lingua: 'en_HK',
             charset: 'iso-8859-1',
-            name: 'English: Hong Kong'
+            name: 'English',
+            country: 'Hong Kong'
         },{
             lingua: 'en_IE',
             charset: 'iso-8859-1',
-            name: 'English: Ireland'
+            name: 'English',
+            country: 'Ireland'
         },{
             lingua: 'en_IN',
             charset: 'iso-8859-1',
-            name: 'English: India'
+            name: 'English',
+            country: 'India'
         },{
             lingua: 'en_JM',
             charset: 'iso-8859-1',
-            name: 'English: Jamaica'
+            name: 'English',
+            country: 'Jamaica'
         },{
             lingua: 'en_NA',
             charset: 'iso-8859-1',
-            name: 'English: Namibia'
+            name: 'English',
+            country: 'Namibia'
         },{
             lingua: 'en_NG',
             charset: 'iso-8859-1',
-            name: 'English: Nigeria'
+            name: 'English',
+            country: 'Nigeria'
         },{
             lingua: 'en_NZ',
             charset: 'iso-8859-1',
-            name: 'English: New Zealand'
+            name: 'English',
+            country: 'New Zealand'
         },{
             lingua: 'en_PH',
             charset: 'us-ascii',
-            name: 'English: Philippines'
+            name: 'English',
+            country: 'Philippines'
         },{
             lingua: 'en_SG',
             charset: 'iso-8859-1',
-            name: 'English: Singapore'
+            name: 'English',
+            country: 'Singapore'
         },{
             lingua: 'en_TT',
             charset: 'iso-8859-1',
-            name: 'English: Trinidad And Tobago'
+            name: 'English',
+            country: 'Trinidad And Tobago'
         },{
             lingua: 'en_US',
             charset: 'us-ascii',
-            name: 'English: United States'
+            name: 'English',
+            country: 'United States'
         },{
             lingua: 'en_ZA',
             charset: 'iso-8859-1',
-            name: 'English: South Africa'
+            name: 'English',
+            country: 'South Africa'
         },{
             lingua: 'en_ZW',
             charset: 'iso-8859-1',
-            name: 'English: Zimbabwe'
+            name: 'English',
+            country: 'Zimbabwe'
         },{
             lingua: 'es_ANY',
             charset: 'iso-8859-1',
-            name: 'Español: INTL'
+            name: 'Español',
+            country: 'INTL'
         },{
             lingua: 'es_AR',
             charset: 'iso-8859-1',
-            name: 'Español: Argentina'
+            name: 'Español',
+            country: 'Argentina'
         },{
             lingua: 'es_BO',
             charset: 'iso-8859-1',
-            name: 'Español: Bolivia'
+            name: 'Español',
+            country: 'Bolivia'
         },{
             lingua: 'es_CL',
             charset: 'iso-8859-1',
-            name: 'Español: Chile'
+            name: 'Español',
+            country: 'Chile'
         },{
             lingua: 'es_CO',
             charset: 'iso-8859-1',
-            name: 'Español: Colombia'
+            name: 'Español',
+            country: 'Colombia'
         },{
             lingua: 'es_CR',
             charset: 'iso-8859-1',
-            name: 'Español: Costa Rica'
+            name: 'Español',
+            country: 'Costa Rica'
         },{
             lingua: 'es_CU',
             charset: 'iso-8859-1',
-            name: 'Español: Cuba'
+            name: 'Español',
+            country: 'Cuba'
         },{
             lingua: 'es_DO',
             charset: 'iso-8859-1',
-            name: 'Español: La República Dominicana'
+            name: 'Español',
+            country: 'La República Dominicana'
         },{
             lingua: 'es_EC',
             charset: 'iso-8859-1',
-            name: 'Español: Ecuador'
+            name: 'Español',
+            country: 'Ecuador'
         },{
             lingua: 'es_ES',
             charset: 'iso-8859-1',
-            name: 'Español: España'
+            name: 'Español',
+            country: 'España'
         },{
             lingua: 'es_GT',
             charset: 'iso-8859-1',
-            name: 'Español: Guatemala'
+            name: 'Español',
+            country: 'Guatemala'
         },{
             lingua: 'es_HN',
             charset: 'iso-8859-1',
-            name: 'Español: Honduras'
+            name: 'Español',
+            country: 'Honduras'
         },{
             lingua: 'es_MX',
             charset: 'iso-8859-1',
-            name: 'Español: México'
+            name: 'Español',
+            country: 'México'
         },{
             lingua: 'es_NI',
             charset: 'iso-8859-1',
-            name: 'Español: Nicaragua'
+            name: 'Español',
+            country: 'Nicaragua'
         },{
             lingua: 'es_PA',
             charset: 'iso-8859-1',
-            name: 'Español: Panamá'
+            name: 'Español',
+            country: 'Panamá'
         },{
             lingua: 'es_PE',
             charset: 'iso-8859-1',
-            name: 'Español: Perú'
+            name: 'Español',
+            country: 'Perú'
         },{
             lingua: 'es_PR',
             charset: 'iso-8859-1',
-            name: 'Español: Puerto Rico'
+            name: 'Español',
+            country: 'Puerto Rico'
         },{
             lingua: 'es_PY',
             charset: 'iso-8859-1',
-            name: 'Español: Paraguay'
+            name: 'Español',
+            country: 'Paraguay'
         },{
             lingua: 'es_SV',
             charset: 'iso-8859-1',
-            name: 'Español: El Salvador'
+            name: 'Español',
+            country: 'El Salvador'
         },{
             lingua: 'es_UY',
             charset: 'iso-8859-1',
-            name: 'Español: Uruguay'
+            name: 'Español',
+            country: 'Uruguay'
         },{
             lingua: 'es_VE',
             charset: 'iso-8859-1',
-            name: 'Español: Venezuela'
+            name: 'Español',
+            country: 'Venezuela'
         },{
             lingua: 'fr_BE',
             charset: 'utf-8',
-            name: 'Français: Belgique'
+            name: 'Français',
+            country: 'Belgique'
         },{
             lingua: 'fr_CA',
             charset: 'utf-8',
-            name: 'Français: Canada'
+            name: 'Français',
+            country: 'Canada'
         },{
             lingua: 'fr_CH',
             charset: 'utf-8',
-            name: 'Français: La Suisse'
+            name: 'Français',
+            country: 'La Suisse'
         },{
             lingua: 'fr_FR',
             charset: 'utf-8',
-            name: 'Français: France'
+            name: 'Français',
+            country: 'France'
         },{
             lingua: 'fr_LU',
             charset: 'utf-8',
-            name: 'Français: Luxembourg'
+            name: 'Français',
+            country: 'Luxembourg'
         },{
             lingua: 'he_IL',
             charset: 'utf-8',
-            name: 'ʿIvrit: ישראל'
+            name: 'ʿIvrit',
+            country: 'ישראל'
         },{
             lingua: 'hu_HU',
-            charset: 'utf-8',
-            charaff: 'unknown-8bit',
-            name: 'Magyar: Magyarország'
+            charset: 'utf-8', charaff: 'unknown-8bit',
+            name: 'Magyar',
+            country: 'Magyarország'
         },{
             lingua: 'it_CH',
             charset: 'iso-8859-1',
-            name: 'Italiana: Svizzera'
+            name: 'Italiana',
+            country: 'Svizzera'
         },{
             lingua: 'it_IT',
             charset: 'iso-8859-1',
-            name: 'Italiana: Italia'
+            name: 'Italiana',
+            country: 'Italia'
         },{
             lingua: 'la_ANY',
             charset: 'us-ascii',
             charaff: 'iso-8859-1',
-            name: 'Latīna: INTL'
+            name: 'Latīna',
+            country: 'INTL'
         },{
             lingua: 'nl_AW',
             charset: 'utf-8',
-            name: 'Nederlands: Aruba'
+            name: 'Nederlands',
+            country: 'Aruba'
         },{
             lingua: 'nl_BE',
             charset: 'utf-8',
-            name: 'Nederlands: België'
+            name: 'Nederlands',
+            country: 'België'
         },{
             lingua: 'nl_NL',
             charset: 'utf-8',
-            name: 'Nederlands: Nederland'
+            name: 'Nederlands',
+            country: 'Nederland'
         },{
             lingua: 'pl_PL',
             charset: 'iso-8859-1',
-            name: 'Polszczyzna: Polska'
+            name: 'Polszczyzna',
+            country: 'Polska'
         },{
             lingua: 'ro_RO',
             charset: 'utf-8',
-            name: 'Română: România'
+            name: 'Română',
+            country: 'România'
         },{
             lingua: 'ru_RU',
-            charset: 'iso-8859-1',
-            name: 'Русский: Россия'
+            charset: 'utf-8',
+            name: 'Русский',
+            country: 'Россия'
         },{
             lingua: 'tr_TR',
             charset: 'utf-8',
-            name: 'Türkçe: Türkiye'
+            name: 'Türkçe',
+            country: 'Türkiye'
         }]
     },
 
     queryMode: 'local',
     displayField: 'name',
     valueField: 'lingua',
+
+    listeners: {
+        beforerender: function (self) {
+            self.tpl = Ext.create ('Ext.XTemplate', [
+                '<tpl for=".">',
+                '<div class="x-boundlist-item">{name}',
+                '<div class="w-boundlist-item-rhs">{country}</div>',
+                '</div>',
+                '</tpl>'
+            ]);
+        }
+    },
+
     emptyText: 'Language ..',
     width: 256
 });
