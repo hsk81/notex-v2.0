@@ -45,6 +45,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Luxemburg',
         flag: 'flag_luxembourg'
     },{
+        lingua: 'el_GR',
+        charset: 'utf-8',
+        name: 'Eλληνικά',
+        country: 'Ελλάδα',
+        flag: 'flag_greece'
+    },{
         lingua: 'en_AG',
         charset: 'iso-8859-1',
         name: 'English',
