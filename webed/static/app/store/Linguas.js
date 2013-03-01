@@ -410,5 +410,11 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Türkçe',
         country: 'Türkiye',
         flag: 'flag_turkey'
+    },{
+        lingua: 'uk_UA',
+        charset: 'utf-8',
+        name: 'украї́нська',
+        country: 'Україна',
+        flag: 'flag_ukraine'
     }]
 });
