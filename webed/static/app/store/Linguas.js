@@ -393,6 +393,20 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Polska',
         flag: 'flag_poland'
     },{
+        lingua: 'pt_BR',
+        charset: 'utf-8',
+        name: 'Português',
+        country: 'Brasil',
+        flag: 'flag_brazil',
+        disabled: true
+    },{
+        lingua: 'pt_PT',
+        charset: 'utf-8',
+        name: 'Português',
+        country: 'Portugal',
+        flag: 'flag_portugal',
+        disabled: true
+    },{
         lingua: 'ro_RO',
         charset: 'utf-8',
         name: 'Română',
