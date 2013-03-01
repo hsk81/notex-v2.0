@@ -96,13 +96,15 @@ Ext.define ('Webed.controller.StatusBar', {
             }
 
             controller.progress_stop (controller);
+            self.enable ();
         };
 
         var timeoutId = setTimeout (function () {
             worker.onmessage ({data: null});
             worker.terminate ();
-        }, 15000);
+        }, 12000);
 
+        self.disable ();
         worker.postMessage ({lingua: lingua, charset: charset});
         this.progress_play (this, {message: 'Loading'});
     },

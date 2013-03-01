@@ -333,7 +333,6 @@ body {
  *****************************************************************************/
 
 .x-boundlist-item-disabled {
-    font-style: italic;
     color: grey;
 }
 
