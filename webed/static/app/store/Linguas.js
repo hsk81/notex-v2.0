@@ -9,6 +9,12 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Al-ʻarabīyah',
         country: 'دولي'
     },{
+        lingua: 'bg_BG',
+        charset: 'utf-8',
+        name: 'български',
+        country: 'България',
+        flag: 'flag_bulgaria'
+    },{
         lingua: 'de_AT',
         charset: 'iso-8859-1',
         name: 'Deutsch',
