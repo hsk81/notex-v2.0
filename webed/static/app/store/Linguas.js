@@ -366,6 +366,18 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_italy',
         disabled: true
     },{
+        lingua: 'ko_NKR',
+        charset: 'utf-8',
+        name: '한국의',
+        country: '북한',
+        flag: 'flag_north_korea'
+    },{
+        lingua: 'ko_SKR',
+        charset: 'utf-8',
+        name: '한국의',
+        country: '대한민국',
+        flag: 'flag_south_korea'
+    },{
         lingua: 'la_ANY',
         charset: 'utf-8',
         name: 'Latīna',
