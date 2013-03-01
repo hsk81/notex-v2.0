@@ -32,8 +32,10 @@ Ext.define ('Webed.form.field.CodeArea', {
         setTypoEngine: function (value) {
             Webed.form.field.CodeArea.typo_engine = value;
             Ext.ComponentQuery.query ('code-area').forEach (function (ca) {
-                ca.codemirror.removeOverlay (ca.spellChecker);
-                if (value) ca.codemirror.addOverlay (ca.spellChecker);
+                if (ca.spellChecker) {
+                    ca.codemirror.removeOverlay (ca.spellChecker);
+                    if (value) ca.codemirror.addOverlay (ca.spellChecker);
+                }
             });
         }
     },
@@ -78,9 +80,26 @@ Ext.define ('Webed.form.field.CodeArea', {
             me.fireEvent ('cursor', me, self.getCursor ());
         });
 
-        this.spellChecker = this.getSpellChecker ();
-        editor.addOverlay (this.spellChecker);
+        if (this.needSpellChecker (this.getMime ())) {
+            this.spellChecker = this.getSpellChecker ();
+            editor.addOverlay (this.spellChecker);
+        } else {
+            this.spellChecker = null;
+        }
+
         return editor;
+    },
+
+    needSpellChecker: function (mime) {
+        switch (mime) {
+            case 'text/plain':
+            case 'text/x-rst':
+            case 'text/x-markdown':
+            case 'text/x-stex':
+                return true;
+            default:
+                return false;
+        }
     },
 
     getSpellChecker: function () {
@@ -99,7 +118,7 @@ Ext.define ('Webed.form.field.CodeArea', {
 
                 if (stream.match (rx_word) &&
                     Webed.form.field.CodeArea.getTypoEngine () &&
-                   !Webed.form.field.CodeArea.getTypoEngine ().check (
+                    !Webed.form.field.CodeArea.getTypoEngine ().check (
                         stream.current ()))
 
                     return "spell-error"; //CSS: cm-spell-error
