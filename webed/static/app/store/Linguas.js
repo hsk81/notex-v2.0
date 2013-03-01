@@ -361,9 +361,10 @@ Ext.define ('Webed.store.Linguas', {
         disabled: true
     },{
         lingua: 'la_ANY',
-        charset: 'us-ascii', aff: 'iso-8859-1',
+        charset: 'utf-8',
         name: 'Latīna',
-        country: 'International'
+        country: 'International',
+        disabled: true
     },{
         lingua: 'nl_AW',
         charset: 'utf-8',
