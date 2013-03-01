@@ -332,11 +332,28 @@ body {
  * ExtJS Customization
  *****************************************************************************/
 
-.w-boundlist-item-rhs {
+.x-boundlist-item-disabled {
+    font-style: italic;
     color: grey;
+}
+
+.w-boundlist-item {
+    vertical-align: middle;
     font-size: smaller;
     float: right;
-    vertical-align: middle;
+    color: grey;
+}
+
+.w-boundlist-item ul li {
+    display: inline;
+}
+
+.w-boundlist-item-text {
+}
+
+.w-boundlist-item-icon {
+    padding: 2px 8px;
+    margin-left: 4px;
 }
 
 .w-shortcut {

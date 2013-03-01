@@ -5,9 +5,13 @@ Ext.define('Webed.model.Lingua', {
     },{
         name: 'charset', type: 'string'
     },{
+        name: 'country', type: 'string'
+    },{
+        name: 'disabled', type: 'boolean', defaultValue: false
+    },{
         name: 'name', type: 'string'
     },{
-        name: 'country', type: 'string'
+        name: 'flag', type: 'string', defaultValue: 'flag_united_nations'
     },{
         name: 'full', type: 'string', convert: function (v, record) {
             return record.data.name + ': ' + record.data.country;

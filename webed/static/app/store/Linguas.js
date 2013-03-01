@@ -285,9 +285,10 @@ Ext.define ('Webed.store.Linguas', {
         country: 'ישראל'
     },{
         lingua: 'hu_HU',
-        charset: 'utf-8', charaff: 'unknown-8bit',
+        charset: 'utf-8', aff: 'unknown-8bit',
         name: 'Magyar',
-        country: 'Magyarország'
+        country: 'Magyarország',
+        disabled: true
     },{
         lingua: 'it_CH',
         charset: 'iso-8859-1',

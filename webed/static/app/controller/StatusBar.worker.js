@@ -27,7 +27,10 @@ self.onmessage = function (event) {
         return;
     }
 
-    var typo = assert (new Typo (args.lingua, aff, dic));
-    self.postMessage (typo);
-    self.close ();
+    try {
+        self.postMessage (new Typo (args.lingua, aff, dic));
+    } catch (ex) {
+        self.postMessage (null);
+        throw ex;
+    } self.close ();
 };

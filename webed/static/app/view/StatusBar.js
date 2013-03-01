@@ -49,6 +49,10 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.webed-statusbar-lingua',
 
+    requires: [
+        'Webed.store.Linguas'
+    ],
+
     store: 'Linguas',
     queryMode: 'local',
     valueField: 'lingua',
@@ -57,9 +61,29 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 
     tpl: [
         '<tpl for=".">',
-        '<div class="x-boundlist-item">{name}',
-        '<div class="w-boundlist-item-rhs">{country}</div>',
-        '</div>',
+        '<tpl if="disabled">',
+            '<div ',
+                'data-qtip="Not available yet"',
+                'class="x-boundlist-item x-boundlist-item-disabled">{name}',
+                '<div class="w-boundlist-item">',
+                    '<ul>',
+                    '<li class="w-boundlist-item-text">{country}</li>',
+                    '<li class="w-boundlist-item-icon icon-{flag}-16"></li>',
+                    '</ul>',
+                '</div>',
+            '</div>',
+
+        '<tpl else>',
+
+            '<div class="x-boundlist-item">{name}',
+                '<div class="w-boundlist-item">',
+                    '<ul>',
+                    '<li class="w-boundlist-item-text">{country}</li>',
+                    '<li class="w-boundlist-item-icon icon-{flag}-16"></li>',
+                    '</ul>',
+                '</div>',
+            '</div>',
+        '</tpl>',
         '</tpl>'
     ],
 
