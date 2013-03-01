@@ -340,7 +340,7 @@ Ext.define ('Webed.store.Linguas', {
         disabled: true
     },{
         lingua: 'hu_HU',
-        charset: 'utf-8', aff: 'unknown-8bit',
+        charset: 'utf-8',
         name: 'Magyar',
         country: 'Magyarország',
         flag: 'flag_hungary',
