@@ -11,7 +11,6 @@ Ext.require ([
     'Ext.form.field.VTypes',
     'Ext.data.writer.Json',
     'Ext.data.reader.Json',
-    'Ext.XTemplate',
 
     'Webed.store.Nodes',
     'Webed.store.Leafs',
@@ -23,8 +22,8 @@ Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
 
-    models: ['Node', 'Leaf', 'Property'],
-    stores: ['Nodes', 'Leafs', 'Properties'],
+    models: ['Node', 'Leaf', 'Property', 'Lingua'],
+    stores: ['Nodes', 'Leafs', 'Properties', 'Linguas'],
 
     controllers: [
         'AddFileBox',

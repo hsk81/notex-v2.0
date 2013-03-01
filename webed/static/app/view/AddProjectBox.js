@@ -53,10 +53,6 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-project-box-mime',
 
-    requires: [
-        'Ext.XTemplate'
-    ],
-
     store: {
         fields: ['mime', 'name'],
         data : [{
@@ -74,12 +70,11 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     queryMode: 'local',
     displayField: 'name',
     valueField: 'mime',
+    typeAhead: true,
 
-    tpl: Ext.create ('Ext.XTemplate',
-        '<tpl for=".">',
-        '<div class="x-boundlist-item">{name}',
-        '<div class="w-boundlist-item-rhs">{mime}</div>',
-        '</div>',
+    tpl:'<tpl for=".">' +
+        '<div class="x-boundlist-item">{name}' +
+        '<div class="w-boundlist-item-rhs">{mime}</div>' +
+        '</div>' +
         '</tpl>'
-    )
 });

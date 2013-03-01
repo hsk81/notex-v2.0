@@ -72,7 +72,6 @@ Ext.define ('Webed.controller.StatusBar', {
     lingua_select: function (self, records) {
 
         var controller = this;
-
         var record = assert (records.pop ());
         var lingua = assert (record.get ('lingua'));
         var charset = assert (record.get ('charset'));
@@ -92,12 +91,7 @@ Ext.define ('Webed.controller.StatusBar', {
         };
 
         this.progress_play (this, {message: 'Loading'});
-
-        worker.postMessage ({
-            lingua: lingua,
-            charset_aff: record.get ('charset_aff') || charset,
-            charset_dic: record.get ('charset_dic') || charset
-        });
+        worker.postMessage ({lingua: lingua, charset: charset});
     },
 
     cursor: function (self, cursor) {
