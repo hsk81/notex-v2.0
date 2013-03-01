@@ -15,6 +15,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'България',
         flag: 'flag_bulgaria'
     },{
+        lingua: 'cs_CZ',
+        charset: 'utf-8',
+        name: 'Český',
+        country: 'Česká republika',
+        flag: 'flag_czech_republic'
+    },{
         lingua: 'de_AT',
         charset: 'iso-8859-1',
         name: 'Deutsch',
