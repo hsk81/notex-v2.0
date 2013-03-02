@@ -84,8 +84,8 @@ Ext.define ('Webed.controller.StatusBar', {
         worker.onmessage = function (event) {
             clearTimeout (timeoutId);
 
-            if (event.data) {
-                var typo_engine = Typo.prototype.load (event.data);
+            if (event.data && event.data.typo) {
+                var typo_engine = Typo.prototype.load (event.data.typo);
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
                 Ext.util.Cookies.set ('lingua', lingua);
             } else {
@@ -100,7 +100,7 @@ Ext.define ('Webed.controller.StatusBar', {
         };
 
         var timeoutId = setTimeout (function () {
-            worker.onmessage ({data: null});
+            worker.onmessage ({data: {typo: null}});
             worker.terminate ();
         }, 45000);
 

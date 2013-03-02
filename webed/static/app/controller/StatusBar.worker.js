@@ -12,7 +12,7 @@ self.onmessage = function (event) {
     );
 
     if (!aff) {
-        self.postMessage (null);
+        self.postMessage ({typo: null});
         self.close ();
         return;
     }
@@ -22,15 +22,15 @@ self.onmessage = function (event) {
     );
 
     if (!dic) {
-        self.postMessage (null);
+        self.postMessage ({typo: null});
         self.close ();
         return;
     }
 
     try {
-        self.postMessage (new Typo (args.lingua, aff, dic));
+        self.postMessage ({typo: new Typo (args.lingua, aff, dic)});
     } catch (ex) {
-        self.postMessage (null);
+        self.postMessage ({typo: null});
         throw ex;
     } self.close ();
 };
