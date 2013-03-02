@@ -497,6 +497,18 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Slovenija',
         flag: 'flag_slovenia'
     },{
+        lingua: 'sr_LA',
+        charset: 'utf-8',
+        name: 'Serbian',
+        country: 'Serbian',
+        flag: 'flag_serbia_montenegro'
+    },{
+        lingua: 'sr_SR',
+        charset: 'utf-8',
+        name: 'Cрпски',
+        country: 'Србија',
+        flag: 'flag_serbia_montenegro'
+    },{
         lingua: 'sv_FI',
         charset: 'utf-8',
         name: 'Svenska',
