@@ -398,6 +398,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_north_korea',
         disabled: true
     },{
+        lingua: 'kk_KZ',
+        charset: 'utf-8',
+        name: 'Қазақ',
+        country: 'Қазақстан',
+        flag: 'flag_kazakhstan',
+        disabled: true
+    },{
         lingua: 'ko_SKR',
         charset: 'utf-8',
         name: '한국의',
