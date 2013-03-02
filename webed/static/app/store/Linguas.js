@@ -27,6 +27,13 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Österreich',
         flag: 'flag_austria'
     },{
+        lingua: 'da_DK',
+        charset: 'utf-8',
+        name: 'Dansk',
+        country: 'Danmark',
+        flag: 'flag_denmark',
+        disabled: true
+    },{
         lingua: 'de_BE',
         charset: 'iso-8859-1',
         name: 'Deutsch',
