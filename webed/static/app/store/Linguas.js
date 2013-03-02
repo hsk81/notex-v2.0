@@ -412,6 +412,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_lithuania',
         disabled: true
     },{
+        lingua: 'lv_LV',
+        charset: 'utf-8',
+        name: 'Latvijos',
+        country: 'Latvija',
+        flag: 'flag_latvia',
+        disabled: true
+    },{
         lingua: 'nl_AW',
         charset: 'utf-8',
         name: 'Nederlands',
