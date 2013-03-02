@@ -364,6 +364,12 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_israel',
         disabled: true
     },{
+        lingua: 'hr_HR',
+        charset: 'utf-8',
+        name: 'Hrvatski',
+        country: 'Hrvatska',
+        flag: 'flag_croatia'
+    },{
         lingua: 'hu_HU',
         charset: 'utf-8',
         name: 'Magyar',
