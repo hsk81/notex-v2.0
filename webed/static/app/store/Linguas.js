@@ -432,6 +432,12 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_latvia',
         disabled: true
     },{
+        lingua: 'nb_NO',
+        charset: 'utf-8',
+        name: 'Bokmål',
+        country: 'Norge',
+        flag: 'flag_norway'
+    },{
         lingua: 'nl_AW',
         charset: 'utf-8',
         name: 'Nederlands',
@@ -452,6 +458,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Nederland',
         flag: 'flag_netherlands',
         disabled: true
+    },{
+        lingua: 'nn_NO',
+        charset: 'utf-8',
+        name: 'Nynorsk',
+        country: 'Norge',
+        flag: 'flag_norway'
     },{
         lingua: 'pl_PL',
         charset: 'iso-8859-1',
