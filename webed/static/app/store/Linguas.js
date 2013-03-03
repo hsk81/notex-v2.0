@@ -468,6 +468,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_india',
         disabled: true
     },{
+        lingua: 'ne_NP',
+        charset: 'utf-8',
+        name: 'नेपाली',
+        country: 'नेपाल',
+        flag: 'flag_nepal',
+        disabled: true
+    },{
         lingua: 'nb_NO',
         charset: 'utf-8',
         name: 'Bokmål',
