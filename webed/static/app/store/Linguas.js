@@ -494,6 +494,13 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Norge',
         flag: 'flag_norway'
     },{
+        lingua: 'pa_IN',
+        charset: 'utf-8',
+        name: 'ਪੰਜਾਬੀ',
+        country: 'ਇੰਡੀਆ',
+        flag: 'flag_india',
+        disabled: true
+    },{
         lingua: 'pl_PL',
         charset: 'iso-8859-1',
         name: 'Polszczyzna',
