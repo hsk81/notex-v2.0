@@ -4,6 +4,12 @@ Ext.define ('Webed.store.Linguas', {
     model: 'Webed.model.Lingua',
 
     data: [{
+        lingua: 'af_ZA',
+        charset: 'utf-8',
+        name: 'Afrikaans',
+        country: 'Suid-Afrika',
+        flag: 'flag_south_africa'
+    },{
         lingua: 'ar_ANY',
         charset: 'utf-8',
         name: 'Al-ʻarabīyah',
