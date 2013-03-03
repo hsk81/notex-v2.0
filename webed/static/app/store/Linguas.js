@@ -627,6 +627,18 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Shqipëri',
         flag: 'flag_albania'
     },{
+        lingua: 'sw_KE',
+        charset: 'iso-8859-1',
+        name: 'Kiswahili',
+        country: 'Kenya',
+        flag: 'flag_kenya'
+    },{
+        lingua: 'sw_TZ',
+        charset: 'iso-8859-1',
+        name: 'Kiswahili',
+        country: 'Tanzania',
+        flag: 'flag_tanzania'
+    },{
         lingua: 'ta_ANY',
         charset: 'utf-8',
         name: 'தமிழ்',
