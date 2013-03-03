@@ -447,6 +447,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_south_korea',
         disabled: true
     },{
+        lingua: 'ku_TR',
+        charset: 'utf-8',
+        name: 'Kurdî',
+        country: 'Tirkiya',
+        flag: 'flag_turkey',
+        disabled: true
+    },{
         lingua: 'la_ANY',
         charset: 'utf-8',
         name: 'Latīna',
