@@ -549,7 +549,7 @@ Ext.define ('Webed.store.Linguas', {
     },{
         lingua: 'ur_PK',
         charset: 'utf-8',
-        name: "Urdu",
+        name: 'Urdu',
         country: 'پاكِستان',
         flag: 'flag_pakistan',
         direction: 'rtl'
