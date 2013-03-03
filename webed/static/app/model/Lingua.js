@@ -7,6 +7,8 @@ Ext.define('Webed.model.Lingua', {
     },{
         name: 'country', type: 'string', defaultValue: 'INTL'
     },{
+        name: 'direction', type: 'string', defaultValue: 'ltr'
+    },{
         name: 'disabled', type: 'boolean', defaultValue: false
     },{
         name: 'name', type: 'string'

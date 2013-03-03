@@ -9,6 +9,7 @@ Ext.define ('Webed.form.field.CodeArea', {
         options: {
             autoClearEmptyLines: true,
             autofocus: true,
+            direction: 'ltr',
             lineNumbers: true,
             lineWrapping: true,
             matchBrackets: true,
@@ -23,6 +24,10 @@ Ext.define ('Webed.form.field.CodeArea', {
 
         setFontSize: function (value) {
             Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
+        },
+
+        setDirection: function (value) {
+            Ext.util.CSS.updateRule ('.CodeMirror pre', 'direction', value);
         },
 
         getTypoEngine: function () {

@@ -65,6 +65,7 @@ Ext.define ('Webed.controller.StatusBar', {
     lingua_change: function (self, newValue, oldValue) {
         if (oldValue && !newValue) {
             Webed.form.field.CodeArea.setTypoEngine (null);
+            Webed.form.field.CodeArea.setDirection (null);
             Ext.util.Cookies.set ('lingua', undefined);
         }
     },
@@ -77,6 +78,7 @@ Ext.define ('Webed.controller.StatusBar', {
         var lingua = assert (record.get ('lingua'));
         var charset = assert (record.get ('charset'));
         var name = assert (record.get ('name'));
+        var direction = assert (record.get ('direction'));
 
         var worker_path = 'static/app/controller/StatusBar.worker.js';
         var worker = new Worker (worker_path);
@@ -87,6 +89,7 @@ Ext.define ('Webed.controller.StatusBar', {
             if (event.data && event.data.typo) {
                 var typo_engine = Typo.prototype.load (event.data.typo);
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
+                Webed.form.field.CodeArea.setDirection (direction);
                 Ext.util.Cookies.set ('lingua', lingua);
             } else {
                 self.reset (); statusbar.setStatus ({
