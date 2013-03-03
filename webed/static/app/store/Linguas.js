@@ -7,7 +7,8 @@ Ext.define ('Webed.store.Linguas', {
         lingua: 'ar_ANY',
         charset: 'utf-8',
         name: 'Al-ʻarabīyah',
-        country: 'دولي'
+        country: 'دولي',
+        direction: 'rtl'
     },{
         lingua: 'bg_BG',
         charset: 'utf-8',
@@ -362,6 +363,7 @@ Ext.define ('Webed.store.Linguas', {
         name: 'ʿIvrit',
         country: 'ישראל',
         flag: 'flag_israel',
+        direction: 'rtl',
         disabled: true
     },{
         lingua: 'hr_HR',
@@ -391,13 +393,6 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_italy',
         disabled: true
     },{
-        lingua: 'ko_NKR',
-        charset: 'utf-8',
-        name: '한국의',
-        country: '북한',
-        flag: 'flag_north_korea',
-        disabled: true
-    },{
         lingua: 'kk_KZ',
         charset: 'utf-8',
         name: 'Қазақ',
@@ -405,9 +400,16 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_kazakhstan',
         disabled: true
     },{
+        lingua: 'ko_NKR',
+        charset: 'utf-8',
+        name: '조선어',
+        country: '조선민주주의인민공화국',
+        flag: 'flag_north_korea',
+        disabled: true
+    },{
         lingua: 'ko_SKR',
         charset: 'utf-8',
-        name: '한국의',
+        name: '한국어',
         country: '대한민국',
         flag: 'flag_south_korea',
         disabled: true
@@ -420,14 +422,14 @@ Ext.define ('Webed.store.Linguas', {
     },{
         lingua: 'lt_LT',
         charset: 'utf-8',
-        name: 'Lietuviešu',
+        name: 'Lietuvių',
         country: 'Lietuva',
         flag: 'flag_lithuania',
         disabled: true
     },{
         lingua: 'lv_LV',
         charset: 'utf-8',
-        name: 'Latvijos',
+        name: 'Latviešu',
         country: 'Latvija',
         flag: 'flag_latvia',
         disabled: true
@@ -544,5 +546,12 @@ Ext.define ('Webed.store.Linguas', {
         name: 'украї́нська',
         country: 'Україна',
         flag: 'flag_ukraine'
+    },{
+        lingua: 'ur_PK',
+        charset: 'utf-8',
+        name: "Urdu",
+        country: 'پاكِستان',
+        flag: 'flag_pakistan',
+        direction: 'rtl'
     }]
 });
