@@ -493,6 +493,12 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_india',
         disabled: true
     },{
+        lingua: 'mn_MN',
+        charset: 'utf-8',
+        name: 'Монгол хэл',
+        country: 'Монгол улс',
+        flag: 'flag_mongolia'
+    },{
         lingua: 'mr_IN',
         charset: 'utf-8',
         name: 'मराठी',
