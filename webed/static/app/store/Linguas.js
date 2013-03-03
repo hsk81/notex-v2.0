@@ -10,6 +10,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'دولي',
         direction: 'rtl'
     },{
+        lingua: 'be_BY',
+        charset: 'utf-8',
+        name: 'Беларускія',
+        country: 'Беларусь',
+        flag: 'flag_belarus'
+    },{
         lingua: 'bg_BG',
         charset: 'utf-8',
         name: 'български',
