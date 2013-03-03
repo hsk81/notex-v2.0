@@ -334,6 +334,13 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Venezuela',
         flag: 'flag_venezuela'
     },{
+        lingua: 'fa_IR',
+        charset: 'utf-8',
+        name: 'Fārsi',
+        country: 'ایران',
+        flag: 'flag_iran',
+        direction: 'rtl'
+    },{
         lingua: 'fr_BE',
         charset: 'utf-8',
         name: 'Français',
