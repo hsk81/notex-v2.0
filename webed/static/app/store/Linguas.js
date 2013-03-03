@@ -454,6 +454,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_latvia',
         disabled: true
     },{
+        lingua: 'mr_IN',
+        charset: 'utf-8',
+        name: 'मराठी',
+        country: 'इंडिया',
+        flag: 'flag_india',
+        disabled: true
+    },{
         lingua: 'nb_NO',
         charset: 'utf-8',
         name: 'Bokmål',
