@@ -544,26 +544,11 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Norge',
         flag: 'flag_norway'
     },{
-        lingua: 'nl_AW',
-        charset: 'utf-8',
-        name: 'Nederlands',
-        country: 'Aruba',
-        flag: 'flag_aruba',
-        disabled: true
-    },{
-        lingua: 'nl_BE',
-        charset: 'utf-8',
-        name: 'Nederlands',
-        country: 'België',
-        flag: 'flag_belgium',
-        disabled: true
-    },{
         lingua: 'nl_NL',
         charset: 'utf-8',
         name: 'Nederlands',
         country: 'Nederland',
-        flag: 'flag_netherlands',
-        disabled: true
+        flag: 'flag_netherlands'
     },{
         lingua: 'nn_NO',
         charset: 'utf-8',
