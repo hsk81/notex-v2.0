@@ -364,6 +364,13 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Luxembourg',
         flag: 'flag_luxembourg'
     },{
+        lingua: 'gu_IN',
+        charset: 'utf-8',
+        name: 'ગુજરાતી',
+        country: 'ભારત',
+        flag: 'flag_india',
+        disabled: true
+    },{
         lingua: 'he_IL',
         charset: 'utf-8',
         name: 'ʿIvrit',
