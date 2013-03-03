@@ -615,6 +615,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Sverige',
         flag: 'flag_sweden'
     },{
+        lingua: 'sq_AL',
+        charset: 'utf-8',
+        name: 'Shqip',
+        country: 'Shqipëri',
+        flag: 'flag_albania'
+    },{
         lingua: 'ta_ANY',
         charset: 'utf-8',
         name: 'தமிழ்',
