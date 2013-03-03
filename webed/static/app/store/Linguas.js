@@ -412,6 +412,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Indonesia',
         flag: 'flag_indonesia'
     },{
+        lingua: 'is_IS',
+        charset: 'utf-8',
+        name: 'Íslenska',
+        country: 'Ísland',
+        flag: 'flag_iceland'
+    },{
         lingua: 'it_CH',
         charset: 'iso-8859-1',
         name: 'Italiana',
