@@ -377,6 +377,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Luxembourg',
         flag: 'flag_luxembourg'
     },{
+        lingua: 'gd_GB',
+        charset: 'utf-8',
+        name: 'Gàidhlig',
+        country: 'Alba',
+        flag: 'flag_scotland'
+    },{
         lingua: 'gu_IN',
         charset: 'utf-8',
         name: 'ગુજરાતી',
