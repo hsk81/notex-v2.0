@@ -406,6 +406,12 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_hungary',
         disabled: true
     },{
+        lingua: 'id_ID',
+        charset: 'iso-8859-1',
+        name: 'Bahasa Indonesia',
+        country: 'Indonesia',
+        flag: 'flag_indonesia'
+    },{
         lingua: 'it_CH',
         charset: 'iso-8859-1',
         name: 'Italiana',
