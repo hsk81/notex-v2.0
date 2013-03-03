@@ -366,6 +366,13 @@ Ext.define ('Webed.store.Linguas', {
         direction: 'rtl',
         disabled: true
     },{
+        lingua: 'hi_IN',
+        charset: 'utf-8',
+        name: 'हिंदी',
+        country: 'भारत',
+        flag: 'flag_india',
+        disabled: true
+    },{
         lingua: 'hr_HR',
         charset: 'utf-8',
         name: 'Hrvatski',
