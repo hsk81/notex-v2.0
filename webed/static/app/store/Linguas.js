@@ -10,6 +10,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'دولي',
         direction: 'rtl'
     },{
+        lingua: 'az_AZ',
+        charset: 'utf-8',
+        name: 'Azərbaycanca',
+        country: 'Azərbaycan',
+        flag: 'flag_azerbaijan'
+    },{
         lingua: 'be_BY',
         charset: 'utf-8',
         name: 'Беларускія',
