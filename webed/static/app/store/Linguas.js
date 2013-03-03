@@ -576,6 +576,12 @@ Ext.define ('Webed.store.Linguas', {
         country: 'Sverige',
         flag: 'flag_sweden'
     },{
+        lingua: 'ta_ANY',
+        charset: 'utf-8',
+        name: 'தமிழ்',
+        country: 'சர்வதேச',
+        disabled: true
+    },{
         lingua: 'tr_TR',
         charset: 'utf-8',
         name: 'Türkçe',
