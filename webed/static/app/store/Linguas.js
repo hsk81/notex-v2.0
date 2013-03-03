@@ -651,5 +651,11 @@ Ext.define ('Webed.store.Linguas', {
         country: 'پاكِستان',
         flag: 'flag_pakistan',
         direction: 'rtl'
+    },{
+        lingua: 'vi_VN',
+        charset: 'utf-8',
+        name: 'Tiếng Việt',
+        country: 'Việt Nam',
+        flag: 'flag_vietnam'
     }]
 });
