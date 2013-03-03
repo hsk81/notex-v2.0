@@ -418,6 +418,13 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_hungary',
         disabled: true
     },{
+        lingua: 'hy_AM',
+        charset: 'utf-8',
+        name: 'հայերեն',
+        country: 'Հայաստան',
+        flag: 'flag_armenia',
+        disabled: true
+    },{
         lingua: 'id_ID',
         charset: 'iso-8859-1',
         name: 'Bahasa Indonesia',
