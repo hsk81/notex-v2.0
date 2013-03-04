@@ -31,7 +31,6 @@ Ext.define ('Webed.controller.StatusBar', {
             'webed-statusbar-infobutton': {click: this.info_click},
 
             'webed-statusbar-lingua': {
-                afterrender: this.lingua_afterrender,
                 change: this.lingua_change,
                 select: this.lingua_select
             },
@@ -52,21 +51,10 @@ Ext.define ('Webed.controller.StatusBar', {
             'progress-stop': this.progress_stop, scope: this});
     },
 
-    lingua_afterrender: function (self) {
-        var lingua = Ext.util.Cookies.get ('lingua');
-        if (lingua && lingua != 'undefined') {
-            var store = assert (self.getStore ());
-            var record = assert (store.findRecord ('lingua', lingua));
-            self.fireEvent ('select', self, [record]);
-            self.setValue (lingua);
-        }
-    },
-
     lingua_change: function (self, newValue, oldValue) {
         if (oldValue && !newValue) {
             Webed.form.field.CodeArea.setTypoEngine (null);
             Webed.form.field.CodeArea.setDirection (null);
-            Ext.util.Cookies.set ('lingua', undefined);
         }
     },
 
@@ -90,7 +78,6 @@ Ext.define ('Webed.controller.StatusBar', {
                 var typo_engine = Typo.prototype.load (event.data.typo);
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
                 Webed.form.field.CodeArea.setDirection (direction);
-                Ext.util.Cookies.set ('lingua', lingua);
             } else {
                 self.reset (); statusbar.setStatus ({
                     text: 'Language: Enabling «{0}» failed!'.format (name),
@@ -105,7 +92,7 @@ Ext.define ('Webed.controller.StatusBar', {
         var timeoutId = setTimeout (function () {
             worker.onmessage ({data: {typo: null}});
             worker.terminate ();
-        }, 18000);
+        }, 60 * 1000);
 
         self.disable ();
         worker.postMessage ({lingua: lingua, charset: charset});
