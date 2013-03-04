@@ -450,14 +450,14 @@ Ext.define ('Webed.store.Linguas', {
         flag: 'flag_iceland'
     },{
         lingua: 'it_CH',
-        charset: 'iso-8859-1',
+        charset: 'utf-8',
         name: 'Italiana',
         country: 'Svizzera',
         flag: 'flag_switzerland',
         disabled: true
     },{
         lingua: 'it_IT',
-        charset: 'iso-8859-1',
+        charset: 'utf-8',
         name: 'Italiana',
         country: 'Italia',
         flag: 'flag_italy',
