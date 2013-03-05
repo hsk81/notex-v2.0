@@ -12,6 +12,7 @@ Ext.require ([
     'Ext.data.writer.Json',
     'Ext.data.reader.Json',
 
+    'Webed.store.MIMEs',
     'Webed.store.Nodes',
     'Webed.store.Leafs',
     'Webed.store.Properties',
@@ -22,8 +23,8 @@ Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
 
-    models: ['Node', 'Leaf', 'Property', 'Lingua'],
-    stores: ['Nodes', 'Leafs', 'Properties', 'Linguas'],
+    models: ['Node', 'Leaf', 'Property', 'Lingua', 'MIME'],
+    stores: ['Nodes', 'Leafs', 'Properties', 'Linguas', 'MIMEs'],
 
     controllers: [
         'AddFileBox',
@@ -53,7 +54,6 @@ Ext.application ({
     },
 
     get_selection: function () {
-        var controller = this.getController ('NodeTree');
-        assert (controller); return controller.get_selection ();
+        return assert (this.getController ('NodeTree')).get_selection ();
     }
 });

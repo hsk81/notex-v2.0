@@ -126,7 +126,7 @@ Ext.define ('Webed.controller.MainBar', {
 
         if (!node.isRoot ()) {
             var renameBox = Ext.create ('Webed.view.RenameBox', {
-                title: Ext.String.format ('Rename {0}', node.getTitle (true)),
+                title: Ext.String.format ('Rename {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
                 node: node
             });
@@ -144,7 +144,7 @@ Ext.define ('Webed.controller.MainBar', {
 
         if (!node.isRoot ()) {
             var deleteBox = Ext.create ('Webed.view.DeleteBox', {
-                title: Ext.String.format ('Delete {0}', node.getTitle (true)),
+                title: Ext.String.format ('Delete {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
                 node: node
             });

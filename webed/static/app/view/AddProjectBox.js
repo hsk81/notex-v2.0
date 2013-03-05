@@ -53,20 +53,7 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-project-box-mime',
 
-    store: {
-        fields: ['mime', 'name'],
-        data : [{
-            'mime':'application/project',
-            'name':'Default'
-        },{
-            'mime':'application/project+rest',
-            'name':'reStructuredText'
-        },{
-            'mime':'application/project+latex',
-            'name':'LaTex'
-        }]
-    },
-
+    store: 'MIMEs',
     queryMode: 'local',
     displayField: 'name',
     valueField: 'mime',
@@ -76,5 +63,15 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
         '<div class="x-boundlist-item">{name}' +
         '<div class="w-boundlist-item">{mime}</div>' +
         '</div>' +
-        '</tpl>'
+        '</tpl>',
+
+    initComponent: function () {
+        this.callParent (arguments); assert (this.getStore ()).filter ([{
+            property: 'mime', value: /^application\/project/
+        }]);
+    },
+
+    beforeDestroy: function () {
+        assert (this.getStore ()).clearFilter ();
+    }
 });

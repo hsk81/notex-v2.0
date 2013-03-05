@@ -10,16 +10,8 @@ Ext.define ('Webed.model.Node', {
         }
     },
 
-    getTitle: function (capitalize) {
-        var mime = this.get ('mime');
-        assert (mime);
-        var title = MIME.to_title (mime);
-        assert (title);
-
-        if (capitalize) {
-            return title.slice (0,1).toUpperCase () + title.slice (1);
-        } else {
-            return title;
-        }
+    getTitle: function () {
+        var mime = assert (this.get ('mime'));
+        return assert (MIME.to_name (mime));
     }
 });

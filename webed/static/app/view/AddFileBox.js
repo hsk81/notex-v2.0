@@ -53,20 +53,7 @@ Ext.define ('Webed.view.AddFileBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-file-box-mime',
 
-    store: {
-        fields: ['mime', 'name'],
-        data : [{
-            'mime':'text/plain',
-            'name':'Plain Text'
-        },{
-            'mime':'text/x-rst',
-            'name':'reStructuredText'
-        },{
-            'mime':'text/x-yaml',
-            'name':'YAML configuration'
-        }]
-    },
-
+    store: 'MIMEs',
     queryMode: 'local',
     displayField: 'name',
     valueField: 'mime',
@@ -76,5 +63,15 @@ Ext.define ('Webed.view.AddFileBoxMime', {
         '<div class="x-boundlist-item">{name}' +
         '<div class="w-boundlist-item">{mime}</div>' +
         '</div>' +
-        '</tpl>'
+        '</tpl>',
+
+    initComponent: function () {
+        this.callParent (arguments); assert (this.getStore ()).filter ([{
+            property: 'mime', value: /^text\/[^\*]+$/
+        }]);
+    },
+
+    beforeDestroy: function () {
+        assert (this.getStore ()).clearFilter ();
+    }
 });
