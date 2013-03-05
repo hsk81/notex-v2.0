@@ -4,15 +4,15 @@ var MIME = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function is_root (mime) {
-        return mime in {'application/root':1};
+        return mime.match (/^application\/root/) ? true : false;
     }
 
     function is_project (mime) {
-        return mime in {'application/project':1};
+        return mime.match (/^application\/project/) ? true : false;
     }
 
     function is_folder (mime) {
-        return mime in {'application/folder':1};
+        return mime.match (/^application\/folder/) ? true : false;
     }
 
     function is_text (mime) {
@@ -26,84 +26,70 @@ var MIME = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    var map2icon = {}, map2icon_cache = {}, tmp2icon = {
-        'application/folder': 'icon-folder',
-        'application/project\\+latex': 'icon-report_latex',
-        'application/project\\+rest': 'icon-report_rest',
-        'application/project': 'icon-report',
-        'image/*': 'icon-picture',
-        'text/*':'icon-page',
-        '*/*': 'icon-page_white',
-        '*': 'icon-page_white'
-    };
-
-    $.each (tmp2icon, function (key, value) {
-        map2icon['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
-    });
-
-    function to_icon (mime, suffix) {
-        var result = map2icon_cache[mime];
-        if (result) return result;
-
-        var keys = [];
-        for (var m2i_key in map2icon) {
-            if (map2icon.hasOwnProperty (m2i_key) && mime.match (m2i_key)) {
-                keys.push (m2i_key);
-            }
-        }
-
-        var key = keys.sort ().pop ();
-        assert (key);
-        var value = map2icon[key] + (suffix ? suffix : '');
-        assert (value);
-
-        return map2icon_cache[mime] = value;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    var map2title = {}, map2title_cache = {}, tmp2title = {
-        'application/folder': 'folder',
-        'application/project': 'project',
-        'image/*': 'image',
-        'text/plain':'text',
-        '*/*': 'document',
-        '*': 'document'
-    }
-
-    $.each (tmp2title, function (key, value) {
-        map2title['^' + key.replace (/\?/g,'.').replace (/\*/g,'.*')] = value;
-    });
-
-    function to_title (mime) {
-        var result = map2title_cache[mime];
-        if (result) return result;
-
-        var keys = [];
-        for (var m2i_key in map2title) {
-            if (map2title.hasOwnProperty (m2i_key) && mime.match (m2i_key)) {
-                keys.push (m2i_key);
-            }
-        }
-
-        var key = keys.sort ().pop ();
-        assert (key);
-        var value = map2title[key];
-        assert (value);
-
-        return map2title_cache[mime] = value;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     return {
         is_root: is_root,
+        is_project: is_project,
+        is_folder: is_folder,
         is_text: is_text,
         is_image: is_image,
-        to_icon: to_icon,
-        to_title: to_title
+
+        to_name: function (mime) {
+            var store = Ext.getStore ('MIMEs');
+            if (!store) store = Ext.create ('Webed.store.MIMEs');
+
+            function name (record) {
+                return assert (record.get ('name'));
+            }
+
+            if (mime) {
+                var RECs = assert (store.query ('mime', mime));
+                if (RECs.getCount () > 0) return name (RECs.getAt (0));
+            }
+            if (mime && is_image (mime)) {
+                var IMGs = assert (store.query ('mime', /^image\/\*$/));
+                if (IMGs.getCount () > 0) return name (IMGs.getAt (0));
+            }
+            if (mime && is_text (mime)) {
+                var TXTs = assert (store.query ('mime', /^text\/\*$/));
+                if (TXTs.getCount () > 0) return name (TXTs.getAt (0));
+            }
+            if (mime) { // fallback && assert (mime)
+                var DOCs = assert (store.query ('mime', /^*$/));
+                if (DOCs.getCount () > 0) return name (DOCs.getAt (0));
+            }
+
+            assert (mime, 'invalid mime');
+            return null;
+        },
+
+        to_icon: function (mime, suffix) {
+            var store = Ext.getStore ('MIMEs');
+            if (!store) store = Ext.create ('Webed.store.MIMEs');
+
+            function icon (record) {
+                return assert (record.get ('icon')) + (suffix ? suffix : '');
+            }
+
+            if (mime) {
+                var RECs = assert (store.query ('mime', mime));
+                if (RECs.getCount () > 0) return icon (RECs.getAt (0));
+            }
+            if (mime && is_image (mime)) {
+                var IMGs = assert (store.query ('mime', /^image\/\*$/));
+                if (IMGs.getCount () > 0) return icon (IMGs.getAt (0));
+            }
+            if (mime && is_text (mime)) {
+                var TXTs = assert (store.query ('mime', /^text\/\*$/));
+                if (TXTs.getCount () > 0) return icon (TXTs.getAt (0));
+            }
+            if (mime) { // fallback && assert (mime)
+                var DOCs = assert (store.query ('mime', /^*$/));
+                if (DOCs.getCount () > 0) return icon (DOCs.getAt (0));
+            }
+
+            assert (mime, 'invalid mime');
+            return null;
+        }
     };
 
     ///////////////////////////////////////////////////////////////////////////
