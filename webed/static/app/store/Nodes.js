@@ -27,20 +27,13 @@ Ext.define ('Webed.store.Nodes', {
             // twice within the tree by omitting the top node information.
             //
 
-            if (operation.params.uuid) {
-                operation.params.omit_top = false;
-            } else {
-                operation.params.omit_top = true;
-            }
+            operation.params.omit_top = !operation.params.uuid;
         }
     },
 
     decorate: function (node) {
-        var mime = node.get ('mime');
-        assert (mime);
-        var icon = MIME.to_icon (mime, '-16');
-        assert (icon);
-
+        var mime = assert (node.get ('mime'));
+        var icon = assert (MIME.to_icon (mime, '-16'));
         node.set ('iconCls', icon);
 
         //

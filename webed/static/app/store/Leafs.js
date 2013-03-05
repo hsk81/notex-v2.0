@@ -4,21 +4,16 @@ Ext.define ('Webed.store.Leafs', {
     model: 'Webed.model.Leaf',
 
     listeners: {
-        prefetch: function (store, records, successful, eOpts) {
-            if (records && successful) {
-                records.forEach (function (record) {
-                    this.decorate (record);
-                }, this);
-            }
+        prefetch: function (store, records, successful) {
+            if (records && successful) records.forEach (function (record) {
+                this.decorate (record);
+            }, this);
         }
     },
 
     decorate: function (leaf) {
-        var mime = leaf.get ('mime');
-        assert (mime);
-        var icon = MIME.to_icon (mime, '-16');
-        assert (icon);
-
+        var mime = assert (leaf.get ('mime'));
+        var icon = assert (MIME.to_icon (mime, '-16'));
         leaf.set ('iconCls', icon);
     },
 
