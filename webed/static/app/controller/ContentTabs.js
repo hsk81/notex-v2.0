@@ -41,26 +41,23 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    render: function (view, eOpts) {
-        var wrap = Ext.fly ('content-wrap');
-        assert (wrap); wrap.destroy ();
+    render: function (view) {
+        assert (Ext.fly ('content-wrap')).destroy ();
     },
 
     beforeadd: function (view, component, index) {
         if (view.items.length == 0) {
-            var wrap = Ext.fly ('page-wrap');
-            assert (wrap); wrap.setDisplayed (false);
+            assert (Ext.fly ('page-wrap')).setDisplayed (false);
         }
     },
 
     remove: function (view, component) {
         if (view.items.length == 0) {
-            var wrap = Ext.fly ('page-wrap');
-            assert (wrap); wrap.setDisplayed (true);
+            assert (Ext.fly ('page-wrap')).setDisplayed (true);
         }
     },
 
-    tabchange: function (tabPanel, newCard, oldCard, eOpts) {
+    tabchange: function (tabPanel, newCard, oldCard) {
         this.application.fireEvent ('select_node', this, {
             record: newCard.record
         });
@@ -77,10 +74,8 @@ Ext.define ('Webed.controller.ContentTabs', {
         if (source == this) return;
 
         assert (args);
-        var record = args.record;
-        assert (record);
-        var mime = record.get ('mime');
-        assert (mime);
+        var record = assert (args.record);
+        var mime = assert (record.get ('mime'));
 
         if (MIME.is_text (mime))
             this.create_text_tab (record, args.callback, args.scope);
@@ -91,19 +86,12 @@ Ext.define ('Webed.controller.ContentTabs', {
     create_text_tab: function (record, callback, scope) {
         assert (record);
 
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var mime = record.get ('mime');
-        assert (mime);
-        var name = record.get ('name');
-        assert (name);
-        var iconCls = record.get ('iconCls');
-        assert (iconCls);
-
-        var view = this.getContentTabs ();
-        assert (view);
-        var app = this.application;
-        assert (app);
+        var uuid = assert (record.get ('uuid'));
+        var mime = assert (record.get ('mime'));
+        var name = assert (record.get ('name'));
+        var iconCls = assert (record.get ('iconCls'));
+        var view = assert (this.getContentTabs ());
+        var app = assert (this.application);
 
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
@@ -150,8 +138,7 @@ Ext.define ('Webed.controller.ContentTabs', {
                     },
 
                     activate: function (panel) {
-                        var ca = panel.child ('code-area');
-                        assert (ca); ca.focus (true, 125);
+                        assert (panel.child ('code-area')).focus (true, 125);
                     }
                 }
             });
@@ -163,17 +150,11 @@ Ext.define ('Webed.controller.ContentTabs', {
     create_image_tab: function (record, callback, scope) {
         assert (record);
 
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var name = record.get ('name');
-        assert (name);
-        var iconCls = record.get ('iconCls');
-        assert (iconCls);
-
-        var view = this.getContentTabs ();
-        assert (view);
-        var app = this.application;
-        assert (app);
+        var uuid = assert (record.get ('uuid'));
+        var name = assert (record.get ('name'));
+        var iconCls = assert (record.get ('iconCls'));
+        var view = assert (this.getContentTabs ());
+        var app = assert (this.application);
 
         var tab = this.get_tab (uuid) || view.add ({
             autoScroll: true,
@@ -258,14 +239,11 @@ Ext.define ('Webed.controller.ContentTabs', {
         if (source == this) return;
         assert (args && args.record);
 
-        var uuid = args.record.get ('uuid');
-        assert (uuid);
-        var mime = args.record.get ('mime');
-        assert (mime);
-
+        var uuid = assert (args.record.get ('uuid'));
         var tab = this.get_tab (uuid);
         if (!tab) return;
 
+        var mime = assert (args.record.get ('mime'));
         if (MIME.is_text (mime))
             this.update_text_tab (tab, args.callback, args.scope);
         else if (MIME.is_image (mime))
@@ -274,15 +252,11 @@ Ext.define ('Webed.controller.ContentTabs', {
 
     update_text_tab: function (tab, callback, scope) {
         assert (tab);
-        var record = tab.record;
-        assert (record);
-        var uuid = record.get ('uuid');
-        assert (uuid);
 
-        var ta = tab.child ('code-area');
-        assert (ta);
-        var data = ta.getValue ();
-        assert (data != null);
+        var record = assert (tab.record);
+        var uuid = assert (record.get ('uuid'));
+        var ta = assert (tab.child ('code-area'));
+        var data = ta.getValue (); assert (data != null);
 
         this.application.fireEvent ('get_property', this, {
             callback: on_get, scope: this, property: [{
@@ -295,7 +269,6 @@ Ext.define ('Webed.controller.ContentTabs', {
 
             props[0].set ('data', data);
             props[0].set ('size', utf8Length (data.length));
-
             props[0].save ({
                 scope: this, callback: function (prop, op) {
                     if (callback && callback.call) {
@@ -316,11 +289,8 @@ Ext.define ('Webed.controller.ContentTabs', {
         if (source == this) return;
         assert (args && args.record);
 
-        var uuid = args.record.get ('uuid');
-        assert (uuid);
-        var name = args.record.get ('name');
-        assert (name);
-
+        var uuid = assert (args.record.get ('uuid'));
+        var name = assert (args.record.get ('name'));
         var tab = this.get_tab (uuid);
         if (tab) tab.setTitle (name);
     },
@@ -329,9 +299,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         if (source == this) return;
         assert (args && args.record);
 
-        var uuid = args.record.get ('uuid');
-        assert (uuid);
-
+        var uuid = assert (args.record.get ('uuid'));
         var tab = this.get_tab (uuid);
         if (tab) tab.close ();
     },
@@ -342,15 +310,12 @@ Ext.define ('Webed.controller.ContentTabs', {
     get_tab: function (uuid) {
         assert (uuid);
 
-        var view = this.getContentTabs ();
-        assert (view);
-
-        var tabs = view.queryBy (function (el) {
+        var view = assert (this.getContentTabs ());
+        var tabs = assert (view.queryBy (function (el) {
             return (el.record && el.record.get ('uuid') == uuid)
                 ? true : false;
-        }, this);
+        }, this));
 
-        assert (tabs);
         return (tabs.length > 0) ? tabs[0] : null;
     }
 
