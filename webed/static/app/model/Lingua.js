@@ -1,7 +1,7 @@
 Ext.define('Webed.model.Lingua', {
     extend: 'Ext.data.Model',
     fields: [{
-        name: 'lingua',  type: 'string'
+        name: 'lingua', type: 'string'
     },{
         name: 'charset', type: 'string'
     },{
