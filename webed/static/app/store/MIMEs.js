@@ -29,12 +29,16 @@ Ext.define ('Webed.store.MIMEs', {
         icon: 'icon-script_code_red',
         flag: {text: true}
     },{
+        mime: 'text/javascript',
+        name: 'JavaScript',
+        icon: 'icon-script_code'
+    },{
         mime: 'text/plain',
         name: 'Plain Text',
         icon: 'icon-page'
     },{
-        mime: 'text/javascript',
-        name: 'JavaScript',
+        mime: 'text/x-python',
+        name: 'Python',
         icon: 'icon-script_code'
     },{
         mime: 'text/x-rst',
