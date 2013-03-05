@@ -6,5 +6,7 @@ Ext.define('Webed.model.MIME', {
         name: 'name', type: 'string'
     },{
         name: 'icon', type: 'string'
+    },{
+        name: 'flag', defaultValue: null
     }]
 });

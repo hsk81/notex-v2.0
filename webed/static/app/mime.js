@@ -15,12 +15,95 @@ var MIME = function () {
         return mime.match (/^application\/folder/) ? true : false;
     }
 
-    function is_text (mime) {
-        return mime.match (/^text\/.+$/) ? true : false;
+    function is_text (mime, no_fallback, store) {
+
+        function internal () {
+            return (no_fallback != undefined)
+                ? mime.match (/^text\/[^*]+$/) ? true : false
+                : mime.match (/^text\/.+$/) ? true : false;
+        }
+
+        if (store == undefined) {
+            store = assert (Ext.getStore ('MIMEs'));
+            if (!store) store = Ext.create ('Webed.store.MIMEs');
+        }
+
+        var records = store.query ('mime', mime);
+        if (records.getCount () > 0) {
+            var record = assert (records.getAt (0));
+            var flag = record.get ('flag');
+            if (flag == null) {
+                return internal ();
+            } else {
+                return flag.text && record; // dirty optimization
+            }
+        } else {
+            return internal ();
+        }
     }
 
-    function is_image (mime) {
-        return mime.match (/^image\/.+$/) ? true : false;
+    function is_image (mime, no_fallback, store) {
+
+        function internal () {
+            return (no_fallback != undefined)
+                ? mime.match (/^image\/[^*]+$/) ? true : false
+                : mime.match (/^image\/.+$/) ? true : false;
+        }
+
+        if (store == undefined) {
+            store = assert (Ext.getStore ('MIMEs'));
+            if (!store) store = Ext.create ('Webed.store.MIMEs');
+        }
+
+        var records = store.query ('mime', mime);
+        if (records.getCount () > 0) {
+            var record = assert (records.getAt (0));
+            var flag = record.get ('flag');
+            if (flag == null) {
+                return internal ();
+            } else {
+                return flag.image && record; // dirty optimization
+            }
+        } else {
+            return internal ();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function for_mime (mime, property, store) {
+        var query = assert (store.query ('mime', mime));
+        return (query.getCount () > 0) ? property (query.getAt (0)) : null;
+    }
+
+    function for_image (mime, property, store) {
+
+        var image = is_image (mime, null, store);
+        if (image instanceof Webed.model.MIME) return property (image);
+        if (image) {
+            var query = assert (store.query ('mime', "image/*"));
+            if (query.getCount () > 0) return property (query.getAt (0));
+        }
+
+        return null;
+    }
+
+    function for_text (mime, property, store) {
+
+        var text = is_text (mime, null, store);
+        if (text instanceof Webed.model.MIME) return property (text);
+        if (text) {
+            var query = assert (store.query ('mime', "text/*"));
+            if (query.getCount () > 0) return property (query.getAt (0));
+        }
+
+        return null;
+    }
+
+    function for_doc (mime, property, store) {
+        var query = assert (store.query ('mime', "*"));
+        return (query.getCount () > 0) ? property (query.getAt (0)) : null;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -41,22 +124,14 @@ var MIME = function () {
                 return assert (record.get ('name'));
             }
 
-            if (mime) {
-                var RECs = assert (store.query ('mime', mime));
-                if (RECs.getCount () > 0) return name (RECs.getAt (0));
-            }
-            if (mime && is_image (mime)) {
-                var IMGs = assert (store.query ('mime', /^image\/\*$/));
-                if (IMGs.getCount () > 0) return name (IMGs.getAt (0));
-            }
-            if (mime && is_text (mime)) {
-                var TXTs = assert (store.query ('mime', /^text\/\*$/));
-                if (TXTs.getCount () > 0) return name (TXTs.getAt (0));
-            }
-            if (mime) { // fallback && assert (mime)
-                var DOCs = assert (store.query ('mime', /^*$/));
-                if (DOCs.getCount () > 0) return name (DOCs.getAt (0));
-            }
+            var rec_name = for_mime (mime, name, store);
+            if (rec_name) return rec_name;
+            var img_name = for_image (mime, name, store);
+            if (img_name) return img_name;
+            var txt_name = for_text (mime, name, store);
+            if (txt_name) return txt_name;
+            var doc_name = for_doc (mime, name, store);
+            if (doc_name) return doc_name;
 
             assert (mime, 'invalid mime');
             return null;
@@ -70,22 +145,14 @@ var MIME = function () {
                 return assert (record.get ('icon')) + (suffix ? suffix : '');
             }
 
-            if (mime) {
-                var RECs = assert (store.query ('mime', mime));
-                if (RECs.getCount () > 0) return icon (RECs.getAt (0));
-            }
-            if (mime && is_image (mime)) {
-                var IMGs = assert (store.query ('mime', /^image\/\*$/));
-                if (IMGs.getCount () > 0) return icon (IMGs.getAt (0));
-            }
-            if (mime && is_text (mime)) {
-                var TXTs = assert (store.query ('mime', /^text\/\*$/));
-                if (TXTs.getCount () > 0) return icon (TXTs.getAt (0));
-            }
-            if (mime) { // fallback && assert (mime)
-                var DOCs = assert (store.query ('mime', /^*$/));
-                if (DOCs.getCount () > 0) return icon (DOCs.getAt (0));
-            }
+            var rec_icon = for_mime (mime, icon, store);
+            if (rec_icon) return rec_icon;
+            var img_icon = for_image (mime, icon, store);
+            if (img_icon) return img_icon;
+            var txt_icon = for_text (mime, icon, store);
+            if (txt_icon) return txt_icon;
+            var dic_icon = for_doc (mime, icon, store);
+            if (dic_icon) return dic_icon;
 
             assert (mime, 'invalid mime');
             return null;

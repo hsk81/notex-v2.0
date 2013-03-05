@@ -24,9 +24,18 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'Generic Project',
         icon: 'icon-report'
     },{
+        mime: 'application/json',
+        name: 'JSON',
+        icon: 'icon-script_code_red',
+        flag: {text: true}
+    },{
         mime: 'text/plain',
         name: 'Plain Text',
         icon: 'icon-page'
+    },{
+        mime: 'text/javascript',
+        name: 'JavaScript',
+        icon: 'icon-script_code'
     },{
         mime: 'text/x-rst',
         name: 'ReStructuredText',
