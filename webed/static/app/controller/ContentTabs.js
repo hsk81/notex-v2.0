@@ -239,11 +239,11 @@ Ext.define ('Webed.controller.ContentTabs', {
         if (source == this) return;
         assert (args && args.record);
 
+        var mime = assert (args.record.get ('mime'));
         var uuid = assert (args.record.get ('uuid'));
         var tab = this.get_tab (uuid);
         if (!tab) return;
 
-        var mime = assert (args.record.get ('mime'));
         if (MIME.is_text (mime))
             this.update_text_tab (tab, args.callback, args.scope);
         else if (MIME.is_image (mime))
