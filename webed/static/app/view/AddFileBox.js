@@ -74,7 +74,7 @@ Ext.define ('Webed.view.AddFileBoxMime', {
 
     tpl:'<tpl for=".">' +
         '<div class="x-boundlist-item">{name}' +
-        '<div class="w-boundlist-item-rhs">{mime}</div>' +
+        '<div class="w-boundlist-item">{mime}</div>' +
         '</div>' +
         '</tpl>'
 });
