@@ -29,6 +29,22 @@ Ext.define ('Webed.store.MIMEs', {
         icon: 'icon-script_code_red',
         flag: {text: true}
     },{
+        mime: 'text/x-csrc',
+        name: 'C',
+        icon: 'icon-script_code'
+    },{
+        mime: 'text/x-c++src',
+        name: 'C++',
+        icon: 'icon-script_code'
+    },{
+        mime: 'text/x-csharp',
+        name: 'C#',
+        icon: 'icon-script_code'
+    },{
+        mime: 'text/x-java',
+        name: 'Java',
+        icon: 'icon-script_code'
+    },{
         mime: 'text/javascript',
         name: 'JavaScript',
         icon: 'icon-script_code'
