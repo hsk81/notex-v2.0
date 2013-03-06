@@ -59,11 +59,23 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     valueField: 'mime',
     typeAhead: true,
 
-    tpl:'<tpl for=".">' +
-        '<div class="x-boundlist-item">{name}' +
-        '<div class="w-boundlist-item">{mime}</div>' +
-        '</div>' +
+    tpl: [
+        '<tpl for=".">',
+        '<tpl if="!hidden">',
+
+            '<div class="x-boundlist-item">{name}',
+            '<div class="w-boundlist-item">',
+                '<ul>',
+                '<li class="w-boundlist-item-text">{mime}</li>',
+                '<li class="w-boundlist-item-icon {icon}-16"></li>',
+                '</ul>',
+            '</div>',
+            '</div>',
+
         '</tpl>',
+        '</tpl>'
+    ],
+
 
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{

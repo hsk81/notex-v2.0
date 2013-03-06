@@ -61,28 +61,17 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 
     tpl: [
         '<tpl for=".">',
-        '<tpl if="disabled">',
-            '<div ',
-                'data-qtip="Not supported yet"',
-                'class="x-boundlist-item x-boundlist-item-disabled">{name}',
-                '<div class="w-boundlist-item">',
-                    '<ul>',
-                    '<li class="w-boundlist-item-text">{country}</li>',
-                    '<li class="w-boundlist-item-icon icon-{flag}-16"></li>',
-                    '</ul>',
-                '</div>',
-            '</div>',
-
-        '<tpl else>',
+        '<tpl if="!hidden">',
 
             '<div class="x-boundlist-item">{name}',
-                '<div class="w-boundlist-item">',
-                    '<ul>',
-                    '<li class="w-boundlist-item-text">{country}</li>',
-                    '<li class="w-boundlist-item-icon icon-{flag}-16"></li>',
-                    '</ul>',
-                '</div>',
+            '<div class="w-boundlist-item">',
+                '<ul>',
+                '<li class="w-boundlist-item-text">{country}</li>',
+                '<li class="w-boundlist-item-icon {flag}-16"></li>',
+                '</ul>',
             '</div>',
+            '</div>',
+
         '</tpl>',
         '</tpl>'
     ],
