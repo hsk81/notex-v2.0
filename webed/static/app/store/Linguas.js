@@ -57,7 +57,7 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Dansk',
         country: 'Danmark',
         flag: 'icon-flag_denmark',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'de_BE',
         charset: 'iso-8859-1',
@@ -400,7 +400,7 @@ Ext.define ('Webed.store.Linguas', {
         name: 'ગુજરાતી',
         country: 'ભારત',
         flag: 'icon-flag_india',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'he_IL',
         charset: 'utf-8',
@@ -408,14 +408,14 @@ Ext.define ('Webed.store.Linguas', {
         country: 'ישראל',
         flag: 'icon-flag_israel',
         direction: 'rtl',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'hi_IN',
         charset: 'utf-8',
         name: 'हिंदी',
         country: 'भारत',
         flag: 'icon-flag_india',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'hr_HR',
         charset: 'utf-8',
@@ -428,14 +428,14 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Magyar',
         country: 'Magyarország',
         flag: 'icon-flag_hungary',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'hy_AM',
         charset: 'utf-8',
         name: 'հայերեն',
         country: 'Հայաստան',
         flag: 'icon-flag_armenia',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'id_ID',
         charset: 'iso-8859-1',
@@ -454,69 +454,69 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Italiana',
         country: 'Svizzera',
         flag: 'icon-flag_switzerland',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'it_IT',
         charset: 'utf-8',
         name: 'Italiana',
         country: 'Italia',
         flag: 'icon-flag_italy',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'kk_KZ',
         charset: 'utf-8',
         name: 'Қазақ',
         country: 'Қазақстан',
         flag: 'icon-flag_kazakhstan',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ko_NKR',
         charset: 'utf-8',
         name: '조선어',
         country: '조선민주주의인민공화국',
         flag: 'icon-flag_north_korea',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ko_SKR',
         charset: 'utf-8',
         name: '한국어',
         country: '대한민국',
         flag: 'icon-flag_south_korea',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ku_TR',
         charset: 'utf-8',
         name: 'Kurdî',
         country: 'Tirkiya',
         flag: 'icon-flag_turkey',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'la_ANY',
         charset: 'utf-8',
         name: 'Latīna',
         country: 'International',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'lt_LT',
         charset: 'utf-8',
         name: 'Lietuvių',
         country: 'Lietuva',
         flag: 'icon-flag_lithuania',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'lv_LV',
         charset: 'utf-8',
         name: 'Latviešu',
         country: 'Latvija',
         flag: 'icon-flag_latvia',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ml_IN',
         charset: 'utf-8',
         name: 'മലയാളം',
         country: 'ഇന്ത്യ',
         flag: 'icon-flag_india',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'mn_MN',
         charset: 'utf-8',
@@ -529,14 +529,14 @@ Ext.define ('Webed.store.Linguas', {
         name: 'मराठी',
         country: 'इंडिया',
         flag: 'icon-flag_india',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ne_NP',
         charset: 'utf-8',
         name: 'नेपाली',
         country: 'नेपाल',
         flag: 'icon-flag_nepal',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'nb_NO',
         charset: 'utf-8',
@@ -561,7 +561,7 @@ Ext.define ('Webed.store.Linguas', {
         name: 'ਪੰਜਾਬੀ',
         country: 'ਇੰਡੀਆ',
         flag: 'icon-flag_india',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'pl_PL',
         charset: 'iso-8859-1',
@@ -574,14 +574,14 @@ Ext.define ('Webed.store.Linguas', {
         name: 'Português',
         country: 'Brasil',
         flag: 'icon-flag_brazil',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'pt_PT',
         charset: 'utf-8',
         name: 'Português',
         country: 'Portugal',
         flag: 'icon-flag_portugal',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'ro_RO',
         charset: 'utf-8',
@@ -653,7 +653,7 @@ Ext.define ('Webed.store.Linguas', {
         charset: 'utf-8',
         name: 'தமிழ்',
         country: 'சர்வதேச',
-        hiddent: true
+        hidden: true
     },{
         lingua: 'tr_TR',
         charset: 'utf-8',
