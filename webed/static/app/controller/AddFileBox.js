@@ -22,6 +22,9 @@ Ext.define ('Webed.controller.AddFileBox', {
             'add-file-box textfield[name=name]': {
                 afterrender: this.afterrender,
                 blur: this.blur
+            },
+            'add-file-box combobox[name=mime]': {
+                select: this.select
             }
         });
     },
@@ -29,16 +32,25 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    blur: function (textfield, event) {
+    afterrender: function (textfield) {
+        textfield.autofocus = true;
+        textfield.focus (true, 25);
+    },
+
+    blur: function (textfield) {
         if (textfield.autofocus) {
             textfield.focus (true, 25);
             textfield.autofocus = false;
         }
     },
 
-    afterrender: function (textfield) {
-        textfield.autofocus = true;
-        textfield.focus (true, 25);
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    select: function (combobox) {
+        var form = assert (combobox.up ('form'));
+        var textfield = assert (form.down ('textfield'));
+        textfield.validate ();
     },
 
     ///////////////////////////////////////////////////////////////////////////

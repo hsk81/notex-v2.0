@@ -26,10 +26,33 @@ Ext.define ('Webed.view.AddFileBox', {
             name: 'name',
             value: 'file.txt',
             width: '100%',
-            xtype: 'textfield'
+            xtype: 'textfield',
+
+            validator: function (value) {
+                var form = assert (this.up ('form'));
+                var combobox = assert (form.down ('combobox'));
+                var mime = combobox.getValue ();
+                if (mime) {
+                    var store = assert (Ext.getStore ('MIMEs'));
+                    var record = store.findRecord ('mime', mime);
+                    if (record) {
+                        var ext = assert (record.get ('ext'));
+                        var rx = new RegExp ('\\.' + ext + '$');
+
+                        if (!value.match (rx)) {
+                            return "'<b>.{0}</b>' extension expected".format (
+                                ext
+                            );
+                        }
+                    }
+                }
+
+                return true;
+            }
         },{
             allowBlank: false,
             emptyText: 'Select type ..',
+            forceSelection: true,
             name: 'mime',
             style: 'margin: 0;',
             value: 'text/plain',

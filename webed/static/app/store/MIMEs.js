@@ -142,7 +142,7 @@ Ext.define ('Webed.store.MIMEs', {
         mime: 'application/json',
         icon: 'icon-page_white_code_red',
         flag: {text:  true},
-        ext:  'js'
+        ext:  'json'
     },{
         name: 'TypeScript',
         mime: 'application/typescript',
