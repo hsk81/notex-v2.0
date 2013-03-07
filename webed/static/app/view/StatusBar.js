@@ -66,7 +66,7 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
             '<div class="w-boundlist-item">',
                 '<ul>',
                 '<li class="w-boundlist-item-text">{country}</li>',
-                '<li class="w-boundlist-item-icon {flag}-16"></li>',
+                '<li class="w-boundlist-item-icon {icon}-16"></li>',
                 '</ul>',
             '</div>',
             '</div>',
@@ -76,7 +76,9 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{
-            filterFn: function (record) { return !record.get ('hidden'); }
+            filterFn: function (record) {
+                return !assert (record.get ('flag')).hidden;
+            }
         }]);
     },
 
