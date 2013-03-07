@@ -20,11 +20,12 @@ Ext.define ('Webed.controller.AddFileBox', {
                 click: this.cancel
             },
             'add-file-box textfield[name=name]': {
-                afterrender: this.afterrender,
-                blur: this.blur
+                afterrender: this.name_afterrender,
+                blur: this.name_blur
             },
             'add-file-box combobox[name=mime]': {
-                select: this.select
+                afterrender: this.mime_afterrender,
+                select: this.mime_select
             }
         });
     },
@@ -32,12 +33,12 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    afterrender: function (textfield) {
+    name_afterrender: function (textfield) {
         textfield.autofocus = true;
         textfield.focus (true, 25);
     },
 
-    blur: function (textfield) {
+    name_blur: function (textfield) {
         if (textfield.autofocus) {
             textfield.focus (true, 25);
             textfield.autofocus = false;
@@ -47,7 +48,32 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    select: function (combobox) {
+    mime_afterrender: function (combobox) {
+        var view = assert (this.getAddFileBox ());
+        var node = assert (view.node);
+        if (node.isLeaf ()) {
+            node = assert (node.parentNode);
+        }
+
+        var store = assert (combobox.getStore ());
+        var mime = assert (node.get ('mime'));
+        var MIMEs = assert (store.query ('mime', mime));
+        var MIME = assert (MIMEs.getAt (0));
+
+        var main = MIME.get ('main');
+        if (main) {
+            combobox.setValue (main);
+
+            var record = assert (store.findRecord ('mime', main));
+            var ext = assert (record.get ('ext'));
+            var form = assert (combobox.up ('form'));
+            var textfield = assert (form.down ('textfield'));
+
+            textfield.setValue ('file.{0}'.format (ext));
+        }
+    },
+
+    mime_select: function (combobox) {
         var form = assert (combobox.up ('form'));
         var textfield = assert (form.down ('textfield'));
         textfield.validate ();
@@ -69,8 +95,7 @@ Ext.define ('Webed.controller.AddFileBox', {
 
         var node = assert (view.node);
         if (node.isLeaf ()) {
-            assert (node.parentNode);
-            node = node.parentNode;
+            node = assert (node.parentNode);
         }
 
         function callback (leaf, op) {

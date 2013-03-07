@@ -334,17 +334,20 @@ Ext.define ('Webed.store.MIMEs', {
         mime: 'application/folder',
         icon: 'icon-folder'
     },{ // --------------------------------------------------------------------
-        name: 'LaTex',
-        mime: 'application/project+latex',
-        icon: 'icon-report_latex'
+        name: 'Generic',
+        mime: 'application/project',
+        icon: 'icon-report',
+        main: 'text/plain'
     },{
         name: 'ReStructuredTex',
         mime: 'application/project+rest',
-        icon: 'icon-report_rest'
+        icon: 'icon-report_rest',
+        main: 'text/x-rst'
     },{
-        name: 'Generic',
-        mime: 'application/project',
-        icon: 'icon-report'
+        name: 'LaTex',
+        mime: 'application/project+latex',
+        icon: 'icon-report_latex',
+        main: 'text/x-latex'
     },{ // --------------------------------------------------------------------
         name: 'Text',
         mime: 'text/*',

@@ -61,7 +61,6 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
 
     tpl: [
         '<tpl for=".">',
-        '<tpl if="!hidden">',
 
             '<div class="x-boundlist-item">{name}',
             '<div class="w-boundlist-item">',
@@ -72,14 +71,16 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
             '</div>',
             '</div>',
 
-        '</tpl>',
         '</tpl>'
     ],
 
-
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{
-            property: 'mime', value: /^application\/project/
+            filterFn: function (record) {
+                var mime = assert (record.get ('mime'));
+                var hidden = record.get ('hidden');
+                return MIME.is_project (mime) && !hidden;
+            }
         }]);
     },
 

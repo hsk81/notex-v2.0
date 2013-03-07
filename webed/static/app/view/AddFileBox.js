@@ -80,8 +80,6 @@ Ext.define ('Webed.view.AddFileBoxMime', {
 
     tpl: [
         '<tpl for=".">',
-        '<tpl if="!hidden">',
-
             '<div class="x-boundlist-item">{name}',
             '<div class="w-boundlist-item">',
                 '<ul>',
@@ -90,15 +88,15 @@ Ext.define ('Webed.view.AddFileBoxMime', {
                 '</ul>',
             '</div>',
             '</div>',
-
-        '</tpl>',
         '</tpl>'
     ],
 
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{
             filterFn: function (record) {
-                return MIME.is_text (assert (record.get ('mime')), true);
+                var mime = assert (record.get ('mime'));
+                var hidden = record.get ('hidden');
+                return MIME.is_text (mime, true) && !hidden;
             }
         }]);
     },
