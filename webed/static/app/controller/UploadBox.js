@@ -25,14 +25,10 @@ Ext.define ('Webed.controller.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirm: function () {
-        var view = this.getUploadBox ();
-        assert (view);
-        var panel = view.down ('form');
-        assert (panel);
-        var form = panel.getForm ();
-        assert (form);
-        var app = this.application;
-        assert (app);
+        var view = assert (this.getUploadBox ());
+        var panel = assert (view.down ('form'));
+        var form = assert (panel.getForm ());
+        var application = assert (this.application);
 
         if (form.isValid ()) {
             form.submit ({
@@ -40,21 +36,22 @@ Ext.define ('Webed.controller.UploadBox', {
                 waitMsg: 'Uploading file ..',
 
                 success: function () {
-                    assert (view); view.destroy ();
-                    app.fireEvent ('refresh_tree');
+                    assert (view).destroy (); application.fireEvent (
+                        'refresh_tree'
+                    );
                 },
 
                 failure: function () {
-                    assert (view); view.destroy ();
-                    console.debug ('[UploadBox.confirmUpload]', 'failed');
+                    assert (view).destroy (); console.debug (
+                        '[UploadBox.confirmUpload]', 'failed'
+                    );
                 }
             });
         }
     },
 
     cancel: function () {
-        var view = this.getUploadBox ();
-        assert (view); view.destroy ();
+        assert (this.getUploadBox ()).destroy ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
