@@ -60,7 +60,7 @@ def file_upload ():
 
     name = secure_filename (file.filename)
     assert name
-    mime = file.mimetype
+    mime = guess_mime (name) or file.mimetype
     assert mime
 
     @db.commit ()
@@ -199,7 +199,7 @@ def create_prj (path, base, mime):
             db.session.add (node); cache[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
-            mime = guess_mime (cur_path, fn)
+            mime = guess_mime_ex (fn, cur_path)
             if mime and mime.lower ().startswith ('text'):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
             else:
@@ -243,11 +243,16 @@ def create_bin (name, root, mime, path=None, file=None):
 
 ###############################################################################
 
-def guess_mime (path, name):
+def guess_mime (name):
 
     if not mimetypes.inited: mimetypes.init (app.config['MIMETYPES_PATHS'])
     mime, _ = mimetypes.guess_type (name)
 
+    return mime
+
+def guess_mime_ex (name, path):
+
+    mime = guess_mime (name)
     if not mime:
         path = os.path.join (path, name)
         args = ['/usr/bin/file', '-b', '--mime-type', path]
@@ -257,7 +262,7 @@ def guess_mime (path, name):
         except subprocess.CalledProcessError, ex:
             logger.exception (ex)
 
-    return mime.rstrip ().lower () if mime else None
+    return mime.strip ().lower () if mime else None
 
 ###############################################################################
 ###############################################################################
