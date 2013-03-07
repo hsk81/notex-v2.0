@@ -3,6 +3,33 @@ Ext.define ('Webed.store.Nodes', {
     requires: 'Webed.model.Node',
     model: 'Webed.model.Node',
 
+    sorters: [{
+        sorterFn: function (lhs, rhs) {
+            var lhs_mime = assert (lhs.get ('mime'));
+            var rhs_mime = assert (rhs.get ('mime'));
+
+            if (lhs_mime === rhs_mime) {
+                var lhs_name = assert (lhs.get ('name'));
+                var rhs_name = assert (rhs.get ('name'));
+
+                if (lhs_name === rhs_name) {
+                    var lhs_size = assert (lhs.get ('size'));
+                    var rhs_size = assert (rhs.get ('size'));
+
+                    if (lhs_size === rhs_size) {
+                        return 0;
+                    } else {
+                        return (lhs_size < rhs_size) ? -1 : +1;
+                    }
+                } else {
+                    return (lhs_name < rhs_name) ? -1 : +1;
+                }
+            } else {
+                return (lhs_mime < rhs_mime) ? -1 : +1;
+            }
+        }
+    }],
+
     root: {
         iconCls: 'icon-node-tree-16',
         uuid_path: ['00000000-0000-0000-0000-000000000000'],
