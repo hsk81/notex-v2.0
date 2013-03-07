@@ -55,13 +55,11 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     saveDocument: function (button) {
-        var node = this.get_selection ();
-        assert (node); if (!node.isLeaf ()) return;
-        assert (button); button.disable ();
+        var node = assert (this.get_selection ());
+        if (!node.isLeaf ()) return;
+        assert (button).disable ();
 
-        var application = this.application;
-        assert (application);
-
+        var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
             message: 'Saving'
         });
@@ -96,22 +94,16 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     addFolder: function () {
-        var node = this.get_selection ();
-        assert (node);
-
         var addFolderBox = Ext.create ('Webed.view.AddFolderBox', {
-            node: node
+            node: assert (this.get_selection ())
         });
 
         addFolderBox.show ();
     },
 
     addFile: function () {
-        var node = this.get_selection ();
-        assert (node);
-
         var addFileBox = Ext.create ('Webed.view.AddFileBox', {
-            node: node
+            node: assert (this.get_selection ())
         });
 
         addFileBox.show ();
@@ -121,10 +113,8 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     rename: function () {
-        var node = this.get_selection ();
-        assert (node);
-
-        if (!node.isRoot ()) {
+        var node = assert (this.get_selection ());
+        if (node.isRoot () == false) {
             var renameBox = Ext.create ('Webed.view.RenameBox', {
                 title: Ext.String.format ('Rename {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
@@ -139,10 +129,8 @@ Ext.define ('Webed.controller.MainBar', {
     ///////////////////////////////////////////////////////////////////////////
 
     destroy: function () {
-        var node = this.get_selection ();
-        assert (node);
-
-        if (!node.isRoot ()) {
+        var node = assert (this.get_selection ());
+        if (node.isRoot () == false) {
             var deleteBox = Ext.create ('Webed.view.DeleteBox', {
                 title: Ext.String.format ('Delete {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
@@ -161,9 +149,7 @@ Ext.define ('Webed.controller.MainBar', {
     },
 
     exportProject: function (button) {
-        var node = this.get_selection ();
-        assert (node);
-
+        var node = assert (this.get_selection ());
         while (node.parentNode != null && node.parentNode.parentNode != null) {
             node = node.parentNode;
         }
@@ -172,11 +158,11 @@ Ext.define ('Webed.controller.MainBar', {
             return;
         }
 
-        assert (button); button.disable ();
-        var application = this.application; assert (application);
+        assert (button).disable ();
+        var application = assert (this.application);
         application.fireEvent ('progress-play', this, {message: 'Exporting'});
 
-        var uuid = node.get ('uuid'); assert (uuid);
+        var uuid = assert (node.get ('uuid'));
         var url = '/archive-download/?node_uuid=' + uuid;
 
         function onSuccess (xhr, opts) {
