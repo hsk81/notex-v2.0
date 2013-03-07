@@ -77,9 +77,8 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{
             filterFn: function (record) {
-                var mime = assert (record.get ('mime'));
-                var hidden = record.get ('hidden');
-                return MIME.is_project (mime) && !hidden;
+                return MIME.is_project (assert (record.get ('mime')))
+                    && !record.get ('hidden');
             }
         }]);
     },

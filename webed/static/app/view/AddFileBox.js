@@ -94,9 +94,8 @@ Ext.define ('Webed.view.AddFileBoxMime', {
     initComponent: function () {
         this.callParent (arguments); assert (this.getStore ()).filter ([{
             filterFn: function (record) {
-                var mime = assert (record.get ('mime'));
-                var hidden = record.get ('hidden');
-                return MIME.is_text (mime, true) && !hidden;
+                return MIME.is_text (assert (record.get ('mime')), true)
+                    && !record.get ('hidden');
             }
         }]);
     },
