@@ -61,7 +61,6 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 
     tpl: [
         '<tpl for=".">',
-        '<tpl if="!hidden">',
 
             '<div class="x-boundlist-item">{name}',
             '<div class="w-boundlist-item">',
@@ -72,9 +71,18 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
             '</div>',
             '</div>',
 
-        '</tpl>',
         '</tpl>'
     ],
+
+    initComponent: function () {
+        this.callParent (arguments); assert (this.getStore ()).filter ([{
+            filterFn: function (record) { return !record.get ('hidden'); }
+        }]);
+    },
+
+    beforeDestroy: function () {
+        assert (this.getStore ()).clearFilter ();
+    },
 
     emptyText: 'Language ..',
     width: 224
