@@ -39,11 +39,11 @@ class Node (db.Model, Polymorphic):
     ###########################################################################
 
     _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
-        name = 'uuid')
+        name='uuid')
     _mime = db.Column (db.String (), nullable=False, index=False,
-        name = 'mime')
+        name='mime')
     _name = db.Column (db.Unicode (), nullable=False, index=False,
-        name = 'name')
+        name='name')
 
     ###########################################################################
 
