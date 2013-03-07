@@ -42,8 +42,8 @@ var MIME = function () {
 
         function internal () {
             return (no_fallback != undefined)
-                ? mime.match (/^image\/[^*]+$/) ? true : false
-                : mime.match (/^image\/.+$/) ? true : false;
+                ? !!mime.match (/^image\/[^*]+$/)
+                : !!mime.match (/^image\/.+$/)
         }
 
         if (store == undefined) {
