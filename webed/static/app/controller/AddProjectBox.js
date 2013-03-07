@@ -45,30 +45,21 @@ Ext.define ('Webed.controller.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirm: function () {
-        var application = this.application;
-        assert (application);
-        var view = this.getAddProjectBox ();
-        assert (view);
-
-        var textfield = view.down ('textfield[name=name]');
-        assert (textfield);
-        var combobox = view.down ('combobox[name=mime]');
-        assert (combobox);
+        var application = assert (this.application);
+        var view = assert (this.getAddProjectBox ());
+        var textfield = assert (view.down ('textfield[name=name]'));
+        var combobox = assert (view.down ('combobox[name=mime]'));
 
         if (!textfield.isValid ()) return;
-        var name = textfield.getValue ();
-        assert (name);
-
+        var name = assert (textfield.getValue ());
         if (!combobox.isValid ()) return;
-        var mime = combobox.getValue ();
-        assert (mime);
+        var mime = assert (combobox.getValue ());
 
         function onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText);
             assert (res.mime);
             assert (res.nodes && res.nodes.length > 0);
-            var node = res.nodes[0];
-            assert (node);
+            var node = assert (res.nodes[0]);
 
             function callback (recs, op) {
                 if (op.success) {
@@ -113,8 +104,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
     },
 
     cancel: function () {
-        var view = this.getAddProjectBox ();
-        assert (view); view.destroy ();
+        assert (this.getAddProjectBox ()).destroy ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
