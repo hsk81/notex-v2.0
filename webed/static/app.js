@@ -23,8 +23,8 @@ Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
 
-    models: ['Node', 'Leaf', 'Property', 'Lingua', 'MIME'],
-    stores: ['Nodes', 'Leafs', 'Properties', 'Linguas', 'MIMEs'],
+    models: ['MIME', 'Lingua', 'Node', 'Leaf', 'Property'],
+    stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
 
     controllers: [
         'AddFileBox',

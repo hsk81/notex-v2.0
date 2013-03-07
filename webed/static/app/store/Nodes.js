@@ -4,6 +4,7 @@ Ext.define ('Webed.store.Nodes', {
     model: 'Webed.model.Node',
 
     root: {
+        iconCls: 'icon-node-tree-16',
         uuid_path: ['00000000-0000-0000-0000-000000000000'],
         name_path: ['root'],
         uuid: '00000000-0000-0000-0000-000000000000',
@@ -14,11 +15,11 @@ Ext.define ('Webed.store.Nodes', {
     },
 
     listeners: {
-        append: function (root, record, index, eOpts) {
-            this.decorate (record);
+        append: function (root, record, index) {
+            if (!record.isRoot ()) this.decorate (record);
         },
 
-        beforeload: function (store, operation, eOpts) {
+        beforeload: function (store, operation) {
             var uuid = operation.node.get ('uuid'); assert (uuid);
             store.proxy.setExtraParam ('uuid', uuid);
 
@@ -28,6 +29,13 @@ Ext.define ('Webed.store.Nodes', {
             //
 
             operation.params.omit_top = !operation.params.uuid;
+
+            //
+            // Discontinue loading if `!autoLoad`: Simple method to load store,
+            // but only *after* something else sets `autoLoad`!
+            //
+
+            return store.autoLoad;
         }
     },
 
@@ -58,5 +66,5 @@ Ext.define ('Webed.store.Nodes', {
         node.on ('expand', on_expand);
     },
 
-    autoLoad: true
+    autoLoad: false
 });

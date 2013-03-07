@@ -18,14 +18,13 @@ var MIME = function () {
     function is_text (mime, no_fallback, store) {
 
         function internal () {
-            return (no_fallback != undefined)
+            return (no_fallback)
                 ? !!mime.match (/^text\/[^*]+$/)
                 : !!mime.match (/^text\/.+$/)
         }
 
         if (store == undefined) {
             store = assert (Ext.getStore ('MIMEs'));
-            if (!store) store = Ext.create ('Webed.store.MIMEs');
         }
 
         var records = store.query ('mime', mime);
@@ -41,14 +40,13 @@ var MIME = function () {
     function is_image (mime, no_fallback, store) {
 
         function internal () {
-            return (no_fallback != undefined)
+            return (no_fallback)
                 ? !!mime.match (/^image\/[^*]+$/)
                 : !!mime.match (/^image\/.+$/)
         }
 
         if (store == undefined) {
             store = assert (Ext.getStore ('MIMEs'));
-            if (!store) store = Ext.create ('Webed.store.MIMEs');
         }
 
         var records = store.query ('mime', mime);
@@ -109,8 +107,7 @@ var MIME = function () {
         is_image: is_image,
 
         to_name: function (mime) {
-            var store = Ext.getStore ('MIMEs');
-            if (!store) store = Ext.create ('Webed.store.MIMEs');
+            var store = assert (Ext.getStore ('MIMEs'));
 
             function name (record) {
                 return assert (record.get ('name'));
@@ -130,8 +127,7 @@ var MIME = function () {
         },
 
         to_icon: function (mime, suffix) {
-            var store = Ext.getStore ('MIMEs');
-            if (!store) store = Ext.create ('Webed.store.MIMEs');
+            var store = assert (Ext.getStore ('MIMEs'));
 
             function icon (record) {
                 return assert (record.get ('icon')) + (suffix ? suffix : '');

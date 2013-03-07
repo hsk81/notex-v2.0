@@ -11,10 +11,12 @@ Ext.define('Webed.model.MIME', {
     },{
         name: 'main', type: 'string', defaultValue: null
     },{
-        name: 'flag', defaultValue: {
-            text: undefined,
-            image: undefined,
-            hidden: undefined
+        name: 'flag', defaultValue: {}
+    }],
+
+    proxy: {
+        type: 'rest', url: '/mime-info', reader: {
+            type: 'json', root: 'results'
         }
-    }]
+    }
 });

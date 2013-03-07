@@ -10,6 +10,7 @@ from flask.globals import request
 from ..app import app
 from ..ext import db, object_cache, logger
 from ..util import Q, JSON
+from ..views import mime as MIME
 
 from ..models import Node
 from ..models import Leaf
@@ -66,13 +67,7 @@ def file_upload ():
     @db.commit ()
     def create_leaf (name, root, mime):
 
-        ##
-        ## TODO: The condition below does *not* classify "text-like" mime,
-        ##       which don't start with `text` (e.g. `application/xml`) as
-        ##       text, but as binary; fix!
-        ##
-
-        if mime.lower ().startswith ('text'):
+        if MIME.is_text (mime):
             leaf, _ = create_txt (name, root, mime, file=file)
         else:
             leaf, _ = create_bin (name, root, mime, file=file)
@@ -207,13 +202,7 @@ def create_prj (path, base, mime):
         for fn in file_names:
             mime = guess_mime_ex (fn, cur_path)
 
-            ##
-            ## TODO: The condition below does *not* classify "text-like" mime,
-            ##       which don't start with `text` (e.g. `application/xml`) as
-            ##       text, but as binary; fix!
-            ##
-
-            if mime and mime.lower ().startswith ('text'):
+            if MIME.is_text (mime):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
             else:
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
