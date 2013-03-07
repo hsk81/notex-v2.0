@@ -74,7 +74,9 @@ def file_upload ():
         db.session.add (leaf)
         return leaf
 
-    leaf = create_leaf (name, root, mime); assert leaf and leaf.id
+    leaf = create_leaf (name, root, mime);
+    assert leaf and leaf.id
+
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
         leaf.base.id, leaf.id)]))
 
