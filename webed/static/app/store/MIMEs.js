@@ -7,324 +7,324 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'APL',
         mime: 'text/apl',
         icon: 'icon-page_white_code',
-        ext:  'apl'
+        exts: ['apl']
     },{
         name: 'Asterisk',
         mime: 'text/x-asterisk',
         icon: 'icon-page_white_code_red',
-        ext:  'conf'
+        exts: ['conf']
     },{
         name: 'C',
         mime: 'text/x-csrc',
         icon: 'icon-page_white_c',
-        ext:  'c'
+        exts: ['c']
     },{
         name: 'C++',
         mime: 'text/x-c++src',
         icon: 'icon-page_white_cplusplus',
-        ext:  'cpp'
+        exts: ['cpp','cxx']
     },{
         name: 'Java',
         mime: 'text/x-java',
         icon: 'icon-page_white_cup',
-        ext:  'java'
+        exts: ['java']
     },{
         name: 'C#',
         mime: 'text/x-csharp',
         icon: 'icon-page_white_csharp',
-        ext:  'cs'
+        exts: ['cs']
     },{
         name: 'Scala',
         mime: 'text/x-scala',
         icon: 'icon-page_white_code',
-        ext:  'scala'
+        exts: ['scala']
     },{
         name: 'Clojure',
         mime: 'text/x-clojure',
         icon: 'icon-page_white_code',
-        ext:  'clj'
+        exts: ['clj']
     },{
         name: 'CoffeeScript',
         mime: 'text/x-coffeescript',
         icon: 'icon-page_white_cup',
-        ext:  'coffee'
+        exts: ['coffee']
     },{
         name: 'Common Lisp',
         mime: 'text/x-common-lisp',
         icon: 'icon-page_white_code',
-        ext:  'lisp'
+        exts: ['lisp']
     },{
         name: 'CSS',
         mime: 'text/css',
         icon: 'icon-css',
-        ext:  'css'
+        exts: ['css']
     },{
         name: 'D',
         mime: 'text/x-d',
         icon: 'icon-page_white_code',
-        ext:  'd'
+        exts: ['d']
     },{
         name: 'Diff',
         mime: 'text/x-diff',
         icon: 'icon-document_inspect',
-        ext:  'diff'
+        exts: ['diff']
     },{
         name: 'ECL',
         mime: 'text/x-ecl',
         icon: 'icon-page_white_code',
-        ext:  'ecl'
+        exts: ['ecl']
     },{
         name: 'Erlang',
         mime: 'text/x-erlang',
         icon: 'icon-page_white_code',
-        ext:  'erl'
+        exts: ['erl']
     },{
         name: 'GO',
         mime: 'text/x-go',
         icon: 'icon-page_white_go',
-        ext:  'go'
+        exts: ['go']
     },{
         name: 'Groovy',
         mime: 'text/x-groovy',
         icon: 'icon-page_white_cup',
-        ext:  'groovy'
+        exts: ['groovy','gvy','gy','gsh']
     },{
         name: 'H',
         mime: 'text/x-csrc',
         icon: 'icon-page_white_h',
-        ext:  'h'
+        exts: ['h']
     },{
         name: 'Haskell',
         mime: 'text/x-haskell',
         icon: 'icon-page_white_code',
-        ext:  'hs'
+        exts: ['hs','lhs']
     },{
         name: 'Haxe',
         mime: 'text/x-haxe',
         icon: 'icon-page_white_code',
-        ext:  'hx'
+        exts: ['hx']
     },{
         name: 'ASP.NET',
         mime: 'application/x-aspx',
         icon: 'icon-page_white_world',
         flag: {text:  true},
-        ext:  'aspx'
+        exts: ['aspx']
     },{
         name: 'Embedded Javascript',
         mime: 'application/x-ejs',
         icon: 'icon-page_white_world',
         flag: {text:  true},
-        ext:  'ejs'
+        exts: ['ejs']
     },{
         name: 'JavaServer Pages',
         mime: 'application/x-jsp',
         icon: 'icon-page_white_world',
         flag: {text:  true},
-        ext:  'jsp'
+        exts: ['jsp']
     },{
         name: 'HTML',
         mime: 'text/html',
         icon: 'icon-html',
-        ext:  'html'
+        exts: ['html']
     },{
         name: 'HTTP',
         mime: 'message/http',
         icon: 'icon-page_white_get',
         flag: {text:  true},
-        ext:  'http'
+        exts: ['http']
     },{
         name: 'JavaScript',
         mime: 'text/javascript',
         icon: 'icon-page_white_cup',
-        ext:  'js'
+        exts: ['js']
     },{
         name: 'JSON',
         mime: 'application/json',
         icon: 'icon-page_white_code_red',
         flag: {text:  true},
-        ext:  'json'
+        exts: ['json']
     },{
         name: 'TypeScript',
         mime: 'application/typescript',
         icon: 'icon-page_white_cup',
         flag: {text:  true},
-        ext:  'ts'
+        exts: ['ts']
     },{
         name: 'LESS',
         mime: 'text/x-less',
         icon: 'icon-css',
-        ext:  'less'
+        exts: ['less']
     },{
         name: 'Lua',
         mime: 'text/x-lua',
         icon: 'icon-page_white_code',
-        ext:  'lua'
+        exts: ['lua']
     },{
         name: 'Markdown (GitHub-flavour)',
         mime: 'text/x-markdown',
         icon: 'icon-page_white_star',
-        ext:  'md'
+        exts: ['md']
     },{
         name: 'NTriples',
         mime: 'text/n-triples',
         icon: 'icon-page_white_code_red',
-        ext:  'nt'
+        exts: ['nt']
     },{
         name: 'OCaml',
         mime: 'text/x-ocaml',
         icon: 'icon-page_white_code',
-        ext:  'ml'
+        exts: ['ocaml','mli','ml']
     },{
         name: 'Pascal',
         mime: 'text/x-pascal',
         icon: 'icon-page_white_code',
-        ext:  'pascal'
+        exts: ['pas','pascal','tpu']
     },{
         name: 'Perl',
         mime: 'text/x-perl',
         icon: 'icon-page_white_code',
-        ext:  'pl'
+        exts: ['pl','perl','plx','pm']
     },{
         name: 'PHP',
         mime: 'text/x-php',
         icon: 'icon-page_white_php',
-        ext:  'php'
+        exts: ['php']
     },{
         name: 'Pig',
         mime: 'text/x-pig',
         icon: 'icon-page_white_database',
-        ext:  'pig'
+        exts: ['pig']
     },{
         name: 'Plain Text',
         mime: 'text/plain',
         icon: 'icon-page_white_text',
-        ext:  'txt'
+        exts: ['txt']
     },{
         name: 'Properties files',
         mime: 'text/x-properties',
         icon: 'icon-page_white_code_red',
-        ext:  'properties'
+        exts: ['properties']
     },{
         name: 'Python',
         mime: 'text/x-python',
         icon: 'icon-page_white_code',
-        ext:  'py'
+        exts: ['py']
     },{
         name: 'R',
         mime: 'text/x-rsrc',
         icon: 'icon-page_white_code',
-        ext:  'r'
+        exts: ['r']
     },{
         name: 'reStructuredText',
         mime: 'text/x-rst',
         icon: 'icon-page_white_star',
-        ext:  'rst'
+        exts: ['rst','rest']
     },{
         name: 'Ruby',
         mime: 'text/x-ruby',
         icon: 'icon-page_white_ruby',
-        ext:  'rb'
+        exts: ['rb','ruby']
     },{
         name: 'Rust',
         mime: 'text/x-rustsrc',
         icon: 'icon-page_white_code',
-        ext:  'rust'
+        exts: ['rust']
     },{
         name: 'Sass',
         mime: 'text/x-sass',
         icon: 'icon-css',
-        ext:  'sass'
+        exts: ['sass']
     },{
         name: 'Scheme',
         mime: 'text/x-scheme',
         icon: 'icon-page_white_code',
-        ext:  'scm'
+        exts: ['scm','ss']
     },{
         name: 'Shell',
         mime: 'text/x-sh',
         icon: 'icon-page_white_code',
-        ext:  'sh'
+        exts: ['sh','ksh','bsh']
     },{
         name: 'Sieve',
         mime: 'application/sieve',
         icon: 'icon-page_white_code',
         flag: {text:  true},
-        ext:  'sieve'
+        exts: ['sieve']
     },{
         name: 'Smalltalk',
         mime: 'text/x-stsrc',
         icon: 'icon-page_white_code',
-        ext:  'st'
+        exts: ['st']
     },{
         hidden: true,
         name: 'SPARQL',
         mime: 'application/x-sparql-query',
         icon: 'icon-page_white_database',
         flag: {text:  true},
-        ext:  'rq'
+        exts: ['rq']
     },{
         hidden: true,
         name: 'SQL',
         mime: 'text/x-sql',
         icon: 'icon-page_white_database',
-        ext:  'sql'
+        exts: ['sql']
     },{
         name: 'sTeX',
         mime: 'text/x-stex',
         icon: 'icon-page_white_medal',
-        ext:  'stex'
+        exts: ['stex']
     },{
         name: 'LaTeX',
         mime: 'text/x-latex',
         icon: 'icon-page_white_medal',
-        ext:  'tex'
+        exts: ['tex','lof','toc','sty','latex']
     },{
         name: 'TiddlyWiki ',
         mime: 'text/x-tiddlywiki',
         icon: 'icon-page_white_lightning',
-        ext:  'wiki'
+        exts: ['wiki']
     },{
         name: 'Tiki wiki',
         mime: 'text/tiki',
         icon: 'icon-page_white_lightning',
-        ext:  'tiki'
+        exts: ['tiki']
     },{
         name: 'VB.NET',
         mime: 'text/x-vb',
         icon: 'icon-page_white_code',
-        ext:  'vb'
+        exts: ['vb']
     },{
         name: 'VBScript',
         mime: 'text/vbscript',
         icon: 'icon-page_white_code',
-        ext:  'vbs'
+        exts: ['vbs']
     },{
         name: 'Verilog',
         mime: 'text/x-verilog',
         icon: 'icon-page_white_code',
-        ext:  'v'
+        exts: ['v']
     },{
         name: 'XML',
         mime: 'application/xml',
         icon: 'icon-page_white_code_red',
         flag: {text:  true},
-        ext:  'xml'
+        exts: ['xml','xhtml']
     },{
         name: 'XQuery',
         mime: 'application/xquery',
         icon: 'icon-page_white_database',
         flag: {text:  true},
-        ext:  'xq'
+        exts: ['xq','xql','xqm','xqy','xquery','xqws']
     },{
         name: 'YAML',
         mime: 'text/x-yaml',
         icon: 'icon-page_white_code_red',
-        ext:  'yaml'
+        exts: ['yaml']
     },{
         name: 'Z80',
         mime: 'text/x-z80',
         icon: 'icon-page_white_code',
-        ext:  'z80'
+        exts: ['z80']
     },{ // --------------------------------------------------------------------
         name: 'Root',
         mime: 'application/root',

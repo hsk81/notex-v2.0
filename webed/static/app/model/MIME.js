@@ -5,7 +5,7 @@ Ext.define('Webed.model.MIME', {
     },{
         name: 'name', type: 'string'
     },{
-        name: 'ext', type: 'string'
+        name: 'exts', defaultValue: []
     },{
         name: 'icon', type: 'string'
     },{

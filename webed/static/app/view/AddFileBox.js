@@ -36,10 +36,13 @@ Ext.define ('Webed.view.AddFileBox', {
                     var store = assert (Ext.getStore ('MIMEs'));
                     var record = store.findRecord ('mime', mime);
                     if (record) {
-                        var ext = assert (record.get ('ext'));
-                        var rx = new RegExp ('\\.' + ext + '$');
-                        var tpl = "'<b>.{0}</b>' extension expected";
-                        if (!value.match (rx)) return tpl.format (ext);
+                        var exts = assert (record.get ('exts'));
+                        var rx = '\\.(?:{0})$'.format (exts.join ('|'));
+                        var tpl = "<b>{0}</b> extension(s) expected";
+
+                        if (!value.match (new RegExp (rx))) {
+                            return tpl.format (exts.join (', '));
+                        }
                     }
                 }
 

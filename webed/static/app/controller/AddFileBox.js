@@ -64,10 +64,11 @@ Ext.define ('Webed.controller.AddFileBox', {
         if (main) {
             combobox.setValue (main);
 
-            var record = assert (store.findRecord ('mime', main));
-            var ext = assert (record.get ('ext'));
             var form = assert (combobox.up ('form'));
             var textfield = assert (form.down ('textfield'));
+            var record = assert (store.findRecord ('mime', main));
+            var exts = assert (record.get ('exts'));
+            var ext = assert (exts.length > 0 && exts[0]);
 
             textfield.setValue ('file.{0}'.format (ext));
         }
