@@ -57,27 +57,17 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirm: function () {
-        var application = this.application;
-        assert (application);
-        var view = this.getAddFileBox ();
-        assert (view);
-
-        var textfield = view.down ('textfield[name=name]');
-        assert (textfield);
-        var combobox = view.down ('combobox[name=mime]');
-        assert (combobox);
+        var application = assert (this.application);
+        var view = assert (this.getAddFileBox ());
+        var textfield = assert (view.down ('textfield[name=name]'));
+        var combobox = assert (view.down ('combobox[name=mime]'));
 
         if (!textfield.isValid ()) return;
-        var name = textfield.getValue ();
-        assert (name);
-
+        var name = assert (textfield.getValue ());
         if (!combobox.isValid ()) return;
-        var mime = combobox.getValue ();
-        assert (mime);
+        var mime = assert (combobox.getValue ());
 
-        var node = view.node;
-        assert (node);
-
+        var node = assert (view.node);
         if (node.isLeaf ()) {
             assert (node.parentNode);
             node = node.parentNode;
@@ -119,8 +109,7 @@ Ext.define ('Webed.controller.AddFileBox', {
     },
 
     cancel: function () {
-        var view = this.getAddFileBox ();
-        assert (view); view.destroy ();
+        assert (this.getAddFileBox ()).destroy ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
