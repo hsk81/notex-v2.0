@@ -162,7 +162,7 @@ Ext.define ('Webed.store.MIMEs', {
     },{
         name: 'Markdown (GitHub-flavour)',
         mime: 'text/x-markdown',
-        icon: 'icon-page_white_star',
+        icon: 'icon-document_editing',
         exts: ['md']
     },{
         name: 'NTriples',
@@ -217,7 +217,7 @@ Ext.define ('Webed.store.MIMEs', {
     },{
         name: 'reStructuredText',
         mime: 'text/x-rst',
-        icon: 'icon-page_white_star',
+        icon: 'icon-document_editing',
         exts: ['rst','rest']
     },{
         name: 'Ruby',
@@ -270,22 +270,22 @@ Ext.define ('Webed.store.MIMEs', {
     },{
         name: 'sTeX',
         mime: 'text/x-stex',
-        icon: 'icon-page_white_medal',
+        icon: 'icon-document_editing',
         exts: ['stex']
     },{
         name: 'LaTeX',
         mime: 'text/x-latex',
-        icon: 'icon-page_white_medal',
+        icon: 'icon-document_editing',
         exts: ['tex','lof','toc','sty','latex']
     },{
         name: 'TiddlyWiki ',
         mime: 'text/x-tiddlywiki',
-        icon: 'icon-page_white_lightning',
+        icon: 'icon-document_editing',
         exts: ['wiki']
     },{
         name: 'Tiki wiki',
         mime: 'text/tiki',
-        icon: 'icon-page_white_lightning',
+        icon: 'icon-document_editing',
         exts: ['tiki']
     },{
         name: 'VB.NET',
