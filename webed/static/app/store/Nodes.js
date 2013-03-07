@@ -49,7 +49,7 @@ Ext.define ('Webed.store.Nodes', {
         // the *loading* icon appears for expanding (and not yet loaded) nodes.
         //
 
-        function on_beforeexpand (self, eOpts) {
+        function on_beforeexpand (self) {
             var loaded = this.get ('loaded');
             if (!loaded) this.set ('iconCls', '');
             this.un ('beforeexpand', on_beforeexpand);
@@ -57,7 +57,7 @@ Ext.define ('Webed.store.Nodes', {
 
         node.on ('beforeexpand', on_beforeexpand);
 
-        function on_expand (self, eOpts) {
+        function on_expand (self) {
             var loaded = this.get ('loaded');
             if (loaded) this.set ('iconCls', icon);
             this.un ('expand', on_expand);
