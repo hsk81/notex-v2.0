@@ -333,7 +333,7 @@ Ext.define ('Webed.store.MIMEs', {
         mime: 'application/folder',
         icon: 'icon-folder'
     },{ // --------------------------------------------------------------------
-        name: 'Generic',
+        name: 'Default',
         mime: 'application/project',
         icon: 'icon-report',
         main: 'text/plain'
@@ -356,7 +356,7 @@ Ext.define ('Webed.store.MIMEs', {
         mime: 'image/*',
         icon: 'icon-picture'
     },{
-        name: 'Generic',
+        name: 'Default',
         mime: '*',
         icon: 'icon-page_white'
     }]
