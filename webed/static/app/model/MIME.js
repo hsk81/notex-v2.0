@@ -11,8 +11,10 @@ Ext.define('Webed.model.MIME', {
     },{
         name: 'main', defaultValue: null
     },{
-        name: 'flag', defaultValue: null
-    },{
-        name: 'hidden', type: 'boolean', defaultValue: false
+        name: 'flag', defaultValue: {
+            text: undefined,
+            image: undefined,
+            hidden: undefined
+        }
     }]
 });

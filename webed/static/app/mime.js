@@ -31,15 +31,11 @@ var MIME = function () {
         var records = store.query ('mime', mime);
         if (records.getCount () > 0) {
             var record = assert (records.getAt (0));
-            var flag = record.get ('flag');
-            if (flag == null) {
-                return internal ();
-            } else {
-                return flag.text && record; // dirty optimization
-            }
-        } else {
-            return internal ();
+            var flag = assert (record.get ('flag'));
+            if (flag.text) return record;
         }
+
+        return internal ();
     }
 
     function is_image (mime, no_fallback, store) {
@@ -58,15 +54,11 @@ var MIME = function () {
         var records = store.query ('mime', mime);
         if (records.getCount () > 0) {
             var record = assert (records.getAt (0));
-            var flag = record.get ('flag');
-            if (flag == null) {
-                return internal ();
-            } else {
-                return flag.image && record; // dirty optimization
-            }
-        } else {
-            return internal ();
+            var flag = assert (record.get ('flag'));
+            if (flag.image) return record;
         }
+
+        return internal ();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -107,19 +107,19 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'ASP.NET',
         mime: 'application/x-aspx',
         icon: 'icon-page_white_world',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['aspx']
     },{
         name: 'Embedded Javascript',
         mime: 'application/x-ejs',
         icon: 'icon-page_white_world',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['ejs']
     },{
         name: 'JavaServer Pages',
         mime: 'application/x-jsp',
         icon: 'icon-page_white_world',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['jsp']
     },{
         name: 'HTML',
@@ -130,7 +130,7 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'HTTP',
         mime: 'message/http',
         icon: 'icon-page_white_get',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['http']
     },{
         name: 'JavaScript',
@@ -141,13 +141,13 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'JSON',
         mime: 'application/json',
         icon: 'icon-page_white_code_red',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['json']
     },{
         name: 'TypeScript',
         mime: 'application/typescript',
         icon: 'icon-page_white_cup',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['ts']
     },{
         name: 'LESS',
@@ -248,7 +248,7 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'Sieve',
         mime: 'application/sieve',
         icon: 'icon-page_white_code',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['sieve']
     },{
         name: 'Smalltalk',
@@ -256,17 +256,16 @@ Ext.define ('Webed.store.MIMEs', {
         icon: 'icon-page_white_code',
         exts: ['st']
     },{
-        hidden: true,
         name: 'SPARQL',
         mime: 'application/x-sparql-query',
         icon: 'icon-page_white_database',
-        flag: {text:  true},
+        flag: {text: true, hidden: true},
         exts: ['rq']
     },{
-        hidden: true,
         name: 'SQL',
         mime: 'text/x-sql',
         icon: 'icon-page_white_database',
+        flag: {hidden: true},
         exts: ['sql']
     },{
         name: 'sTeX',
@@ -307,13 +306,13 @@ Ext.define ('Webed.store.MIMEs', {
         name: 'XML',
         mime: 'application/xml',
         icon: 'icon-page_white_code_red',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['xml','xhtml']
     },{
         name: 'XQuery',
         mime: 'application/xquery',
         icon: 'icon-page_white_database',
-        flag: {text:  true},
+        flag: {text: true},
         exts: ['xq','xql','xqm','xqy','xquery','xqws']
     },{
         name: 'YAML',
