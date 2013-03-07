@@ -4,15 +4,15 @@ var MIME = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function is_root (mime) {
-        return mime.match (/^application\/root/) ? true : false;
+        return !!mime.match (/^application\/root$/);
     }
 
     function is_project (mime) {
-        return mime.match (/^application\/project/) ? true : false;
+        return !!mime.match (/^application\/project(?:\+\w+)?$/);
     }
 
     function is_folder (mime) {
-        return mime.match (/^application\/folder/) ? true : false;
+        return !!mime.match (/^application\/folder$/);
     }
 
     function is_text (mime, no_fallback, store) {
@@ -73,7 +73,7 @@ var MIME = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function for_mime (mime, property, store) {
-        var query = assert (store.query ('mime', mime));
+        var query = assert (store.query ('mime', mime, false, false, true));
         return (query.getCount () > 0) ? property (query.getAt (0)) : null;
     }
 
@@ -82,7 +82,7 @@ var MIME = function () {
         var image = is_image (mime, null, store);
         if (image instanceof Webed.model.MIME) return property (image);
         if (image) {
-            var query = assert (store.query ('mime', "image/*"));
+            var query = assert (store.query ('mime', /^image\/\*$/));
             if (query.getCount () > 0) return property (query.getAt (0));
         }
 
@@ -94,7 +94,7 @@ var MIME = function () {
         var text = is_text (mime, null, store);
         if (text instanceof Webed.model.MIME) return property (text);
         if (text) {
-            var query = assert (store.query ('mime', "text/*"));
+            var query = assert (store.query ('mime', /^text\/\*$/));
             if (query.getCount () > 0) return property (query.getAt (0));
         }
 
@@ -102,7 +102,7 @@ var MIME = function () {
     }
 
     function for_doc (mime, property, store) {
-        var query = assert (store.query ('mime', "*"));
+        var query = assert (store.query ('mime', /^\*$/));
         return (query.getCount () > 0) ? property (query.getAt (0)) : null;
     }
 
