@@ -29,18 +29,12 @@ Ext.define ('Webed.controller.FileUploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_url: function () {
-        var root = this.application.get_selection ();
-        assert (root);
+        var root = assert (this.application.get_selection ());
+        if (root.isLeaf ()) root = assert (root.parentNode);
 
-        if (root.isLeaf ()) {
-            assert (root.parentNode);
-            root = root.parentNode;
-        }
-
-        var root_uuid = root.get ('uuid');
-        assert (root_uuid);
-
-        return Ext.String.format ('/file-upload/?root_uuid={0}', root_uuid);
+        return Ext.String.format (
+            '/file-upload/?root_uuid={0}', assert (root.get ('uuid'))
+        );
     }
 
     ///////////////////////////////////////////////////////////////////////////
