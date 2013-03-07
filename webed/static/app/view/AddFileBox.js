@@ -38,12 +38,8 @@ Ext.define ('Webed.view.AddFileBox', {
                     if (record) {
                         var ext = assert (record.get ('ext'));
                         var rx = new RegExp ('\\.' + ext + '$');
-
-                        if (!value.match (rx)) {
-                            return "'<b>.{0}</b>' extension expected".format (
-                                ext
-                            );
-                        }
+                        var tpl = "'<b>.{0}</b>' extension expected";
+                        if (!value.match (rx)) return tpl.format (ext);
                     }
                 }
 
