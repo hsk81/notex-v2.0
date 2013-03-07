@@ -31,11 +31,11 @@ Ext.define ('Webed.store.Nodes', {
             operation.params.omit_top = !operation.params.uuid;
 
             //
-            // Discontinue loading if `!autoLoad`: Simple method to load store,
-            // but only *after* something else sets `autoLoad`!
+            // Stop loading if locked: Simple method to control loading; it
+            // allows load *only* if `loadLock` is empty!
             //
 
-            return store.autoLoad;
+            return store.loadLock.empty ();
         }
     },
 
@@ -66,5 +66,6 @@ Ext.define ('Webed.store.Nodes', {
         node.on ('expand', on_expand);
     },
 
-    autoLoad: false
+    autoLoad: true,
+    loadLock: create_lock ([true])
 });

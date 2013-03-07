@@ -205,7 +205,9 @@ function create_lock (ls) {
         empty: function () { return list.length == 0; },
         clear: function () { list = []; },
         push: function (el) { list.push (el); },
-        pop: function () { return list.pop (); }
+        pop: function (ask) {
+            return (ask) ? list.pop () && this.empty () : list.pop ();
+        }
     }
 }
 

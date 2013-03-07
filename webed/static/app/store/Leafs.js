@@ -8,6 +8,16 @@ Ext.define ('Webed.store.Leafs', {
             if (records && successful) records.forEach (function (record) {
                 this.decorate (record);
             }, this);
+        },
+
+        beforeload: function (store, operation) {
+
+            //
+            // Stop loading if locked: Simple method to control loading; it
+            // allows load *only* if `loadLock` is empty!
+            //
+
+            return store.loadLock.empty ();
         }
     },
 
@@ -25,6 +35,7 @@ Ext.define ('Webed.store.Leafs', {
     remoteFilter: true,
     remoteSort: true,
     autoLoad: false,
+    loadLock: create_lock ([true]),
     buffered: true,
     pageSize: 250
 });

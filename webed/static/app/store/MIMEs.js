@@ -8,8 +8,9 @@ Ext.define ('Webed.store.MIMEs', {
 
             if (successful) {
                 var nodes = assert (Ext.getStore ('Nodes'));
-                nodes.autoLoad = true;
-                nodes.load ();
+                if (nodes.loadLock.pop (true) && nodes.autoLoad) nodes.load ();
+                var leafs = assert (Ext.getStore ('Leafs'));
+                if (leafs.loadLock.pop (true) && leafs.autoLoad) leafs.load ();
             } else {
                 console.error ('[MIMEs::load]', 'failed')
             }
