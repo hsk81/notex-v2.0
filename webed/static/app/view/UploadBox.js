@@ -51,7 +51,8 @@ Ext.define ('Webed.view.FileUploadBox', {
             buttonText: '',
             buttonConfig: {iconCls: 'icon-folder-16'},
             emptyText: 'Select document ..',
-            name: 'file'
+            name: 'file',
+            width: '100%'
         }]
     }]
 });
@@ -88,6 +89,7 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
             xtype: 'add-project-box-mime',
             allowBlank: true,
             emptyText: 'Select type ..',
+            forceSelection: true,
             name: 'mime',
             style: 'margin: 0;',
             value: 'application/project',
