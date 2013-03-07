@@ -19,8 +19,8 @@ var MIME = function () {
 
         function internal () {
             return (no_fallback != undefined)
-                ? mime.match (/^text\/[^*]+$/) ? true : false
-                : mime.match (/^text\/.+$/) ? true : false;
+                ? !!mime.match (/^text\/[^*]+$/)
+                : !!mime.match (/^text\/.+$/)
         }
 
         if (store == undefined) {
