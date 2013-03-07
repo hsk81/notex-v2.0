@@ -66,6 +66,12 @@ def file_upload ():
     @db.commit ()
     def create_leaf (name, root, mime):
 
+        ##
+        ## TODO: The condition below does *not* classify "text-like" mime,
+        ##       which don't start with `text` (e.g. `application/xml`) as
+        ##       text, but as binary; fix!
+        ##
+
         if mime.lower ().startswith ('text'):
             leaf, _ = create_txt (name, root, mime, file=file)
         else:
@@ -200,10 +206,18 @@ def create_prj (path, base, mime):
 
         for fn in file_names:
             mime = guess_mime_ex (fn, cur_path)
+
+            ##
+            ## TODO: The condition below does *not* classify "text-like" mime,
+            ##       which don't start with `text` (e.g. `application/xml`) as
+            ##       text, but as binary; fix!
+            ##
+
             if mime and mime.lower ().startswith ('text'):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
             else:
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
+
             db.session.add (leaf)
             cache[os.path.join (cur_path, fn)] = leaf
 
@@ -324,10 +338,12 @@ def compress (root):
         prop = Q (leaf.props).one (name='data')
         assert prop
 
-        if leaf.mime.lower ().startswith ('text'):
+        if type (prop) == TextProperty:
             data = prop.data.replace ('\n', '\r\n').encode ('utf-8')
-        else:
+        elif type (prop) == Base64Property:
             data = base64.decodestring (prop.data.split (',')[1])
+        else:
+            raise Exception ('invalid property: %r' % prop)
 
         assert data is not None
         path = os.path.join (leaf_path, leaf.name)
