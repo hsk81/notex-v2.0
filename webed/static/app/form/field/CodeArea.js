@@ -13,7 +13,8 @@ Ext.define ('Webed.form.field.CodeArea', {
             lineNumbers: true,
             lineWrapping: true,
             matchBrackets: true,
-            styleActiveLine: true
+            styleActiveLine: true,
+            undoDepth: 99
         }, mime: undefined
     },
 

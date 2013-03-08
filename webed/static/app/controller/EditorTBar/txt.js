@@ -40,24 +40,79 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    editor: function (component) {
+        var panel = assert (component.up ('panel'));
+        var ca = assert (panel.down ('code-area'));
+        return ca.codemirror;
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    cutToBuffer: function (editor, buffer, name) {
+
+        var selection = editor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            editor.replaceSelection ('');
+            return true;
+        }
+
+        return false;
+    },
+
+    copyToBuffer: function (editor, buffer, name) {
+
+        var selection = editor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            return true;
+        }
+
+        return false;
+    },
+
+    pasteFromBuffer: function (editor, buffer, name) {
+
+        if (buffer[name]) {
+            editor.replaceSelection (buffer[name]);
+            editor.setCursor (editor.getCursor ());
+            return true;
+        }
+
+        return false;
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     undo: function (button) {
-        console.debug ('[undo]', button);
+        assert (this.editor (button)).undo ();
     },
 
     redo: function (button) {
-        console.debug ('[redo]', button);
+        assert (this.editor (button)).redo ();
     },
 
     cut: function (button) {
-        console.debug ('[cut]', button);
+        var editor = assert (this.editor (button));
+        if (this.cutToBuffer (editor, document, 'clipboard')) {
+            editor.focus ();
+        }
     },
 
     copy: function (button) {
-        console.debug ('[copy]', button);
+        var editor = assert (this.editor (button));
+        if (this.copyToBuffer (editor, document, 'clipboard')) {
+            editor.focus ();
+        }
     },
 
     paste: function (button) {
-        console.debug ('[paste]', button);
+        var editor = assert (this.editor (button));
+        if (this.pasteFromBuffer (editor, document, 'clipboard')) {
+            editor.focus ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
