@@ -28,9 +28,7 @@ Ext.define ('Webed.view.AddProjectBox', {
             width: '100%',
             xtype: 'textfield'
         },{
-            allowBlank: false,
             emptyText: 'Select type ..',
-            forceSelection: true,
             name: 'mime',
             style: 'margin: 0;',
             value: 'application/project',
@@ -54,9 +52,11 @@ Ext.define ('Webed.view.AddProjectBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-project-box-mime',
 
+    allowBlank: false,
+    displayField: 'name',
+    forceSelection: true,
     store: 'MIMEs',
     queryMode: 'local',
-    displayField: 'name',
     valueField: 'mime',
     typeAhead: true,
 

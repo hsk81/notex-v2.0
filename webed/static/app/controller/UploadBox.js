@@ -36,15 +36,13 @@ Ext.define ('Webed.controller.UploadBox', {
                 waitMsg: 'Uploading file ..',
 
                 success: function () {
-                    assert (view).destroy (); application.fireEvent (
-                        'refresh_tree'
-                    );
+                    view.destroy ();
+                    application.fireEvent ('refresh_tree');
                 },
 
                 failure: function () {
-                    assert (view).destroy (); console.debug (
-                        '[UploadBox.confirmUpload]', 'failed'
-                    );
+                    view.destroy ();
+                    console.debug ('[UploadBox.confirmUpload]', 'failed');
                 }
             });
         }

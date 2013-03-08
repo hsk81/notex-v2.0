@@ -49,9 +49,7 @@ Ext.define ('Webed.view.AddFileBox', {
                 return true;
             }
         },{
-            allowBlank: false,
             emptyText: 'Select type ..',
-            forceSelection: true,
             name: 'mime',
             style: 'margin: 0;',
             value: 'text/plain',
@@ -75,11 +73,13 @@ Ext.define ('Webed.view.AddFileBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-file-box-mime',
 
-    store: 'MIMEs',
-    queryMode: 'local',
+    allowBlank: false,
     displayField: 'name',
-    valueField: 'mime',
+    forceSelection: true,
+    queryMode: 'local',
+    store: 'MIMEs',
     typeAhead: true,
+    valueField: 'mime',
 
     tpl: [
         '<tpl for=".">',

@@ -87,9 +87,7 @@ Ext.define ('Webed.view.ArchiveUploadBox', {
             width: '100%'
         },{
             xtype: 'add-project-box-mime',
-            allowBlank: true,
             emptyText: 'Select type ..',
-            forceSelection: true,
             name: 'mime',
             style: 'margin: 0;',
             value: 'application/project',
