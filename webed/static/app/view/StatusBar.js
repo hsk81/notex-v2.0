@@ -93,7 +93,7 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
 Ext.define ('Webed.view.statusBar.SizeButton', {
     extend: 'Ext.Button',
     alias: 'widget.webed-statusbar-sizebutton',
-    tooltip: 'Font Size',
+    tooltip: 'Text Zoom',
     text: '100%',
     width: 48
 });
@@ -103,7 +103,7 @@ Ext.define ('Webed.view.statusBar.Slider', {
     alias: 'widget.webed-statusbar-slider',
 
     tipText: function (thumb) {
-        return 'Font Size: {0}%'.format (thumb.value);
+        return 'Text Zoom: {0}%'.format (thumb.value);
     },
 
     width: 128,
