@@ -33,6 +33,9 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
             },
             'editor-tbar-txt button[action=replace-all]': {
                 click: this.replace_all
+            },
+            'editor-tbar-txt button[action=clear-search]': {
+                click: this.clear_search
             }
         });
     },
@@ -119,19 +122,27 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     find: function (button) {
-        console.debug ('[find]', button);
+        CodeMirror.commands['find'] (assert (this.editor (button)));
     },
 
     find_next: function (button) {
-        console.debug ('[find-next]', button);
+        CodeMirror.commands['findNext'] (assert (this.editor (button)));
     },
 
     find_previous: function (button) {
-        console.debug ('[find-previous]', button);
+        CodeMirror.commands['findPrev'] (assert (this.editor (button)));
+    },
+
+    replace: function (button) {
+        CodeMirror.commands['replace'] (assert (this.editor (button)));
     },
 
     replace_all: function (button) {
-        console.debug ('[replace-all]', button);
+        CodeMirror.commands['replaceAll'] (assert (this.editor (button)));
+    },
+
+    clear_search: function (button) {
+        CodeMirror.commands['clearSearch'] (assert (this.editor (button)));
     }
 
     ///////////////////////////////////////////////////////////////////////////

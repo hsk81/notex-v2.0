@@ -109,6 +109,9 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             },
             'editor-tbar-rst button[action=replace-all]': {
                 click: this.replace_all
+            },
+            'editor-tbar-rst button[action=clear-search]': {
+                click: this.clear_search
             }
         });
     },
