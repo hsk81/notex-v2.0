@@ -64,7 +64,7 @@ def file_upload ():
     mime = guess_mime (name) or file.mimetype
     assert mime
 
-    @db.commit ()
+    @db.nest ()
     def create_leaf (name, root, mime):
 
         if MIME.is_text (mime):
