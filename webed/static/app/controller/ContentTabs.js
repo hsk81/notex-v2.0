@@ -148,10 +148,15 @@ Ext.define ('Webed.controller.ContentTabs', {
 
                 listeners: {
                     afterlayout: function (panel) {
-                        var height = panel.getHeight ();
-                        assert (typeof (height) == 'number');
-                        var ca = panel.child ('code-area');
-                        assert (ca); ca.setHeight (height-2);
+                        var tbar = assert (panel.child ('toolbar'));
+                        var ca = assert (panel.child ('code-area'));
+
+                        var height1 = panel.getHeight ();
+                        assert (typeof (height1) == 'number');
+                        var height2 = tbar.getHeight ();
+                        assert (typeof (height2) == 'number');
+
+                        ca.setHeight (height1 - height2 - 2);
                     },
 
                     activate: function (panel) {
