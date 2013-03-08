@@ -151,11 +151,11 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     decrease_indent: function (button) {
-        console.debug ('[decrease-indent]', button);
+        CodeMirror.commands ['indentLess'](assert (this.editor (button)));
     },
 
     increase_indent: function (button) {
-        console.debug ('[increase-indent]', button);
+        CodeMirror.commands ['indentMore'](assert (this.editor (button)));
     },
 
     ///////////////////////////////////////////////////////////////////////////
