@@ -57,78 +57,66 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    editor: function (component) {
-        var panel = assert (component.up ('panel'));
-        var ca = assert (panel.down ('code-area'));
-        return ca.codemirror;
+    codemirror: function (component) {
+        return assert (this.codearea (component)).codemirror;
     },
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    cutToBuffer: function (editor, buffer, name) {
-
-        var selection = editor.getSelection ();
-        if (selection) {
-            buffer[name] = selection;
-            editor.replaceSelection ('');
-            return true;
-        }
-
-        return false;
-    },
-
-    copyToBuffer: function (editor, buffer, name) {
-
-        var selection = editor.getSelection ();
-        if (selection) {
-            buffer[name] = selection;
-            return true;
-        }
-
-        return false;
-    },
-
-    pasteFromBuffer: function (editor, buffer, name) {
-
-        if (buffer[name]) {
-            editor.replaceSelection (buffer[name]);
-            editor.setCursor (editor.getCursor ());
-            return true;
-        }
-
-        return false;
+    codearea: function (component) {
+        return assert (component.up ('panel')).down ('code-area');
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     undo: function (button) {
-        assert (this.editor (button)).undo ();
+        var editor = assert (this.codemirror (button));
+        editor.undo (); editor.focus ();
     },
 
     redo: function (button) {
-        assert (this.editor (button)).redo ();
+        var editor = assert (this.codemirror (button));
+        editor.redo (); editor.focus ();
     },
 
     cut: function (button) {
-        var editor = assert (this.editor (button));
-        if (this.cutToBuffer (editor, document, 'clipboard')) {
-            editor.focus ();
-        }
+        var editor = assert (this.codemirror (button));
+        this.cutToBuffer (editor, document, 'clipboard');
+        editor.focus ();
     },
 
     copy: function (button) {
-        var editor = assert (this.editor (button));
-        if (this.copyToBuffer (editor, document, 'clipboard')) {
-            editor.focus ();
-        }
+        var editor = assert (this.codemirror (button));
+        this.copyToBuffer (editor, document, 'clipboard');
+        editor.focus ();
     },
 
     paste: function (button) {
-        var editor = assert (this.editor (button));
-        if (this.pasteFromBuffer (editor, document, 'clipboard')) {
-            editor.focus ();
+        var editor = assert (this.codemirror (button));
+        this.pasteFromBuffer (editor, document, 'clipboard');
+        editor.focus ();
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    cutToBuffer: function (editor, buffer, name) {
+        var selection = editor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            editor.replaceSelection ('');
+        }
+    },
+
+    copyToBuffer: function (editor, buffer, name) {
+        var selection = editor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+        }
+    },
+
+    pasteFromBuffer: function (editor, buffer, name) {
+        if (buffer[name]) {
+            editor.replaceSelection (buffer[name]);
+            editor.setCursor (editor.getCursor ());
         }
     },
 
@@ -136,53 +124,68 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     lower_case: function (button) {
-        var editor = assert (this.editor (button));
+        var editor = assert (this.codemirror (button));
         var selection = editor.getSelection ();
         if (selection) editor.replaceSelection (selection.toLowerCase ());
+        editor.focus ();
     },
 
     upper_case: function (button) {
-        var editor = assert (this.editor (button));
+        var editor = assert (this.codemirror (button));
         var selection = editor.getSelection ();
         if (selection) editor.replaceSelection (selection.toUpperCase ());
+        editor.focus ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     decrease_indent: function (button) {
-        CodeMirror.commands ['indentLess'](assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands ['indentLess'](editor);
+        editor.focus ();
     },
 
     increase_indent: function (button) {
-        CodeMirror.commands ['indentMore'](assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands ['indentMore'](editor);
+        editor.focus ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     find: function (button) {
-        CodeMirror.commands['find'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['find'] (editor);
     },
 
     find_next: function (button) {
-        CodeMirror.commands['findNext'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['findNext'] (editor);
+        editor.focus ();
     },
 
     find_previous: function (button) {
-        CodeMirror.commands['findPrev'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['findPrev'] (editor);
+        editor.focus ();
     },
 
     replace: function (button) {
-        CodeMirror.commands['replace'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['replace'] (editor);
     },
 
     replace_all: function (button) {
-        CodeMirror.commands['replaceAll'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['replaceAll'] (editor);
     },
 
     clear_search: function (button) {
-        CodeMirror.commands['clearSearch'] (assert (this.editor (button)));
+        var editor = assert (this.codemirror (button));
+        CodeMirror.commands['clearSearch'] (editor);
+        editor.focus ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
