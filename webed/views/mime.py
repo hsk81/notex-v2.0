@@ -181,6 +181,7 @@ def mimes ():
         'name': 'Markdown (GitHub-flavour)',
         'mime': 'text/x-markdown',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['md']
     }, {
         'name': 'NTriples',
@@ -216,6 +217,7 @@ def mimes ():
         'name': 'Plain Text',
         'mime': 'text/plain',
         'icon': 'icon-page_white_text',
+        'flag': {'spell_check': True},
         'exts': ['txt']
     }, {
         'name': 'Properties files',
@@ -236,6 +238,7 @@ def mimes ():
         'name': 'reStructuredText',
         'mime': 'text/x-rst',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['rst', 'rest']
     }, {
         'name': 'Ruby',
@@ -289,21 +292,25 @@ def mimes ():
         'name': 'sTeX',
         'mime': 'text/x-stex',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['stex']
     }, {
         'name': 'LaTeX',
         'mime': 'text/x-latex',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['tex', 'lof', 'toc', 'sty', 'latex']
     }, {
         'name': 'TiddlyWiki ',
         'mime': 'text/x-tiddlywiki',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['wiki']
     }, {
         'name': 'Tiki wiki',
         'mime': 'text/tiki',
         'icon': 'icon-page',
+        'flag': {'spell_check': True},
         'exts': ['tiki']
     }, {
         'name': 'VB.NET',

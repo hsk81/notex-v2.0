@@ -96,15 +96,11 @@ Ext.define ('Webed.form.field.CodeArea', {
     },
 
     needSpellChecker: function (mime) {
-        switch (mime) {
-            case 'text/plain':
-            case 'text/x-rst':
-            case 'text/x-markdown':
-            case 'text/x-stex':
-                return true;
-            default:
-                return false;
-        }
+        var store = assert (Ext.getStore ('MIMEs'));
+        var record = assert (store.findRecord ('mime', mime));
+        var flag = assert (record.get ('flag'));
+
+        return flag['spell_check'];
     },
 
     getSpellChecker: function () {
