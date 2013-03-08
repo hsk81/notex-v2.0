@@ -8,6 +8,13 @@ Ext.define ('Webed.controller.ContentTabs', {
         selector: 'content-tabs', ref: 'contentTabs'
     }],
 
+    requires: [
+        'Webed.view.EditorTBar.txt',
+        'Webed.view.EditorTBar.rst'
+    ],
+
+    stores: ['MIMEs'],
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -101,6 +108,16 @@ Ext.define ('Webed.controller.ContentTabs', {
                 closable: true,
                 iconCls: iconCls,
                 layout: 'fit',
+
+                tbar: {
+                    xtype: function (store) {
+                        var record = assert (store.findRecord ('mime', mime));
+                        var flag = assert (record.get ('flag'));
+                        var tbar = flag['tbar'];
+
+                        return tbar ? tbar : 'editor-tbar-txt';
+                    } (assert (this.getMIMEsStore ()))
+                },
 
                 items: [Ext.create ('Webed.form.field.CodeArea', {
                     mime: mime, listeners: {

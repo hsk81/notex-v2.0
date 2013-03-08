@@ -238,7 +238,7 @@ def mimes ():
         'name': 'reStructuredText',
         'mime': 'text/x-rst',
         'icon': 'icon-page',
-        'flag': {'spell_check': True},
+        'flag': {'spell_check': True, 'tbar': 'editor-tbar-rst'},
         'exts': ['rst', 'rest']
     }, {
         'name': 'Ruby',

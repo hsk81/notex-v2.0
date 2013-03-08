@@ -32,6 +32,8 @@ Ext.application ({
         'AddProjectBox',
         'ArchiveUploadBox',
         'ContentTabs',
+        'EditorTBar.txt',
+        'EditorTBar.rst',
         'DeleteBox',
         'FileUploadBox',
         'Leaf',
