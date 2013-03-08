@@ -77,7 +77,9 @@ Ext.define ('Webed.controller.AddFileBox', {
     mime_select: function (combobox) {
         var form = assert (combobox.up ('form'));
         var textfield = assert (form.down ('textfield'));
-        textfield.validate ();
+        textfield.validate (); if (!textfield.isValid ()) {
+            textfield.focus (true, 25);
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
