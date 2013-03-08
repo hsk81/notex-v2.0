@@ -68,18 +68,18 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                 click: this.upper_case
             },
 
-            'editor-tbar-rst button[action=toggle-bullet-list]': {
-                click: this.toggle_bullet_list
-            },
-            'editor-tbar-rst button[action=toggle-number-list]': {
-                click: this.toggle_number_list
-            },
-
             'editor-tbar-rst button[action=decrease-indent]': {
                 click: this.decrease_indent
             },
             'editor-tbar-rst button[action=increase-indent]': {
                 click: this.increase_indent
+            },
+
+            'editor-tbar-rst button[action=toggle-bullet-list]': {
+                click: this.toggle_bullet_list
+            },
+            'editor-tbar-rst button[action=toggle-number-list]': {
+                click: this.toggle_number_list
             },
 
             'editor-tbar-rst button[action=insert-figure]': {
@@ -152,34 +152,12 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    lower_case: function (button) {
-        console.debug ('[lower-case]', button);
-    },
-
-    upper_case: function (button) {
-        console.debug ('[upper-case]', button);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     toggle_bullet_list: function (button) {
         console.debug ('[toggle-bullet-list]', button);
     },
 
     toggle_number_list: function (button) {
         console.debug ('[toggle-number-list]', button);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    decrease_indent: function (button) {
-        console.debug ('[decrease-indent]', button);
-    },
-
-    increase_indent: function (button) {
-        console.debug ('[increase-indent]', button);
     },
 
     ///////////////////////////////////////////////////////////////////////////

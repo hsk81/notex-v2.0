@@ -97,16 +97,6 @@ Ext.define ('Webed.view.EditorTBar.rst', {
         defaults: {text: 'Upper Case'},
         tooltip: 'Upper Case'
     },'-',{
-        action: 'toggle-bullet-list',
-        iconCls: 'icon-text_list_bullets-16',
-        defaults: {text: 'Bullet List'},
-        tooltip: 'Bullet List'
-    },{
-        action: 'toggle-number-list',
-        iconCls: 'icon-text_list_numbers-16',
-        defaults: {text: 'Number List'},
-        tooltip: 'Number List'
-    },'-',{
         action: 'decrease-indent',
         iconCls: 'icon-text_indent_remove-16',
         defaults: {text: 'Decrease Indent'},
@@ -116,6 +106,16 @@ Ext.define ('Webed.view.EditorTBar.rst', {
         iconCls: 'icon-text_indent-16',
         defaults: {text: 'Increase Indent-16'},
         tooltip: 'Increase Indent'
+    },'-',{
+        action: 'toggle-bullet-list',
+        iconCls: 'icon-text_list_bullets-16',
+        defaults: {text: 'Bullet List'},
+        tooltip: 'Bullet List'
+    },{
+        action: 'toggle-number-list',
+        iconCls: 'icon-text_list_numbers-16',
+        defaults: {text: 'Number List'},
+        tooltip: 'Number List'
     },'-',{
         action: 'insert-figure',
         iconCls: 'icon-picture-16',

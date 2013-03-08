@@ -28,6 +28,26 @@ Ext.define ('Webed.view.EditorTBar.txt', {
         iconCls: 'icon-paste_plain-16',
         tooltip: 'Paste&nbsp;<div class="w-shortcut">[CTRL+V]</div>'
     },'-',{
+        action: 'lower-case',
+        iconCls: 'icon-text_lowercase-16',
+        defaults: {text: 'Lower Case'},
+        tooltip: 'Lower Case'
+    },{
+        action: 'upper-case',
+        iconCls: 'icon-text_uppercase-16',
+        defaults: {text: 'Upper Case'},
+        tooltip: 'Upper Case'
+    },'-',{
+        action: 'decrease-indent',
+        iconCls: 'icon-text_indent_remove-16',
+        defaults: {text: 'Decrease Indent'},
+        tooltip: 'Decrease Indent'
+    },{
+        action: 'increase-indent',
+        iconCls: 'icon-text_indent-16',
+        defaults: {text: 'Increase Indent-16'},
+        tooltip: 'Increase Indent'
+    },'-',{
         action: 'find-previous',
         iconCls: 'icon-document_page_previous-16',
         defaults: {text: 'Find Previous'},

@@ -22,6 +22,20 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
                 click: this.paste
             },
 
+            'editor-tbar-txt button[action=lower-case]': {
+                click: this.lower_case
+            },
+            'editor-tbar-txt button[action=upper-case]': {
+                click: this.upper_case
+            },
+
+            'editor-tbar-txt button[action=decrease-indent]': {
+                click: this.decrease_indent
+            },
+            'editor-tbar-txt button[action=increase-indent]': {
+                click: this.increase_indent
+            },
+
             'editor-tbar-txt button[action=find]': {
                 click: this.find
             },
@@ -116,6 +130,32 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
         if (this.pasteFromBuffer (editor, document, 'clipboard')) {
             editor.focus ();
         }
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    lower_case: function (button) {
+        var editor = assert (this.editor (button));
+        var selection = editor.getSelection ();
+        if (selection) editor.replaceSelection (selection.toLowerCase ());
+    },
+
+    upper_case: function (button) {
+        var editor = assert (this.editor (button));
+        var selection = editor.getSelection ();
+        if (selection) editor.replaceSelection (selection.toUpperCase ());
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    decrease_indent: function (button) {
+        console.debug ('[decrease-indent]', button);
+    },
+
+    increase_indent: function (button) {
+        console.debug ('[increase-indent]', button);
     },
 
     ///////////////////////////////////////////////////////////////////////////
