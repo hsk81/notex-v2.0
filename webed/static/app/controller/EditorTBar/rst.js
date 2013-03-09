@@ -23,25 +23,25 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             },
 
             'editor-tbar-rst button[action=apply-heading-0]': {
-                click: Ext.pass (this.apply_heading, [0])
+                click: Ext.pass (this.apply_heading, [0], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-1]': {
-                click: Ext.pass (this.apply_heading, [1])
+                click: Ext.pass (this.apply_heading, [1], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-2]': {
-                click: Ext.pass (this.apply_heading, [2])
+                click: Ext.pass (this.apply_heading, [2], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-3]': {
-                click: Ext.pass (this.apply_heading, [3])
+                click: Ext.pass (this.apply_heading, [3], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-4]': {
-                click: Ext.pass (this.apply_heading, [4])
+                click: Ext.pass (this.apply_heading, [4], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-5]': {
-                click: Ext.pass (this.apply_heading, [5])
+                click: Ext.pass (this.apply_heading, [5], this)
             },
             'editor-tbar-rst menuitem[action=apply-heading-6]': {
-                click: Ext.pass (this.apply_heading, [6])
+                click: Ext.pass (this.apply_heading, [6], this)
             },
 
             'editor-tbar-rst button[action=toggle-strong]': {
@@ -119,8 +119,120 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    headingMarker: function (level) {
+        return {1:'#', 2:'*', 3:'=', 4:'-', 5:'^', 6:'.. rubric::'}[level];
+    },
+
     apply_heading: function (level, button) {
-        console.debug ('[apply-heading]', level, button);
+        if (level == 0) return;
+        var editor = assert (this.codemirror (button));
+        var marker = assert (this.headingMarker (level));
+
+        switch (level) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                applyHeading1to5.call (this, marker, level);
+                break;
+            case 6:
+                applyHeading6.call (this, marker);
+                break;
+            default:
+                throw new Exception ('invalid level:', level);
+        }
+
+        function applyHeading1to5 (marker, level) {
+            removeHeading.call (this, function () {
+                var sel = editor.getSelection ();
+                if (sel) {
+                    var head = '';
+                    var size = (sel.length < 64) ? sel.length : 4;
+                    for (var idx = 0; idx < size; idx++) head += marker;
+                    var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
+                    editor.replaceSelection (String.format (tpl, head, sel));
+                    editor.setCursor (editor.getCursor (true));
+                }
+            });
+        }
+
+        function applyHeading6 (marker) {
+            removeHeading.call (this, function () {
+                var sel = editor.getSelection();
+                if (sel) {
+                    var rep = sel.replace (/\s+$/, '');
+                    var tpl = marker + ' ' + '{0}';
+                    editor.replaceSelection (String.format (tpl, rep));
+                    editor.setCursor (editor.getCursor (true));
+                }
+            });
+        }
+
+        function removeHeading (callback) {
+
+            var beg = editor.getCursor (true);
+            var end = editor.getCursor ();
+            var tok = [], upp, low;
+
+            for (var n = -3; n < 3; n++) {
+                tok[n] = editor.getTokenAt ({line:end.line + n,ch:1});
+                tok[n].line = end.line + n;
+
+                if (tok[n].className == 'header') {
+                    if (upp) { low = tok[n]; } else { upp = tok[n]; }
+                }
+            }
+
+            var sel = editor.getSelection ();
+            if (sel) {
+
+                removeHeading6.call (this);
+
+                if (tok[-3] && tok[-3].className == 'header' && !low) return;
+                if (tok[-2] && tok[-2].className == 'header' && !low) return;
+                if (low) editor.removeLine (low.line);
+                if (upp) editor.removeLine (upp.line);
+
+                resetCursor.call (this);
+
+                Ext.defer (function () {
+                    var cur = editor.getCursor ();
+                    var txt = editor.getLine (cur.line);
+
+                    editor.setSelection (
+                        {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
+                    );
+
+                    if (callback) callback.call (this);
+                }, 5, this)
+            }
+
+            function removeHeading6 () {
+                var marker = assert (this.headingMarker (6));
+                var rx = new RegExp (marker + '(\\s*)');
+                if (sel.match (rx)) {
+                    editor.replaceSelection (sel.replace (rx, ''));
+                } else {
+                    var cur = editor.getCursor ();
+                    var txt = editor.getLine (cur.line);
+                    if (txt && txt.match (rx)) {
+                        editor.setLine (cur.line, txt.replace (rx, ''));
+                    }
+                }
+            }
+
+            function resetCursor () {
+                if (upp && low)
+                    editor.setCursor ({line:upp.line - 0, ch:0});
+                else if (upp || low)
+                    editor.setCursor ({line:upp.line - 1, ch:0});
+                else if (beg.line == end.line)
+                    editor.setCursor ({line:beg.line - 0, ch:0});
+                else
+                    editor.setCursor ({line:end.line - 1, ch:0});
+            }
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
