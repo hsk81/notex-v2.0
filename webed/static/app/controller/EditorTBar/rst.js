@@ -119,14 +119,14 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    headingMarker: function (level) {
+    heading_marker: function (level) {
         return {1:'#', 2:'*', 3:'=', 4:'-', 5:'^', 6:'.. rubric::'}[level];
     },
 
     apply_heading: function (level, button) {
         if (level == 0) return;
         var editor = assert (this.codemirror (button));
-        var marker = assert (this.headingMarker (level));
+        var marker = assert (this.heading_marker (level));
 
         switch (level) {
             case 1:
@@ -134,17 +134,17 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             case 3:
             case 4:
             case 5:
-                applyHeading1to5.call (this, marker, level);
+                apply_heading_1to5.call (this, marker, level);
                 break;
             case 6:
-                applyHeading6.call (this, marker);
+                apply_heading_6.call (this, marker);
                 break;
             default:
                 throw new Exception ('invalid level:', level);
         }
 
-        function applyHeading1to5 (marker, level) {
-            removeHeading.call (this, function () {
+        function apply_heading_1to5 (marker, level) {
+            remove_heading.call (this, function () {
                 var sel = editor.getSelection ();
                 if (sel) {
                     var head = '';
@@ -157,8 +157,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             });
         }
 
-        function applyHeading6 (marker) {
-            removeHeading.call (this, function () {
+        function apply_heading_6 (marker) {
+            remove_heading.call (this, function () {
                 var sel = editor.getSelection();
                 if (sel) {
                     var rep = sel.replace (/\s+$/, '');
@@ -169,8 +169,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             });
         }
 
-        function removeHeading (callback) {
-
+        function remove_heading (callback) {
             var beg = editor.getCursor (true);
             var end = editor.getCursor ();
             var tok = [], upp, low;
@@ -187,14 +186,14 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             var sel = editor.getSelection ();
             if (sel) {
 
-                removeHeading6.call (this);
+                remove_heading_6.call (this);
 
                 if (tok[-3] && tok[-3].className == 'header' && !low) return;
                 if (tok[-2] && tok[-2].className == 'header' && !low) return;
                 if (low) editor.removeLine (low.line);
                 if (upp) editor.removeLine (upp.line);
 
-                resetCursor.call (this);
+                reset_cursor.call (this);
 
                 Ext.defer (function () {
                     var cur = editor.getCursor ();
@@ -208,8 +207,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                 }, 5, this)
             }
 
-            function removeHeading6 () {
-                var marker = assert (this.headingMarker (6));
+            function remove_heading_6 () {
+                var marker = assert (this.heading_marker (6));
                 var rx = new RegExp (marker + '(\\s*)');
                 if (sel.match (rx)) {
                     editor.replaceSelection (sel.replace (rx, ''));
@@ -222,7 +221,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                 }
             }
 
-            function resetCursor () {
+            function reset_cursor () {
                 if (upp && low)
                     editor.setCursor ({line:upp.line - 0, ch:0});
                 else if (upp || low)
@@ -231,6 +230,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                     editor.setCursor ({line:beg.line - 0, ch:0});
                 else
                     editor.setCursor ({line:end.line - 1, ch:0});
+                editor.focus ();
             }
         }
     },
