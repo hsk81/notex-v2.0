@@ -350,11 +350,84 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     insert_footnote: function (button) {
-        console.debug ('[insert-footnote]', button);
+
+        var editor = this.get_editor (button);
+        var cursor = editor.getCursor ();
+        var range = editor.getRange ({
+            line: cursor.line, ch: cursor.ch-1
+        },{
+            line: cursor.line, ch: cursor.ch+1
+        });
+
+        var prefix = (range.match (/^\s/) || (cursor.ch -1 < 0)) ? '' : ' ';
+        var suffix = (range.match (/\s$/)) ? '' : ' ';
+        var anchor = String.format ('{0}{1}{2}', prefix, '[#]_', suffix);
+
+        if (editor.lineCount () <= cursor.line+1) {
+            editor.replaceSelection (anchor + '\n');
+            editor.setCursor ({line: cursor.line+1, ch:0});
+            editor.replaceSelection ('\n.. [#] \n');
+        } else {
+            editor.replaceSelection (anchor);
+            editor.setCursor ({line: cursor.line+1, ch:0});
+            editor.replaceSelection ('\n.. [#] \n');
+
+            var next = editor.getCursor ();
+            editor.setCursor (next);
+
+            if (editor.getLine (next.line)) editor.replaceSelection ('\n');
+        }
+
+        editor.setCursor ({line: cursor.line+2, ch: 7});
+        editor.focus ();
     },
 
     insert_horizontal_line: function (button) {
-        console.debug ('[insert-horizontal-line]', button);
+        var editor = this.get_editor (button);
+
+        var rest = '\n----\n';
+        var cur = editor.getCursor ();
+        var txt = editor.getLine (cur.line);
+
+        rest = this.fix_preceeding_whitespace (editor, rest, txt, cur);
+        rest = this.fix_succeeding_whitespace (editor, rest, txt, cur);
+
+        editor.replaceSelection (rest);
+        editor.setCursor (editor.getCursor ());
+        editor.focus ();
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    fix_preceeding_whitespace: function (editor, rest, text, cursor) {
+
+        if (cursor.ch > 0 && !text.match (/^\s+$/)) {
+            rest = '\n' + rest;
+        } else {
+            var prev_txt = editor.getLine (cursor.line - 1);
+            if (prev_txt == '' || (prev_txt && prev_txt.match (/^\s+$/))) {
+                rest = rest.replace (/^\n/, '');
+            }
+
+            if (text.match (/^\s+$/)) editor.setLine (cursor.line, '');
+        }
+
+        return rest;
+    },
+
+    fix_succeeding_whitespace: function (editor, rest, text, cursor) {
+
+        if (cursor.ch < text.length) {
+            rest += '\n'
+        } else {
+            var next_txt = editor.getLine (cursor.line + 1);
+            if (next_txt == '' || (next_txt && next_txt.match (/^\s+$/))) {
+                rest = rest.replace (/\n$/, '');
+            }
+        }
+
+        return rest;
     }
 
     ///////////////////////////////////////////////////////////////////////////
