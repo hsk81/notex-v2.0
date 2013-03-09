@@ -126,7 +126,6 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     apply_heading: function (level, button) {
-
         var editor = assert (this.codemirror (button));
         var marker = assert (this.heading_marker (level));
 
