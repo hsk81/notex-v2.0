@@ -23,7 +23,9 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             },
 
             'editor-tbar-rst button[action=apply-heading-0]': {
-                click: Ext.pass (this.apply_heading, [0], this)
+                click: function (button) {
+                    EDITOR = assert (this.codemirror (button));
+                }
             },
             'editor-tbar-rst menuitem[action=apply-heading-1]': {
                 click: Ext.pass (this.apply_heading, [1], this)
@@ -124,7 +126,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     apply_heading: function (level, button) {
-        if (level == 0) return;
+
         var editor = assert (this.codemirror (button));
         var marker = assert (this.heading_marker (level));
 
@@ -185,7 +187,6 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
             var sel = editor.getSelection ();
             if (sel) {
-
                 remove_heading_6.call (this);
 
                 if (tok[-3] && tok[-3].className == 'header' && !low) return;
@@ -195,16 +196,14 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
                 reset_cursor.call (this);
 
-                Ext.defer (function () {
-                    var cur = editor.getCursor ();
-                    var txt = editor.getLine (cur.line);
+                var cur = editor.getCursor ();
+                var txt = editor.getLine (cur.line);
 
-                    editor.setSelection (
-                        {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
-                    );
+                editor.setSelection (
+                    {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
+                );
 
-                    if (callback) callback.call (this);
-                }, 5, this)
+                if (callback) callback.call (this);
             }
 
             function remove_heading_6 () {
@@ -230,7 +229,6 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                     editor.setCursor ({line:beg.line - 0, ch:0});
                 else
                     editor.setCursor ({line:end.line - 1, ch:0});
-                editor.focus ();
             }
         }
     },
