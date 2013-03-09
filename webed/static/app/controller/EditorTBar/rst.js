@@ -153,7 +153,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                     for (var idx = 0; idx < size; idx++) head += marker;
                     var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
                     editor.replaceSelection (String.format (tpl, head, sel));
-                    editor.setCursor (editor.getCursor (true));
+                    editor.setCursor (editor.getCursor ('end'));
                 }
             });
         }
@@ -165,7 +165,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                     var rep = sel.replace (/\s+$/, '');
                     var tpl = marker + ' ' + '{0}';
                     editor.replaceSelection (String.format (tpl, rep));
-                    editor.setCursor (editor.getCursor (true));
+                    editor.setCursor (editor.getCursor ('end'));
                 }
             });
         }
@@ -198,7 +198,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
             reset_cursor.call (this);
 
-            var cur = editor.getCursor ();
+            var cur = editor.getCursor ('head');
             var txt = editor.getLine (cur.line);
 
             editor.setSelection (
@@ -214,7 +214,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             if (sel.match (rx)) {
                 editor.replaceSelection (sel.replace (rx, ''));
             } else {
-                var cur = editor.getCursor ();
+                var cur = editor.getCursor ('head');
                 var txt = editor.getLine (cur.line);
                 if (txt && txt.match (rx)) editor.setLine (
                     cur.line, txt.replace (rx, '')
