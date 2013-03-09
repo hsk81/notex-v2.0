@@ -57,6 +57,14 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    get_editor: function (component) {
+        if (component) {
+            return this.editor = assert (this.codemirror (component));
+        } else {
+            return this.editor;
+        }
+    },
+
     codemirror: function (component) {
         return assert (this.codearea (component)).codemirror;
     },
@@ -69,29 +77,29 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     undo: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         editor.undo (); editor.focus ();
     },
 
     redo: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         editor.redo (); editor.focus ();
     },
 
     cut: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         this.cutToBuffer (editor, document, 'clipboard');
         editor.focus ();
     },
 
     copy: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         this.copyToBuffer (editor, document, 'clipboard');
         editor.focus ();
     },
 
     paste: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         this.pasteFromBuffer (editor, document, 'clipboard');
         editor.focus ();
     },
@@ -124,14 +132,14 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     lower_case: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         var selection = editor.getSelection ();
         if (selection) editor.replaceSelection (selection.toLowerCase ());
         editor.focus ();
     },
 
     upper_case: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         var selection = editor.getSelection ();
         if (selection) editor.replaceSelection (selection.toUpperCase ());
         editor.focus ();
@@ -141,13 +149,13 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     decrease_indent: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands ['indentLess'](editor);
         editor.focus ();
     },
 
     increase_indent: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands ['indentMore'](editor);
         editor.focus ();
     },
@@ -156,34 +164,34 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
 
     find: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['find'] (editor);
     },
 
     find_next: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['findNext'] (editor);
         editor.focus ();
     },
 
     find_previous: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['findPrev'] (editor);
         editor.focus ();
     },
 
     replace: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['replace'] (editor);
     },
 
     replace_all: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['replaceAll'] (editor);
     },
 
     clear_search: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         CodeMirror.commands['clearSearch'] (editor);
         editor.focus ();
     }

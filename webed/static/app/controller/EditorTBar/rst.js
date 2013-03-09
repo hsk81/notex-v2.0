@@ -126,7 +126,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     apply_heading: function (level, button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         var marker = assert (this.heading_marker (level));
 
         switch (level) {
@@ -141,11 +141,11 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                 apply_heading_6.call (this, marker);
                 break;
             default:
-                throw new Exception ('invalid level:', level);
+                return;
         }
 
         function apply_heading_1to5 (marker, level) {
-            remove_heading.call (this, function () {
+            this.remove_heading (editor, function () {
                 var sel = editor.getSelection ();
                 if (sel) {
                     var head = '';
@@ -158,8 +158,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             });
         }
 
-        function apply_heading_6 (marker) {
-            remove_heading.call (this, function () {
+        function apply_heading_6  (marker) {
+            this.remove_heading (editor, function () {
                 var sel = editor.getSelection();
                 if (sel) {
                     var rep = sel.replace (/\s+$/, '');
@@ -170,65 +170,67 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             });
         }
 
-        function remove_heading (callback) {
-            var beg = editor.getCursor (true);
-            var end = editor.getCursor ();
-            var tok = [], upp, low;
+        editor.focus ();
+    },
 
-            for (var n = -3; n < 3; n++) {
-                tok[n] = editor.getTokenAt ({line:end.line + n,ch:1});
-                tok[n].line = end.line + n;
+    remove_heading: function (editor, callback) {
+        var beg = editor.getCursor ('head');
+        var end = editor.getCursor ('end');
+        var tok = [], upp, low;
 
-                if (tok[n].className == 'header') {
-                    if (upp) { low = tok[n]; } else { upp = tok[n]; }
-                }
+        for (var n = -3; n < 3; n++) {
+            tok[n] = editor.getTokenAt ({line:end.line + n,ch:1});
+            tok[n].line = end.line + n;
+
+            if (tok[n].className == 'header') {
+                if (upp) { low = tok[n]; } else { upp = tok[n]; }
             }
+        }
 
-            var sel = editor.getSelection ();
-            if (sel) {
-                remove_heading_6.call (this);
+        var sel = editor.getSelection ();
+        if (sel) {
+            remove_heading_6.call (this);
 
-                if (tok[-3] && tok[-3].className == 'header' && !low) return;
-                if (tok[-2] && tok[-2].className == 'header' && !low) return;
-                if (low) editor.removeLine (low.line);
-                if (upp) editor.removeLine (upp.line);
+            if (tok[-3] && tok[-3].className == 'header' && !low) return;
+            if (tok[-2] && tok[-2].className == 'header' && !low) return;
+            if (low) editor.removeLine (low.line);
+            if (upp) editor.removeLine (upp.line);
 
-                reset_cursor.call (this);
+            reset_cursor.call (this);
 
+            var cur = editor.getCursor ();
+            var txt = editor.getLine (cur.line);
+
+            editor.setSelection (
+                {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
+            );
+
+            if (callback) callback.call (this);
+        }
+
+        function remove_heading_6 () {
+            var marker = assert (this.heading_marker (6));
+            var rx = new RegExp (marker + '(\\s*)');
+            if (sel.match (rx)) {
+                editor.replaceSelection (sel.replace (rx, ''));
+            } else {
                 var cur = editor.getCursor ();
                 var txt = editor.getLine (cur.line);
-
-                editor.setSelection (
-                    {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
+                if (txt && txt.match (rx)) editor.setLine (
+                    cur.line, txt.replace (rx, '')
                 );
-
-                if (callback) callback.call (this);
             }
+        }
 
-            function remove_heading_6 () {
-                var marker = assert (this.heading_marker (6));
-                var rx = new RegExp (marker + '(\\s*)');
-                if (sel.match (rx)) {
-                    editor.replaceSelection (sel.replace (rx, ''));
-                } else {
-                    var cur = editor.getCursor ();
-                    var txt = editor.getLine (cur.line);
-                    if (txt && txt.match (rx)) {
-                        editor.setLine (cur.line, txt.replace (rx, ''));
-                    }
-                }
-            }
-
-            function reset_cursor () {
-                if (upp && low)
-                    editor.setCursor ({line:upp.line - 0, ch:0});
-                else if (upp || low)
-                    editor.setCursor ({line:upp.line - 1, ch:0});
-                else if (beg.line == end.line)
-                    editor.setCursor ({line:beg.line - 0, ch:0});
-                else
-                    editor.setCursor ({line:end.line - 1, ch:0});
-            }
+        function reset_cursor () {
+            if (upp && low)
+                editor.setCursor ({line:upp.line - 0, ch:0});
+            else if (upp || low)
+                editor.setCursor ({line:upp.line - 1, ch:0});
+            else if (beg.line == end.line)
+                editor.setCursor ({line:beg.line - 0, ch:0});
+            else
+                editor.setCursor ({line:end.line - 1, ch:0});
         }
     },
 
@@ -236,7 +238,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
 
     toggle_strong: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         if (editor.cfg_strong == undefined)
             editor.cfg_strong = this.toggle_cfg ('strong', '**', '**');
         this.toggle_inline (editor, editor.cfg_strong);
@@ -244,7 +246,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     toggle_italic: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         if (editor.cfg_italic == undefined)
             editor.cfg_italic = this.toggle_cfg ('em', '*', '*');
         this.toggle_inline (editor, editor.cfg_italic);
@@ -252,7 +254,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     toggle_literal: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         if (editor.cfg_literal == undefined)
             editor.cfg_literal = this.toggle_cfg ('string-2', '``', '``');
         this.toggle_inline (editor, editor.cfg_literal);
@@ -260,7 +262,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     toggle_subscript: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         if (editor.cfg_subscript == undefined)
             editor.cfg_subscript = this.toggle_cfg ('meta', ':sub:`', '`');
         this.toggle_inline (editor, editor.cfg_subscript);
@@ -268,7 +270,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     toggle_supscript: function (button) {
-        var editor = assert (this.codemirror (button));
+        var editor = assert (this.get_editor (button));
         if (editor.cfg_supscript == undefined)
             editor.cfg_supscript = this.toggle_cfg ('meta', ':sup:`', '`');
         this.toggle_inline (editor, editor.cfg_supscript);
