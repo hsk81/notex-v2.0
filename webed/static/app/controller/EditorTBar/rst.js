@@ -350,8 +350,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     insert_footnote: function (button) {
-
         var editor = this.get_editor (button);
+
         var cursor = editor.getCursor ();
         var range = editor.getRange ({
             line: cursor.line, ch: cursor.ch-1
