@@ -385,7 +385,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
         curr = editor.getCursor ('head');
         text = editor.getLine (curr.line);
         if (!text.match (rx)) {
-            editor.setCursor ({line:curr.line - 1, ch:text.length - 1});
+            editor.setCursor ({line:curr.line - 1, ch:text.length - 0});
             curr = editor.getCursor ('head');
             text = editor.getLine (curr.line);
         }
