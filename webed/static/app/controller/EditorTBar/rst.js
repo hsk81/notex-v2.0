@@ -327,8 +327,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
 
     toggle_bullet_list: function (button) {
-        var editor = this.get_editor (button);
-
+        var editor = assert (this.get_editor (button));
         var sel = editor.getSelection ();
         if (sel) this.all_points (
             editor, '+ ', /^(\s*)(\+)(\s+)/, /^(\s*)(.*)/, sel
@@ -338,7 +337,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     toggle_number_list: function (button) {
-        var editor = this.get_editor (button);
+        var editor = assert (this.get_editor (button));
         var sel = editor.getSelection ();
         if (sel) this.all_points (
             editor, '#. ', /^(\s*)([#0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
@@ -406,12 +405,18 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     insert_hyperlink: function (button) {
-        console.debug ('[insert-hyperlink]', button);
+        var insertLinkBox = Ext.create ('Webed.view.InsertLinkBox', {
+            editor: assert (this.get_editor (button))
+        });
+
+        insertLinkBox.show ();
     },
 
-    insert_footnote: function (button) {
-        var editor = this.get_editor (button);
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
+    insert_footnote: function (button) {
+        var editor = assert (this.get_editor (button));
         var cursor = editor.getCursor ();
         var range = editor.getRange ({
             line: cursor.line, ch: cursor.ch-1
@@ -443,8 +448,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     insert_horizontal_line: function (button) {
-        var editor = this.get_editor (button);
-
+        var editor = assert (this.get_editor (button));
         var rest = '\n----\n';
         var cur = editor.getCursor ();
         var txt = editor.getLine (cur.line);

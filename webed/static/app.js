@@ -22,7 +22,6 @@ Ext.require ([
 Ext.application ({
     name: 'Webed',
     requires: ['Ext.container.Viewport'],
-
     models: ['MIME', 'Lingua', 'Node', 'Leaf', 'Property'],
     stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
 
@@ -36,6 +35,7 @@ Ext.application ({
         'EditorTBar.rst',
         'DeleteBox',
         'FileUploadBox',
+        'InsertLinkBox',
         'Leaf',
         'LeafList',
         'MainBar',

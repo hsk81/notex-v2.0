@@ -2,6 +2,10 @@ Ext.define ('Webed.view.EditorTBar.rst', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.editor-tbar-rst',
 
+    requires: [
+        'Webed.view.InsertLinkBox'
+    ],
+
     items: [{
         action: 'undo',
         defaults: {text: 'Undo'},

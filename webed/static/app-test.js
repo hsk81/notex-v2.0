@@ -7,8 +7,8 @@ Ext.require ('Ext.app.Application');
 Ext.require ('Ext.form.field.VTypes');
 Ext.require ('Ext.data.writer.Json');
 Ext.require ('Ext.data.reader.Json');
-Ext.require ('Ext.XTemplate');
 
+Ext.require ('Webed.store.MIMEs');
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
 Ext.require ('Webed.store.Properties');
@@ -17,8 +17,8 @@ Ext.onReady (function() {
     window.app = Ext.create ('Ext.app.Application', {
         name: 'Webed',
 
-        models: ['Node', 'Leaf', 'Property'],
-        stores: ['Nodes', 'Leafs', 'Properties'],
+        models: ['MIME', 'Lingua', 'Node', 'Leaf', 'Property'],
+        stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
 
         paths: {
             'Webed': '../static/app'
@@ -27,7 +27,6 @@ Ext.onReady (function() {
         launch: function () {
             var env = jasmine.getEnv ();
             env.defaultTimeoutInterval = 2048; //ms
-
             var reporter = new jasmine.HtmlReporter ();
             assert (reporter);
 
