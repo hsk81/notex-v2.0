@@ -103,11 +103,12 @@ Ext.define ('Webed.controller.ContentTabs', {
         var tab = this.get_tab (uuid);
         if (tab == undefined) {
             tab = view.add ({
-                record: record,
-                title: name,
                 closable: true,
                 iconCls: iconCls,
                 layout: 'fit',
+                name: 'editor',
+                record: record,
+                title: name,
 
                 tbar: {
                     xtype: function (store) {
@@ -184,6 +185,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             closable: true,
             iconCls: iconCls,
             layout: 'absolute',
+            name: 'viewer',
             record: record,
             title: name,
 
