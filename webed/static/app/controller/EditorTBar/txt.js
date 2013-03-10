@@ -70,7 +70,7 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     },
 
     codearea: function (component) {
-        return assert (component.up ('viewport')).down ('code-area');
+        return assert (component.up ('panel')).down ('code-area');
     },
 
     ///////////////////////////////////////////////////////////////////////////
