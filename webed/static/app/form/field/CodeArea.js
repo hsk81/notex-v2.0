@@ -110,7 +110,7 @@ Ext.define ('Webed.form.field.CodeArea', {
         var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾";
         var rx_word_sub = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎";
         var rx_word_xxx = "≈≡×";
-        var rx_word = new RegExp ("^[^{0}{1}{2}{3}{4}\\d\\s]{2,}".format (
+        var rx_word = new RegExp ("^[^{0}{1}{2}{3}{4}\\d\\s]{3,}".format (
             rx_word_bas, rx_word_ext, rx_word_sup, rx_word_sub, rx_word_xxx
         ));
 
