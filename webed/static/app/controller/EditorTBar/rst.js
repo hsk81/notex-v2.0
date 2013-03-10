@@ -327,11 +327,71 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
 
     toggle_bullet_list: function (button) {
-        console.debug ('[toggle-bullet-list]', button);
+        var editor = this.get_editor (button);
+
+        var sel = editor.getSelection ();
+        if (sel) this.all_points (
+            editor, '+ ', /^(\s*)(\+)(\s+)/, /^(\s*)(.*)/, sel
+        );
+
+        else this.next_point (editor, '\n{0}+ \n', /^(\s*)\+(\s+)$/);
     },
 
     toggle_number_list: function (button) {
-        console.debug ('[toggle-number-list]', button);
+        var editor = this.get_editor (button);
+        var sel = editor.getSelection ();
+        if (sel) this.all_points (
+            editor, '#. ', /^(\s*)([#0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
+        );
+
+        else this.next_point (editor, '\n{0}#. \n', /^(\s*)[#0-9]\.(\s+)$/);
+    },
+
+    all_points: function (editor, tpl, rx1, rx2, sel) {
+        var rest = ''; CodeMirror.splitLines (sel)
+            .filter(function (el) { return el; })
+            .forEach(function (el, idx) {
+
+                var rx1_group = el.match (rx1)
+                if (rx1_group) {
+                    rest += rx1_group[1]+ el.replace (rx1_group[0], '') +'\n';
+                } else {
+                    var rx2_group = el.match (rx2)
+                    if (rx2_group) rest += String.format ('{0}{1}{2}\n',
+                        rx2_group[1], String.format (tpl, idx+1), rx2_group[2]
+                    );
+                }
+            });
+
+        editor.replaceSelection (rest);
+        editor.focus ();
+    },
+
+    next_point: function  (editor, tpl, rx) {
+        var curr = editor.getCursor ();
+        var text = editor.getLine (curr.line);
+        var rest = tpl;
+
+        var group = text.match (/^(\s+)/);
+        if (group && group[0])
+            rest = String.format (rest, group[0]);
+        else
+            rest = String.format (rest, '');
+
+        rest = this.fix_preceeding_whitespace (editor, rest, text, curr);
+        rest = this.fix_succeeding_whitespace (editor, rest, text, curr);
+        editor.replaceSelection (rest);
+
+        curr = editor.getCursor ('head');
+        text = editor.getLine (curr.line);
+        if (!text.match (rx)) {
+            editor.setCursor ({line:curr.line - 1, ch:text.length - 1});
+            curr = editor.getCursor ('head');
+            text = editor.getLine (curr.line);
+        }
+
+        editor.setCursor ({line:curr.line - 0, ch:text.length - 0});
+        editor.focus ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
