@@ -292,8 +292,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
             var rep = undefined;
             if (sel.match (cfg.inline)) {
-                rep = sel.replace (cfg.rx_markger_beg, '');
-                rep = rep.replace (cfg.rx_markger_end, '');
+                rep = sel.replace (cfg.rx_marker_beg, '');
+                rep = rep.replace (cfg.rx_marker_end, '');
             } else {
                 if (sel.match (/^:(.*?):`(.*)`$/))
                     return; // no toggle if another role
@@ -317,8 +317,8 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             cls: cls,
             marge_beg: beg,
             marker_end: end,
-            rx_markger_beg: new RegExp ('^' + quote (beg)),
-            rx_markger_end: new RegExp (quote (end) + '$'),
+            rx_marker_beg: new RegExp ('^' + quote (beg)),
+            rx_marker_end: new RegExp (quote (end) + '$'),
             inline: new RegExp ('^'+ quote (beg) + '(?:.*)' + quote (end) +'$')
         }
     },
