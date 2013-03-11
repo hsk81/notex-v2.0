@@ -132,7 +132,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    afterrender: function (self) {
+    afterrender: function () {
         this.keyMap = Ext.create ('Webed.controller.EditorTBar.rst.KeyMap', {
             controller: this
         });
@@ -597,7 +597,7 @@ Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
         key: Ext.EventObject.B,
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
+        handler: function () {
             var controller = assert (this.getController ());
             var tbar = assert (controller.getToolbar ());
             var button = assert (tbar.down ('button[action=toggle-strong]'));
@@ -607,7 +607,7 @@ Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
         key: Ext.EventObject.I,
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
+        handler: function () {
             var controller = assert (this.getController ());
             var tbar = assert (controller.getToolbar ());
             var button = assert (tbar.down ('button[action=toggle-italic]'));
@@ -617,7 +617,7 @@ Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
         key: Ext.EventObject.L,
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
+        handler: function () {
             var controller = assert (this.getController ());
             var tbar = assert (controller.getToolbar ());
             var button = assert (tbar.down ('button[action=toggle-literal]'));
