@@ -59,8 +59,10 @@ Ext.define ('Webed.controller.InsertLinkBox', {
         var editor = assert (view.editor);
 
         var url_textfield = assert (view.down ('textfield[name=url]'));
+        if (!url_textfield.isValid ()) return;
         var url = assert (url_textfield.getValue ());
         var label_textfield = assert (view.down ('textfield[name=label]'));
+        if (!label_textfield.isValid ()) return;
         var label = label_textfield.getValue ();
 
         var link = (label) ? String.format ('`{0} <{1}>`_', label, url) : url;
