@@ -38,14 +38,14 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    refresh: function (self) {
+    refresh: function () {
         assert (this.getLeafsStore ()).load ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    afterrender: function (self) {
+    afterrender: function () {
         this.keyMap = Ext.create ('Webed.controller.LeafList.KeyMap', {
             controller: this
         });
@@ -56,7 +56,7 @@ Ext.define ('Webed.controller.LeafList', {
         this.application.fireEvent ('select_node', this, {record: record});
     },
 
-    expand: function (self) {
+    expand: function () {
         var store = assert (this.getLeafsStore ());
         if (store.getTotalCount () == 0) store.load ();
     },
@@ -137,7 +137,7 @@ Ext.define ('Webed.controller.LeafList.KeyMap', {
     binding: [{
         key: Ext.EventObject.F10,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
+        handler: function () {
             var controller = assert (this.getController ());
             var view = assert (controller.getLeafList ());
 
