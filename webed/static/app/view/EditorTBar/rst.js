@@ -3,7 +3,8 @@ Ext.define ('Webed.view.EditorTBar.rst', {
     alias: 'widget.editor-tbar-rst',
 
     requires: [
-        'Webed.view.InsertLinkBox'
+        'Webed.view.InsertLinkBox',
+        'Webed.view.InsertPictureBox'
     ],
 
     items: [{

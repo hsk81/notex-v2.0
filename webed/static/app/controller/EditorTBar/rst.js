@@ -397,11 +397,21 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
 
     insert_figure: function (button) {
-        console.debug ('[insert-figure]', button);
+        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
+            editor: assert (this.get_editor (button)),
+            picture_type: 'figure'
+        });
+
+        insertPictureBox.show ();
     },
 
     insert_image: function (button) {
-        console.debug ('[insert-image]', button);
+        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
+            editor: assert (this.get_editor (button)),
+            picture_type: 'image'
+        });
+
+        insertPictureBox.show ();
     },
 
     insert_hyperlink: function (button) {
