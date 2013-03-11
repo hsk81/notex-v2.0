@@ -72,5 +72,7 @@ Ext.define ('Webed.view.EditorTBar.txt', {
         iconCls: 'icon-text_replace-16',
         defaults: {text: 'Replace All'},
         tooltip: 'Replace All&nbsp;<div class="w-shortcut">[SHIFT+CTRL+R]</div>'
-    }]
+    }],
+
+    enableOverflow: true
 });
