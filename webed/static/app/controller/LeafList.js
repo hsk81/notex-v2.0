@@ -38,27 +38,30 @@ Ext.define ('Webed.controller.LeafList', {
         });
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    refresh: function (self) {
+        assert (this.getLeafsStore ()).load ();
+    },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    afterrender: function () {
+    afterrender: function (self) {
         this.keyMap = Ext.create ('Webed.controller.LeafList.KeyMap', {
             controller: this
         });
     },
 
-    itemclick: function (view, record) {
+    itemclick: function (self, record) {
         this.application.fireEvent ('create_tab', this, {record: record});
         this.application.fireEvent ('select_node', this, {record: record});
     },
 
-    expand: function (panel, eOpts) {
-        var store = this.getLeafsStore ();
-        assert (store);
-        var total = store.getTotalCount ();
-        assert (total >= 0);
-
+    expand: function (self) {
+        var store = assert (this.getLeafsStore ());
+        var total = assert (store.getTotalCount ());
         if (total == 0) store.load ();
     },
 
@@ -75,12 +78,9 @@ Ext.define ('Webed.controller.LeafList', {
         if (source == this) return;
         assert (args && args.record);
 
-        var uuid = args.record.get ('uuid');
-        assert (uuid);
-        var view = this.getLeafList ();
-        assert (view);
-        var store = this.getLeafsStore ();
-        assert (store);
+        var uuid = assert (args.record.get ('uuid'));
+        var view = assert (this.getLeafList ());
+        var store = assert (this.getLeafsStore ());
 
         var collection = store.queryBy (function (leaf) {
             return leaf.get ('uuid') == uuid;
@@ -97,50 +97,28 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_selection: function () {
-        var view = this.getLeafList ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
+        var view = assert (this.getLeafList ());
+        var semo = assert (view.getSelectionModel ());
 
         return semo.getLastSelected ();
     },
 
     set_selection: function (record) {
         assert (record);
-        var uuid = record.get ('uuid');
-        assert (uuid);
 
-        var view = this.getLeafList ();
-        assert (view);
-        var store = this.getLeafsStore ();
-        assert (store);
+        var uuid = assert (record.get ('uuid'));
+        var view = assert (this.getLeafList ());
+        var store = assert (this.getLeafsStore ());
 
         var collection = store.queryBy (function (leaf) {
             return leaf.get ('uuid') == uuid;
         });
 
         if (collection && collection.length > 0) {
-            var leaf = collection.items[0];
-            assert (leaf);
-            var table = view.getView ();
-            assert (table);
-
+            var leaf = assert (collection.items[0]);
+            var table = assert (view.getView ());
             table.select (leaf);
         }
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    refresh: function () {
-        var view = this.getLeafList ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var store = this.getLeafsStore ();
-        assert (store);
-
-        store.load ();
     }
 });
 
@@ -165,14 +143,11 @@ Ext.define ('Webed.controller.LeafList.KeyMap', {
         key: Ext.EventObject.F10,
         defaultEventAction: 'stopEvent',
         handler: function (key, event) {
-            var controller = this.getController ();
-            assert (controller);
-            var view = controller.getLeafList ();
-            assert (view);
+            var controller = assert (this.getController ());
+            var view = assert (controller.getLeafList ());
 
             function focus () {
-                var triggerfield = view.down ('triggerfield');
-                assert (triggerfield); triggerfield.focus (25);
+                assert (view.down ('triggerfield')).focus (25);
             }
 
             if (view.getCollapsed () == 'bottom') {
