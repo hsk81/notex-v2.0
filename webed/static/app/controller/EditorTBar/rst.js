@@ -301,7 +301,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
                     return; // no toggle if heading/trailing space
                 else
                     rep = String.format (
-                        '{0}{1}{2}', cfg.marge_beg, sel, cfg.marker_end
+                        '{0}{1}{2}', cfg.marker_beg, sel, cfg.marker_end
                     );
             }
 
@@ -315,7 +315,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
         return {
             cls: cls,
-            marge_beg: beg,
+            marker_beg: beg,
             marker_end: end,
             rx_marker_beg: new RegExp ('^' + quote (beg)),
             rx_marker_end: new RegExp (quote (end) + '$'),
