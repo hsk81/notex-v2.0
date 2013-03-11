@@ -351,11 +351,11 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             .filter(function (el) { return el; })
             .forEach(function (el, idx) {
 
-                var rx1_group = el.match (rx1)
+                var rx1_group = el.match (rx1);
                 if (rx1_group) {
                     rest += rx1_group[1]+ el.replace (rx1_group[0], '') +'\n';
                 } else {
-                    var rx2_group = el.match (rx2)
+                    var rx2_group = el.match (rx2);
                     if (rx2_group) rest += String.format ('{0}{1}{2}\n',
                         rx2_group[1], String.format (tpl, idx+1), rx2_group[2]
                     );
