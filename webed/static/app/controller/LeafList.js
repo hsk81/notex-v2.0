@@ -58,8 +58,7 @@ Ext.define ('Webed.controller.LeafList', {
 
     expand: function (self) {
         var store = assert (this.getLeafsStore ());
-        var total = assert (store.getTotalCount ());
-        if (total == 0) store.load ();
+        if (store.getTotalCount () == 0) store.load ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
