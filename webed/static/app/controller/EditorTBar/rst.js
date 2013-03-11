@@ -4,6 +4,13 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    refs: [{
+        selector: 'editor-tbar-rst', ref: 'toolbar'
+    }],
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     init: function () {
         this.control ({
             'editor-tbar-rst button[action=undo]': {
@@ -114,7 +121,20 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             },
             'editor-tbar-rst button[action=clear-search]': {
                 click: this.clear_search
+            },
+
+            'editor-tbar-rst': {
+                afterrender: this.afterrender
             }
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    afterrender: function (self) {
+        this.keyMap = Ext.create ('Webed.controller.EditorTBar.rst.KeyMap', {
+            controller: this
         });
     },
 
@@ -554,7 +574,56 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
         return rest;
     }
+});
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
+    extend: 'Ext.util.KeyMap',
+
+    config: {
+        target: Ext.getDoc (),
+        controller: null
+    },
+
+    constructor: function () {
+        this.callParent (arguments);
+        assert (this.target);
+        assert (this.controller);
+    },
+
+    binding: [{
+        key: Ext.EventObject.B,
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var controller = assert (this.getController ());
+            var tbar = assert (controller.getToolbar ());
+            var button = assert (tbar.down ('button[action=toggle-strong]'));
+            controller.toggle_strong (button);
+        }
+    },{
+        key: Ext.EventObject.I,
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var controller = assert (this.getController ());
+            var tbar = assert (controller.getToolbar ());
+            var button = assert (tbar.down ('button[action=toggle-italic]'));
+            controller.toggle_italic (button);
+        }
+    },{
+        key: Ext.EventObject.L,
+        ctrl: true,
+        defaultEventAction: 'stopEvent',
+        handler: function (key, event) {
+            var controller = assert (this.getController ());
+            var tbar = assert (controller.getToolbar ());
+            var button = assert (tbar.down ('button[action=toggle-literal]'));
+            controller.toggle_literal (button);
+        }
+    }],
+
+    getController: function () { return this.controller; }
 });
