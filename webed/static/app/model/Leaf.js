@@ -1,5 +1,6 @@
 Ext.define ('Webed.model.Leaf', {
     extend: 'Ext.data.Model',
+
     fields: [
         'uuid_path', 'name_path', 'root_uuid', 'uuid', 'name', 'mime', 'size'
     ],
@@ -10,10 +11,10 @@ Ext.define ('Webed.model.Leaf', {
         },
 
         filterParam: 'filters', encodeFilters: function (filters) {
-            return JSON.stringify (filters.map (function (filter, index) {
+            return JSON.stringify (filters.map (function (filter) {
                 var property = assert (filter.property);
                 var regex = assert (filter.regex.source);
-                var ignore_case = assert (filter.regex.ignoreCase);
+                var ignore_case = filter.regex.ignoreCase;
 
                 return {
                     ignore_case: ignore_case,
