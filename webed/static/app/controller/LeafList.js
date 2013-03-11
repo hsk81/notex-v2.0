@@ -1,6 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
 Ext.define ('Webed.controller.LeafList', {
     extend: 'Ext.app.Controller',
 
@@ -79,7 +76,6 @@ Ext.define ('Webed.controller.LeafList', {
         assert (args && args.record);
 
         var uuid = assert (args.record.get ('uuid'));
-        var view = assert (this.getLeafList ());
         var store = assert (this.getLeafsStore ());
 
         var collection = store.queryBy (function (leaf) {
@@ -165,6 +161,3 @@ Ext.define ('Webed.controller.LeafList.KeyMap', {
 
     getController: function () { return this.controller; }
 });
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
