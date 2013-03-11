@@ -397,13 +397,13 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     ///////////////////////////////////////////////////////////////////////////
 
     insert_figure: function (button) {
+        var editor = assert (this.get_editor (button));
+
         var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
             scope: this, callback: callback, title: 'Insert Figure'
         });
 
         function callback (path, scale, alignment, caption) {
-            var editor = assert (this.get_editor (button));
-
             var rest = String.format ('\n.. figure:: {0}\n', path);
             rest += String.format ('   :scale: {0} %\n', scale);
             rest += String.format ('   :align: {0}\n', alignment);
@@ -422,13 +422,15 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
             editor.replaceSelection (rest);
             editor.setCursor (editor.getCursor ());
-            editor.focus ();
         }
 
+        insertPictureBox.on ('destroy', function () { editor.focus (); });
         insertPictureBox.show ();
     },
 
     insert_image: function (button) {
+        var editor = assert (this.get_editor (button));
+
         var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
             scope: this, callback: callback, title: 'Insert Image',
             listeners: { afterrender: function (panel) {
@@ -437,8 +439,6 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
         });
 
         function callback (path, scale, alignment) {
-            var editor = assert (this.get_editor (button));
-
             var rest = String.format ('\n.. image:: {0}\n', path);
             rest += String.format ('   :scale: {0} %\n', scale);
             rest += String.format ('   :align: {0}\n', alignment);
@@ -454,6 +454,7 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
             editor.focus ();
         }
 
+        insertPictureBox.on ('destroy', function () { editor.focus (); });
         insertPictureBox.show ();
     },
 
@@ -467,9 +468,9 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
         function callback (url, label) {
             editor.replaceSelection ((label)
                 ? String.format ('`{0} <{1}>`_', label, url) : url);
-            editor.focus ();
         }
 
+        insertLinkBox.on ('destroy', function () { editor.focus (); });
         insertLinkBox.show ();
     },
 
