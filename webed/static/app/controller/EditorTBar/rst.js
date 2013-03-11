@@ -451,7 +451,6 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
             editor.replaceSelection (rest);
             editor.setCursor (editor.getCursor ());
-            editor.focus ();
         }
 
         insertPictureBox.on ('destroy', function () { editor.focus (); });

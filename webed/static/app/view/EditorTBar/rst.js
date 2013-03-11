@@ -70,17 +70,17 @@ Ext.define ('Webed.view.EditorTBar.rst', {
         action: 'toggle-strong',
         iconCls: 'icon-text_bold-16',
         defaults: {text: 'Strong Emphasis'},
-        tooltip: 'Strong Emphasis'
+        tooltip: 'Strong Emphasis&nbsp;<div class="w-shortcut">[CTRL+B]</div>'
     },{
         action: 'toggle-italic',
         iconCls: 'icon-text_italic-16',
         defaults: {text: 'Emphasis'},
-        tooltip: 'Emphasis'
+        tooltip: 'Emphasis&nbsp;<div class="w-shortcut">[CTRL+I]</div>'
     },{
         action: 'toggle-literal',
         iconCls: 'icon-text_allcaps-16',
         defaults: {text: 'Literal'},
-        tooltip: 'Literal'
+        tooltip: 'Literal&nbsp;<div class="w-shortcut">[CTRL+L]</div>'
     },'-',{
         action: 'toggle-subscript',
         iconCls: 'icon-text_subscript-16',
