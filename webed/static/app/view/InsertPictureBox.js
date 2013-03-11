@@ -30,34 +30,12 @@ Ext.define ('Webed.view.InsertPictureBox', {
             displayField: 'name_path',
             emptyText: 'Select a file ..',
             forceSelection: true,
-            name: 'filename',
+            name: 'path',
             queryMode: 'local',
             store: [],
             typeAhead: true,
             width: '100%',
-            xtype: 'combobox',
-
-            listeners: {
-                afterrender: function (combobox) {
-                    assert (Ext.getStore ('Leafs')).load ({
-                        scope: this, callback: on_load
-                    });
-
-                    function on_load (records, operation, success) {
-                        if (!success) return;
-
-                        var paths = records.filter (function (record) {
-                            var mime = assert (record.get ('mime'));
-                            return MIME.is_image (mime);
-                        }).map (function (record) {
-                            var path = assert (record.get ('name_path'));
-                            return [path.slice (1).join ('/')];
-                        });
-
-                        combobox.store.loadData (paths);
-                    }
-                }
-            }
+            xtype: 'combobox'
         },{
             allowBlank: false,
             emptyText: 'Enter scale [%] ..',

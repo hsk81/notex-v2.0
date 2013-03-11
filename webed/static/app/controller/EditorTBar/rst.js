@@ -398,18 +398,61 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
     insert_figure: function (button) {
         var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
-            editor: assert (this.get_editor (button)),
-            picture_type: 'figure'
+            scope: this, callback: callback, title: 'Insert Figure'
         });
+
+        function callback (path, scale, alignment, caption) {
+            var editor = assert (this.get_editor (button));
+
+            var rest = String.format ('\n.. figure:: {0}\n', path);
+            rest += String.format ('   :scale: {0} %\n', scale);
+            rest += String.format ('   :align: {0}\n', alignment);
+
+            if (caption) {
+                caption = caption.replace (/\n/g, '\n   '); // multi-line
+                caption = caption.replace (/\s+$/, '');
+                rest += '\n' + String.format ('   {0}\n', caption);
+            }
+
+            var cursor = editor.getCursor ();
+            var text = editor.getLine (cursor.line);
+
+            rest = this.fix_preceeding_whitespace (editor, rest, text, cursor);
+            rest = this.fix_succeeding_whitespace (editor, rest, text, cursor);
+
+            editor.replaceSelection (rest);
+            editor.setCursor (editor.getCursor ());
+            editor.focus ();
+        }
 
         insertPictureBox.show ();
     },
 
     insert_image: function (button) {
         var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
-            editor: assert (this.get_editor (button)),
-            picture_type: 'image'
+            scope: this, callback: callback, title: 'Insert Image',
+            listeners: { afterrender: function (panel) {
+                assert (panel.down ('textfield[name=caption]')).hide ();
+            }}
         });
+
+        function callback (path, scale, alignment) {
+            var editor = assert (this.get_editor (button));
+
+            var rest = String.format ('\n.. image:: {0}\n', path);
+            rest += String.format ('   :scale: {0} %\n', scale);
+            rest += String.format ('   :align: {0}\n', alignment);
+
+            var cursor = editor.getCursor ();
+            var text = editor.getLine (cursor.line);
+
+            rest = this.fix_preceeding_whitespace (editor, rest, text, cursor);
+            rest = this.fix_succeeding_whitespace (editor, rest, text, cursor);
+
+            editor.replaceSelection (rest);
+            editor.setCursor (editor.getCursor ());
+            editor.focus ();
+        }
 
         insertPictureBox.show ();
     },

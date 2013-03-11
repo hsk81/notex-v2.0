@@ -36,6 +36,7 @@ Ext.application ({
         'DeleteBox',
         'FileUploadBox',
         'InsertLinkBox',
+        'InsertPictureBox',
         'Leaf',
         'LeafList',
         'MainBar',
