@@ -27,15 +27,55 @@ Ext.define ('Webed.view.InsertPictureBox', {
 
         items: [{
             allowBlank: false,
-            displayField: 'name_path',
+            displayField: 'full_path',
             emptyText: 'Select a file ..',
             forceSelection: true,
             name: 'path',
-            queryMode: 'local',
-            store: [],
+            queryMode: 'remote',
             typeAhead: true,
             width: '100%',
-            xtype: 'combobox'
+            xtype: 'combobox',
+
+            store: Ext.create ('Ext.data.Store', {
+                model: 'Webed.model.Leaf',
+                filters: [{property: 'mime', regex: /^image\/(?:[^/]+)$/}],
+                remoteFilter: true,
+                sorters: [{property: 'name_path'}],
+                remoteSort: true,
+                autoLoad: true,
+
+                listeners: {
+                    load: function (store, records, successful) {
+                        if (records && successful) records.forEach (
+                            function (record) { this.decorate (record);}, this
+                        );
+                    }
+                },
+
+                decorate: function (leaf) {
+                    var mime = assert (leaf.get ('mime'));
+                    var icon = assert (MIME.to_icon (mime, '-16'));
+                    leaf.set ('iconCls', icon);
+                    var name_path = assert (leaf.get ('name_path'));
+                    var node_path = name_path.slice (+1,-1).join ('/');
+                    leaf.set ('node_path', node_path);
+                    var full_path = name_path.slice (+1).join ('/');
+                    leaf.set ('full_path', full_path);
+                }
+            }),
+
+            tpl: [
+                '<tpl for=".">',
+                    '<div class="x-boundlist-item">{node_path}',
+                    '<div class="w-boundlist-item">',
+                        '<ul>',
+                        '<li class="w-boundlist-item-text">{name}</li>',
+                        '<li class="w-boundlist-item-icon {iconCls}"></li>',
+                        '</ul>',
+                    '</div>',
+                    '</div>',
+                '</tpl>'
+            ]
         },{
             allowBlank: false,
             emptyText: 'Enter scale [%] ..',

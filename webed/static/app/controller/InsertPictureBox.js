@@ -29,21 +29,7 @@ Ext.define ('Webed.controller.InsertPictureBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function (combobox) {
-        assert (Ext.getStore ('Leafs')).load ({
-            scope: this, callback: function (records, operation, success) {
-                if (!success) return;
-
-                var paths = records.filter (function (record) {
-                    var mime = assert (record.get ('mime'));
-                    return MIME.is_image (mime);
-                }).map (function (record) {
-                    var path = assert (record.get ('name_path'));
-                    return [path.slice (1).join ('/')];
-                });
-
-                combobox.store.loadData (paths);
-            }
-        });
+        combobox.focus (true, 250);
     },
 
     ///////////////////////////////////////////////////////////////////////////
