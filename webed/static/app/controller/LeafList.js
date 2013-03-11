@@ -48,13 +48,9 @@ Ext.define ('Webed.controller.LeafList', {
         });
     },
 
-    itemclick: function (view, record, item, index, e, eOpts) {
-        this.application.fireEvent ('create_tab', this, {
-            record: record
-        });
-        this.application.fireEvent ('select_node', this, {
-            record: record
-        });
+    itemclick: function (view, record) {
+        this.application.fireEvent ('create_tab', this, {record: record});
+        this.application.fireEvent ('select_node', this, {record: record});
     },
 
     expand: function (panel, eOpts) {
@@ -62,9 +58,8 @@ Ext.define ('Webed.controller.LeafList', {
         assert (store);
         var total = store.getTotalCount ();
         assert (total >= 0);
-        if (total == 0) {
-            store.load ();
-        }
+
+        if (total == 0) store.load ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -92,11 +87,9 @@ Ext.define ('Webed.controller.LeafList', {
         });
 
         if (collection && collection.length > 0) {
-            store.reload ({
-                scope: this, callback: function () {
-                    this.select_leaf (source, args);
-                }
-            });
+            store.reload ({scope: this, callback: function () {
+                this.select_leaf (source, args);
+            }});
         }
     },
 
