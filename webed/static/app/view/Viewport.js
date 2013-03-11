@@ -58,22 +58,15 @@ Ext.define ('Webed.view.Viewport', {
             region: 'center',
             flex: 4,
 
-            layout: 'border',
+            layout: 'fit',
             items: [{
                 border: false,
-                region: 'center',
                 xtype: 'content-tabs',
-                tabPosition: 'bottom',
-                flex: 4,
-
-                tbar: {
-                    xtype: 'main-bar'
-                }
+                tabPosition: 'bottom'
             }],
 
-            bbar: {
-                xtype: 'webed-statusbar'
-            }
+            tbar: {xtype: 'main-bar' },
+            bbar: {xtype: 'webed-statusbar'}
         }]
     }],
 
