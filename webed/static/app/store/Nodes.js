@@ -42,7 +42,7 @@ Ext.define ('Webed.store.Nodes', {
     },
 
     listeners: {
-        append: function (root, record, index) {
+        append: function (root, record) {
             if (!record.isRoot ()) this.decorate (record);
         },
 
@@ -76,7 +76,7 @@ Ext.define ('Webed.store.Nodes', {
         // the *loading* icon appears for expanding (and not yet loaded) nodes.
         //
 
-        function on_beforeexpand (self) {
+        function on_beforeexpand () {
             var loaded = this.get ('loaded');
             if (!loaded) this.set ('iconCls', '');
             this.un ('beforeexpand', on_beforeexpand);
@@ -84,7 +84,7 @@ Ext.define ('Webed.store.Nodes', {
 
         node.on ('beforeexpand', on_beforeexpand);
 
-        function on_expand (self) {
+        function on_expand () {
             var loaded = this.get ('loaded');
             if (loaded) this.set ('iconCls', icon);
             this.un ('expand', on_expand);
