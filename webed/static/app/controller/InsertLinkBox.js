@@ -46,9 +46,7 @@ Ext.define ('Webed.controller.InsertLinkBox', {
 
     label_afterrender: function (textfield) {
         var view = assert (this.getInsertLinkBox ());
-        var editor = assert (view.editor);
-        var label = editor.getSelection ();
-        if (label) textfield.setValue (label);
+        if (view.label) textfield.setValue (view.label);
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -56,7 +54,8 @@ Ext.define ('Webed.controller.InsertLinkBox', {
 
     confirm: function () {
         var view = assert (this.getInsertLinkBox ());
-        var editor = assert (view.editor);
+        var callback = assert (view.callback);
+        var scope = assert (view.scope);
 
         var url_textfield = assert (view.down ('textfield[name=url]'));
         if (!url_textfield.isValid ()) return;
@@ -65,8 +64,7 @@ Ext.define ('Webed.controller.InsertLinkBox', {
         if (!label_textfield.isValid ()) return;
         var label = label_textfield.getValue ();
 
-        var link = (label) ? String.format ('`{0} <{1}>`_', label, url) : url;
-        editor.replaceSelection (link);
+        callback.call (scope, url, label);
         view.destroy ();
     },
 

@@ -458,9 +458,17 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
     },
 
     insert_hyperlink: function (button) {
+        var editor = assert (this.get_editor (button));
+
         var insertLinkBox = Ext.create ('Webed.view.InsertLinkBox', {
-            editor: assert (this.get_editor (button))
+            scope: this, callback: callback, label: editor.getSelection ()
         });
+
+        function callback (url, label) {
+            editor.replaceSelection ((label)
+                ? String.format ('`{0} <{1}>`_', label, url) : url);
+            editor.focus ();
+        }
 
         insertLinkBox.show ();
     },
