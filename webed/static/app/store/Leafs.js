@@ -10,7 +10,7 @@ Ext.define ('Webed.store.Leafs', {
             }, this);
         },
 
-        beforeload: function (store, operation) {
+        beforeload: function (store) {
 
             //
             // Stop loading if locked: Simple method to control loading; it
