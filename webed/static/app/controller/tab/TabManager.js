@@ -1,8 +1,8 @@
-Ext.define ('Webed.controller.ContentTabs', {
+Ext.define ('Webed.controller.tab.TabManager', {
     extend: 'Ext.app.Controller',
 
     refs: [{
-        selector: 'content-tabs', ref: 'contentTabs'
+        selector: 'tab-manager', ref: 'tabManager'
     }],
 
     requires: [
@@ -14,8 +14,9 @@ Ext.define ('Webed.controller.ContentTabs', {
     ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
+
         this.control ({
-            'content-tabs' : {
+            'tab-manager': {
                 render: this.render,
                 beforeadd: this.beforeadd,
                 remove: this.remove,
@@ -121,7 +122,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             record: record, code_area: code_area
         });
 
-        var view = assert (this.getContentTabs ());
+        var view = assert (this.getTabManager ());
         var tab = this.get_tab (assert (record.get ('uuid')));
         if (!tab) tab = view.add (editor_tab);
 
@@ -134,7 +135,7 @@ Ext.define ('Webed.controller.ContentTabs', {
         var uuid = assert (record.get ('uuid'));
         var name = assert (record.get ('name'));
         var iconCls = assert (record.get ('iconCls'));
-        var view = assert (this.getContentTabs ());
+        var view = assert (this.getTabManager ());
         var app = assert (this.application);
 
         var tab = this.get_tab (uuid) || view.add ({
@@ -293,7 +294,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     get_tab: function (uuid) {
         assert (uuid);
 
-        var view = assert (this.getContentTabs ());
+        var view = assert (this.getTabManager ());
         var tabs = assert (view.queryBy (function (el) {
             return (el.record && el.record.get ('uuid') == uuid)
                 ? true : false;

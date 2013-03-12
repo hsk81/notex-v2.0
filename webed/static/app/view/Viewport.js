@@ -7,8 +7,8 @@ Ext.define ('Webed.view.Viewport', {
         'Webed.view.MainBar',
         'Webed.view.NodeTree',
         'Webed.view.LeafList',
-        'Webed.view.ContentTabs',
-        'Webed.view.StatusBar'
+        'Webed.view.StatusBar',
+        'Webed.tab.TabManager'
     ],
 
     items: [{
@@ -61,7 +61,7 @@ Ext.define ('Webed.view.Viewport', {
             layout: 'fit',
             items: [{
                 border: false,
-                xtype: 'content-tabs',
+                xtype: 'tab-manager',
                 tabPosition: 'bottom'
             }],
 

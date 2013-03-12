@@ -30,7 +30,6 @@ Ext.application ({
         'AddFolderBox',
         'AddProjectBox',
         'ArchiveUploadBox',
-        'ContentTabs',
         'DeleteBox',
         'FileUploadBox',
         'InsertLinkBox',
@@ -45,6 +44,7 @@ Ext.application ({
         'PropertyGrid',
         'RenameBox',
         'StatusBar',
+        'tab.TabManager',
         'toolbar.TextToolbar',
         'toolbar.RestToolbar'
     ],

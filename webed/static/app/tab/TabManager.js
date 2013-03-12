@@ -1,6 +1,6 @@
-Ext.define ('Webed.view.ContentTabs', {
+Ext.define ('Webed.tab.TabManager', {
     extend: 'Ext.tab.Panel',
-    alias: 'widget.content-tabs',
+    alias: 'widget.tab-manager',
 
     requires: [
         'Ext.layout.container.Absolute'
