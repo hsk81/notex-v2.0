@@ -104,6 +104,13 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
                 click: this.insert_horizontal_line
             },
 
+            'rest-toolbar button[action=split-vertical]': {
+                click: this.split_vertical
+            },
+            'rest-toolbar button[action=split-horizontal]': {
+                click: this.split_horizontal
+            },
+
             'rest-toolbar button[action=find]': {
                 click: this.find
             },

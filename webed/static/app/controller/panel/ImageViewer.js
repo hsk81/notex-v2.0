@@ -15,7 +15,15 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
     },
 
     beforeclose: function (self) {
-        console.debug ('[before-close]', self); // TODO: W.r.t. `TabManager`!
+        var tab_managers = Ext.ComponentQuery.query ('tab-manager');
+        if (tab_managers.length > 1) {
+            var tabs = assert (self.up ('tab-manager'));
+            if (tabs.items.getCount () == 1) {
+                tabs.close (); return false;
+            }
+        }
+
+        return true;
     },
 
     resize: function (self) {

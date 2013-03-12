@@ -45,8 +45,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    render: function (view) {
-        assert (Ext.fly ('content-wrap')).destroy ();
+    render: function (view) { //TODO: view.up/down?
+        var content_wrap = Ext.fly ('content-wrap');
+        if (content_wrap) content_wrap.destroy ();
     },
 
     beforeadd: function (view) {

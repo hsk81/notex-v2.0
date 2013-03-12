@@ -48,6 +48,16 @@ Ext.define ('Webed.toolbar.TextToolbar', {
         overflowText: 'Increase Indent-16',
         tooltip: 'Increase Indent'
     },'-',{
+        action: 'split-horizontal',
+        iconCls: 'icon-application_tile_horizontal-16',
+        overflowText: 'Horizontal Split',
+        tooltip: 'Horizontal Split'
+    },{
+        action: 'split-vertical',
+        iconCls: 'icon-application_tile_vertical-16',
+        overflowText: 'Vertical Split',
+        tooltip: 'Vertical Split'
+    },'-',{
         action: 'find-previous',
         iconCls: 'icon-document_page_previous-16',
         overflowText: 'Find Previous',

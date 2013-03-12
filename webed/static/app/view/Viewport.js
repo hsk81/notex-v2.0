@@ -58,11 +58,16 @@ Ext.define ('Webed.view.Viewport', {
             region: 'center',
             flex: 4,
 
-            layout: 'fit',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+
             items: [{
                 border: false,
                 xtype: 'tab-manager',
-                tabPosition: 'bottom'
+                tabPosition: 'bottom',
+                flex: 1
             }],
 
             tbar: {xtype: 'main-toolbar' },
