@@ -4,11 +4,11 @@ Ext.define ('Webed.view.Viewport', {
 
     requires: [
         'Ext.layout.container.Border',
-        'Webed.view.MainBar',
-        'Webed.view.NodeTree',
-        'Webed.view.LeafList',
         'Webed.statusbar.StatusBar',
-        'Webed.tab.TabManager'
+        'Webed.tab.TabManager',
+        'Webed.toolbar.MainToolbar',
+        'Webed.view.NodeTree',
+        'Webed.view.LeafList'
     ],
 
     items: [{
@@ -65,7 +65,7 @@ Ext.define ('Webed.view.Viewport', {
                 tabPosition: 'bottom'
             }],
 
-            tbar: {xtype: 'main-bar' },
+            tbar: {xtype: 'main-toolbar' },
             bbar: {xtype: 'webed-statusbar'}
         }]
     }],

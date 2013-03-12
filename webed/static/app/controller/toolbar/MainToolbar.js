@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.MainBar', {
+Ext.define ('Webed.controller.toolbar.MainToolbar', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////
@@ -6,37 +6,37 @@ Ext.define ('Webed.controller.MainBar', {
 
     init: function () {
         this.control ({
-            'main-bar button[action=save-document]': {
+            'main-toolbar button[action=save-document]': {
                 click: this.saveDocument
             },
-            'main-bar button[action=open-document]': {
+            'main-toolbar button[action=open-document]': {
                 click: this.openDocument
             },
-            'main-bar splitbutton[action=add]': {
+            'main-toolbar splitbutton[action=add]': {
                 click: this.add
             },
-            'main-bar menuitem[action=add-project]': {
+            'main-toolbar menuitem[action=add-project]': {
                 click: this.addProject
             },
-            'main-bar menuitem[action=add-folder]': {
+            'main-toolbar menuitem[action=add-folder]': {
                 click: this.addFolder
             },
-            'main-bar menuitem[action=add-file]': {
+            'main-toolbar menuitem[action=add-file]': {
                 click: this.addFile
             },
-            'main-bar button[action=rename]': {
+            'main-toolbar button[action=rename]': {
                 click: this.rename
             },
-            'main-bar button[action=delete]': {
+            'main-toolbar button[action=delete]': {
                 click: this.destroy
             },
-            'main-bar button[action=import-project]': {
+            'main-toolbar button[action=import-project]': {
                 click: this.importProject
             },
-            'main-bar button[action=export-project]': {
+            'main-toolbar button[action=export-project]': {
                 click: this.exportProject
             },
-            'main-bar': {
+            'main-toolbar': {
                 afterrender: this.afterrender
             }
         });
@@ -224,88 +224,91 @@ Ext.define ('Webed.controller.MainBar', {
 Ext.define ('Webed.controller.MainBar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
+    refs: [{
+        selector: 'main-toolbar button[action=save-document]',
+        ref: 'saveDocumentButton'
+    },{
+        selector: 'main-toolbar button[action=export-project]',
+        ref: 'exportProjectButton'
+    }],
+
     config: {
         target: Ext.getDoc (),
         controller: null
     },
 
-    constructor: function () {
+    constructor: function (config) {
         this.callParent (arguments);
-        assert (this.target);
-        assert (this.controller);
+        this.initConfig (config);
     },
 
     binding: [{
         key: 's',
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            var buttonQuery = 'main-bar button[action=save-document]';
-            var button = Ext.ComponentQuery.query (buttonQuery).pop ();
-            assert (button); this.getController ().saveDocument (button);
+        handler: function () {
+            var button = assert (this.getSaveDocumentButton ());
+            assert (this.getController ()).saveDocument (button);
         }
     },{
         key: 'o',
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().openDocument ();
+        handler: function () {
+            assert (this.getController ()).openDocument ();
         }
     },{
         key: 'p',
         alt: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().addProject ();
+        handler: function () {
+            assert (this.getController ()).addProject ();
         }
     },{
         key: 'f',
         alt: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().addFolder ();
+        handler: function () {
+            assert (this.getController ()).addFolder ();
         }
     },{
         key: 'd',
         alt: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().addFile ();
+        handler: function () {
+            assert (this.getController ()).addFile ();
         }
     },{
         key: Ext.EventObject.F2,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().rename ();
+        handler: function () {
+            assert (this.getController ()).rename ();
         }
     },{
         key: Ext.EventObject.DELETE,
         ctrl: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().destroy ();
+        handler: function () {
+            assert (this.getController ()).destroy ();
         }
     },{
         key: 'i',
         ctrl: true,
         shift: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            this.getController ().importProject ();
+        handler: function () {
+            assert (this.getController ()).importProject ();
         }
     },{
         key: 'e',
         ctrl: true,
         shift: true,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            var buttonQuery = 'main-bar button[action=export-project]';
-            var button = Ext.ComponentQuery.query (buttonQuery).pop ();
-            assert (button); this.getController ().exportProject (button);
+        handler: function () {
+            var button = assert (this.getExportProjectButton ());
+            assert (this.getController ()).exportProject (button);
         }
-    }],
-
-    getController: function () { return this.controller; }
+    }]
 });
 
 ///////////////////////////////////////////////////////////////////////////////

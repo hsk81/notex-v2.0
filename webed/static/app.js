@@ -36,7 +36,6 @@ Ext.application ({
         'InsertPictureBox',
         'Leaf',
         'LeafList',
-        'MainBar',
         'Node',
         'NodeTree',
         'panel.TextEditor',
@@ -45,6 +44,7 @@ Ext.application ({
         'RenameBox',
         'statusbar.StatusBar',
         'tab.TabManager',
+        'toolbar.MainToolbar',
         'toolbar.TextToolbar',
         'toolbar.RestToolbar'
     ],

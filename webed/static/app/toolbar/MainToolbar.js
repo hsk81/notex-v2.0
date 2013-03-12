@@ -1,6 +1,6 @@
-Ext.define ('Webed.view.MainBar', {
+Ext.define ('Webed.toolbar.MainToolbar', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.main-bar',
+    alias: 'widget.main-toolbar',
 
     requires: [
         'Ext.button.Split',
