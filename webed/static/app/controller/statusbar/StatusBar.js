@@ -1,23 +1,20 @@
-Ext.define ('Webed.controller.StatusBar', {
+Ext.define ('Webed.controller.statusbar.StatusBar', {
     extend: 'Ext.app.Controller',
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     requires: [
         'Ext.util.Cookies'
     ],
 
     refs: [{
-        selector: 'webed-statusbar-progressbar', ref: 'progressbar'
+        selector: 'webed-statusbar-progressbar', ref: 'progressBar'
     },{
         selector: 'webed-statusbar-infobutton', ref: 'infoButton'
     },{
-        selector: 'webed-statusbar-sizebutton', ref: 'sizeButton'
+        selector: 'webed-statusbar-zoombutton', ref: 'zoomButton'
     },{
-        selector: 'webed-statusbar-slider', ref: 'slider'
+        selector: 'webed-statusbar-zoomslider', ref: 'zoomSlider'
     },{
-        selector: 'webed-statusbar', ref: 'statusbar'
+        selector: 'webed-statusbar', ref: 'statusBar'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -27,7 +24,7 @@ Ext.define ('Webed.controller.StatusBar', {
 
         this.control ({
             'webed-statusbar-progressbar': {update: this.progress_update},
-            'webed-statusbar-sizebutton': {click: this.size_click},
+            'webed-statusbar-zoombutton': {click: this.zoom_click},
             'webed-statusbar-infobutton': {click: this.info_click},
 
             'webed-statusbar-lingua': {
@@ -35,7 +32,7 @@ Ext.define ('Webed.controller.StatusBar', {
                 select: this.lingua_select
             },
 
-            'webed-statusbar-slider': {
+            'webed-statusbar-zoomslider': {
                 change: this.slider_change,
                 afterrender: this.slider_afterrender
             },
@@ -59,17 +56,18 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     lingua_select: function (self, records) {
-
         var controller = this;
-        var statusbar = this.getStatusbar ();
+        var statusBar = this.getStatusBar ();
+
         var record = assert (records.pop ());
         var lingua = assert (record.get ('lingua'));
         var charset = assert (record.get ('charset'));
         var name = assert (record.get ('name'));
         var direction = assert (record.get ('direction'));
 
-        var worker_path = 'static/app/controller/StatusBar.worker.js';
-        var worker = new Worker (worker_path);
+        var worker = new Worker (
+            'static/app/controller/statusbar/StatusBar.worker.js'
+        );
 
         worker.onmessage = function (event) {
             clearTimeout (timeoutId);
@@ -79,7 +77,7 @@ Ext.define ('Webed.controller.StatusBar', {
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
                 Webed.form.field.CodeArea.setDirection (direction);
             } else {
-                self.reset (); statusbar.setStatus ({
+                self.reset (); statusBar.setStatus ({
                     text: 'Language: Enabling «{0}» failed!'.format (name),
                     clear: true
                 });
@@ -113,15 +111,15 @@ Ext.define ('Webed.controller.StatusBar', {
         }
     },
 
-    size_click: function () {
-        assert (this.getSlider ()).setValue (100);
+    zoom_click: function () {
+        assert (this.getZoomSlider ()).setValue (100);
     },
 
     info_click: function (self) {
         var viewport = assert (self.up ('viewport'));
-        var tabs = assert (viewport.down ('content-tabs'));
+        var tab_manager = assert (viewport.down ('tab-manager'));
 
-        var tab = tabs.getActiveTab ();
+        var tab = tab_manager.getActiveTab ();
         if (tab) {
             var ca = tab.down ('code-area');
             if (ca) {
@@ -151,9 +149,9 @@ Ext.define ('Webed.controller.StatusBar', {
 
     slider_change: function (self, value) {
         var viewport = assert (self.up ('viewport'));
-        var tabs = assert (viewport.down ('content-tabs'));
+        var tab_manager = assert (viewport.down ('tab-manager'));
 
-        var tab = tabs.getActiveTab ();
+        var tab = tab_manager.getActiveTab ();
         if (tab) {
             var ca = tab.down ('code-area');
             if (ca) {
@@ -165,7 +163,7 @@ Ext.define ('Webed.controller.StatusBar', {
             Webed.form.field.CodeArea.setFontSize (value);
         }
 
-        assert (this.getSizeButton ()).setText (value + '%');
+        assert (this.getZoomButton ()).setText (value + '%');
         Ext.util.Cookies.set ('editor.font-size', value);
     },
 
@@ -177,21 +175,21 @@ Ext.define ('Webed.controller.StatusBar', {
     },
 
     progress_play: function (source, args) {
-        var progressbar = assert (this.getProgressbar ());
-        if (progressbar.hidden) progressbar.show ();
-        if (args.message) progressbar.setMessage (args.message);
+        var progressBar = assert (this.getProgressBar ());
+        if (progressBar.hidden) progressBar.show ();
+        if (args.message) progressBar.setMessage (args.message);
 
-        progressbar.setTotal (0);
-        progressbar.wait ($.extend ({
-            interval: progressbar.interval,
-            increment: progressbar.increment
+        progressBar.setTotal (0);
+        progressBar.wait ($.extend ({
+            interval: progressBar.interval,
+            increment: progressBar.increment
         }, args));
     },
 
     progress_stop: function (source) {
-        var progressbar = assert (this.getProgressbar ());
-        progressbar.reset (true);
-        progressbar.setTotal (0);
+        var progressBar = assert (this.getProgressBar ());
+        progressBar.reset (true);
+        progressBar.setTotal (0);
     }
 
     ///////////////////////////////////////////////////////////////////////////

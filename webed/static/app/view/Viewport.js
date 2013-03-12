@@ -7,7 +7,7 @@ Ext.define ('Webed.view.Viewport', {
         'Webed.view.MainBar',
         'Webed.view.NodeTree',
         'Webed.view.LeafList',
-        'Webed.view.StatusBar',
+        'Webed.statusbar.StatusBar',
         'Webed.tab.TabManager'
     ],
 

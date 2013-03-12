@@ -43,7 +43,7 @@ Ext.application ({
         'Property',
         'PropertyGrid',
         'RenameBox',
-        'StatusBar',
+        'statusbar.StatusBar',
         'tab.TabManager',
         'toolbar.TextToolbar',
         'toolbar.RestToolbar'

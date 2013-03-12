@@ -2,10 +2,10 @@ Ext.Loader.setPath ({
     'Ext.ux': '../static/lib/extjs/examples/ux'
 });
 
-Ext.define ('Webed.view.StatusBar', {
+Ext.define ('Webed.statusbar.StatusBar', {
     extend: 'Ext.ux.statusbar.StatusBar',
     alias: 'widget.webed-statusbar',
-    defaultText: 'WebEd',
+
     items: [{
         xtype: 'webed-statusbar-progressbar'
     },'-',{
@@ -13,20 +13,21 @@ Ext.define ('Webed.view.StatusBar', {
     },'-',{
         xtype: 'webed-statusbar-lingua'
     },'-',{
-        xtype: 'webed-statusbar-sizebutton'
+        xtype: 'webed-statusbar-zoombutton'
     },{
-        xtype: 'webed-statusbar-slider'
-    }]
+        xtype: 'webed-statusbar-zoomslider'
+    }],
+
+    defaultText: 'WebEd'
 });
 
-Ext.define ('Webed.view.statusBar.ProgressBar', {
+Ext.define ('Webed.statusbar.ProgressBar', {
     extend: 'Ext.ProgressBar',
     alias: 'widget.webed-statusbar-progressbar',
 
     width: 256,
     value: 0.0,
     hidden: true,
-
     interval: 125, //[ms]
     increment: 80, // #segments
 
@@ -36,7 +37,7 @@ Ext.define ('Webed.view.statusBar.ProgressBar', {
     setMessage: function (value) { this.message = value; }
 });
 
-Ext.define ('Webed.view.statusBar.InfoButton', {
+Ext.define ('Webed.statusbar.InfoButton', {
     extend: 'Ext.Button',
     alias: 'widget.webed-statusbar-infobutton',
     tooltip:
@@ -45,7 +46,7 @@ Ext.define ('Webed.view.statusBar.InfoButton', {
     minWidth: 64
 });
 
-Ext.define ('Webed.view.StatusBar.SpellCheck', {
+Ext.define ('Webed.statusbar.Lingua', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.webed-statusbar-lingua',
 
@@ -75,7 +76,9 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     ],
 
     initComponent: function () {
-        this.callParent (arguments); assert (this.getStore ()).filter ([{
+        this.callParent (arguments);
+
+        assert (this.getStore ()).filter ([{
             filterFn: function (record) {
                 return !assert (record.get ('flag')).hidden;
             }
@@ -90,20 +93,20 @@ Ext.define ('Webed.view.StatusBar.SpellCheck', {
     width: 224
 });
 
-Ext.define ('Webed.view.statusBar.SizeButton', {
+Ext.define ('Webed.statusbar.ZoomButton', {
     extend: 'Ext.Button',
-    alias: 'widget.webed-statusbar-sizebutton',
-    tooltip: 'Text Zoom',
+    alias: 'widget.webed-statusbar-zoombutton',
+    tooltip: 'Zoom',
     text: '100%',
     width: 48
 });
 
-Ext.define ('Webed.view.statusBar.Slider', {
+Ext.define ('Webed.statusbar.ZoomSlider', {
     extend: 'Ext.slider.Single',
-    alias: 'widget.webed-statusbar-slider',
+    alias: 'widget.webed-statusbar-zoomslider',
 
     tipText: function (thumb) {
-        return 'Text Zoom: {0}%'.format (thumb.value);
+        return 'Zoom: {0}%'.format (thumb.value);
     },
 
     width: 128,
