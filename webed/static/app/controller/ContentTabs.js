@@ -9,7 +9,8 @@ Ext.define ('Webed.controller.ContentTabs', {
     }],
 
     requires: [
-        'Webed.view.EditorTab'
+        'Webed.form.field.CodeArea',
+        'Webed.panel.TextEditor'
     ],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -119,7 +120,7 @@ Ext.define ('Webed.controller.ContentTabs', {
             }
         });
 
-        var editor_tab = Ext.create ('Webed.view.EditorTab', {
+        var editor_tab = Ext.create ('Webed.panel.TextEditor', {
             record: record, code_area: code_area
         });
 

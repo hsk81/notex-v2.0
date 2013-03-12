@@ -76,7 +76,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
     },
 
     code_area: function (component) {
-        return assert (component.up ('editor-tab')).down ('code-area');
+        return assert (component.up ('text-editor')).down ('code-area');
     },
 
     ///////////////////////////////////////////////////////////////////////////

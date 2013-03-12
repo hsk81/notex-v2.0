@@ -1,6 +1,6 @@
-Ext.define ('Webed.view.EditorTab', {
+Ext.define ('Webed.panel.TextEditor', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.editor-tab',
+    alias: 'widget.text-editor',
 
     requires: [
         'Webed.toolbar.TextToolbar',

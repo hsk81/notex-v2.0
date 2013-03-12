@@ -1,13 +1,13 @@
-Ext.define ('Webed.controller.EditorTab', {
+Ext.define ('Webed.controller.panel.TextEditor', {
     extend: 'Ext.app.Controller',
 
     refs: [{
-        selector: 'editor-tab', ref: 'editorTab'
+        selector: 'text-editor', ref: 'textEditor'
     }],
 
     init: function () {
         this.control ({
-            'editor-tab' : {
+            'text-editor' : {
                 afterlayout: this.afterlayout,
                 activate: this.activate,
                 beforeclose: this.beforeclose
