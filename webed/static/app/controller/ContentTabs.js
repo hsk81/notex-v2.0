@@ -9,11 +9,8 @@ Ext.define ('Webed.controller.ContentTabs', {
     }],
 
     requires: [
-        'Webed.view.EditorTBar.txt',
-        'Webed.view.EditorTBar.rst'
+        'Webed.view.EditorTab'
     ],
-
-    stores: ['MIMEs'],
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -52,19 +49,19 @@ Ext.define ('Webed.controller.ContentTabs', {
         assert (Ext.fly ('content-wrap')).destroy ();
     },
 
-    beforeadd: function (view, component, index) {
+    beforeadd: function (view) {
         if (view.items.length == 0) {
             assert (Ext.fly ('page-wrap')).setDisplayed (false);
         }
     },
 
-    remove: function (view, component) {
+    remove: function (view) {
         if (view.items.length == 0) {
             assert (Ext.fly ('page-wrap')).setDisplayed (true);
         }
     },
 
-    tabchange: function (tabPanel, newCard, oldCard) {
+    tabchange: function (tabPanel, newCard) {
         this.application.fireEvent ('select_node', this, {
             record: newCard.record
         });
@@ -91,81 +88,44 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     create_text_tab: function (record, callback, scope) {
-        assert (record);
+        var application = assert (this.application);
 
-        var uuid = assert (record.get ('uuid'));
-        var mime = assert (record.get ('mime'));
-        var name = assert (record.get ('name'));
-        var iconCls = assert (record.get ('iconCls'));
-        var view = assert (this.getContentTabs ());
-        var app = assert (this.application);
+        function on_render (ca) {
+            ca.setLoading ('Loading ..');
 
-        var tab = this.get_tab (uuid);
-        if (tab == undefined) {
-            tab = view.add ({
-                closable: true,
-                iconCls: iconCls,
-                layout: 'fit',
-                name: 'editor',
-                record: record,
-                title: name,
-
-                tbar: {
-                    xtype: function (store) {
-                        var record = assert (store.findRecord ('mime', mime));
-                        var flag = assert (record.get ('flag'));
-                        var tbar = flag['tbar'];
-
-                        return tbar ? tbar : 'editor-tbar-txt';
-                    } (assert (this.getMIMEsStore ()))
-                },
-
-                items: [Ext.create ('Webed.form.field.CodeArea', {
-                    mime: mime, listeners: {
-                        render: function (ca) {
-                            ca.setLoading ('Loading ..');
-
-                            app.fireEvent ('get_property', this, {
-                                callback: on_get, scope: this, property: [{
-                                    node_uuid: uuid, name: 'data'
-                                }]
-                            });
-
-                            function on_get (props) {
-                                assert (props && props.length > 0);
-                                var data = props[0].get ('data');
-                                assert (data || data == '');
-                                ca.setValue (data);
-
-                                if (callback && callback.call) {
-                                    callback.call (scope||this, props);
-                                }
-
-                                ca.setLoading (false);
-                            }
-                        }
-                    }
-                })],
-
-                listeners: {
-                    afterlayout: function (panel) {
-                        var tbar = assert (panel.child ('toolbar'));
-                        var ca = assert (panel.child ('code-area'));
-
-                        var height1 = panel.getHeight ();
-                        assert (typeof (height1) == 'number');
-                        var height2 = tbar.getHeight ();
-                        assert (typeof (height2) == 'number');
-
-                        ca.setHeight (height1 - height2 - 2);
-                    },
-
-                    activate: function (panel) {
-                        assert (panel.child ('code-area')).focus (true, 125);
-                    }
-                }
+            application.fireEvent ('get_property', this, {
+                callback: on_get, scope: this, property: [{
+                    node_uuid: assert (record.get ('uuid')), name: 'data'
+                }]
             });
+
+            function on_get (props) {
+                assert (props && props.length > 0);
+                var data = props[0].get ('data');
+                assert (data || data == '');
+                ca.setValue (data);
+
+                if (callback && callback.call) {
+                    callback.call (scope||this, props);
+                }
+
+                ca.setLoading (false);
+            }
         }
+
+        var code_area = Ext.create ('Webed.form.field.CodeArea', {
+            mime: assert (record.get ('mime')), listeners: {
+                render: on_render
+            }
+        });
+
+        var editor_tab = Ext.create ('Webed.view.EditorTab', {
+            record: record, code_area: code_area
+        });
+
+        var view = assert (this.getContentTabs ());
+        var tab = this.get_tab (assert (record.get ('uuid')));
+        if (!tab) tab = view.add (editor_tab);
 
         view.setActiveTab (tab);
     },
@@ -304,6 +264,7 @@ Ext.define ('Webed.controller.ContentTabs', {
     },
 
     update_image_tab: function (tab, callback, scope) {
+        console.debug ('[update-image-tab]', tab, callback, scope);
     },
 
     ///////////////////////////////////////////////////////////////////////////

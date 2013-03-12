@@ -4,6 +4,11 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    stores: ['MIMEs'],
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     init: function () {
         this.control ({
             'editor-tbar-txt button[action=undo]': {
@@ -66,11 +71,11 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
     },
 
     codemirror: function (component) {
-        return assert (this.codearea (component)).codemirror;
+        return assert (this.code_area (component)).codemirror;
     },
 
-    codearea: function (component) {
-        return assert (component.up ('panel[name=editor]')).down ('code-area');
+    code_area: function (component) {
+        return assert (component.up ('editor-tab')).down ('code-area');
     },
 
     ///////////////////////////////////////////////////////////////////////////
