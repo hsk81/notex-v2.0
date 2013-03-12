@@ -224,14 +224,6 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 Ext.define ('Webed.controller.MainBar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
-    refs: [{
-        selector: 'main-toolbar button[action=save-document]',
-        ref: 'saveDocumentButton'
-    },{
-        selector: 'main-toolbar button[action=export-project]',
-        ref: 'exportProjectButton'
-    }],
-
     config: {
         target: Ext.getDoc (),
         controller: null
@@ -247,7 +239,8 @@ Ext.define ('Webed.controller.MainBar.KeyMap', {
         ctrl: true,
         defaultEventAction: 'stopEvent',
         handler: function () {
-            var button = assert (this.getSaveDocumentButton ());
+            var query = 'main-toolbar button[action=save-document]';
+            var button = assert (Ext.ComponentQuery.query (query).pop ());
             assert (this.getController ()).saveDocument (button);
         }
     },{
@@ -305,7 +298,8 @@ Ext.define ('Webed.controller.MainBar.KeyMap', {
         shift: true,
         defaultEventAction: 'stopEvent',
         handler: function () {
-            var button = assert (this.getExportProjectButton ());
+            var query = 'main-toolbar button[action=export-project]';
+            var button = assert (Ext.ComponentQuery.query (query).pop ());
             assert (this.getController ()).exportProject (button);
         }
     }]

@@ -26,6 +26,13 @@ Ext.application ({
     stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
 
     controllers: [
+        'panel.ImageViewer',
+        'panel.TextEditor',
+        'statusbar.StatusBar',
+        'tab.TabManager',
+        'toolbar.MainToolbar',
+        'toolbar.TextToolbar',
+        'toolbar.RestToolbar',
         'AddFileBox',
         'AddFolderBox',
         'AddProjectBox',
@@ -38,15 +45,9 @@ Ext.application ({
         'LeafList',
         'Node',
         'NodeTree',
-        'panel.TextEditor',
         'Property',
         'PropertyGrid',
-        'RenameBox',
-        'statusbar.StatusBar',
-        'tab.TabManager',
-        'toolbar.MainToolbar',
-        'toolbar.TextToolbar',
-        'toolbar.RestToolbar'
+        'RenameBox'
     ],
 
     paths: {

@@ -32,6 +32,6 @@ Ext.define ('Webed.controller.panel.TextEditor', {
     },
 
     beforeclose: function (self) {
-        console.debug ('[before-close]', self);
+        console.debug ('[before-close]', self); // TODO: W.r.t. `TabManager`!
     }
 });

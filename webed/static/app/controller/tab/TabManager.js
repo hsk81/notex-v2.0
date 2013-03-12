@@ -7,6 +7,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
     requires: [
         'Webed.form.field.CodeArea',
+        'Webed.panel.ImageViewer',
         'Webed.panel.TextEditor'
     ],
 
@@ -87,129 +88,98 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     create_text_tab: function (record, callback, scope) {
+
         var application = assert (this.application);
+        var view = assert (this.getTabManager ());
+        var uuid = assert (record.get ('uuid'));
 
-        function on_render (ca) {
-            ca.setLoading ('Loading ..');
+        var tab = this.get_tab (uuid);
+        if (!tab) {
 
-            application.fireEvent ('get_property', this, {
-                callback: on_get, scope: this, property: [{
-                    node_uuid: assert (record.get ('uuid')), name: 'data'
-                }]
+            function on_render (ca) {
+                ca.setLoading ('Loading ..');
+
+                application.fireEvent ('get_property', this, {
+                    callback: on_get, scope: this, property: [{
+                        node_uuid: uuid, name: 'data'
+                    }]
+                });
+
+                function on_get (props) {
+                    assert (props && props.length > 0);
+                    var data = props[0].get ('data');
+                    assert (data || data == '');
+                    ca.setValue (data);
+
+                    if (callback && callback.call) {
+                        callback.call (scope||this, props);
+                    }
+
+                    ca.setLoading (false);
+                }
+            }
+
+            var code_area = Ext.create ('Webed.form.field.CodeArea', {
+                mime: assert (record.get ('mime')), listeners: {
+                    render: on_render
+                }
             });
 
-            function on_get (props) {
-                assert (props && props.length > 0);
-                var data = props[0].get ('data');
-                assert (data || data == '');
-                ca.setValue (data);
+            var editor_tab = Ext.create ('Webed.panel.TextEditor', {
+                record: record, codeArea: code_area
+            });
 
-                if (callback && callback.call) {
-                    callback.call (scope||this, props);
-                }
-
-                ca.setLoading (false);
-            }
+            tab = view.add (editor_tab);
         }
-
-        var code_area = Ext.create ('Webed.form.field.CodeArea', {
-            mime: assert (record.get ('mime')), listeners: {
-                render: on_render
-            }
-        });
-
-        var editor_tab = Ext.create ('Webed.panel.TextEditor', {
-            record: record, code_area: code_area
-        });
-
-        var view = assert (this.getTabManager ());
-        var tab = this.get_tab (assert (record.get ('uuid')));
-        if (!tab) tab = view.add (editor_tab);
 
         view.setActiveTab (tab);
     },
 
     create_image_tab: function (record, callback, scope) {
-        assert (record);
 
-        var uuid = assert (record.get ('uuid'));
-        var name = assert (record.get ('name'));
-        var iconCls = assert (record.get ('iconCls'));
+        var application = assert (this.application);
         var view = assert (this.getTabManager ());
-        var app = assert (this.application);
+        var uuid = assert (record.get ('uuid'));
 
-        var tab = this.get_tab (uuid) || view.add ({
-            autoScroll: true,
-            bodyStyle: 'background: grey;',
-            closable: true,
-            iconCls: iconCls,
-            layout: 'absolute',
-            name: 'viewer',
-            record: record,
-            title: name,
+        var tab = this.get_tab (uuid);
+        if (!tab) {
 
-            listeners: {
-                render: function (panel) {
-                    panel.setLoading ('Loading ..');
+            function on_render (self) {
+                self.setLoading ('Loading ..');
 
-                    app.fireEvent ('get_property', this, {
-                        callback: on_get, scope: this, property: [{
-                            node_uuid: uuid, name: 'data'
-                        }]
+                application.fireEvent ('get_property', this, {
+                    callback: on_get, scope: this, property: [{
+                        node_uuid: uuid, name: 'data'
+                    }]
+                });
+
+                function on_get (props) {
+                    assert (props && props.length > 0);
+                    var data = props[0].get ('data');
+                    assert (data || data == '');
+
+                    self.add ({
+                        xtype: 'box', autoEl: {tag: 'img', src: data},
+                        listeners: {render: function () {
+                            Webed.controller.panel.ImageViewer.center (
+                                self, 1
+                            );
+                        }}
                     });
 
-                    function on_get (props) {
-                        assert (props && props.length > 0);
-                        var data = props[0].get ('data');
-                        assert (data || data == '');
-
-                        panel.add ({
-                            xtype: 'box', autoEl: {
-                                tag: 'img', src: data
-                            },
-                            listeners: {
-                                render: function () { center (panel, 1); }
-                            }
-                        });
-
-                        if (callback && callback.call) {
-                            callback.call (scope||this, props);
-                        }
-
-                        panel.setLoading (false);
+                    if (callback && callback.call) {
+                        callback.call (scope||this, props);
                     }
+
+                    self.setLoading (false);
                 }
             }
-        });
 
-        function center (panel, ms, stop) {
-            if (ms && ms > 0) {
-                Ext.defer (function () { center (panel, 0, stop); }, ms);
-            } else {
-                var inner = panel.down ('box');
-                if (inner || stop>=1) {
-                    var outer = panel.body;
-                    if (outer || stop>=2) {
-                        var W = outer.getWidth ();
-                        var H = outer.getHeight ();
-                        var w = inner.getWidth ();
-                        var h = inner.getHeight ();
+            var viewer_tab = Ext.create ('Webed.panel.ImageViewer', {
+                record: record, listeners: {render: on_render}
+            });
 
-                        if (w>0 && h>0 || stop>=3) {
-                            var innerDx = (W - w) / 2.0;
-                            var innerDy = (H - h) / 2.0;
-
-                            inner.setPosition (innerDx, innerDy);
-                        } else {
-                            center (panel, 10, 3);
-                        }
-                    } else {
-                        center (panel, 10, 2);
-                    }
-                } else {
-                    center (panel, 10, 1);
-                }
-            }
+            tab = view.add (viewer_tab);
         }
 
         view.setActiveTab (tab);
