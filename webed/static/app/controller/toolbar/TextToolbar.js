@@ -1,8 +1,9 @@
-Ext.define ('Webed.controller.EditorTBar.txt', {
+Ext.define ('Webed.controller.toolbar.TextToolbar', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+    refs: [{
+        selector: 'text-toolbar', ref: 'toolbar'
+    }],
 
     stores: ['MIMEs'],
 
@@ -11,49 +12,49 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
 
     init: function () {
         this.control ({
-            'editor-tbar-txt button[action=undo]': {
+            'text-toolbar button[action=undo]': {
                 click: this.undo
             },
-            'editor-tbar-txt button[action=redo]': {
+            'text-toolbar button[action=redo]': {
                 click: this.redo
             },
-            'editor-tbar-txt button[action=cut]': {
+            'text-toolbar button[action=cut]': {
                 click: this.cut
             },
-            'editor-tbar-txt button[action=copy]': {
+            'text-toolbar button[action=copy]': {
                 click: this.copy
             },
-            'editor-tbar-txt button[action=paste]': {
+            'text-toolbar button[action=paste]': {
                 click: this.paste
             },
 
-            'editor-tbar-txt button[action=lower-case]': {
+            'text-toolbar button[action=lower-case]': {
                 click: this.lower_case
             },
-            'editor-tbar-txt button[action=upper-case]': {
+            'text-toolbar button[action=upper-case]': {
                 click: this.upper_case
             },
 
-            'editor-tbar-txt button[action=decrease-indent]': {
+            'text-toolbar button[action=decrease-indent]': {
                 click: this.decrease_indent
             },
-            'editor-tbar-txt button[action=increase-indent]': {
+            'text-toolbar button[action=increase-indent]': {
                 click: this.increase_indent
             },
 
-            'editor-tbar-txt button[action=find]': {
+            'text-toolbar button[action=find]': {
                 click: this.find
             },
-            'editor-tbar-txt button[action=find-next]': {
+            'text-toolbar button[action=find-next]': {
                 click: this.find_next
             },
-            'editor-tbar-txt button[action=find-previous]': {
+            'text-toolbar button[action=find-previous]': {
                 click: this.find_previous
             },
-            'editor-tbar-txt button[action=replace-all]': {
+            'text-toolbar button[action=replace-all]': {
                 click: this.replace_all
             },
-            'editor-tbar-txt button[action=clear-search]': {
+            'text-toolbar button[action=clear-search]': {
                 click: this.clear_search
             }
         });
@@ -200,7 +201,4 @@ Ext.define ('Webed.controller.EditorTBar.txt', {
         CodeMirror.commands['clearSearch'] (editor);
         editor.focus ();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });

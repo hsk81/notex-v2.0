@@ -1,6 +1,6 @@
-Ext.define ('Webed.view.EditorTBar.rst', {
+Ext.define ('Webed.toolbar.RestToolbar', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.editor-tbar-rst',
+    alias: 'widget.rest-toolbar',
 
     requires: [
         'Webed.view.InsertLinkBox',

@@ -1,6 +1,6 @@
-Ext.define ('Webed.view.EditorTBar.txt', {
+Ext.define ('Webed.toolbar.TextToolbar', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.editor-tbar-txt',
+    alias: 'widget.text-toolbar',
 
     items: [{
         action: 'undo',

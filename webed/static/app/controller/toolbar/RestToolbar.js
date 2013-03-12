@@ -1,11 +1,8 @@
-Ext.define ('Webed.controller.EditorTBar.rst', {
-    extend: 'Webed.controller.EditorTBar.txt',
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+Ext.define ('Webed.controller.toolbar.RestToolbar', {
+    extend: 'Webed.controller.toolbar.TextToolbar',
 
     refs: [{
-        selector: 'editor-tbar-rst', ref: 'toolbar'
+        selector: 'rest-toolbar', ref: 'toolbar'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -13,117 +10,117 @@ Ext.define ('Webed.controller.EditorTBar.rst', {
 
     init: function () {
         this.control ({
-            'editor-tbar-rst button[action=undo]': {
+            'rest-toolbar button[action=undo]': {
                 click: this.undo
             },
-            'editor-tbar-rst button[action=redo]': {
+            'rest-toolbar button[action=redo]': {
                 click: this.redo
             },
-            'editor-tbar-rst button[action=cut]': {
+            'rest-toolbar button[action=cut]': {
                 click: this.cut
             },
-            'editor-tbar-rst button[action=copy]': {
+            'rest-toolbar button[action=copy]': {
                 click: this.copy
             },
-            'editor-tbar-rst button[action=paste]': {
+            'rest-toolbar button[action=paste]': {
                 click: this.paste
             },
 
-            'editor-tbar-rst button[action=apply-heading-0]': {
+            'rest-toolbar button[action=apply-heading-0]': {
                 click: function (button) {
                     EDITOR = assert (this.codemirror (button));
                 }
             },
-            'editor-tbar-rst menuitem[action=apply-heading-1]': {
+            'rest-toolbar menuitem[action=apply-heading-1]': {
                 click: Ext.pass (this.apply_heading, [1], this)
             },
-            'editor-tbar-rst menuitem[action=apply-heading-2]': {
+            'rest-toolbar menuitem[action=apply-heading-2]': {
                 click: Ext.pass (this.apply_heading, [2], this)
             },
-            'editor-tbar-rst menuitem[action=apply-heading-3]': {
+            'rest-toolbar menuitem[action=apply-heading-3]': {
                 click: Ext.pass (this.apply_heading, [3], this)
             },
-            'editor-tbar-rst menuitem[action=apply-heading-4]': {
+            'rest-toolbar menuitem[action=apply-heading-4]': {
                 click: Ext.pass (this.apply_heading, [4], this)
             },
-            'editor-tbar-rst menuitem[action=apply-heading-5]': {
+            'rest-toolbar menuitem[action=apply-heading-5]': {
                 click: Ext.pass (this.apply_heading, [5], this)
             },
-            'editor-tbar-rst menuitem[action=apply-heading-6]': {
+            'rest-toolbar menuitem[action=apply-heading-6]': {
                 click: Ext.pass (this.apply_heading, [6], this)
             },
 
-            'editor-tbar-rst button[action=toggle-strong]': {
+            'rest-toolbar button[action=toggle-strong]': {
                 click: this.toggle_strong
             },
-            'editor-tbar-rst button[action=toggle-italic]': {
+            'rest-toolbar button[action=toggle-italic]': {
                 click: this.toggle_italic
             },
-            'editor-tbar-rst button[action=toggle-literal]': {
+            'rest-toolbar button[action=toggle-literal]': {
                 click: this.toggle_literal
             },
 
-            'editor-tbar-rst button[action=toggle-subscript]': {
+            'rest-toolbar button[action=toggle-subscript]': {
                 click: this.toggle_subscript
             },
-            'editor-tbar-rst button[action=toggle-supscript]': {
+            'rest-toolbar button[action=toggle-supscript]': {
                 click: this.toggle_supscript
             },
 
-            'editor-tbar-rst button[action=lower-case]': {
+            'rest-toolbar button[action=lower-case]': {
                 click: this.lower_case
             },
-            'editor-tbar-rst button[action=upper-case]': {
+            'rest-toolbar button[action=upper-case]': {
                 click: this.upper_case
             },
 
-            'editor-tbar-rst button[action=decrease-indent]': {
+            'rest-toolbar button[action=decrease-indent]': {
                 click: this.decrease_indent
             },
-            'editor-tbar-rst button[action=increase-indent]': {
+            'rest-toolbar button[action=increase-indent]': {
                 click: this.increase_indent
             },
 
-            'editor-tbar-rst button[action=toggle-bullet-list]': {
+            'rest-toolbar button[action=toggle-bullet-list]': {
                 click: this.toggle_bullet_list
             },
-            'editor-tbar-rst button[action=toggle-number-list]': {
+            'rest-toolbar button[action=toggle-number-list]': {
                 click: this.toggle_number_list
             },
 
-            'editor-tbar-rst button[action=insert-figure]': {
+            'rest-toolbar button[action=insert-figure]': {
                 click: this.insert_figure
             },
-            'editor-tbar-rst button[action=insert-image]': {
+            'rest-toolbar button[action=insert-image]': {
                 click: this.insert_image
             },
-            'editor-tbar-rst button[action=insert-hyperlink]': {
+            'rest-toolbar button[action=insert-hyperlink]': {
                 click: this.insert_hyperlink
             },
-            'editor-tbar-rst button[action=insert-footnote]': {
+            'rest-toolbar button[action=insert-footnote]': {
                 click: this.insert_footnote
             },
-            'editor-tbar-rst button[action=insert-horizontal-line]': {
+            'rest-toolbar button[action=insert-horizontal-line]': {
                 click: this.insert_horizontal_line
             },
 
-            'editor-tbar-rst button[action=find]': {
+            'rest-toolbar button[action=find]': {
                 click: this.find
             },
-            'editor-tbar-rst button[action=find-next]': {
+            'rest-toolbar button[action=find-next]': {
                 click: this.find_next
             },
-            'editor-tbar-rst button[action=find-previous]': {
+            'rest-toolbar button[action=find-previous]': {
                 click: this.find_previous
             },
-            'editor-tbar-rst button[action=replace-all]': {
+            'rest-toolbar button[action=replace-all]': {
                 click: this.replace_all
             },
-            'editor-tbar-rst button[action=clear-search]': {
+            'rest-toolbar button[action=clear-search]': {
                 click: this.clear_search
             },
 
-            'editor-tbar-rst': {
+            'rest-toolbar': {
                 afterrender: this.afterrender
             }
         });

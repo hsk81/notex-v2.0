@@ -3,8 +3,8 @@ Ext.define ('Webed.view.EditorTab', {
     alias: 'widget.editor-tab',
 
     requires: [
-        'Webed.view.EditorTBar.txt',
-        'Webed.view.EditorTBar.rst'
+        'Webed.toolbar.TextToolbar',
+        'Webed.toolbar.RestToolbar'
     ],
 
     closable: true,
@@ -16,7 +16,6 @@ Ext.define ('Webed.view.EditorTab', {
     },
 
     constructor: function (config) {
-
         this.initConfig (config);
         assert (this.record);
         assert (this.code_area);
@@ -31,33 +30,11 @@ Ext.define ('Webed.view.EditorTab', {
             var flag = assert (record.get ('flag'));
 
             return {
-                xtype: (flag['tbar']) ? flag['tbar'] :'editor-tbar-txt'
+                xtype: (flag['tbar']) ? flag['tbar'] :'text-toolbar'
             };
         } (this.mime);
 
         this.callParent (arguments);
         this.items.add (this.code_area);
-    },
-
-    listeners: {
-        afterlayout: function (panel) {
-            var tbar = assert (panel.child ('toolbar'));
-            var ca = assert (panel.child ('code-area'));
-
-            var height1 = panel.getHeight ();
-            assert (typeof (height1) == 'number');
-            var height2 = tbar.getHeight ();
-            assert (typeof (height2) == 'number');
-
-            ca.setHeight (height1 - height2 - 2);
-        },
-
-        activate: function (panel) {
-            assert (panel.child ('code-area')).focus (true, 125);
-        },
-
-        beforeclose: function (panel) {
-            console.debug ('[before-close]', panel);
-        }
     }
 });

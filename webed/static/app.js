@@ -31,8 +31,7 @@ Ext.application ({
         'AddProjectBox',
         'ArchiveUploadBox',
         'ContentTabs',
-        'EditorTBar.txt',
-        'EditorTBar.rst',
+        'EditorTab',
         'DeleteBox',
         'FileUploadBox',
         'InsertLinkBox',
@@ -45,7 +44,9 @@ Ext.application ({
         'Property',
         'PropertyGrid',
         'RenameBox',
-        'StatusBar'
+        'StatusBar',
+        'toolbar.TextToolbar',
+        'toolbar.RestToolbar'
     ],
 
     paths: {
