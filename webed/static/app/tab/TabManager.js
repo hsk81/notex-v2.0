@@ -6,5 +6,9 @@ Ext.define ('Webed.tab.TabManager', {
         'Ext.layout.container.Absolute'
     ],
 
+    config: {
+        focused: true
+    },
+
     html: Ext.fly ('content').getHTML ()
 });

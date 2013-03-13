@@ -2,6 +2,8 @@ Ext.define ('Webed.controller.tab.TabManager', {
     extend: 'Ext.app.Controller',
 
     refs: [{
+        selector: 'viewport', ref: 'viewport'
+    },{
         selector: 'tab-manager', ref: 'tabManager'
     }],
 
@@ -80,17 +82,17 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     focus: function (self) {
-        var tab_managers = Ext.ComponentQuery.query ('tab-manager');
+        var viewport = assert (this.getViewport ());
+        var tab_managers = assert (viewport.query ('tab-manager'));
+
         tab_managers.forEach (function (tab_manager) {
-            tab_manager.focused = false;
+            if (self != tab_manager) tab_manager.focused = false;
         });
 
         var active_tab = assert (self.getActiveTab ());
-
         this.application.fireEvent ('select_node', this, {
             record: assert (active_tab.record)
         });
-
         this.application.fireEvent ('select_leaf', this, {
             record: assert (active_tab.record)
         });
@@ -135,9 +137,10 @@ Ext.define ('Webed.controller.tab.TabManager', {
     create_text_tab: function (record, callback, scope) {
 
         var application = assert (this.application);
-        var tab_manager = assert (this.getTabManager ());
-        var uuid = assert (record.get ('uuid'));
+        var viewport = assert (this.getViewport ());
+        var tab_manager = assert (viewport.down ('tab-manager'));
 
+        var uuid = assert (record.get ('uuid'));
         var tab = this.get_tab (uuid);
         if (!tab) {
 
