@@ -10,23 +10,23 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
     init: function () {
         this.control ({
-            'rest-toolbar button[action=undo]': {
+            'rest-toolbar component[action=undo]': {
                 click: this.undo
             },
-            'rest-toolbar button[action=redo]': {
+            'rest-toolbar component[action=redo]': {
                 click: this.redo
             },
-            'rest-toolbar button[action=cut]': {
+            'rest-toolbar component[action=cut]': {
                 click: this.cut
             },
-            'rest-toolbar button[action=copy]': {
+            'rest-toolbar component[action=copy]': {
                 click: this.copy
             },
-            'rest-toolbar button[action=paste]': {
+            'rest-toolbar component[action=paste]': {
                 click: this.paste
             },
 
-            'rest-toolbar button[action=apply-heading-0]': {
+            'rest-toolbar component[action=apply-heading-0]': {
                 click: function (button) {
                     EDITOR = assert (this.codemirror (button));
                 }
@@ -50,80 +50,80 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
                 click: Ext.pass (this.apply_heading, [6], this)
             },
 
-            'rest-toolbar button[action=toggle-strong]': {
+            'rest-toolbar component[action=toggle-strong]': {
                 click: this.toggle_strong
             },
-            'rest-toolbar button[action=toggle-italic]': {
+            'rest-toolbar component[action=toggle-italic]': {
                 click: this.toggle_italic
             },
-            'rest-toolbar button[action=toggle-literal]': {
+            'rest-toolbar component[action=toggle-literal]': {
                 click: this.toggle_literal
             },
 
-            'rest-toolbar button[action=toggle-subscript]': {
+            'rest-toolbar component[action=toggle-subscript]': {
                 click: this.toggle_subscript
             },
-            'rest-toolbar button[action=toggle-supscript]': {
+            'rest-toolbar component[action=toggle-supscript]': {
                 click: this.toggle_supscript
             },
 
-            'rest-toolbar button[action=lower-case]': {
+            'rest-toolbar component[action=lower-case]': {
                 click: this.lower_case
             },
-            'rest-toolbar button[action=upper-case]': {
+            'rest-toolbar component[action=upper-case]': {
                 click: this.upper_case
             },
 
-            'rest-toolbar button[action=decrease-indent]': {
+            'rest-toolbar component[action=decrease-indent]': {
                 click: this.decrease_indent
             },
-            'rest-toolbar button[action=increase-indent]': {
+            'rest-toolbar component[action=increase-indent]': {
                 click: this.increase_indent
             },
 
-            'rest-toolbar button[action=toggle-bullet-list]': {
+            'rest-toolbar component[action=toggle-bullet-list]': {
                 click: this.toggle_bullet_list
             },
-            'rest-toolbar button[action=toggle-number-list]': {
+            'rest-toolbar component[action=toggle-number-list]': {
                 click: this.toggle_number_list
             },
 
-            'rest-toolbar button[action=insert-figure]': {
+            'rest-toolbar component[action=insert-figure]': {
                 click: this.insert_figure
             },
-            'rest-toolbar button[action=insert-image]': {
+            'rest-toolbar component[action=insert-image]': {
                 click: this.insert_image
             },
-            'rest-toolbar button[action=insert-hyperlink]': {
+            'rest-toolbar component[action=insert-hyperlink]': {
                 click: this.insert_hyperlink
             },
-            'rest-toolbar button[action=insert-footnote]': {
+            'rest-toolbar component[action=insert-footnote]': {
                 click: this.insert_footnote
             },
-            'rest-toolbar button[action=insert-horizontal-line]': {
+            'rest-toolbar component[action=insert-horizontal-line]': {
                 click: this.insert_horizontal_line
             },
 
-            'rest-toolbar button[action=split-vertical]': {
+            'rest-toolbar component[action=split-vertical]': {
                 click: this.split_vertical
             },
-            'rest-toolbar button[action=split-horizontal]': {
+            'rest-toolbar component[action=split-horizontal]': {
                 click: this.split_horizontal
             },
 
-            'rest-toolbar button[action=find]': {
+            'rest-toolbar component[action=find]': {
                 click: this.find
             },
-            'rest-toolbar button[action=find-next]': {
+            'rest-toolbar component[action=find-next]': {
                 click: this.find_next
             },
-            'rest-toolbar button[action=find-previous]': {
+            'rest-toolbar component[action=find-previous]': {
                 click: this.find_previous
             },
-            'rest-toolbar button[action=replace-all]': {
+            'rest-toolbar component[action=replace-all]': {
                 click: this.replace_all
             },
-            'rest-toolbar button[action=clear-search]': {
+            'rest-toolbar component[action=clear-search]': {
                 click: this.clear_search
             },
 

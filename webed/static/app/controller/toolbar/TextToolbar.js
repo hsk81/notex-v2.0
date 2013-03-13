@@ -12,56 +12,56 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
 
     init: function () {
         this.control ({
-            'text-toolbar button[action=undo]': {
+            'text-toolbar component[action=undo]': {
                 click: this.undo
             },
-            'text-toolbar button[action=redo]': {
+            'text-toolbar component[action=redo]': {
                 click: this.redo
             },
-            'text-toolbar button[action=cut]': {
+            'text-toolbar component[action=cut]': {
                 click: this.cut
             },
-            'text-toolbar button[action=copy]': {
+            'text-toolbar component[action=copy]': {
                 click: this.copy
             },
-            'text-toolbar button[action=paste]': {
+            'text-toolbar component[action=paste]': {
                 click: this.paste
             },
 
-            'text-toolbar button[action=lower-case]': {
+            'text-toolbar component[action=lower-case]': {
                 click: this.lower_case
             },
-            'text-toolbar button[action=upper-case]': {
+            'text-toolbar component[action=upper-case]': {
                 click: this.upper_case
             },
 
-            'text-toolbar button[action=decrease-indent]': {
+            'text-toolbar component[action=decrease-indent]': {
                 click: this.decrease_indent
             },
-            'text-toolbar button[action=increase-indent]': {
+            'text-toolbar component[action=increase-indent]': {
                 click: this.increase_indent
             },
 
-            'text-toolbar button[action=split-vertical]': {
+            'text-toolbar component[action=split-vertical]': {
                 click: this.split_vertical
             },
-            'text-toolbar button[action=split-horizontal]': {
+            'text-toolbar component[action=split-horizontal]': {
                 click: this.split_horizontal
             },
 
-            'text-toolbar button[action=find]': {
+            'text-toolbar component[action=find]': {
                 click: this.find
             },
-            'text-toolbar button[action=find-next]': {
+            'text-toolbar component[action=find-next]': {
                 click: this.find_next
             },
-            'text-toolbar button[action=find-previous]': {
+            'text-toolbar component[action=find-previous]': {
                 click: this.find_previous
             },
-            'text-toolbar button[action=replace-all]': {
+            'text-toolbar component[action=replace-all]': {
                 click: this.replace_all
             },
-            'text-toolbar button[action=clear-search]': {
+            'text-toolbar component[action=clear-search]': {
                 click: this.clear_search
             }
         });
