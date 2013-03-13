@@ -177,7 +177,31 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     split_vertical: function (button) {
-        console.debug ('[split-vertical]', button);
+        var lhs_tabs = assert (button.up ('tab-manager'));
+        var lhs_text_editor = assert (button.up ('text-editor'));
+        var lhs_code_area = assert (lhs_text_editor.down ('code-area'));
+
+        var record = assert (lhs_text_editor.record);
+        var mime = assert (record.get ('mime'));
+
+        var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
+            mime: mime, value: lhs_code_area.getValue ()
+        });
+        var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
+            record: record, codeArea: rhs_code_area
+        });
+
+        var rhs_tabs = assert (lhs_tabs.cloneConfig ());
+        rhs_tabs.add (rhs_text_editor);
+        var vbox = assert (lhs_tabs.up ('panel[name=vbox]'));
+
+        vbox.add ({
+            border: false,
+            flex: 1,
+            name: 'hbox',
+            layout: {type: 'hbox', align: 'stretch'},
+            items: [rhs_tabs]
+        });
     },
 
     split_horizontal: function (button) {
@@ -191,15 +215,21 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
         var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
             mime: mime, value: lhs_code_area.getValue ()
         });
-
         var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
             record: record, codeArea: rhs_code_area
         });
 
         var rhs_tabs = assert (lhs_tabs.cloneConfig ());
         rhs_tabs.add (rhs_text_editor);
-        var container = assert (lhs_tabs.up ('panel'));
-        container.add (rhs_tabs);
+        var hbox = assert (lhs_tabs.up ('panel[name=hbox]'));
+
+        hbox.add ({
+            border: false,
+            flex: 1,
+            name: 'vbox',
+            layout: {type: 'vbox', align: 'stretch'},
+            items: [rhs_tabs]
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
