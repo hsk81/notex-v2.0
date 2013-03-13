@@ -21,7 +21,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 render: this.render,
                 beforeadd: this.beforeadd,
                 remove: this.remove,
-                tabchange: this.tabchange
+                tabchange: this.tabchange,
+                focus: this.focus,
+                blur: this.blur
             }
         });
 
@@ -54,8 +56,8 @@ Ext.define ('Webed.controller.tab.TabManager', {
         assert (Ext.fly ('page-wrap')).setDisplayed (false);
     },
 
-    remove: function (view) {
-        if (view.items.length == 0) {
+    remove: function (self) {
+        if (self.items.length == 0) {
             assert (Ext.fly ('page-wrap')).setDisplayed (true);
         }
     },
@@ -68,6 +70,16 @@ Ext.define ('Webed.controller.tab.TabManager', {
         this.application.fireEvent ('select_leaf', this, {
             record: newCard.record
         });
+    },
+
+    focus: function (self) {
+        console.debug ('[TabManager:focus]', self.id);
+        self.focused = true;
+    },
+
+    blur: function (self) {
+        console.debug ('[TabManager:blur]', self.id);
+        self.focused = false;
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -158,12 +170,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     assert (data || data == '');
 
                     self.add ({
-                        xtype: 'box', autoEl: {tag: 'img', src: data},
-                        listeners: {render: function () {
-                            Webed.controller.panel.ImageViewer.center (
-                                self, 1
-                            );
-                        }}
+                        xtype: 'box', autoEl: {tag: 'img', src: data}
                     });
 
                     if (callback && callback.call) {

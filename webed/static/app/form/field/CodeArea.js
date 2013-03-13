@@ -108,6 +108,10 @@ Ext.define ('Webed.form.field.CodeArea', {
         });
         editor.on ('focus', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
+            me.fireEvent ('focus', me);
+        });
+        editor.on ('blur', function (self) {
+            me.fireEvent ('blur', me);
         });
 
         if (this.needSpellChecker (this.getMime ())) {

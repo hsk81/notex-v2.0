@@ -11,6 +11,11 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                 afterlayout: this.afterlayout,
                 activate: this.activate,
                 beforeclose: this.beforeclose
+            },
+
+            'text-editor code-area': {
+                focus: this.focus,
+                blur: this.blur
             }
         });
     },
@@ -31,6 +36,10 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         assert (self.child ('code-area')).focus (true, 125);
     },
 
+    //
+    // TODO: Decouple by shifting to `tab-manager`!?
+    //
+
     beforeclose: function (self) {
         var tab_manager = assert (self.up ('tab-manager'));
         if (tab_manager.items.getCount () == 1) {
@@ -47,5 +56,29 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         }
 
         return true;
+    },
+
+    focus: function (code_area) {
+        var editors = Ext.ComponentQuery.query ('text-editor');
+        editors.every (function (editor) {
+            var ca = assert (editor.down ('code-area'));
+            if (ca == code_area) {
+                editor.bubble (function (component) {
+                    component.fireEvent ('focus', component);
+                }); return false;
+            } return true;
+        });
+    },
+
+    blur: function (code_area) {
+        var editors = Ext.ComponentQuery.query ('text-editor');
+        editors.every (function (editor) {
+            var ca = assert (editor.down ('code-area'));
+            if (ca == code_area) {
+                editor.bubble (function (component) {
+                    component.fireEvent ('blur', component);
+                }); return false;
+            } return true;
+        });
     }
 });

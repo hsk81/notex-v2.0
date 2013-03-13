@@ -9,10 +9,15 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
         this.control ({
             'image-viewer' : {
                 beforeclose: this.beforeclose,
+                render: this.render,
                 resize: this.resize
             }
         });
     },
+
+    //
+    // TODO: Decouple by shifting to `tab-manager`!?
+    //
 
     beforeclose: function (self) {
         var tab_manager = assert (self.up ('tab-manager'));
@@ -30,6 +35,10 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
         }
 
         return true;
+    },
+
+    render: function (self) {
+        Webed.controller.panel.ImageViewer.center (self, 1);
     },
 
     resize: function (self) {
