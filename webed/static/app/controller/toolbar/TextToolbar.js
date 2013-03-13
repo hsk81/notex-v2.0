@@ -185,7 +185,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
         var mime = assert (record.get ('mime'));
 
         var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
-            mime: mime, value: lhs_code_area.getValue ()
+            mime: mime
         });
         var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
             record: record, codeArea: rhs_code_area
@@ -203,6 +203,8 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
             layout: {type: 'hbox', align: 'stretch'},
             items: [rhs_tabs]
         });
+
+        rhs_code_area.link_to (lhs_code_area);
     },
 
     split_horizontal: function (button) {
@@ -214,7 +216,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
         var mime = assert (record.get ('mime'));
 
         var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
-            mime: mime, value: lhs_code_area.getValue ()
+            mime: mime
         });
         var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
             record: record, codeArea: rhs_code_area
@@ -232,6 +234,8 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
             layout: {type: 'vbox', align: 'stretch'},
             items: [rhs_tabs]
         });
+
+        rhs_code_area.link_to (lhs_code_area);
     },
 
     ///////////////////////////////////////////////////////////////////////////

@@ -124,6 +124,12 @@ Ext.define ('Webed.form.field.CodeArea', {
         return editor;
     },
 
+    link_to: function (that) {
+        var doc = assert (that.codemirror.getDoc ());
+        var lnk = assert (doc.linkedDoc ({sharedHist: true}));
+        return assert (this.codemirror.swapDoc (lnk));
+    },
+
     needSpellChecker: function (mime) {
         var store = assert (Ext.getStore ('MIMEs'));
         var record = assert (store.findRecord ('mime', mime));

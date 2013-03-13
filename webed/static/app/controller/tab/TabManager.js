@@ -63,11 +63,11 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
     tabchange: function (tabPanel, newCard) {
         this.application.fireEvent ('select_node', this, {
-            record: newCard.record
+            record: assert (newCard.record)
         });
 
         this.application.fireEvent ('select_leaf', this, {
-            record: newCard.record
+            record: assert (newCard.record)
         });
     },
 
@@ -75,6 +75,16 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var tab_managers = Ext.ComponentQuery.query ('tab-manager');
         tab_managers.forEach (function (tab_manager) {
             tab_manager.focused = false;
+        });
+
+        var active_tab = assert (self.getActiveTab ());
+
+        this.application.fireEvent ('select_node', this, {
+            record: assert (active_tab.record)
+        });
+
+        this.application.fireEvent ('select_leaf', this, {
+            record: assert (active_tab.record)
         });
 
         self.focused = true;
