@@ -193,6 +193,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
 
         var rhs_tabs = assert (lhs_tabs.cloneConfig ());
         rhs_tabs.add (rhs_text_editor);
+        rhs_tabs.setActiveTab (0);
         var vbox = assert (lhs_tabs.up ('panel[name=vbox]'));
 
         vbox.add ({
@@ -221,6 +222,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
 
         var rhs_tabs = assert (lhs_tabs.cloneConfig ());
         rhs_tabs.add (rhs_text_editor);
+        rhs_tabs.setActiveTab (0);
         var hbox = assert (lhs_tabs.up ('panel[name=hbox]'));
 
         hbox.add ({

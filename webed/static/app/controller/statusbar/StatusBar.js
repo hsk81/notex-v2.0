@@ -117,7 +117,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
 
     info_click: function (self) {
         var viewport = assert (self.up ('viewport'));
-        var tab_manager = assert (viewport.down ('tab-manager'));
+        var tab_manager = assert (viewport.down ('tab-manager[focused=true]'));
 
         var tab = tab_manager.getActiveTab ();
         if (tab) {

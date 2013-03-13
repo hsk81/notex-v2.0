@@ -22,8 +22,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 beforeadd: this.beforeadd,
                 remove: this.remove,
                 tabchange: this.tabchange,
-                focus: this.focus,
-                blur: this.blur
+                focus: this.focus
             }
         });
 
@@ -73,13 +72,12 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     focus: function (self) {
-        console.debug ('[TabManager:focus]', self.id);
-        self.focused = true;
-    },
+        var tab_managers = Ext.ComponentQuery.query ('tab-manager');
+        tab_managers.forEach (function (tab_manager) {
+            tab_manager.focused = false;
+        });
 
-    blur: function (self) {
-        console.debug ('[TabManager:blur]', self.id);
-        self.focused = false;
+        self.focused = true;
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -170,7 +168,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     assert (data || data == '');
 
                     self.add ({
-                        xtype: 'box', autoEl: {tag: 'img', src: data}
+                        xtype: 'image', src: data
                     });
 
                     if (callback && callback.call) {
