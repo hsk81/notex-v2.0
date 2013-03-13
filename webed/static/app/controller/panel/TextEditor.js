@@ -9,8 +9,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         this.control ({
             'text-editor' : {
                 afterlayout: this.afterlayout,
-                activate: this.activate,
-                beforeclose: this.beforeclose
+                activate: this.activate
             },
 
             'text-editor code-area': {
@@ -34,28 +33,6 @@ Ext.define ('Webed.controller.panel.TextEditor', {
 
     activate: function (self) {
         assert (self.child ('code-area')).focus (true, 125);
-    },
-
-    //
-    // TODO: Decouple by shifting to `tab-manager`!?
-    //
-
-    beforeclose: function (self) {
-        var tab_manager = assert (self.up ('tab-manager'));
-        if (tab_manager.items.getCount () == 1) {
-
-            var curr = tab_manager;
-            var next = curr.up ('panel');
-
-            while (next && next.query ('tab-manager').length == 1) {
-                curr = next; next = next.up ('panel');
-            }
-
-            var tab_managers = Ext.ComponentQuery.query ('tab-manager');
-            if (tab_managers.length > 1) { curr.close (); return false; }
-        }
-
-        return true;
     },
 
     focus: function (code_area) {

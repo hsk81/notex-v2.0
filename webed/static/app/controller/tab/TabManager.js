@@ -23,6 +23,14 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 remove: this.remove,
                 tabchange: this.tabchange,
                 focus: this.focus
+            },
+
+            'tab-manager text-editor': {
+                beforeclose: this.beforeclose
+            },
+
+            'tab-manager image-viewer': {
+                beforeclose: this.beforeclose
             }
         });
 
@@ -88,6 +96,24 @@ Ext.define ('Webed.controller.tab.TabManager', {
         });
 
         self.focused = true;
+    },
+
+    beforeclose: function (component) {
+        var tab_manager = assert (component.up ('tab-manager'));
+        if (tab_manager.items.getCount () == 1) {
+
+            var curr = tab_manager;
+            var next = curr.up ('panel');
+
+            while (next && next.query ('tab-manager').length == 1) {
+                curr = next; next = next.up ('panel');
+            }
+
+            var tab_managers = Ext.ComponentQuery.query ('tab-manager');
+            if (tab_managers.length > 1) { curr.close (); return false; }
+        }
+
+        return true;
     },
 
     ///////////////////////////////////////////////////////////////////////////

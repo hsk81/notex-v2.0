@@ -9,32 +9,9 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
         this.control ({
             'image-viewer': {
                 beforeclose: this.beforeclose,
-                afterrender: this.afterrender,
-                resize: this.resize
+                afterrender: this.afterrender
             }
         });
-    },
-
-    //
-    // TODO: Decouple by shifting to `tab-manager`!?
-    //
-
-    beforeclose: function (self) {
-        var tab_manager = assert (self.up ('tab-manager'));
-        if (tab_manager.items.getCount () == 1) {
-
-            var curr = tab_manager;
-            var next = curr.up ('panel');
-
-            while (next && next.query ('tab-manager').length == 1) {
-                curr = next; next = next.up ('panel');
-            }
-
-            var tab_managers = Ext.ComponentQuery.query ('tab-manager');
-            if (tab_managers.length > 1) { curr.close (); return false; }
-        }
-
-        return true;
     },
 
     afterrender: function (self) {
