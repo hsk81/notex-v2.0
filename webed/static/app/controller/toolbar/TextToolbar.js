@@ -185,34 +185,34 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
     },
 
     split: function (button, type, subtype) {
-        var lhs_tabs = assert (button.up ('tab-manager'));
-        var lhs_text_editor = assert (button.up ('text-editor'));
-        var lhs_code_area = assert (lhs_text_editor.down ('code-area'));
+        var lhs_manager = assert (button.up ('tab-manager'));
+        var lhs_editor = assert (button.up ('text-editor'));
+        var lhs_area = assert (lhs_editor.down ('code-area'));
 
-        var record = assert (lhs_text_editor.record);
+        var record = assert (lhs_editor.record);
         var mime = assert (record.get ('mime'));
 
-        var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
+        var rhs_area = Ext.create ('Webed.form.field.CodeArea', {
             mime: mime
         });
-        var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
-            record: record, codeArea: rhs_code_area
+        var rhs_editor = Ext.create ('Webed.panel.TextEditor', {
+            record: record, codeArea: rhs_area
         });
 
-        var rhs_tabs = assert (lhs_tabs.cloneConfig ());
-        rhs_tabs.add (rhs_text_editor);
-        rhs_tabs.setActiveTab (0);
+        var rhs_manager = assert (lhs_manager.cloneConfig ());
+        rhs_manager.add (rhs_editor);
+        rhs_manager.setActiveTab (0);
 
-        var box = assert (lhs_tabs.up ('panel[name={0}]'.format (type)));
+        var box = assert (lhs_manager.up ('panel[name={0}]'.format (type)));
         box.add ({
             border: false,
             flex: 1,
             name: subtype,
             layout: {type: subtype, align: 'stretch'},
-            items: [rhs_tabs]
+            items: [rhs_manager]
         });
 
-        rhs_code_area.link_to (lhs_code_area);
+        rhs_area.link_to (lhs_area);
     },
 
     ///////////////////////////////////////////////////////////////////////////
