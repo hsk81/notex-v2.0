@@ -15,6 +15,8 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         selector: 'webed-statusbar-zoomslider', ref: 'zoomSlider'
     },{
         selector: 'webed-statusbar', ref: 'statusBar'
+    },{
+        selector: 'tab-manager[focused=true]', ref: 'tabManager'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -116,9 +118,8 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
     },
 
     info_click: function (self) {
-        var viewport = assert (self.up ('viewport'));
-        var tab_manager = assert (viewport.down ('tab-manager[focused=true]'));
 
+        var tab_manager = assert (this.getTabManager ());
         var tab = tab_manager.getActiveTab ();
         if (tab) {
             var ca = tab.down ('code-area');

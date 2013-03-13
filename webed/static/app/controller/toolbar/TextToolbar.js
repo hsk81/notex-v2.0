@@ -177,37 +177,14 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     split_vertical: function (button) {
-        var lhs_tabs = assert (button.up ('tab-manager'));
-        var lhs_text_editor = assert (button.up ('text-editor'));
-        var lhs_code_area = assert (lhs_text_editor.down ('code-area'));
-
-        var record = assert (lhs_text_editor.record);
-        var mime = assert (record.get ('mime'));
-
-        var rhs_code_area = Ext.create ('Webed.form.field.CodeArea', {
-            mime: mime
-        });
-        var rhs_text_editor = Ext.create ('Webed.panel.TextEditor', {
-            record: record, codeArea: rhs_code_area
-        });
-
-        var rhs_tabs = assert (lhs_tabs.cloneConfig ());
-        rhs_tabs.add (rhs_text_editor);
-        rhs_tabs.setActiveTab (0);
-        var vbox = assert (lhs_tabs.up ('panel[name=vbox]'));
-
-        vbox.add ({
-            border: false,
-            flex: 1,
-            name: 'hbox',
-            layout: {type: 'hbox', align: 'stretch'},
-            items: [rhs_tabs]
-        });
-
-        rhs_code_area.link_to (lhs_code_area);
+        this.split (button, 'vbox', 'hbox');
     },
 
     split_horizontal: function (button) {
+        this.split (button, 'hbox', 'vbox');
+    },
+
+    split: function (button, type, subtype) {
         var lhs_tabs = assert (button.up ('tab-manager'));
         var lhs_text_editor = assert (button.up ('text-editor'));
         var lhs_code_area = assert (lhs_text_editor.down ('code-area'));
@@ -225,13 +202,13 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
         var rhs_tabs = assert (lhs_tabs.cloneConfig ());
         rhs_tabs.add (rhs_text_editor);
         rhs_tabs.setActiveTab (0);
-        var hbox = assert (lhs_tabs.up ('panel[name=hbox]'));
 
-        hbox.add ({
+        var box = assert (lhs_tabs.up ('panel[name={0}]'.format (type)));
+        box.add ({
             border: false,
             flex: 1,
-            name: 'vbox',
-            layout: {type: 'vbox', align: 'stretch'},
+            name: subtype,
+            layout: {type: subtype, align: 'stretch'},
             items: [rhs_tabs]
         });
 
