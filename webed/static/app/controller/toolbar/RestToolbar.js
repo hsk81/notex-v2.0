@@ -136,9 +136,9 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    afterrender: function () {
+    afterrender: function (self) {
         this.keyMap = Ext.create ('Webed.controller.EditorTBar.rst.KeyMap', {
-            controller: this
+            toolbar: self
         });
     },
 
@@ -586,15 +586,18 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
+    refs: [{
+        selector: 'tab-manager[focused=true]', ref: 'tabManager'
+    }],
+
     config: {
         target: Ext.getDoc (),
-        controller: null
+        toolbar: null
     },
 
-    constructor: function () {
+    constructor: function (config) {
         this.callParent (arguments);
-        assert (this.target);
-        assert (this.controller);
+        this.initConfig (config);
     },
 
     binding: [{
@@ -602,32 +605,36 @@ Ext.define ('Webed.controller.EditorTBar.rst.KeyMap', {
         ctrl: true,
         defaultEventAction: 'stopEvent',
         handler: function () {
-            var controller = assert (this.getController ());
-            var tbar = assert (controller.getToolbar ());
-            var button = assert (tbar.down ('button[action=toggle-strong]'));
-            controller.toggle_strong (button);
+            var toolbar = assert (this.getToolbar ());
+            var tab_manager = toolbar.up ('tab-manager[focused=true]');
+            if (tab_manager) {
+                var button = toolbar.down ('button[action=toggle-strong]');
+                assert (button).fireEvent ('click', button);
+            }
         }
     },{
         key: Ext.EventObject.I,
         ctrl: true,
         defaultEventAction: 'stopEvent',
         handler: function () {
-            var controller = assert (this.getController ());
-            var tbar = assert (controller.getToolbar ());
-            var button = assert (tbar.down ('button[action=toggle-italic]'));
-            controller.toggle_italic (button);
+            var toolbar = assert (this.getToolbar ());
+            var tab_manager = toolbar.up ('tab-manager[focused=true]');
+            if (tab_manager) {
+                var button = toolbar.down ('button[action=toggle-italic]');
+                assert (button).fireEvent ('click', button);
+            }
         }
     },{
         key: Ext.EventObject.L,
         ctrl: true,
         defaultEventAction: 'stopEvent',
         handler: function () {
-            var controller = assert (this.getController ());
-            var tbar = assert (controller.getToolbar ());
-            var button = assert (tbar.down ('button[action=toggle-literal]'));
-            controller.toggle_literal (button);
+            var toolbar = assert (this.getToolbar ());
+            var tab_manager = toolbar.up ('tab-manager[focused=true]');
+            if (tab_manager) {
+                var button = toolbar.down ('button[action=toggle-literal]');
+                assert (button).fireEvent ('click', button);
+            }
         }
-    }],
-
-    getController: function () { return this.controller; }
+    }]
 });
