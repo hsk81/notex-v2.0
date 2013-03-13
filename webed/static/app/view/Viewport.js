@@ -57,14 +57,14 @@ Ext.define ('Webed.view.Viewport', {
         },{
             region: 'center',
             flex: 4,
-            name: 'vbox',
-            layout: {type: 'vbox', align: 'stretch'},
+            name: 'hbox',
+            layout: {type: 'hbox', align: 'stretch'},
 
             items: [{
                 border: false,
                 flex: 1,
-                name: 'hbox',
-                layout: {type: 'hbox', align: 'stretch'},
+                name: 'vbox',
+                layout: {type: 'vbox', align: 'stretch'},
 
                 items: [{
                     border: false,
