@@ -51,9 +51,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     beforeadd: function (view) {
-        if (view.items.length == 0) {
-            assert (Ext.fly ('page-wrap')).setDisplayed (false);
-        }
+        assert (Ext.fly ('page-wrap')).setDisplayed (false);
     },
 
     remove: function (view) {
@@ -91,7 +89,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
     create_text_tab: function (record, callback, scope) {
 
         var application = assert (this.application);
-        var view = assert (this.getTabManager ());
+        var tab_manager = assert (this.getTabManager ());
         var uuid = assert (record.get ('uuid'));
 
         var tab = this.get_tab (uuid);
@@ -130,10 +128,10 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 record: record, codeArea: code_area
             });
 
-            tab = view.add (editor_tab);
+            tab = tab_manager.add (editor_tab);
         }
 
-        view.setActiveTab (tab);
+        tab_manager.setActiveTab (tab);
     },
 
     create_image_tab: function (record, callback, scope) {
