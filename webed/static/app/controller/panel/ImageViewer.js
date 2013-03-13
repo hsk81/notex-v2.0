@@ -8,8 +8,8 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
     init: function () {
         this.control ({
             'image-viewer': {
-                beforeclose: this.beforeclose,
-                afterrender: this.afterrender
+                afterrender: this.afterrender,
+                resize: this.resize
             }
         });
     },
