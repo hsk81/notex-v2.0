@@ -7,9 +7,9 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
 
     init: function () {
         this.control ({
-            'image-viewer' : {
+            'image-viewer': {
                 beforeclose: this.beforeclose,
-                render: this.render,
+                afterrender: this.afterrender,
                 resize: this.resize
             }
         });
@@ -37,7 +37,7 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
         return true;
     },
 
-    render: function (self) {
+    afterrender: function (self) {
         Webed.controller.panel.ImageViewer.center (self, 1);
     },
 
