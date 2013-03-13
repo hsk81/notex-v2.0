@@ -124,7 +124,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
     create_tab: function (source, args) {
         if (source == this) return;
 
-        assert (args);
         var record = assert (args.record);
         var mime = assert (record.get ('mime'));
 
@@ -137,10 +136,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
     create_text_tab: function (record, callback, scope) {
 
         var application = assert (this.application);
-        var viewport = assert (this.getViewport ());
-        var tab_manager = assert (viewport.down ('tab-manager'));
-
+        var tab_manager = assert (this.getTabManager ());
         var uuid = assert (record.get ('uuid'));
+
         var tab = this.get_tab (uuid);
         if (!tab) {
 
@@ -186,7 +184,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
     create_image_tab: function (record, callback, scope) {
 
         var application = assert (this.application);
-        var view = assert (this.getTabManager ());
+        var tab_manager = assert (this.getTabManager ());
         var uuid = assert (record.get ('uuid'));
 
         var tab = this.get_tab (uuid);
@@ -222,10 +220,10 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 record: record, listeners: {render: on_render}
             });
 
-            tab = view.add (viewer_tab);
+            tab = tab_manager.add (viewer_tab);
         }
 
-        view.setActiveTab (tab);
+        tab_manager.setActiveTab (tab);
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -233,7 +231,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
     update_tab: function (source, args) {
         if (source == this) return;
-        assert (args && args.record);
 
         var mime = assert (args.record.get ('mime'));
         var uuid = assert (args.record.get ('uuid'));
@@ -247,7 +244,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     update_text_tab: function (tab, callback, scope) {
-        assert (tab);
 
         var record = assert (tab.record);
         var uuid = assert (record.get ('uuid'));
@@ -284,7 +280,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
     rename_tab: function (source, args) {
         if (source == this) return;
-        assert (args && args.record);
 
         var uuid = assert (args.record.get ('uuid'));
         var name = assert (args.record.get ('name'));
@@ -294,7 +289,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
     delete_tab: function (source, args) {
         if (source == this) return;
-        assert (args && args.record);
 
         var uuid = assert (args.record.get ('uuid'));
         var tab = this.get_tab (uuid);
@@ -305,14 +299,14 @@ Ext.define ('Webed.controller.tab.TabManager', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_tab: function (uuid) {
-        assert (uuid);
 
-        var view = assert (this.getTabManager ());
-        var tabs = assert (view.queryBy (function (el) {
-            return (el.record && el.record.get ('uuid') == uuid)
+        var tab_manager = assert (this.getTabManager ());
+        var tabs = tab_manager.queryBy (function (el) {
+            return (el.record && el.record.get ('uuid') == assert (uuid))
                 ? true : false;
-        }, this));
+        }, this);
 
+        assert (tabs);
         return (tabs.length > 0) ? tabs[0] : null;
     }
 });
