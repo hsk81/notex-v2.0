@@ -148,21 +148,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
     },
 
     slider_change: function (self, value) {
-        var viewport = assert (self.up ('viewport'));
-        var tab_manager = assert (viewport.down ('tab-manager'));
-
-        var tab = tab_manager.getActiveTab ();
-        if (tab) {
-            var ca = tab.down ('code-area');
-            if (ca) {
-                ca.setFontSize (value);
-            } else {
-                Webed.form.field.CodeArea.setFontSize (value);
-            }
-        } else {
-            Webed.form.field.CodeArea.setFontSize (value);
-        }
-
+        Webed.form.field.CodeArea.setFontSize (value);
         assert (this.getZoomButton ()).setText (value + '%');
         Ext.util.Cookies.set ('editor.font-size', value);
     },

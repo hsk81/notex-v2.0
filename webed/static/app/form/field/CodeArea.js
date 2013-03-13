@@ -19,16 +19,40 @@ Ext.define ('Webed.form.field.CodeArea', {
     },
 
     statics: {
-        setHeight: function (value) {
-            Ext.util.CSS.updateRule ('.CodeMirror', 'height', value + 'px');
+        setHeight: function (value, ca) {
+            if (ca && ca.id) {
+                $('#{0} .CodeMirror'.format (ca.id)).css (
+                    'height', value + 'px'
+                );
+            } else {
+                Ext.util.CSS.updateRule ('.CodeMirror',
+                    'height', value + 'px'
+                );
+            }
         },
 
-        setFontSize: function (value) {
-            Ext.util.CSS.updateRule ('.CodeMirror', 'font-size', value + '%');
+        setFontSize: function (value, ca) {
+            if (ca && ca.id) {
+                $('#{0} .CodeMirror'.format (ca.id)).css (
+                    'font-size', value + '%'
+                );
+            } else {
+                Ext.util.CSS.updateRule ('.CodeMirror',
+                    'font-size', value + '%'
+                );
+            }
         },
 
-        setDirection: function (value) {
-            Ext.util.CSS.updateRule ('.CodeMirror pre', 'direction', value);
+        setDirection: function (value, ca) {
+            if (ca && ca.id) {
+                $('#{0} .CodeMirror pre'.format (ca.id)).css (
+                    'direction', value
+                );
+            } else {
+                Ext.util.CSS.updateRule ('.CodeMirror pre',
+                    'direction', value
+                );
+            }
         },
 
         getTypoEngine: function () {
@@ -160,12 +184,12 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
 
     setHeight: function (value) {
-        Webed.form.field.CodeArea.setHeight (value);
+        Webed.form.field.CodeArea.setHeight (value, this);
         this.updateLayout ();
     },
 
     setFontSize: function (value) {
-        Webed.form.field.CodeArea.setFontSize (value);
+        Webed.form.field.CodeArea.setFontSize (value, this);
         this.updateLayout ();
     },
 
@@ -188,8 +212,8 @@ Ext.define ('Webed.form.field.CodeArea', {
 
     focus: function (selectText, delay) {
         if (this.codemirror) {
-            Ext.defer (function () {
-                this.codemirror.focus ();
+            var me = this; Ext.defer (function () {
+                me.codemirror.focus ();
             }, delay, this);
         } else {
             this.callParent (arguments);
