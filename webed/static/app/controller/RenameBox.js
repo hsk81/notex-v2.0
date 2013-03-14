@@ -58,7 +58,7 @@ Ext.define ('Webed.controller.RenameBox', {
 
     show: function () {
         var box = assert (this.getRenameBox ());
-        var record = assert (box.record);
+        var record = assert (box.getRecord ());
         var textfield = assert (box.down ('textfield'));
 
         var fullname = assert (record.get ('name'));
@@ -75,7 +75,7 @@ Ext.define ('Webed.controller.RenameBox', {
         var application = assert (this.application);
         var box = assert (this.getRenameBox ());
         var textfield = assert (box.down ('textfield'));
-        var record = assert (box.record);
+        var record = assert (box.getRecord ());
 
         if (!textfield.isValid ()) {
             return;
