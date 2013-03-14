@@ -120,14 +120,14 @@ class StringProperty (Property, DataPropertyMixin):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (StringProperty, self).__init__ (name, node, mime=mime \
+        super (StringProperty, self).__init__ (name, node, mime=mime
             if mime else 'text/plain', uuid=uuid)
 
         self.set_data (data)
 
     def __repr__ (self):
 
-        return u'<StringProperty@%x: %s>' % (self.id if self.id \
+        return u'<StringProperty@%x: %s>' % (self.id if self.id
             else 0, self._name)
 
 ###############################################################################
@@ -176,7 +176,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (ExternalProperty, self).__init__ (name, node, mime=mime \
+        super (ExternalProperty, self).__init__ (name, node, mime=mime
             if mime else 'application/octet-stream', uuid=uuid)
 
         self.set_data (data)
@@ -226,7 +226,7 @@ class Base64Property (ExternalProperty):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (Base64Property, self).__init__ (name, data, node, mime=mime \
+        super (Base64Property, self).__init__ (name, data, node, mime=mime
             if mime else 'application/octet-stream', uuid=uuid)
 
     def __repr__ (self):
@@ -253,7 +253,7 @@ class TextProperty (ExternalProperty):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (TextProperty, self).__init__ (name, data, node, mime=mime \
+        super (TextProperty, self).__init__ (name, data, node, mime=mime
             if mime else 'text/plain', uuid=uuid)
 
     def __repr__ (self):
