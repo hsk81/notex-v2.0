@@ -37,6 +37,7 @@ Ext.application ({
         'AddFolderBox',
         'AddProjectBox',
         'ArchiveUploadBox',
+        'ConfirmBox',
         'DeleteBox',
         'FileUploadBox',
         'InsertLinkBox',

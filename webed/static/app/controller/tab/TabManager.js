@@ -155,7 +155,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     assert (props && props.length > 0);
                     var data = props[0].get ('data');
                     assert (data || data == '');
+
                     ca.setValue (data);
+                    ca.setClean ();
 
                     if (callback && callback.call) {
                         callback.call (scope||this, props);
@@ -247,8 +249,10 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
         var record = assert (tab.record);
         var uuid = assert (record.get ('uuid'));
-        var ta = assert (tab.child ('code-area'));
-        var data = ta.getValue (); assert (data != null);
+        var ca = assert (tab.child ('code-area'));
+
+        var data = ca.getValue ();
+        assert (data != null);
 
         this.application.fireEvent ('get_property', this, {
             callback: on_get, scope: this, property: [{
@@ -266,6 +270,8 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     if (callback && callback.call) {
                         callback.call (scope||this, [prop], op);
                     }
+
+                    if (op.success) ca.setClean ();
                 }
             });
         }

@@ -5,11 +5,16 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         selector: 'text-editor', ref: 'textEditor'
     }],
 
+    requires: [
+        'Webed.view.ConfirmBox'
+    ],
+
     init: function () {
         this.control ({
             'text-editor' : {
                 afterlayout: this.afterlayout,
-                activate: this.activate
+                activate: this.activate,
+                beforeclose: this.beforeclose
             },
 
             'text-editor code-area': {
@@ -33,6 +38,38 @@ Ext.define ('Webed.controller.panel.TextEditor', {
 
     activate: function (self) {
         assert (self.child ('code-area')).focus (true, 125);
+    },
+
+    beforeclose: function (self) {
+        var ca = assert (self.child ('code-area'));
+        if (!ca.getClean ({fake: true})) {
+
+            var record = assert (self.getRecord ());
+            var name_path = assert (record.get ('name_path'));
+            var value = assert (name_path.slice (1).join ('/'));
+            var title = assert (record.getTitle ());
+            var iconCls = assert (record.get ('iconCls'));
+
+            var confirmBox = Ext.create ('Webed.view.ConfirmBox', {
+                title: 'Close {0}?'.format (title),
+                iconCls: iconCls,
+                value: value,
+
+                listeners: {
+                    confirm: function (box) {
+                        box.close ();
+                        ca.setClean ({fake: true});
+                        self.close ();
+                    },
+                    cancel: function (box) {
+                        box.close ();
+                    }
+                }
+            });
+
+            confirmBox.show ();
+            return false;
+        } return true;
     },
 
     focus: function (code_area) {

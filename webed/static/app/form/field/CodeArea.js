@@ -98,30 +98,32 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    mirror: function (ta, options) {
-        var editor = CodeMirror.fromTextArea (ta, options);
-        if (options.mode) CodeMirror.autoLoadMode (editor, options.mode);
+    mirror: function (ta) {
+
+        var options = assert (this.getOptions ());
+        var codemirror = CodeMirror.fromTextArea (ta, options);
+        if (options.mode) CodeMirror.autoLoadMode (codemirror, options.mode);
 
         var me = this;
-        editor.on ('cursorActivity', function (self) {
+        codemirror.on ('cursorActivity', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
         });
-        editor.on ('focus', function (self) {
+        codemirror.on ('focus', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
             me.fireEvent ('focus', me);
         });
-        editor.on ('blur', function (self) {
+        codemirror.on ('blur', function (self) {
             me.fireEvent ('blur', me);
         });
 
         if (this.needSpellChecker (this.getMime ())) {
             this.spellChecker = this.getSpellChecker ();
-            editor.addOverlay (this.spellChecker);
+            codemirror.addOverlay (this.spellChecker);
         } else {
             this.spellChecker = null;
         }
 
-        return editor;
+        return codemirror;
     },
 
     link_to: function (that) {
@@ -129,6 +131,9 @@ Ext.define ('Webed.form.field.CodeArea', {
         var lnk = assert (doc.linkedDoc ({sharedHist: true}));
         return assert (this.codemirror.swapDoc (lnk));
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     needSpellChecker: function (mime) {
         var store = assert (Ext.getStore ('MIMEs'));
@@ -172,9 +177,7 @@ Ext.define ('Webed.form.field.CodeArea', {
             this.codemirror.setValue (value);
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = this.mirror (
-                    this.inputEl.dom, this.getOptions ()
-                );
+                this.codemirror = this.mirror (this.inputEl.dom);
                 this.codemirror.setValue (value);
             } else {
                 this.callParent (arguments);
@@ -206,14 +209,44 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    setClean: function (config) {
+
+        if (!config||!config.fake) {
+            if (this.codemirror) {
+                this.codemirror.markClean ();
+                this.fake_clean = undefined;
+            } else {
+                this.fake_clean = true;
+            }
+        } else {
+            this.fake_clean = true;
+        }
+    },
+
+    getClean: function (config) {
+
+        if (config && config.fake) {
+            if (this.fake_clean !== undefined) {
+                return this.fake_clean;
+            }
+        }
+
+        if (this.codemirror) {
+            return this.codemirror.isClean ();
+        }
+
+        return undefined;
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
         } else {
             if (this.inputEl && this.inputEl.dom) {
-                this.codemirror = this.mirror (
-                    this.inputEl.dom, this.getOptions ()
-                );
+                this.codemirror = this.mirror (this.inputEl.dom);
             } else {
                 this.callParent (arguments);
             }
