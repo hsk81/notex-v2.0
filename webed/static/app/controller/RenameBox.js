@@ -59,10 +59,13 @@ Ext.define ('Webed.controller.RenameBox', {
     show: function () {
         var box = assert (this.getRenameBox ());
         var record = assert (box.record);
-        var name = assert (record.get ('name'));
         var textfield = assert (box.down ('textfield'));
 
-        textfield.setValue (name);
+        var fullname = assert (record.get ('name'));
+        var array = assert (fullname.split ('.'));
+        var ext = assert (array.pop ());
+
+        textfield.setValue (array.join ('.'));
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -87,9 +90,13 @@ Ext.define ('Webed.controller.RenameBox', {
             }
         }
 
+        var fullname = assert (record.get ('name'));
+        var array = assert (fullname.split ('.'));
+        var ext = assert (array.pop ());
+
         application.fireEvent ('update_node', {
             scope: this, callback: callback, for: record, to: {
-                name: textfield.getValue ()
+                name: textfield.getValue () + '.' + ext
             }
         });
 
