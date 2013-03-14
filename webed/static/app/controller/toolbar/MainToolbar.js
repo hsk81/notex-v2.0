@@ -1,9 +1,6 @@
 Ext.define ('Webed.controller.toolbar.MainToolbar', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     init: function () {
         this.control ({
             'main-toolbar button[action=save-document]': {
@@ -40,6 +37,10 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 afterrender: this.afterrender
             }
         });
+    },
+
+    get_selection: function () {
+        return this.application.get_selection ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -208,13 +209,6 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 button.enable ();
             }
         });
-   },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    get_selection: function () {
-        return this.application.get_selection ();
     }
 });
 
@@ -304,6 +298,3 @@ Ext.define ('Webed.controller.MainBar.KeyMap', {
         }
     }]
 });
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
