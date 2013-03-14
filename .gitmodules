@@ -19,3 +19,6 @@
 [submodule "webed/static/lib/typojs.git"]
 	path = webed/static/lib/typojs.git
 	url = https://github.com/hsk81/Typo.js.git
+[submodule "webed/static/lib/dmp.git"]
+	path = webed/static/lib/dmp.git
+	url = https://github.com/hsk81/google-diff-match-patch

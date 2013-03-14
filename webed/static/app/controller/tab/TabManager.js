@@ -158,6 +158,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
                     ca.setValue (data);
                     ca.setClean ();
+                    ca.synchronize ();
 
                     if (callback && callback.call) {
                         callback.call (scope||this, props);
@@ -256,21 +257,29 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 callback.call (scope||this, [], {success: true});
             }
         } else {
-            var data = ca.getValue ();
-            assert (data != null);
+            var variation = ca.getValue ();
+            assert (variation != null);
+            var difference = ca.getDifference (variation);
+            assert (difference != null);
 
             function on_get (props) {
                 assert (props && props.length > 0);
 
-                props[0].set ('data', data);
-                props[0].set ('size', utf8Length (data.length));
+                props[0].set ('data', difference);
+                props[0].set ('size', utf8Length (variation.length));
+
                 props[0].save ({
                     scope: this, callback: function (prop, op) {
+                        props[0].set ('data', variation);
+
+                        if (op.success) {
+                            ca.setClean ();
+                            ca.synchronize ();
+                        }
+
                         if (callback && callback.call) {
                             callback.call (scope||this, [prop], op);
                         }
-
-                        if (op.success) ca.setClean ();
                     }
                 });
             }

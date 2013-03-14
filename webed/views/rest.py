@@ -466,7 +466,7 @@ def property_update (json=True):
     if data and prop.data != data: prop.data = data
     if size and prop.size != size: pass ## ignore!
 
-    result = dict (success=True, result=prop2ext (prop))
+    result = dict (success=True, result=prop2ext (prop, omit_data=True))
     return jsonify (result) if json else result
 
 @db.commit ()
@@ -552,7 +552,7 @@ def leaf2ext (leaf):
         'name_path': leaf.get_path (field='name')
     }
 
-def prop2ext (prop):
+def prop2ext (prop, omit_data=False):
 
     assert prop
     assert prop.node
@@ -570,7 +570,7 @@ def prop2ext (prop):
         'type': prop.type,
         'mime': prop.mime,
         'name': prop.name,
-        'data': prop.data,
+        'data': prop.data if not omit_data else None,
         'size': prop.size
     }
 

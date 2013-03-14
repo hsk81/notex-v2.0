@@ -67,6 +67,12 @@ Ext.define ('Webed.form.field.CodeArea', {
                     if (value) ca.codemirror.addOverlay (ca.spellChecker);
                 }
             });
+        },
+
+        DMP: function () {
+            if (Webed.form.field.CodeArea.dmp == undefined)
+                Webed.form.field.CodeArea.dmp = new diff_match_patch ();
+            return Webed.form.field.CodeArea.dmp;
         }
     },
 
@@ -241,6 +247,32 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    getDifference: function (variation) {
+        var original = this.getOriginal ();
+        if (original) {
+            var dmp = Webed.form.field.CodeArea.DMP ();
+            var patches = assert (dmp.patch_make (original, variation));
+            return dmp.patch_toText (patches);
+        } else {
+            return undefined;
+        }
+    },
+
+    getOriginal: function () {
+        if (this.codemirror) {
+            return assert (this.codemirror.getTextArea ()).value;
+        } else {
+            return undefined;
+        }
+    },
+
+    synchronize: function () {
+        if (this.codemirror) this.codemirror.save ();
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
@@ -252,6 +284,9 @@ Ext.define ('Webed.form.field.CodeArea', {
             }
         }
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     focus: function (selectText, delay) {
         if (this.codemirror) {

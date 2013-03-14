@@ -3,6 +3,8 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from diff_match_patch import diff_match_patch as DMP
+
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects import postgres as pg
 from sqlalchemy import event
@@ -149,6 +151,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     def set_data (self, value):
 
+        value = self.patch (value)
         value_key = unicode (cache.make_key (value))
         if self._data == value_key: return
 
@@ -171,6 +174,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     def decode (self, value): return value
     def encode (self, value): return value
+    def patch (self, value): return value
 
     ###########################################################################
 
@@ -251,6 +255,21 @@ class TextProperty (ExternalProperty):
         except ValueError:
             return value
 
+    def patch (self, value):
+
+        if self._data:
+            path_to = os.path.join (app.config['FS_CACHE'], self._data)
+            if os.path.exists (path_to):
+
+                with open (path_to, 'r') as file:
+                    original = self.decode (file.read ())
+
+                patches = self.dmp.patch_fromText (value)
+                value, results = self.dmp.patch_apply (patches, original)
+                assert all (results)
+
+        return value
+
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
         super (TextProperty, self).__init__ (name, data, node, mime=mime
@@ -260,6 +279,14 @@ class TextProperty (ExternalProperty):
 
         return u'<TextProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
+
+    @property
+    def dmp (self):
+
+        if not hasattr (self, '_dmp') or not self._dmp:
+            self._dmp = DMP ()
+
+        return self._dmp
 
 ###############################################################################
 ###############################################################################

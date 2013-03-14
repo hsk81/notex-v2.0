@@ -3,6 +3,18 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+import os
+import sys
+
+cmd_subfolder = os.path.abspath ('webed/static/lib/dmp/python2')
+assert os.path.exists (cmd_subfolder)
+
+if cmd_subfolder not in sys.path:
+    sys.path.insert(0, cmd_subfolder)
+
+###############################################################################
+###############################################################################
+
 import admin
 import views
 
