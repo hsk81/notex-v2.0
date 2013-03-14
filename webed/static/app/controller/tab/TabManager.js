@@ -278,7 +278,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     update_image_tab: function (tab, callback, scope) {
-        console.debug ('[update-image-tab]', tab, callback, scope);
+        if (callback && callback.call) {
+            callback.call (scope||this, [], {success: true});
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
