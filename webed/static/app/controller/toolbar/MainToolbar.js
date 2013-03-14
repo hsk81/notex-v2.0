@@ -118,7 +118,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             var renameBox = Ext.create ('Webed.view.RenameBox', {
                 title: Ext.String.format ('Rename {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
-                node: node
+                record: node
             });
 
             renameBox.show ();

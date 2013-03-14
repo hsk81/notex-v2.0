@@ -1,15 +1,9 @@
 Ext.define ('Webed.controller.RenameBox', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     refs: [{
         selector: 'rename-box', ref: 'renameBox'
     }],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.control ({
@@ -63,59 +57,46 @@ Ext.define ('Webed.controller.RenameBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     show: function () {
-        var view = this.getRenameBox ();
-        assert (view);
-        var node = view.node;
-        assert (node);
-        var name = node.get ('name');
-        assert (name);
-        var textfield = view.down ('textfield');
-        assert (textfield);
+        var box = assert (this.getRenameBox ());
+        var record = assert (box.record);
+        var name = assert (record.get ('name'));
+        var textfield = assert (box.down ('textfield'));
 
         textfield.setValue (name);
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     confirm: function () {
-        var application = this.application;
-        assert (application);
-        var view = this.getRenameBox ();
-        assert (view);
-        var textfield = view.down ('textfield');
-        assert (textfield);
-        var node = view.node;
-        assert (node);
+        var application = assert (this.application);
+        var box = assert (this.getRenameBox ());
+        var textfield = assert (box.down ('textfield'));
+        var record = assert (box.record);
 
         if (!textfield.isValid ()) {
             return;
         }
 
-        function callback (rec, op) {
-            if (rec && op && op.success) {
-                application.fireEvent ('rename_tab', this, {
-                    record: rec
-                });
-                application.fireEvent ('reload_leaf', this, {
-                    record: rec
-                });
+        function callback (record, op) {
+            if (record && op && op.success) {
+                application.fireEvent ('rename_tab', this, {record: record});
+                application.fireEvent ('reload_leaf', this, {record: record});
             } else {
-                console.error ('[RenameBox.confirm]', rec, op);
+                console.error ('[RenameBox.confirm]', record, op);
             }
         }
 
         application.fireEvent ('update_node', {
-            scope: this, callback: callback, for: node, to: {
+            scope: this, callback: callback, for: record, to: {
                 name: textfield.getValue ()
             }
         });
 
-        view.destroy ();
+        box.close ();
     },
 
     cancel: function () {
-        var view = this.getRenameBox ();
-        assert (view); view.destroy ();
+        assert (this.getRenameBox ()).close ();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });

@@ -17,10 +17,10 @@ Ext.define ('Webed.controller.DeleteBox', {
         var box = assert (this.getDeleteBox ());
         var record = assert (box.getRecord ());
         var name_path = assert (record.get ('name_path'));
-        var value = assert (name_path.slice (1).join ('/'));
+        var path = assert (name_path.slice (1).join ('/'));
         var textfield = assert (box.down ('textfield'));
 
-        textfield.setValue (value);
+        textfield.setValue (path);
     },
 
     confirm: function () {
