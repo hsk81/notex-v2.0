@@ -41,11 +41,11 @@ Ext.define ('Webed.controller.RenameBox', {
         }
     },
 
-    focus: function (textfield, event) {
+    focus: function (textfield) {
         textfield.autofocus = true;
     },
 
-    blur: function (textfield, event) {
+    blur: function (textfield) {
         if (textfield.autofocus) textfield.focus (true, 25);
     },
 
@@ -63,7 +63,7 @@ Ext.define ('Webed.controller.RenameBox', {
 
         var fullname = assert (record.get ('name'));
         var array = assert (fullname.split ('.'));
-        var ext = assert (array.pop ());
+        assert (array.pop ()); // extension
 
         textfield.setValue (array.join ('.'));
     },
