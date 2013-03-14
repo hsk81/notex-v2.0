@@ -277,9 +277,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
                             ca.synchronize ();
                         }
 
-                        if (callback && callback.call) {
-                            callback.call (scope||this, [prop], op);
-                        }
+                        if (callback && callback.call) callback.call (
+                            scope||this, [prop], op
+                        );
                     }
                 });
             }
