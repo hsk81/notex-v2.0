@@ -103,7 +103,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     addFile: function () {
         var addFileBox = Ext.create ('Webed.view.AddFileBox', {
-            node: assert (this.get_selection ())
+            record: assert (this.get_selection ())
         });
 
         addFileBox.show ();

@@ -1,15 +1,9 @@
 Ext.define ('Webed.controller.AddFileBox', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     refs: [{
         selector: 'add-file-box', ref: 'addFileBox'
     }],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.control ({
@@ -49,16 +43,15 @@ Ext.define ('Webed.controller.AddFileBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     mime_afterrender: function (combobox) {
-        var view = assert (this.getAddFileBox ());
-        var node = assert (view.node);
-        if (node.isLeaf ()) {
-            node = assert (node.parentNode);
+        var box = assert (this.getAddFileBox ());
+        var record = assert (box.getRecord ());
+        if (record.isLeaf ()) {
+            record = assert (record.parentNode);
         }
 
         var store = assert (combobox.getStore ());
-        var mime = assert (node.get ('mime'));
-        var MIMEs = assert (store.query ('mime', mime));
-        var MIME = assert (MIMEs.getAt (0));
+        var mime = assert (record.get ('mime'));
+        var MIME = assert (store.query ('mime', mime).getAt (0));
 
         var main = MIME.get ('main');
         if (main) {
@@ -66,8 +59,8 @@ Ext.define ('Webed.controller.AddFileBox', {
 
             var form = assert (combobox.up ('form'));
             var textfield = assert (form.down ('textfield'));
-            var record = assert (store.findRecord ('mime', main));
-            var exts = assert (record.get ('exts'));
+            var MAIN = assert (store.findRecord ('mime', main));
+            var exts = assert (MAIN.get ('exts'));
             var ext = assert (exts.length > 0 && exts[0]);
 
             textfield.setValue ('file.{0}'.format (ext));
@@ -87,18 +80,18 @@ Ext.define ('Webed.controller.AddFileBox', {
 
     confirm: function () {
         var application = assert (this.application);
-        var view = assert (this.getAddFileBox ());
-        var textfield = assert (view.down ('textfield[name=name]'));
-        var combobox = assert (view.down ('combobox[name=mime]'));
+        var box = assert (this.getAddFileBox ());
+        var textfield = assert (box.down ('textfield[name=name]'));
+        var combobox = assert (box.down ('combobox[name=mime]'));
 
         if (!textfield.isValid ()) return;
         var name = assert (textfield.getValue ());
         if (!combobox.isValid ()) return;
         var mime = assert (combobox.getValue ());
 
-        var node = assert (view.node);
-        if (node.isLeaf ()) {
-            node = assert (node.parentNode);
+        var record = assert (box.getRecord ());
+        if (record.isLeaf ()) {
+            record = assert (record.parentNode);
         }
 
         function callback (leaf, op) {
@@ -113,8 +106,8 @@ Ext.define ('Webed.controller.AddFileBox', {
                     scope: this, callback: on_set, property: [{
                         data: '....\n',
                         mime: mime,
-                        node_uuid: leaf.get ('uuid'),
                         name: 'data',
+                        node_uuid: leaf.get ('uuid'),
                         size: 5,
                         type: 'TextProperty'
                     }]
@@ -128,16 +121,16 @@ Ext.define ('Webed.controller.AddFileBox', {
             scope: this, callback: callback, with: {
                 mime: mime,
                 name: name,
-                root: node,
+                root: record,
                 size: 5
             }
         });
 
-        view.destroy ();
+        box.close ();
     },
 
     cancel: function () {
-        assert (this.getAddFileBox ()).destroy ();
+        assert (this.getAddFileBox ()).close ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
