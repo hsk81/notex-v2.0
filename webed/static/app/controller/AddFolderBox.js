@@ -1,15 +1,9 @@
 Ext.define ('Webed.controller.AddFolderBox', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     refs: [{
         selector: 'add-folder-box', ref: 'addFolderBox'
     }],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.control ({
@@ -60,27 +54,22 @@ Ext.define ('Webed.controller.AddFolderBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirm: function () {
-        var application = this.application;
-        assert (application);
-        var view = this.getAddFolderBox ();
-        assert (view);
-        var textfield = view.down ('textfield');
-        assert (textfield);
-        var node = view.node;
-        assert (node);
+        var application = assert (this.application);
+        var box = assert (this.getAddFolderBox ());
+        var textfield = assert (box.down ('textfield'));
+        var record = assert (box.getRecord ());
 
         if (!textfield.isValid ()) {
             return;
         }
 
-        if (node.isLeaf ()) {
-            assert (node.parentNode);
-            node = node.parentNode;
+        if (record.isLeaf ()) {
+            record = assert (record.parentNode);
         }
 
-        function callback (rec, op) {
-            if (!rec||!op||!op.success) {
-                console.error ('[AddFolderBox.confirm]', rec, op);
+        function callback (record, op) {
+            if (!record||!op||!op.success) {
+                console.error ('[AddFolderBox.confirm]', record, op);
             }
         }
 
@@ -88,18 +77,14 @@ Ext.define ('Webed.controller.AddFolderBox', {
             scope: this, callback: callback, with: {
                 name: textfield.getValue (),
                 mime: 'application/folder',
-                root: node
+                root: record
             }
         });
 
-        view.destroy ();
+        box.close ();
     },
 
     cancel: function () {
-        var view = this.getAddFolderBox ();
-        assert (view); view.destroy ();
+        assert (this.getAddFolderBox ()).close ();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });

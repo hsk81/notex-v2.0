@@ -95,7 +95,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     addFolder: function () {
         var addFolderBox = Ext.create ('Webed.view.AddFolderBox', {
-            node: assert (this.get_selection ())
+            record: assert (this.get_selection ())
         });
 
         addFolderBox.show ();
