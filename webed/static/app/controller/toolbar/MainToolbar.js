@@ -132,9 +132,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         var node = assert (this.get_selection ());
         if (node.isRoot () == false) {
             var deleteBox = Ext.create ('Webed.view.DeleteBox', {
-                title: Ext.String.format ('Delete {0}', node.getTitle ()),
+                title: Ext.String.format ('Delete {0}?', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
-                node: node
+                record: node
             });
 
             deleteBox.show ();

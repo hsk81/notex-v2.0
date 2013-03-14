@@ -35,5 +35,15 @@ Ext.define ('Webed.view.DeleteBox', {
         text: 'Cancel',
         iconCls: 'icon-cross-16',
         action: 'cancel'
-    }]
+    }],
+
+    config: {
+        record: undefined
+    },
+
+    constructor: function (config) {
+        this.initConfig (config);
+        this.callParent (arguments);
+        assert (this.getRecord ());
+    }
 });

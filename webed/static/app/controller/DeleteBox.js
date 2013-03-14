@@ -1,15 +1,9 @@
 Ext.define ('Webed.controller.DeleteBox', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     refs: [{
         selector: 'delete-box', ref: 'deleteBox'
     }],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.control ({
@@ -19,57 +13,38 @@ Ext.define ('Webed.controller.DeleteBox', {
         });
     },
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     show: function () {
-        var view = this.getDeleteBox ();
-        assert (view);
-        var node = view.node;
-        assert (node);
-        var name_path = node.get ('name_path');
-        assert (name_path);
-        var path = name_path.slice (1).join ('/');
-        assert (path);
-        var textfield = view.down ('textfield');
-        assert (textfield);
+        var box = assert (this.getDeleteBox ());
+        var record = assert (box.getRecord ());
+        var name_path = assert (record.get ('name_path'));
+        var value = assert (name_path.slice (1).join ('/'));
+        var textfield = assert (box.down ('textfield'));
 
-        textfield.setValue (path);
+        textfield.setValue (value);
     },
 
     confirm: function () {
-        var application = this.application;
-        assert (application);
-        var view = this.getDeleteBox ();
-        assert (view);
-        var node = view.node;
-        assert (node);
+        var application = assert (this.application);
+        var box = assert (this.getDeleteBox ());
+        var record = assert (box.getRecord ());
 
-        function callback (rec, op) {
-            if (rec && op && op.success) {
-                application.fireEvent ('delete_tab', this, {
-                    record: rec
-                });
-                application.fireEvent ('reload_leaf', this, {
-                    record: rec
-                });
+        function callback (record, op) {
+            if (record && op && op.success) {
+                application.fireEvent ('delete_tab', this, {record: record});
+                application.fireEvent ('reload_leaf', this, {record: record});
             } else {
-                console.error ('[DeleteBox.confirm]', rec, op);
+                console.error ('[DeleteBox.confirm]', record, op);
             }
         }
 
         application.fireEvent ('delete_node', {
-            scope: this, callback: callback, for: node
+            scope: this, callback: callback, for: record
         });
 
-        view.destroy ();
+        box.close ();
     },
 
     cancel: function () {
-        var view = this.getDeleteBox ();
-        assert (view); view.destroy ();
+        assert (this.getDeleteBox ()).close ();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });
