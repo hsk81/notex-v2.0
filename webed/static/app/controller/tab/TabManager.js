@@ -251,28 +251,34 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var uuid = assert (record.get ('uuid'));
         var ca = assert (tab.child ('code-area'));
 
-        var data = ca.getValue ();
-        assert (data != null);
+        if (ca.getClean ()) {
+            if (callback && callback.call) {
+                callback.call (scope||this, [], {success: true});
+            }
+        } else {
+            var data = ca.getValue ();
+            assert (data != null);
 
-        this.application.fireEvent ('get_property', this, {
-            callback: on_get, scope: this, property: [{
-                node_uuid: uuid, name: 'data'
-            }]
-        });
+            function on_get (props) {
+                assert (props && props.length > 0);
 
-        function on_get (props) {
-            assert (props && props.length > 0);
+                props[0].set ('data', data);
+                props[0].set ('size', utf8Length (data.length));
+                props[0].save ({
+                    scope: this, callback: function (prop, op) {
+                        if (callback && callback.call) {
+                            callback.call (scope||this, [prop], op);
+                        }
 
-            props[0].set ('data', data);
-            props[0].set ('size', utf8Length (data.length));
-            props[0].save ({
-                scope: this, callback: function (prop, op) {
-                    if (callback && callback.call) {
-                        callback.call (scope||this, [prop], op);
+                        if (op.success) ca.setClean ();
                     }
+                });
+            }
 
-                    if (op.success) ca.setClean ();
-                }
+            this.application.fireEvent ('get_property', this, {
+                callback: on_get, scope: this, property: [{
+                    node_uuid: uuid, name: 'data'
+                }]
             });
         }
     },
