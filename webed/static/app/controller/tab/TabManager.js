@@ -253,9 +253,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var ca = assert (tab.child ('code-area'));
 
         if (ca.getClean ()) {
-            if (callback && callback.call) {
-                callback.call (scope||this, [], {success: true});
-            }
+            if (callback && callback.call) callback.call (
+                scope||this, [], {success: true}
+            );
         } else {
             var variation = ca.getValue ();
             assert (variation != null);
