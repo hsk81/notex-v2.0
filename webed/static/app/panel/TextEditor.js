@@ -16,8 +16,8 @@ Ext.define ('Webed.panel.TextEditor', {
     },
 
     constructor: function (config) {
-        this.initConfig (config);
 
+        this.initConfig (config);
         var record = assert (this.getRecord ());
         var code_area = assert (this.getCodeArea ());
 
