@@ -16,10 +16,13 @@ resource = Blueprint ('resource', __name__)
 ###############################################################################
 
 @resource.route ('/all-classes.js', methods=['GET'])
-def all_classes (path='webed/templates/all-classes.js'):
+def all_classes (path='webed/static/all-classes.js'):
+    return make_resource_response (path, 'text/javascript')
+
+def make_resource_response (path, content_type):
 
     response = make_response (open (os.path.abspath (path)).read ())
-    response.headers['Content-Type'] = 'text/javascript'
+    response.headers['Content-Type'] = content_type
     return response
 
 ###############################################################################
