@@ -11,6 +11,7 @@ Ext.require ([
     'Ext.form.field.VTypes',
     'Ext.data.writer.Json',
     'Ext.data.reader.Json',
+    'Ext.data.proxy.Rest',
 
     'Webed.store.MIMEs',
     'Webed.store.Linguas',

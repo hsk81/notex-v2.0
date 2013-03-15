@@ -55,7 +55,8 @@ def main (page='home', template='index.html'):
     def cached_template (template, page, debug):
         return render_template (template, page=page, debug=debug)
 
-    return cached_template (template, page=page, debug=app.debug)
+    return cached_template (template, page=page, debug=app.debug
+        if not 'no-debug' in request.args else False)
 
 ###############################################################################
 ###############################################################################
