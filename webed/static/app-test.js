@@ -9,6 +9,7 @@ Ext.require ('Ext.data.writer.Json');
 Ext.require ('Ext.data.reader.Json');
 
 Ext.require ('Webed.store.MIMEs');
+Ext.require ('Webed.store.Linguas');
 Ext.require ('Webed.store.Nodes');
 Ext.require ('Webed.store.Leafs');
 Ext.require ('Webed.store.Properties');

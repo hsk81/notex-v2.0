@@ -32,10 +32,13 @@ describe ('NodeController', function () {
     it ('should set nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+        nodes.loadLock.clear ();
+        expect (nodes.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
-        nodes.load ({scope: this, callback: function (records, op, success) {
+        nodes.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
@@ -93,8 +96,11 @@ describe ('NodeController', function () {
     it ('should get nodes', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+        nodes.loadLock.clear ();
+        expect (nodes.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
         nodes.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();

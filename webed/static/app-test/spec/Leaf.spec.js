@@ -32,10 +32,13 @@ describe ('LeafController', function () {
     it ('should set leafs', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+        nodes.loadLock.clear ();
+        expect (nodes.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
-        nodes.load ({scope: this, callback: function (records, op, success) {
+        nodes.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();
             expect (records.length).toBeGreaterThan (0);
 
@@ -93,8 +96,11 @@ describe ('LeafController', function () {
     it ('should get leafs', function () {
         var leafs = window.app.getStore ('Leafs');
         expect (leafs).toBeTruthy ();
+        leafs.loadLock.clear ();
+        expect (leafs.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
         leafs.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();

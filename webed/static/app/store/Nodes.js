@@ -13,8 +13,10 @@ Ext.define ('Webed.store.Nodes', {
                 var rhs_name = assert (rhs.get ('name'));
 
                 if (lhs_name === rhs_name) {
-                    var lhs_size = assert (lhs.get ('size'));
-                    var rhs_size = assert (rhs.get ('size'));
+                    var lhs_size = lhs.get ('size');
+                    assert (!isNaN(lhs_size));
+                    var rhs_size = rhs.get ('size');
+                    assert (!isNaN(rhs_size));
 
                     if (lhs_size === rhs_size) {
                         return 0;

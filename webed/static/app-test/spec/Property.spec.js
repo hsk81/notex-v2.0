@@ -32,8 +32,11 @@ describe ('PropertyController', function () {
     it ('should set properties', function () {
         var nodes = window.app.getStore ('Nodes');
         expect (nodes).toBeTruthy ();
+        nodes.loadLock.clear ();
+        expect (nodes.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
         nodes.load ({scope: this, callback: function (records, op, success) {
             expect (records).toBeTruthy ();
@@ -86,8 +89,11 @@ describe ('PropertyController', function () {
     it ('should get properties', function () {
         var properties = window.app.getStore ('Properties');
         expect (properties).toBeTruthy ();
+        properties.loadLock.clear ();
+        expect (properties.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true, true]); // ensure callback verification!
+        expect (lock.empty ()).toBeFalsy ();
 
         properties.load ({scope: this, callback: function (records) {
             expect (records).toBeTruthy ();

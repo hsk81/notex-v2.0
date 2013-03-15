@@ -13,6 +13,7 @@ Ext.require ([
     'Ext.data.reader.Json',
 
     'Webed.store.MIMEs',
+    'Webed.store.Linguas',
     'Webed.store.Nodes',
     'Webed.store.Leafs',
     'Webed.store.Properties',

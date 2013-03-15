@@ -3,5 +3,18 @@ Ext.define('Webed.store.Properties', {
     requires: 'Webed.model.Property',
     model: 'Webed.model.Property',
 
-    autoLoad: false
+    listeners: {
+        beforeload: function (store) {
+
+            //
+            // Stop loading if locked: Simple method to control loading; it
+            // allows load *only* if `loadLock` is empty!
+            //
+
+            return store.loadLock.empty ();
+        }
+    },
+
+    autoLoad: false,
+    loadLock: create_lock ([]) //no lock!
 });

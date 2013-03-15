@@ -1,14 +1,8 @@
 Ext.define ('Webed.controller.Leaf', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     models: ['Leaf'],
     stores: ['Leafs'],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.application.on ({
@@ -26,8 +20,7 @@ Ext.define ('Webed.controller.Leaf', {
     set_leaf: function (source, args) {
         if (source == this) return;
 
-        var store = this.getLeafsStore ();
-        assert (store);
+        var store = assert (this.getLeafsStore ());
 
         assert (args);
         assert (args.leaf);
@@ -57,10 +50,7 @@ Ext.define ('Webed.controller.Leaf', {
             leaf.name_path.push (leaf.name);
             assert (leaf.name_path[leaf.name_path.length - 1] == leaf.name);
 
-            var model = Ext.create ('Webed.model.Leaf', leaf);
-            assert (model);
-
-            var model = model.save ({
+            assert (Ext.create ('Webed.model.Leaf', leaf)).save ({
                 scope: args.scope||this, callback: function (rec, op) {
 
                     if (rec && op && op.success) {
@@ -73,8 +63,6 @@ Ext.define ('Webed.controller.Leaf', {
                     }
                 }
             });
-
-            assert (model);
         });
     },
 
@@ -97,7 +85,9 @@ Ext.define ('Webed.controller.Leaf', {
         store.queryBy (function (leaf) {
             Ext.Array.each (args.leaf, function (object, index) {
                 Ext.Object.each (object, function (key, value) {
-                    if (leaf.get (key) != value) { index = -1; return false; }
+                    if (leaf.get (key) != value) {
+                        index = -1; return false;
+                    } return true;
                 });
 
                 if (index >= 0) array[index].push (leaf);
@@ -116,7 +106,4 @@ Ext.define ('Webed.controller.Leaf', {
             }
         });
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });

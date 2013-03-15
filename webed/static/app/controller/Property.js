@@ -1,14 +1,8 @@
 Ext.define ('Webed.controller.Property', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     models: ['Property'],
     stores: ['Properties'],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.application.on ({
@@ -26,8 +20,7 @@ Ext.define ('Webed.controller.Property', {
     set_property: function (source, args) {
         if (source == this) return;
 
-        var store = this.getPropertiesStore ();
-        assert (store);
+        var store = assert (this.getPropertiesStore ());
 
         assert (args);
         assert (args.property);
@@ -48,10 +41,7 @@ Ext.define ('Webed.controller.Property', {
             if (!prop.data) prop.data = '';
             if (!prop.size) prop.size = 0;
 
-            var model = Ext.create ('Webed.model.Property', prop);
-            assert (model);
-
-            var model = model.save ({
+            assert (Ext.create ('Webed.model.Property', prop)).save ({
                 scope: this, callback: function (rec, op) {
 
                     if (rec && op && op.success) {
@@ -64,8 +54,6 @@ Ext.define ('Webed.controller.Property', {
                     }
                 }
             });
-
-            assert (model);
         });
     },
 
@@ -78,9 +66,7 @@ Ext.define ('Webed.controller.Property', {
         assert (args.callback);
         assert (args.callback.call);
 
-        var store = this.getPropertiesStore ();
-        assert (store);
-
+        var store = assert (this.getPropertiesStore ());
         var array = Ext.Array.map (args.property, function () {
             return [];
         });
@@ -88,7 +74,9 @@ Ext.define ('Webed.controller.Property', {
         store.queryBy (function (prop) {
             Ext.Array.each (args.property, function (object, index) {
                 Ext.Object.each (object, function (key, value) {
-                    if (prop.get (key) != value) { index = -1; return false; }
+                    if (prop.get (key) != value) {
+                        index = -1; return false;
+                    } return true;
                 });
 
                 if (index >= 0) array[index].push (prop);
@@ -107,7 +95,4 @@ Ext.define ('Webed.controller.Property', {
             }
         });
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });

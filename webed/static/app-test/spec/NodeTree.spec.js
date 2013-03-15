@@ -34,6 +34,8 @@ describe ('NodeTree', function () {
 
         if (!store) store = window.app.getStore ('Nodes');
         expect (store).toBeTruthy ();
+        store.loadLock.clear ();
+        expect (store.loadLock.empty ()).toBeTruthy ();
 
         lock.init ([true]); store.load ({
             scope: this, callback: function (recs, op) {
@@ -160,7 +162,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { load ('application/folder'); });
+        runs (function () { load ('application/project+rest'); });
     });
 
     it ('should read leafs', function () {
@@ -217,7 +219,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { update ('application/folder'); });
+        runs (function () { update ('application/project+rest'); });
     });
 
     it ('should update a leaf', function () {
@@ -276,7 +278,7 @@ describe ('NodeTree', function () {
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }
 
-        runs (function () { destroy ('application/folder'); });
+        runs (function () { destroy ('application/project+rest'); });
     });
 
     it ('should delete a leaf', function () {

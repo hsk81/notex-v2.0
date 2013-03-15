@@ -1,14 +1,8 @@
 Ext.define ('Webed.controller.Node', {
     extend: 'Ext.app.Controller',
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     models: ['Node'],
     stores: ['Nodes'],
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
     init: function () {
         this.application.on ({
@@ -32,7 +26,7 @@ Ext.define ('Webed.controller.Node', {
 
         Ext.Array.each (args.node, function (node, index) {
 
-            var node = $.extend (Ext.clone (node), {
+            node = $.extend (Ext.clone (node), {
                 uuid_path: node.uuid_path.slice (0),
                 name_path: node.name_path.slice (0)
             });
@@ -54,18 +48,13 @@ Ext.define ('Webed.controller.Node', {
             node.name_path.push (node.name);
             assert (node.name_path[node.name_path.length - 1] == node.name);
 
-            var model = Ext.create ('Webed.model.Node', node);
-            assert (model);
-
-            var model = model.save ({
+            assert (Ext.create ('Webed.model.Node', node)).save ({
                 scope: args.scope||this, callback: function (rec, op) {
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op, index);
                     }
                 }
             });
-
-            assert (model);
         });
     },
 
@@ -78,9 +67,7 @@ Ext.define ('Webed.controller.Node', {
         assert (args.callback);
         assert (args.callback.call);
 
-        var store = this.getNodesStore ();
-        assert (store);
-
+        var store = assert (this.getNodesStore ());
         var array = Ext.Array.map (args.node, function () {
             return [];
         });
@@ -88,7 +75,9 @@ Ext.define ('Webed.controller.Node', {
         store.getRootNode ().cascadeBy (function (node) {
             Ext.Array.each (args.node, function (object, index) {
                 Ext.Object.each (object, function (key, value) {
-                    if (node.get (key) != value) { index = -1; return false; }
+                    if (node.get (key) != value) {
+                        index = -1; return false;
+                    } return true;
                 });
 
                 if (index >= 0) array[index].push (node);
@@ -103,12 +92,12 @@ Ext.define ('Webed.controller.Node', {
                 //
                 // Loading has the side effect of filtering associated views;
                 // most of time this is **not** desired. Therefore `get_node`
-                // should be called only with cached items, such that following
-                // load is *not* executed!
+                // should be called only with cached items, such that the
+                // following load is *not* executed!
                 //
                 // It's only meant as a fallback solution, to deliver a result
-                // if it exists; but those use cases should be review and then
-                // implemented in such a way that the load is *avoided*.
+                // if it exists; but those use cases should be reviewed and
+                // then implemented in such a way that this load is *avoided*.
                 //
 
                 store.load ({
@@ -119,7 +108,4 @@ Ext.define ('Webed.controller.Node', {
             }
         });
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 });
