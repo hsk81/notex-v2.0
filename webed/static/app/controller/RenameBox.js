@@ -95,7 +95,7 @@ Ext.define ('Webed.controller.RenameBox', {
         var ext = assert (array.pop ());
 
         application.fireEvent ('update_node', {
-            scope: this, callback: callback, for: record, to: {
+            scope: this, callback: callback, node: record, to: {
                 name: textfield.getValue () + '.' + ext
             }
         });

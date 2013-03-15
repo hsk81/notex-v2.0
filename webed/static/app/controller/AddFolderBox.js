@@ -74,7 +74,7 @@ Ext.define ('Webed.controller.AddFolderBox', {
         }
 
         application.fireEvent ('create_node', {
-            scope: this, callback: callback, with: {
+            scope: this, callback: callback, where: {
                 name: textfield.getValue (),
                 mime: 'application/folder',
                 root: record

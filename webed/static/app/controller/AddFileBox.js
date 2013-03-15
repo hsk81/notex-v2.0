@@ -118,7 +118,7 @@ Ext.define ('Webed.controller.AddFileBox', {
         }
 
         application.fireEvent ('create_leaf', {
-            scope: this, callback: callback, with: {
+            scope: this, callback: callback, where: {
                 mime: mime,
                 name: name,
                 root: record,

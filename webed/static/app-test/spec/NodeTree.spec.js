@@ -81,7 +81,7 @@ describe ('NodeTree', function () {
             expect (root_uuid).toBeTruthy ();
 
             lock.init ([true]); window.app.fireEvent ('create_node', {
-                with: node, scope: this, callback: function (rec, op) {
+                where: node, scope: this, callback: function (rec, op) {
                     expect (rec).toBeTruthy ();
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
@@ -114,7 +114,7 @@ describe ('NodeTree', function () {
             expect (root_uuid).toBeTruthy ();
 
             lock.init ([true]); window.app.fireEvent ('create_leaf', {
-                with: leaf, scope: this, callback: function (rec, op) {
+                where: leaf, scope: this, callback: function (rec, op) {
                     expect (rec).toBeTruthy ();
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
@@ -213,7 +213,7 @@ describe ('NodeTree', function () {
                     expect (rec.get ('name')).toEqual ('node');
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
-                }, for: node, to: {name:'node'}
+                }, node: node, to: {name:'node'}
             });
 
             waitsFor (function () { return lock.empty (); }, 'unlock');
@@ -243,7 +243,7 @@ describe ('NodeTree', function () {
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
-                }, for: leaf, to: {name:'leaf'}
+                }, node: leaf, to: {name:'leaf'}
             });
 
             waitsFor (function () { return lock.empty (); }, 'unlock');
@@ -272,7 +272,7 @@ describe ('NodeTree', function () {
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
-                }, for: node
+                }, node: node
             });
 
             waitsFor (function () { return lock.empty (); }, 'unlock');
@@ -298,7 +298,7 @@ describe ('NodeTree', function () {
                     expect (op).toBeTruthy ();
                     expect (op.success).toBeTruthy ();
                     lock.pop ();
-                }, for: leaf
+                }, node: leaf
             });
 
             waitsFor (function () { return lock.empty (); }, 'unlock');

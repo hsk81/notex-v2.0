@@ -38,7 +38,7 @@ Ext.define ('Webed.controller.DeleteBox', {
         }
 
         application.fireEvent ('delete_node', {
-            scope: this, callback: callback, for: record
+            scope: this, callback: callback, node: record
         });
 
         box.close ();

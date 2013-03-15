@@ -192,17 +192,17 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     create_node: function (args) {
-        assert (args && args.with);
-        assert (args.with.root);
+        assert (args && args.where);
+        assert (args.where.root);
 
         var node = {
-            root_uuid: args.with.root.get ('uuid'),
-            uuid: args.with.uuid||UUID.random (),
-            uuid_path: args.with.root.get ('uuid_path').slice (0),
-            name: args.with.name,
-            name_path: args.with.root.get ('name_path').slice (0),
-            mime: args.with.mime,
-            size: args.with.size||0
+            root_uuid: args.where.root.get ('uuid'),
+            uuid: args.where.uuid||UUID.random (),
+            uuid_path: args.where.root.get ('uuid_path').slice (0),
+            name: args.where.name,
+            name_path: args.where.root.get ('name_path').slice (0),
+            mime: args.where.mime,
+            size: args.where.size||0
         }
 
         assert (node.root_uuid);
@@ -305,14 +305,14 @@ Ext.define ('Webed.controller.NodeTree', {
 
     update_node: function (args) {
         assert (args);
-        assert (args.for);
+        assert (args.node);
         assert (args.to);
 
-        if (args.for instanceof Webed.model.Node) {
-            on_get.call (this, args.for);
+        if (args.node instanceof Webed.model.Node) {
+            on_get.call (this, args.node);
         } else {
             this.application.fireEvent ('get_node', this, {
-                node: [args.for], scope:this, callback: function (recs) {
+                node: [args.node], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
                         for (var idx in recs) on_get.call (this, recs[idx]);
                     }
@@ -358,13 +358,13 @@ Ext.define ('Webed.controller.NodeTree', {
 
     delete_node: function (args) {
         assert (args);
-        assert (args.for);
+        assert (args.node);
 
-        if (args.for instanceof Webed.model.Node) {
-            on_get.call (this, args.for);
+        if (args.node instanceof Webed.model.Node) {
+            on_get.call (this, args.node);
         } else {
             this.application.fireEvent ('get_node', this, {
-                node: [args.for], scope:this, callback: function (recs) {
+                node: [args.node], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
                         for (var idx in recs) on_get.call (this, recs[idx]);
                     }
