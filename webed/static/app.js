@@ -48,7 +48,6 @@ Ext.application ({
         'Node',
         'NodeTree',
         'Property',
-        'PropertyGrid',
         'RenameBox'
     ],
 
