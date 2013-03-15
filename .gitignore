@@ -21,6 +21,8 @@
 
 /webed/config/production.py
 /webed/config/production.sql
+/webed/static/all-classes.js
+/webed/templates/index.html
 
 # ##############################################################################
 # global -----------------------------------------------------------------------
