@@ -43,7 +43,8 @@ function build_env () {
 
     STATIC=$1/static
     CLASSPATH=$STATIC/app.js
-    CLASSPATH=$CLASSPATH,$STATIC/app/,$STATIC/lib/extjs/src
+    CLASSPATH=$CLASSPATH,$STATIC/app
+    CLASSPATH=$CLASSPATH,$STATIC/lib/extjs/src
     CLASSPATH=$CLASSPATH,$STATIC/lib/extjs/examples/ux/statusbar
 
     TEMPLATES=$1/templates
