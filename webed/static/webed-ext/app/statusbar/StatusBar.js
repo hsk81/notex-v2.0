@@ -1,10 +1,10 @@
-Ext.Loader.setPath ({
-    'Ext.ux': '../static/ext/src/ux'
-});
-
 Ext.define ('Webed.statusbar.StatusBar', {
     extend: 'Ext.ux.statusbar.StatusBar',
     alias: 'widget.webed-statusbar',
+
+    requires: [
+        'Webed.controller.statusbar.StatusBar' // fix: avoids dynamic load!
+    ],
 
     items: [{
         xtype: 'webed-statusbar-progressbar'

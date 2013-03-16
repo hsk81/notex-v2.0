@@ -4,6 +4,7 @@ Ext.Loader.setConfig ({
 
 Ext.Loader.setPath ({
     'Ext': '../static/ext/src',
+    'Ext.ux': '../static/ext/src/ux',
     'Webed': '../static/webed-ext/app'
 });
 
@@ -24,9 +25,12 @@ Ext.require ([
 
 Ext.application ({
     name: 'Webed',
-    requires: ['Ext.container.Viewport'],
     models: ['MIME', 'Lingua', 'Node', 'Leaf', 'Property'],
     stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
+
+    requires: [
+        'Ext.container.Viewport'
+    ],
 
     controllers: [
         'panel.ImageViewer',
