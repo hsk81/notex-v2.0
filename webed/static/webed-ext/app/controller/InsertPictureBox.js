@@ -29,6 +29,7 @@ Ext.define ('Webed.controller.InsertPictureBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function (combobox) {
+        combobox.store.loadLock.clear ();
         combobox.focus (true, 250);
     },
 

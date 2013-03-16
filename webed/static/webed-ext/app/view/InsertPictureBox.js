@@ -45,6 +45,10 @@ Ext.define ('Webed.view.InsertPictureBox', {
                 autoLoad: true,
 
                 listeners: {
+                    beforeload: function (store) {
+                        return store.loadLock.empty ();
+                    },
+
                     load: function (store, records, successful) {
                         if (records && successful) records.forEach (
                             function (record) { this.decorate (record);}, this
@@ -61,7 +65,9 @@ Ext.define ('Webed.view.InsertPictureBox', {
                     leaf.set ('node_path', node_path);
                     var full_path = name_path.slice (+1).join ('/');
                     leaf.set ('full_path', full_path);
-                }
+                },
+
+                loadLock: create_lock ([true])
             }),
 
             tpl: [

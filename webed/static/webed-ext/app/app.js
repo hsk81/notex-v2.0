@@ -3,8 +3,8 @@ Ext.Loader.setConfig ({
 });
 
 Ext.Loader.setPath ({
-    'Ext': '../static/lib/extjs/src',
-    'Webed': '../static/app'
+    'Ext': '../static/ext/src',
+    'Webed': '../static/webed-ext/app'
 });
 
 Ext.require ([
@@ -53,7 +53,7 @@ Ext.application ({
     ],
 
     paths: {
-        'Webed': '../static/app'
+        'Webed': '../static/webed-ext/app'
     },
 
     launch: function () {

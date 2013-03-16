@@ -1,0 +1,3 @@
+$CustomManifest = {
+    widgets: []
+};

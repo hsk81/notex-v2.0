@@ -66,7 +66,7 @@ class DefaultConfig:
     ## archives, which will be imported on the first visit.
     ##
 
-    ARCHIVE_PATH = os.path.join ('webed', 'static', 'dat')
+    ARCHIVE_PATH = os.path.join ('webed', 'static', 'webed-ext', 'dat')
     ARCHIVE_INCLUDE = [r'(.+)\.zip$']
     ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 

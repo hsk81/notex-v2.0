@@ -1,5 +1,5 @@
 Ext.Loader.setPath ({
-    'Ext.ux': '../static/lib/extjs/examples/ux'
+    'Ext.ux': '../static/ext/src/ux'
 });
 
 Ext.define ('Webed.statusbar.StatusBar', {
