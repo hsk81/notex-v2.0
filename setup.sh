@@ -40,10 +40,8 @@ function clean_log () {
 }
 
 function build_env () {
-
     STATIC=$1/static
     TEMPLATES=$1/templates
-
     WEBED_EXT=$STATIC/webed-ext
     CLASSPATH_EXT=$WEBED_EXT/app/app.js,$WEBED_EXT/app,$STATIC/ext/src
 
