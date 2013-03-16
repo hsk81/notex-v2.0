@@ -8,19 +8,29 @@
 <link rel="shortcut icon"
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
 
+{% if debug %}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
+{% else %}
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib.min.css') }}" />
+{% endif %}
 
+{% if debug %}
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/reset.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/reset.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/menu.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/menu.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/webed.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/webed.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/icons-16.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/icons-16.css') }}" />
+{% else %}
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='webed-ext/resources/theme/theme.min.css') }}" />
+{% endif %}
 
 <link rel="stylesheet"
       href="{{ url_for('static', filename='webed-ext/resources/theme/app.css') }}" />
@@ -32,6 +42,7 @@
     <div id="content">{% include 'page.html' %}</div>
 </div>
 
+{% if debug %}
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
 <script type="text/javascript"
@@ -58,11 +69,16 @@
         src="{{ url_for('static', filename='lib/codemirror/addon/mode/overlay.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/codemirror/mode/meta.js') }}"></script>
+{% else %}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='lib.min.js') }}"></script>
+{% endif %}
 
 <script type="text/javascript">
     CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
 </script>
 
+{% if debug %}
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/assert.js') }}"></script>
 <script type="text/javascript"
@@ -71,6 +87,10 @@
         src="{{ url_for('static', filename='webed-ext/app/uuid.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/mime.js') }}"></script>
+{% else %}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='webed-ext.min.js') }}"></script>
+{% endif %}
 
 {% if debug and not lazy %}
 <script type="text/javascript"

@@ -1,7 +1,7 @@
 #cssmenu ul {
     margin: 24px;
     padding: 7px 6px 0;
-    background: #888888 url(../img/overlay.png) repeat-x 0 -110px;
+    background: #888888 url(img/overlay.png) repeat-x 0 -110px;
     line-height: 100%;
     border-radius: 1em;
     font: normal 12px/4px Arial, Helvetica, sans-serif;
@@ -41,7 +41,7 @@
 
 #cssmenu .active a,
 #cssmenu li:hover > a {
-    background: #666 url(../img/overlay.png) repeat-x 0 -40px;
+    background: #666 url(img/overlay.png) repeat-x 0 -40px;
     color: #444;
     border-top: solid 1px #f8f8f8;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
@@ -60,7 +60,7 @@
 }
 
 #cssmenu ul ul a:hover {
-    background: #8f8f8f url(../img/overlay.png) repeat-x 0 -100px !important;
+    background: #8f8f8f url(img/overlay.png) repeat-x 0 -100px !important;
     color: #fff !important;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -80,7 +80,7 @@
     position: absolute;
     top: 40px;
     left: 0;
-    background: #ddd url(../img/overlay.png) repeat-x 0 0;
+    background: #ddd url(img/overlay.png) repeat-x 0 0;
     border: solid 1px #b4b4b4;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
