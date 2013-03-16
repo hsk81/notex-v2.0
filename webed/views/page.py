@@ -52,11 +52,13 @@ def main (page='home', template='index.html'):
         director.setup (json=False)
 
     @cache.memoize (name='views.main.cached_template', unless=app.is_dev)
-    def cached_template (template, page, debug):
-        return render_template (template, page=page, debug=debug)
+    def cached_template (template, page, debug, lazy):
+        return render_template (template, page=page, debug=debug, lazy=lazy)
 
-    return cached_template (template, page=page, debug=app.debug
-        if not 'no-debug' in request.args else False)
+    debug = False if 'no-debug' in request.args else app.debug
+    lazy = 'lazy' in request.args
+
+    return cached_template (template, page=page, debug=debug, lazy=lazy)
 
 ###############################################################################
 ###############################################################################
