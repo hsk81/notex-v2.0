@@ -22,3 +22,6 @@
 [submodule "webed/static/lib/dmp.git"]
 	path = webed/static/lib/dmp.git
 	url = https://github.com/hsk81/google-diff-match-patch
+[submodule "webed/static/lib/jasmine.git"]
+	path = webed/static/lib/jasmine.git
+	url = https://github.com/hsk81/jasmine-standalone.git
