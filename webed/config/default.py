@@ -30,7 +30,7 @@ class DefaultConfig:
     CACHE1_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
-    NIX_FILE = os.path.join (os.sep, 'tmp', 'webed-wsgi.sock')
+    NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed-wsgi.sock')
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since
