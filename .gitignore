@@ -20,6 +20,7 @@
 # private
 
 /webed/static/ext
+/webed/static/.sencha/workspace/sencha.cfg
 /webed/static/webed-ext/all-classes.*.js
 /webed/templates/index.html
 /webed/config/production.py
