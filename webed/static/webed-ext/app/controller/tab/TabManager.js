@@ -325,14 +325,20 @@ Ext.define ('Webed.controller.tab.TabManager', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_tab: function (uuid) {
+        assert (uuid);
 
-        var tab_manager = assert (this.getTabManager ());
-        var tabs = tab_manager.queryBy (function (el) {
-            return (el.record && el.record.get ('uuid') == assert (uuid))
-                ? true : false;
-        }, this);
+        var viewport = assert (this.getViewport ());
+        var tab_managers = assert (viewport.query ('tab-manager'));
 
-        assert (tabs);
-        return (tabs.length > 0) ? tabs[0] : null;
+        for (var index=0; index<tab_managers.length; index++) {
+            var tab_manager = assert (tab_managers[index]);
+            var tabs = tab_manager.queryBy (function (el) {
+                return Boolean (el.record && el.record.get ('uuid') == uuid);
+            }, this);
+
+            if (tabs.length > 0) return tabs[0];
+        }
+
+        return null;
     }
 });
