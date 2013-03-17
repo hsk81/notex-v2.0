@@ -56,11 +56,14 @@ function build_env () {
                    -option debug:false \
               page -inp=$TEMPLATES/index-in.html \
                    -out=$TEMPLATES/index.html \
-                   -cla=../static/all-classes.excl.js \
+                   -cla=../static/all-classes.excl.new.js \
                    -strip -compress and \
            include -namespace Webed and \
-            concat -out=$STATIC/all-classes.incl.js \
+            concat -out=$STATIC/all-classes.incl.new.js \
                    -strip -compress
+
+    mv $STATIC/all-classes.excl.new.js $STATIC/all-classes.excl.js
+    mv $STATIC/all-classes.incl.new.js $STATIC/all-classes.incl.js
 }
 
 function minify () {
