@@ -18,7 +18,7 @@ from .page import main
 from .page import overview
 from .page import tutorial
 from .project import setup_project
-from .resource import all_classes
+from .resource import statusbar_worker
 from .rest import LeafApi
 from .rest import NodeApi
 from .rest import PropertyApi

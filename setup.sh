@@ -56,10 +56,10 @@ function build_env () {
                    -option debug:false \
               page -inp=$TEMPLATES/index-in.html \
                    -out=$TEMPLATES/index.html \
-                   -cla=../static/webed-ext/all-classes.excl.js \
+                   -cla=../static/all-classes.excl.js \
                    -strip -compress and \
            include -namespace Webed and \
-            concat -out=$WEBED_EXT/all-classes.incl.js \
+            concat -out=$STATIC/all-classes.incl.js \
                    -strip -compress
 }
 
@@ -69,11 +69,7 @@ function minify () {
 
     FROMs=$STATIC/lib/codemirror/lib/codemirror.css
     FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
-
-    sencha fs concatenate -f $FROMs -t $STATIC/lib.css
-    yuicompressor --type css $STATIC/lib.css > $STATIC/lib.min.css
-
-    FROMs=$WEBED_EXT/resources/theme/reset.css
+    FROMs=$FROMs,$WEBED_EXT/resources/theme/reset.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/menu.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/webed.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/icons-16.css
@@ -106,7 +102,8 @@ function minify () {
     FROMs=$FROMs,$WEBED_EXT/app/mime.js
 
     sencha fs concatenate -f $FROMs -t $STATIC/webed-ext.js
-    yuicompressor --type js $STATIC/webed-ext.js > $STATIC/webed-ext.min.js
+    yuicompressor --type js $STATIC/webed-ext.js \
+                          > $STATIC/webed-ext.min.js
 }
 
 ###############################################################################

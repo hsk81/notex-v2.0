@@ -13,12 +13,6 @@
       href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
-{% else %}
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='lib.min.css') }}" />
-{% endif %}
-
-{% if debug %}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/reset.css') }}" />
 <link rel="stylesheet" type="text/css"
@@ -107,7 +101,7 @@
 <!-- </x-compile> -->
 {% else %}
 <script type="text/javascript"
-        src="{{ url_for('static', filename='webed-ext/all-classes.incl.js') }}"></script>
+        src="{{ url_for('static', filename='all-classes.incl.js') }}"></script>
 {% endif %}
 
 </body>

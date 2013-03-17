@@ -23,6 +23,7 @@
 /webed/config/production.sql
 
 /webed/static/.sencha/workspace/sencha.cfg
+/webed/static/all-classes.*.js
 /webed/static/ext
 /webed/static/lib.css
 /webed/static/lib.js
@@ -30,7 +31,6 @@
 /webed/static/lib.min.js
 /webed/static/webed-ext.js
 /webed/static/webed-ext.min.js
-/webed/static/webed-ext/all-classes.*.js
 /webed/static/webed-ext/resources/theme/theme.css
 /webed/static/webed-ext/resources/theme/theme.min.css
 
