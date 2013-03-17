@@ -279,6 +279,21 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    onDestroy: function () {
+        var lnk_list = [];
+        this.codemirror.iterLinkedDocs (function (lnk) {
+            lnk_list.push (lnk);
+        });
+
+        var doc = assert (this.codemirror.getDoc ());
+        lnk_list.forEach (function (lnk) {
+            lnk.unlinkDoc (doc);
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     updateLayout: function () {
         if (this.codemirror) {
             this.codemirror.refresh ();
