@@ -229,7 +229,9 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            $.extend (node, {expandable: true, leaf: false, loaded: true});
+            node = Ext.apply ({}, node, {
+                expandable: true, leaf: false, loaded: true
+            });
         }
 
         function append_node (node) {
@@ -294,10 +296,14 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            $.extend (leaf, {expandable: false, leaf: true, loaded: true});
+            Ext.apply ({}, leaf, {
+                expandable: false,
+                leaf: true,
+                loaded: true
+            });
         }
 
-        this.create_node ($.extend (args, {creator: creator}));
+        this.create_node (Ext.apply ({}, args, {creator: creator}));
     },
 
     ///////////////////////////////////////////////////////////////////////////

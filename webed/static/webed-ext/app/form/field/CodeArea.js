@@ -21,7 +21,7 @@ Ext.define ('Webed.form.field.CodeArea', {
     statics: {
         setHeight: function (value, ca) {
             if (ca && ca.id) {
-                $('#{0} .CodeMirror'.format (ca.id)).css (
+                assert (ca.getEl ().down ('.CodeMirror')).setStyle (
                     'height', value + 'px'
                 );
             } else {
@@ -33,7 +33,7 @@ Ext.define ('Webed.form.field.CodeArea', {
 
         setFontSize: function (value, ca) {
             if (ca && ca.id) {
-                $('#{0} .CodeMirror'.format (ca.id)).css (
+                assert (ca.getEl ().down ('.CodeMirror')).setStyle (
                     'font-size', value + '%'
                 );
             } else {
@@ -45,7 +45,7 @@ Ext.define ('Webed.form.field.CodeArea', {
 
         setDirection: function (value, ca) {
             if (ca && ca.id) {
-                $('#{0} .CodeMirror pre'.format (ca.id)).css (
+                assert (ca.getEl ().down ('.CodeMirror')).setStyle (
                     'direction', value
                 );
             } else {

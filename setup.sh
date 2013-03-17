@@ -97,8 +97,7 @@ function minify () {
     ###########################################################################
     ## $STATIC/lib.new.js
 
-    FROMs=$STATIC/lib/jquery/jquery.min.js
-    FROMs=$FROMs,$STATIC/lib/node-uuid/uuid.js
+    FROMs=$STATIC/lib/node-uuid/uuid.js
     FROMs=$FROMs,$STATIC/lib/dmp/javascript/diff_match_patch.js
     FROMs=$FROMs,$STATIC/lib/typojs/typo/typo.js
     FROMs=$FROMs,$STATIC/lib/codemirror/lib/codemirror.js

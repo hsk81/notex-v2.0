@@ -26,7 +26,7 @@ Ext.define ('Webed.controller.Node', {
 
         Ext.Array.each (args.node, function (node, index) {
 
-            node = $.extend (Ext.clone (node), {
+            node = Ext.apply ({}, Ext.clone (node), {
                 uuid_path: node.uuid_path.slice (0),
                 name_path: node.name_path.slice (0)
             });

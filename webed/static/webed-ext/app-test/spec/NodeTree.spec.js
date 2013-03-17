@@ -73,7 +73,7 @@ describe ('NodeTree', function () {
     it ('should create a node', function () {
 
         function create (node) {
-            $.extend (node, {
+            node = Ext.apply ({}, node, {
                 uuid: UUID.random ()
             });
 
@@ -106,7 +106,7 @@ describe ('NodeTree', function () {
     it ('should create a leaf', function () {
 
         function create (leaf) {
-            $.extend (leaf, {
+            leaf = Ext.apply ({}, leaf, {
                 uuid: UUID.random ()
             });
 

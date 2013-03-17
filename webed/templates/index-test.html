@@ -8,21 +8,20 @@
 <link rel="shortcut icon"
       href="{{ url_for('static', filename='ico/favicon-test.ico') }}">
 
+<link rel='stylesheet' type='text/css'
+      href='{{ url_for("static", filename="lib/jasmine/jasmine.css") }}' />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
-<link rel='stylesheet' type='text/css'
-      href='{{ url_for("static", filename="lib/jasmine/jasmine.css") }}' />
-
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/reset.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/reset.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/webed.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/menu.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/menu.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/webed.css') }}" />
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/css/icons-16.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/icons-16.css') }}" />
 
 <link rel="stylesheet"
       href="{{ url_for('static', filename='webed-ext/resources/theme/app.css') }}" />
@@ -34,8 +33,6 @@
     <div id="content">{% include 'page.html' %}</div>
 </div>
 
-<script type="text/javascript"
-        src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
 <script type="text/javascript"
@@ -63,17 +60,10 @@
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/codemirror/mode/meta.js') }}"></script>
 
-<script type="text/javascript">
-    CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
-</script>
-
 <script type='text/javascript'
         src='{{ url_for("static", filename="lib/jasmine/jasmine.js") }}'></script>
 <script type='text/javascript'
         src='{{ url_for("static", filename="lib/jasmine/jasmine-html.js") }}'></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='ext/ext-dev.js') }}"></script>
 
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/assert.js') }}"></script>
@@ -83,6 +73,13 @@
         src="{{ url_for('static', filename='webed-ext/app/uuid.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/mime.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='ext/ext-dev.js') }}"></script>
+
+<script type="text/javascript">
+    CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
+</script>
 
 <script type='text/javascript'
         src='{{ url_for("static", filename="webed-ext/app-test/app-test.js") }}'></script>

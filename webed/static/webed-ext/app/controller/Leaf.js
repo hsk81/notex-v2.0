@@ -28,7 +28,7 @@ Ext.define ('Webed.controller.Leaf', {
 
         Ext.Array.each (args.leaf, function (leaf, index) {
 
-            var leaf = $.extend (Ext.clone (leaf), {
+            leaf = Ext.apply ({}, Ext.clone (leaf), {
                 uuid_path: leaf.uuid_path.slice (0),
                 name_path: leaf.name_path.slice (0)
             });
