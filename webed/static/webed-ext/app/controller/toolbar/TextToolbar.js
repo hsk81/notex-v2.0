@@ -193,7 +193,7 @@ Ext.define ('Webed.controller.toolbar.TextToolbar', {
         var mime = assert (record.get ('mime'));
 
         var rhs_area = Ext.create ('Webed.form.field.CodeArea', {
-            mime: mime
+            mime: mime, value: lhs_area.getOriginal ()
         });
         var rhs_editor = Ext.create ('Webed.panel.TextEditor', {
             record: record, codeArea: rhs_area

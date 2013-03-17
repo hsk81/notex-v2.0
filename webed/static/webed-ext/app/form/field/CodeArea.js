@@ -267,7 +267,13 @@ Ext.define ('Webed.form.field.CodeArea', {
     },
 
     synchronize: function () {
-        if (this.codemirror) this.codemirror.save ();
+        if (this.codemirror) {
+            this.codemirror.iterLinkedDocs (function (doc) {
+                assert (doc.getEditor ()).save ();
+            });
+
+            this.codemirror.save ();
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
