@@ -40,6 +40,7 @@ function clean_log () {
 }
 
 function build_env () {
+
     STATIC=$1/static
     TEMPLATES=$1/templates
     WEBED_EXT=$STATIC/webed-ext
@@ -67,12 +68,19 @@ function build_env () {
 }
 
 function minify () {
+
     STATIC=$1/static
     WEBED_EXT=$STATIC/webed-ext
+
+    ###########################################################################
+    ## delete intermediary `*.{css,js}`
 
     rm $STATIC/lib.js
     rm $STATIC/webed-ext.js
     rm $WEBED_EXT/resources/theme/theme.css
+
+    ###########################################################################
+    ## $WEBED_EXT/resources/theme/theme.new.css
 
     FROMs=$STATIC/lib/codemirror/lib/codemirror.css
     FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
@@ -85,6 +93,9 @@ function minify () {
     sencha fs concatenate -f $FROMs -t $WEBED_EXT/resources/theme/theme.css
     yuicompressor --type css $WEBED_EXT/resources/theme/theme.css \
                            > $WEBED_EXT/resources/theme/theme.new.css
+
+    ###########################################################################
+    ## $STATIC/lib.new.js
 
     FROMs=$STATIC/lib/jquery/jquery.min.js
     FROMs=$FROMs,$STATIC/lib/node-uuid/uuid.js
@@ -103,6 +114,9 @@ function minify () {
     sencha fs concatenate -f $FROMs -t $STATIC/lib.js
     yuicompressor --type js $STATIC/lib.js > $STATIC/lib.new.js
 
+    ###########################################################################
+    ## $STATIC/webed-ext.new.js
+
     FROMs=$WEBED_EXT/app/assert.js
     FROMs=$FROMs,$WEBED_EXT/app/util.js
     FROMs=$FROMs,$WEBED_EXT/app/uuid.js
@@ -111,6 +125,9 @@ function minify () {
     sencha fs concatenate -f $FROMs -t $STATIC/webed-ext.js
     yuicompressor --type js $STATIC/webed-ext.js \
                           > $STATIC/webed-ext.new.js
+
+    ###########################################################################
+    ## swap from `*.new.{css,js}` to `*.min.{css,js}`
 
     mv $STATIC/webed-ext.new.js $STATIC/webed-ext.min.js
     mv $STATIC/lib.new.js $STATIC/lib.min.js
