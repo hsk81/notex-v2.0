@@ -1,5 +1,5 @@
-importScripts ('../../assert.js');
-importScripts ('../../../lib/typojs/typo/typo.js');
+importScripts ('static/webed-ext/app/assert.js');
+importScripts ('static/lib/typojs/typo/typo.js');
 
 self.onmessage = function (event) {
 

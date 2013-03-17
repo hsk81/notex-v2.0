@@ -15,9 +15,15 @@ resource = Blueprint ('resource', __name__)
 ###############################################################################
 ###############################################################################
 
-@resource.route ('/all-classes.js', methods=['GET'])
-def all_classes (path='webed/static/all-classes.js'):
-    return make_resource_response (path, 'text/javascript')
+@resource.route ('/StatusBar.worker.js', methods=['GET'])
+def statusbar_worker (
+        base='webed/static/webed-ext',
+        path='app/controller/statusbar/StatusBar.worker.js'):
+
+    path_to = os.path.join (base, path)
+    assert os.path.exists (path_to)
+
+    return make_resource_response (path_to, 'text/javascript')
 
 def make_resource_response (path, content_type):
 
