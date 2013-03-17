@@ -10,13 +10,5 @@ Ext.define ('Webed.tab.TabManager', {
         focused: true
     },
 
-    listeners: {
-        render: function () {
-            var menu = assert (Ext.fly ('cssmenu'));
-            var item = assert (menu.down ('li[clazz=active]'));
-            item.addCls ('active');
-        }
-    },
-
     html: Ext.fly ('content').getHTML ()
 });

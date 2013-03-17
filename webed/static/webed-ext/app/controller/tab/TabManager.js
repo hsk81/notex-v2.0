@@ -57,6 +57,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
     ///////////////////////////////////////////////////////////////////////////
 
     render: function () {
+        var menu = assert (Ext.fly ('cssmenu'));
+        var item = menu.down ('li[clazz=active]');
+        if (item) item.addCls ('active');
         var content_wrap = Ext.fly ('content-wrap');
         if (content_wrap) content_wrap.destroy ();
     },
