@@ -89,7 +89,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         var timeoutId = setTimeout (function () {
             worker.onmessage ({data: {typo: null}});
             worker.terminate ();
-        }, 60 * 1000);
+        }, 180 * 1000);
 
         self.disable ();
         worker.postMessage ({lingua: lingua, charset: charset});
