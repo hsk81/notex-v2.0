@@ -2,19 +2,19 @@
     <div id="page-wrap-content">
         <div id='cssmenu'>
             <ul>
-                <li clazz="{% if page == 'home' %}active{% endif %}">
+                <li active="{{ page == 'home' }}">
                     <a href="{{ url_for('.home') }}"><span>Home</span></a>
                 </li>
-                <li clazz="{% if page == 'overview' %}active{% endif %}">
+                <li active="{{ page == 'overview' }}">
                     <a href="{{ url_for('.overview') }}"><span>WebEd</span></a>
                 </li>
-                <li clazz="{% if page == 'tutorial' %}active{% endif %}">
+                <li active="{{ page == 'tutorial' }}">
                     <a href="{{ url_for('.tutorial') }}"><span>Tutorial</span></a>
                 </li>
-                <li clazz="{% if page == 'faq' %}active{% endif %}">
+                <li active="{{ page == 'faq' }}">
                     <a href="{{ url_for('.faq') }}"><span>FAQ</span></a>
                 </li>
-                <li clazz="{% if page == 'contact' %}active{% endif %}" style="float: right;">
+                <li active="{{ page == 'contact' }}" style="float: right;">
                     <a href="{{ url_for('.contact') }}"><span>Contact</span></a>
                 </li>
             </ul>
