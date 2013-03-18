@@ -210,7 +210,11 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     assert (data || data == '');
 
                     self.add ({
-                        xtype: 'image', src: data
+                        xtype: 'image', src: data, listeners: {
+                            afterrender: function (image) {
+                                image.fireEvent ('load', image);
+                            }
+                        }
                     });
 
                     if (callback && callback.call) {
