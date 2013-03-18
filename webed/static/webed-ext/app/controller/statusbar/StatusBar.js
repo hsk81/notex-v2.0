@@ -164,7 +164,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         if (args.message) progressBar.setMessage (args.message);
 
         progressBar.setTotal (0);
-        progressBar.wait (Ext.apply ({},{
+        progressBar.wait (Ext.apply ({
             interval: progressBar.interval,
             increment: progressBar.increment
         }, args));

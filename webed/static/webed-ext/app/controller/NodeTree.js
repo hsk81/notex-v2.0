@@ -203,7 +203,7 @@ Ext.define ('Webed.controller.NodeTree', {
             name_path: args.where.root.get ('name_path').slice (0),
             mime: args.where.mime,
             size: args.where.size||0
-        }
+        };
 
         assert (node.root_uuid);
         assert (node.uuid_path);
@@ -229,7 +229,7 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            node = Ext.apply ({}, node, {
+            node = Ext.apply (node||{}, {
                 expandable: true, leaf: false, loaded: true
             });
         }
@@ -296,14 +296,12 @@ Ext.define ('Webed.controller.NodeTree', {
                 }
             });
 
-            Ext.apply ({}, leaf, {
-                expandable: false,
-                leaf: true,
-                loaded: true
+            Ext.apply (leaf||{}, {
+                expandable: false, leaf: true, loaded: true
             });
         }
 
-        this.create_node (Ext.apply ({}, args, {creator: creator}));
+        this.create_node (Ext.apply (args||{}, {creator: creator}));
     },
 
     ///////////////////////////////////////////////////////////////////////////
