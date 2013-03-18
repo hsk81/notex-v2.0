@@ -6,7 +6,7 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
     }],
 
     config: {
-        delay: 125,
+        delay: 10,
         ratio: 10
     },
 
