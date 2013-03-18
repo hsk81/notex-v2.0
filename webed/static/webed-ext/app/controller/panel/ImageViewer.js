@@ -15,11 +15,11 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
     },
 
     afterrender: function (self) {
-        Webed.controller.panel.ImageViewer.center (self, 1);
+        Webed.controller.panel.ImageViewer.center (self, 25);
     },
 
     resize: function (self) {
-        Webed.controller.panel.ImageViewer.center (self, 1);
+        Webed.controller.panel.ImageViewer.center (self, 25);
     },
 
     statics: {
@@ -44,13 +44,13 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
 
                             inner.setPosition (innerDx, innerDy);
                         } else {
-                            cls.center (panel, 10, 3);
+                            cls.center (panel, 25, 3);
                         }
                     } else {
-                        cls.center (panel, 10, 2);
+                        cls.center (panel, 25, 2);
                     }
                 } else {
-                    cls.center (panel, 10, 1);
+                    cls.center (panel, 25, 1);
                 }
             }
         }
