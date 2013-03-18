@@ -31,8 +31,8 @@
 /webed/static/lib.min.js
 /webed/static/webed-ext.js
 /webed/static/webed-ext.min.js
-/webed/static/webed-ext/resources/theme/theme.css
-/webed/static/webed-ext/resources/theme/theme.min.css
+/webed/static/webed-ext/resources/theme/theme-*.css
+/webed/static/webed-ext/resources/theme/theme-*.min.css
 
 /webed/templates/index.html
 
