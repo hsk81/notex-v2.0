@@ -280,13 +280,12 @@ def mimes ():
         'name': 'SPARQL',
         'mime': 'application/x-sparql-query',
         'icon': 'icon-page_white_database',
-        'flag': {'text': True, 'hidden': True},
+        'flag': {'text': True},
         'exts': ['rq']
     }, {
         'name': 'SQL',
         'mime': 'text/x-sql',
         'icon': 'icon-page_white_database',
-        'flag': {'hidden': True},
         'exts': ['sql']
     }, {
         'name': 'sTeX',
