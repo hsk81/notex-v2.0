@@ -1,42 +1,4 @@
 /******************************************************************************
- * ExtJS: Default
- *****************************************************************************/
-
-@import url('../../../ext/resources/css/ext-all.css');
-
-/******************************************************************************
- * ExtJS: Customization
- *****************************************************************************/
-
-.x-boundlist-item-disabled {
-    color: grey;
-}
-
-.w-boundlist-item {
-    vertical-align: middle;
-    font-size: smaller;
-    float: right;
-    color: grey;
-}
-
-.w-boundlist-item ul li {
-    display: inline;
-}
-
-.w-boundlist-item-text {
-}
-
-.w-boundlist-item-icon {
-    padding: 2px 8px;
-    margin-left: 4px;
-}
-
-.w-shortcut {
-    float:right;
-    color: grey;
-}
-
-/******************************************************************************
  * Base
  *****************************************************************************/
 
@@ -364,6 +326,38 @@ body {
     vertical-align: middle;
     text-align: center;
     color: #808080;
+}
+
+/******************************************************************************
+ * ExtJS: Customization
+ *****************************************************************************/
+
+.x-boundlist-item-disabled {
+    color: grey;
+}
+
+.w-boundlist-item {
+    vertical-align: middle;
+    font-size: smaller;
+    float: right;
+    color: grey;
+}
+
+.w-boundlist-item ul li {
+    display: inline;
+}
+
+.w-boundlist-item-text {
+}
+
+.w-boundlist-item-icon {
+    padding: 2px 8px;
+    margin-left: 4px;
+}
+
+.w-shortcut {
+    float:right;
+    color: grey;
 }
 
 /******************************************************************************

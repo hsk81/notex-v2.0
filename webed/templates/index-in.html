@@ -9,9 +9,7 @@
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
 {% if debug -%}
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
+      href="{{ url_for('static', filename='webed-ext/resources/theme/app.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/reset.css') }}" />
 <link rel="stylesheet" type="text/css"
@@ -20,6 +18,10 @@
       href="{{ url_for('static', filename='webed-ext/resources/theme/webed.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/icons-16.css') }}" />
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
 {% else -%}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/theme.min.css') }}" />

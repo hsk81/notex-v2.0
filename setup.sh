@@ -82,12 +82,13 @@ function minify () {
     ###########################################################################
     ## $WEBED_EXT/resources/theme/theme.new.css
 
-    FROMs=$STATIC/lib/codemirror/lib/codemirror.css
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
+    FROMs=$WEBED_EXT/resources/theme/app.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/reset.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/menu.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/webed.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/icons-16.css
+    FROMs=$FROMs,$STATIC/lib/codemirror/lib/codemirror.css
+    FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
 
     sencha fs concatenate -f $FROMs -t $WEBED_EXT/resources/theme/theme.css
     yuicompressor $WEBED_EXT/resources/theme/theme.css \
