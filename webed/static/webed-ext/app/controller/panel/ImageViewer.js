@@ -16,20 +16,19 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
         });
     },
 
-    resize: function () {
-        this.center (this.getDelay ());
+    resize: function (viewer) {
+        this.center (viewer, this.getDelay ());
     },
 
-    load: function () {
-        this.center (this.getDelay ());
+    load: function (image) {
+        this.center (assert (image.up ('image-viewer')), this.getDelay ());
     },
 
-    center: function (ms, stop) {
-        var viewer = this.getImageViewer (),
-            me = this;
+    center: function (viewer, ms, stop) {
+        var me = this;
 
         if (ms && ms > 0) {
-            Ext.defer (function () { me.center (0, stop); }, ms);
+            Ext.defer (function () { me.center (viewer, 0, stop); }, ms);
         } else {
             var inner = viewer.down ('box');
             if (inner || stop>=1) {
@@ -46,13 +45,13 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
 
                         inner.setPosition (innerDx, innerDy);
                     } else {
-                        this.center (this.getDelay (), 3);
+                        this.center (viewer, this.getDelay (), 3);
                     }
                 } else {
-                    this.center (this.getDelay (), 2);
+                    this.center (viewer, this.getDelay (), 2);
                 }
             } else {
-                this.center (this.getDelay (), 1);
+                this.center (viewer, this.getDelay (), 1);
             }
         }
     }
