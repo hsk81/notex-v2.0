@@ -88,11 +88,10 @@ function minify () {
     FROMs=$FROMs,$WEBED_EXT/resources/theme/menu.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/webed.css
     FROMs=$FROMs,$WEBED_EXT/resources/theme/icons-16.css
- ## FROMs=$FROMs,$WEBED_EXT/resources/theme/app.css
 
     sencha fs concatenate -f $FROMs -t $WEBED_EXT/resources/theme/theme.css
-    yuicompressor --type css $WEBED_EXT/resources/theme/theme.css \
-                           > $WEBED_EXT/resources/theme/theme.new.css
+    yuicompressor $WEBED_EXT/resources/theme/theme.css \
+                > $WEBED_EXT/resources/theme/theme.new.css
 
     ###########################################################################
     ## $STATIC/lib.new.js
@@ -111,7 +110,7 @@ function minify () {
     FROMs=$FROMs,$STATIC/lib/codemirror/mode/meta.js
 
     sencha fs concatenate -f $FROMs -t $STATIC/lib.js
-    yuicompressor --type js $STATIC/lib.js > $STATIC/lib.new.js
+    yuicompressor $STATIC/lib.js > $STATIC/lib.new.js
 
     ###########################################################################
     ## $STATIC/webed-ext.new.js
@@ -122,8 +121,7 @@ function minify () {
     FROMs=$FROMs,$WEBED_EXT/app/mime.js
 
     sencha fs concatenate -f $FROMs -t $STATIC/webed-ext.js
-    yuicompressor --type js $STATIC/webed-ext.js \
-                          > $STATIC/webed-ext.new.js
+    yuicompressor $STATIC/webed-ext.js > $STATIC/webed-ext.new.js
 
     ###########################################################################
     ## swap from `*.new.{css,js}` to `*.min.{css,js}`
