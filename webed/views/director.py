@@ -7,7 +7,7 @@ from flask.globals import session
 from flask import Blueprint
 
 from ..app import app
-from ..ext import cache
+from ..ext import std_cache
 from ..util import jsonify
 
 from datetime import datetime
@@ -21,7 +21,7 @@ director = Blueprint ('director', __name__)
 ###############################################################################
 
 @director.route ('/setup/')
-@cache.memoize (900, name='views.setup', session=session, unless=app.is_dev)
+@std_cache.memoize (900, name='views.setup', session=session, unless=app.is_dev)
 def setup (json=True):
     """
     Sets a session up if it's virgin; otherwise no extra operation is executed.
@@ -37,7 +37,7 @@ def setup (json=True):
     return jsonify (result) if json else result
 
 @director.route ('/refresh/')
-@cache.memoize (900, name='views.refresh', session=session, unless=app.is_dev)
+@std_cache.memoize (900, name='views.refresh', session=session, unless=app.is_dev)
 def refresh (json=True):
     """
     Resets the session: If a particular user wants to get rid of her own data
@@ -49,7 +49,7 @@ def refresh (json=True):
     return jsonify (result) if json else result
 
 @director.route ('/reset/')
-@cache.memoize (900, name='views.reset', unless=app.is_dev)
+@std_cache.memoize (900, name='views.reset', unless=app.is_dev)
 def reset (json=True):
     """
     Resets the database and is therefore a very dangerous function; so it's

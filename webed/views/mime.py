@@ -6,7 +6,7 @@ __author__ = 'hsk81'
 from flask import Blueprint
 
 from ..app import app
-from ..ext import cache
+from ..ext import std_cache
 from ..util import JSON
 
 import re
@@ -389,7 +389,7 @@ def mimes ():
 ###############################################################################
 
 @mime.route ('/mime-info', methods=['GET'])
-@cache.memoize (900, name='views.mime-info')
+@std_cache.memoize (900, name='views.mime-info')
 def mime_info (mime=None, json=True):
 
     if not mime:

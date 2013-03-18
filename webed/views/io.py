@@ -8,7 +8,7 @@ from flask import Blueprint, Response
 from flask.globals import request
 
 from ..app import app
-from ..ext import db, object_cache, logger
+from ..ext import db, obj_cache, logger
 from ..util import Q, JSON
 from ..views import mime as MIME
 
@@ -188,16 +188,16 @@ def extract (zip_file, path):
 
 @db.nest ()
 def create_prj (path, base, mime):
-    cache = {path: base}
+    lookup = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
-        root = cache.get (cur_path)
+        root = lookup.get (cur_path)
         assert root
 
         for dn in dir_names:
             mime = 'application/folder' if root.root else mime
             node = create_dir (dn, root, mime)
-            db.session.add (node); cache[os.path.join (cur_path, dn)] = node
+            db.session.add (node); lookup[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
             mime = guess_mime_ex (fn, cur_path)
@@ -208,9 +208,9 @@ def create_prj (path, base, mime):
                 leaf, _ = create_bin (fn, root, mime, path=cur_path)
 
             db.session.add (leaf)
-            cache[os.path.join (cur_path, fn)] = leaf
+            lookup[os.path.join (cur_path, fn)] = leaf
 
-    return filter (lambda n: n.root == base, cache.values ())
+    return filter (lambda n: n.root == base, lookup.values ())
 
 def create_dir (name, root, mime):
 
@@ -280,8 +280,8 @@ def archive_download (chunk_size=256 * 1024):
     node = Q (base.subnodes).one (uuid=node_uuid)
     assert node
 
-    archive_key = object_cache.make_key (node_uuid, 'archive', 'zip')
-    content_val = object_cache.get_value (archive_key)
+    archive_key = obj_cache.make_key (node_uuid, 'archive', 'zip')
+    content_val = obj_cache.get_value (archive_key)
 
     if content_val:
         if request.args.get ('fetch', False):
@@ -300,10 +300,10 @@ def archive_download (chunk_size=256 * 1024):
                     node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
         else:
             response = JSON.encode (dict (success=True, name=node.name))
-            object_cache.expire (archive_key, expiry=90) ## refresh
+            obj_cache.expire (archive_key, expiry=90) ## refresh
     else:
         response = JSON.encode (dict (success=True, name=node.name))
-        object_cache.set_value (archive_key, compress (node), expiry=90) ##[s]
+        obj_cache.set_value (archive_key, compress (node), expiry=90) ##[s]
 
     return response
 

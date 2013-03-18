@@ -388,11 +388,20 @@ class WebedRedis (WebedCache):
 ###############################################################################
 ###############################################################################
 
-cache = WebedRedis (app, servers=app.config.get ('CACHE0_SERVERS'),
-    prefix=app.config.get ('CACHE0_KEY_PREFIX'))
+std_cache = WebedRedis (app, servers=app.config.get ('CACHE0_SERVERS'),
+    prefix=app.config.get ('CACHE0_KEY_PREFIX'), db=0)
 
-object_cache = WebedRedis (app, servers=app.config.get ('CACHE1_SERVERS'),
+sss_cache = WebedRedis (app, servers=app.config.get ('CACHE1_SERVERS'),
     prefix=app.config.get ('CACHE1_KEY_PREFIX'), db=1)
+
+ver_cache = WebedRedis (app, servers=app.config.get ('CACHE2_SERVERS'),
+    prefix=app.config.get ('CACHE2_KEY_PREFIX'), db=2)
+
+tpl_cache = WebedRedis (app, servers=app.config.get ('CACHE3_SERVERS'),
+    prefix=app.config.get ('CACHE3_KEY_PREFIX'), db=3)
+
+obj_cache = WebedRedis (app, servers=app.config.get ('CACHE4_SERVERS'),
+    prefix=app.config.get ('CACHE4_KEY_PREFIX'), db=4)
 
 ###############################################################################
 ###############################################################################

@@ -8,10 +8,7 @@ from flask.ext.script import Manager, Command, Option
 from webed.util import Q
 from webed.app import app
 from webed.models import User
-from webed.ext import db, cache
-
-import os
-import shutil
+from webed.ext import db
 
 ###############################################################################
 ###############################################################################
@@ -83,23 +80,59 @@ manager.add_command ('clear-db', DbClear ())
 
 ###############################################################################
 
-class CacheClear (Command):
-    """Clear cache to delete *all* keys"""
+class StdCacheClear (Command):
+    """Prints command to clear standard cache (views)"""
 
     def run (self):
+        print 'redis-cli KEYS "webed-std:*" | xargs redis-cli DEL'
 
-        path = app.config['FS_CACHE']
-        if os.path.exists (path): shutil.rmtree (path)
-        os.mkdir (path)
+manager.add_command ('clear-std-cache', StdCacheClear ())
 
-        cache.flush_all ()
+class SssCacheClear (Command):
+    """Prints command to clear session cache [DON'T!]"""
 
-manager.add_command ('clear-cache', CacheClear ())
+    def run (self):
+        print 'redis-cli KEYS "webed-sss:*" | xargs redis-cli DEL'
+
+manager.add_command ('clear-sss-cache', SssCacheClear ())
+
+class VerCacheClear (Command):
+    """Prints command to clear version-ing cache (DB) [DON'T!]"""
+
+    def run (self):
+        print 'redis-cli KEYS "webed-ver:*" | xargs redis-cli DEL'
+
+manager.add_command ('clear-ver-cache', VerCacheClear ())
+
+class TplCacheClear (Command):
+    """Prints command to clear template cache"""
+
+    def run (self):
+        print 'redis-cli KEYS "webed-tpl:*" | xargs redis-cli DEL'
+
+manager.add_command ('clear-tpl-cache', TplCacheClear ())
+
+class ObjCacheClear (Command):
+    """Prints command to clear object cache (archives etc.)"""
+
+    def run (self):
+        print 'redis-cli KEYS "webed-obj:*" | xargs redis-cli DEL'
+
+manager.add_command ('clear-obj-cache', ObjCacheClear ())
+
+class FsCacheClear (Command):
+    """Prints command to clear file system cache/backend [DON'T]"""
+
+    def run (self):
+        print 'rm -r "%s" && mkdir "%s"' % (
+            app.config['FS_CACHE'], app.config['FS_CACHE'])
+
+manager.add_command ('clear-fs-cache', FsCacheClear ())
 
 ###############################################################################
 
 class AppReset (Command):
-    """Reset application: Clear cache & DB, and setup DB"""
+    """Reset application: DON'T in production!"""
 
     def get_options (self):
 
@@ -115,7 +148,13 @@ class AppReset (Command):
         mail = kwargs['mail']
         assert mail
 
-        CacheClear ().run ()
+        StdCacheClear ().run ()
+        SssCacheClear ().run ()
+        VerCacheClear ().run ()
+        TplCacheClear ().run ()
+        ObjCacheClear ().run ()
+        FsCacheClear ().run ()
+
         DbClear ().run ()
         DbSetup ().run (name=name, mail=mail)
 

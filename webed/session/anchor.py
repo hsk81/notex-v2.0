@@ -3,7 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from ..ext.cache import cache
+from ..ext.cache import sss_cache
 
 import uuid
 import hashlib
@@ -33,29 +33,29 @@ class SessionAnchor (object):
     ###########################################################################
 
     def get_version_key (self):
-        return cache.make_key ('version')
+        return sss_cache.make_key ('version')
 
     def get_version (self):
         key = self.get_version_key ()
-        return cache.get_number (key) or 0, key
+        return sss_cache.get_number (key) or 0, key
 
     ###########################################################################
 
     def get_value_key (self):
         version, _ = self.get_version ()
-        return cache.make_key (version, self._sid, self._token), version
+        return sss_cache.make_key (version, self._sid, self._token), version
 
     def get_value (self):
         key, _ = self.get_value_key ()
-        return cache.get (key), key
+        return sss_cache.get (key), key
 
     def set_value (self, value):
         key, _ = self.get_value_key ()
-        cache.set (key, value)
+        sss_cache.set (key, value)
 
     def clear (self):
         key, _ = self.get_value_key ()
-        cache.delete (key)
+        sss_cache.delete (key)
 
     ###########################################################################
 
@@ -92,12 +92,12 @@ class SessionAnchor (object):
 
     def reset (self):
         version, key = self.get_version ()
-        cache.set_number (key, version + 1, expiry=cache.NEVER)
+        sss_cache.set_number (key, version + 1, expiry=sss_cache.NEVER)
         return version
 
     def refresh (self):
         value, key = self.get_value ()
-        if key: cache.delete (key)
+        if key: sss_cache.delete (key)
         return value
 
 ###############################################################################

@@ -9,7 +9,7 @@ from flask.globals import request, session
 from flask import Blueprint
 
 from ..app import app
-from ..ext import cache
+from ..ext import tpl_cache
 from ..session.anchor import SessionAnchor
 
 import sys
@@ -51,7 +51,7 @@ def main (page='home', template='index.html'):
     else:
         director.setup (json=False)
 
-    @cache.memoize (name='views.main.cached_template', unless=app.is_dev)
+    @tpl_cache.memoize (name='views.main.cached_template', unless=app.is_dev)
     def cached_template (*args, **kwargs):
         return render_template (*args, **kwargs)
 

@@ -24,10 +24,16 @@ class DefaultConfig:
     PERMANENT_SESSION_LIFETIME = timedelta (days=14) ## session expires after!
     CACHE_DEFAULT_TIMEOUT = int (PERMANENT_SESSION_LIFETIME.total_seconds ())
 
-    CACHE0_KEY_PREFIX = 'webed:'
+    CACHE0_KEY_PREFIX = 'webed-std:'
     CACHE0_SERVERS = ['127.0.0.1']
-    CACHE1_KEY_PREFIX = 'webed-obj:'
+    CACHE1_KEY_PREFIX = 'webed-sss:'
     CACHE1_SERVERS = ['127.0.0.1']
+    CACHE2_KEY_PREFIX = 'webed-ver:'
+    CACHE2_SERVERS = ['127.0.0.1']
+    CACHE3_KEY_PREFIX = 'webed-tpl:'
+    CACHE3_SERVERS = ['127.0.0.1']
+    CACHE4_KEY_PREFIX = 'webed-obj:'
+    CACHE4_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
     NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed-wsgi.sock')

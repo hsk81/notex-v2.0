@@ -14,7 +14,7 @@ from node import Node
 
 from ..app import app
 from ..ext.db import db
-from ..ext.cache import cache
+from ..ext.cache import ver_cache
 
 from .polymorphic import Polymorphic
 
@@ -152,14 +152,14 @@ class ExternalProperty (Property, DataPropertyMixin):
     def set_data (self, value):
 
         value = self.patch (value)
-        value_key = unicode (cache.make_key (value))
+        value_key = unicode (ver_cache.make_key (value))
         if self._data == value_key: return
 
         if self._data:
             ExternalProperty.on_delete (None, None, target=self)
 
         for uuid in self.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
+            ver_cache.increase_version (key=[uuid, 'size', 'data'])
 
         self._data = value_key
         self._size = len (value) if value else 0
@@ -168,8 +168,8 @@ class ExternalProperty (Property, DataPropertyMixin):
         if not os.path.exists (path_to):
             with open (path_to, 'w') as file: file.write (self.encode (value))
 
-        version_key = cache.make_key (value_key)
-        version = cache.increase (version_key)
+        version_key = ver_cache.make_key (value_key)
+        version = ver_cache.increase (version_key)
         assert version > 0
 
     def decode (self, value): return value
@@ -196,10 +196,10 @@ class ExternalProperty (Property, DataPropertyMixin):
     def on_delete (mapper, connection, target):
 
         for uuid in target.node.get_path ('uuid'):
-            cache.increase_version (key=[uuid, 'size', 'data'])
+            ver_cache.increase_version (key=[uuid, 'size', 'data'])
 
-        version_key = cache.make_key (target._data)
-        version = cache.decrease (key=version_key)
+        version_key = ver_cache.make_key (target._data)
+        version = ver_cache.decrease (key=version_key)
         if version <= 0:
             path_to = os.path.join (app.config['FS_CACHE'], target._data)
             if os.path.exists (path_to): os.unlink (path_to)
