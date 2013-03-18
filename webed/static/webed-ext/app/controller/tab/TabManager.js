@@ -161,7 +161,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
                     ca.setValue (data);
                     ca.setClean ();
-                    ca.synchronize ();
 
                     if (callback && callback.call) {
                         callback.call (scope||this, props);
@@ -277,7 +276,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
                         if (op.success) {
                             ca.setClean ();
-                            ca.synchronize ();
                         }
 
                         if (callback && callback.call) callback.call (

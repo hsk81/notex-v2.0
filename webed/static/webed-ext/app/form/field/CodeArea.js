@@ -15,7 +15,9 @@ Ext.define ('Webed.form.field.CodeArea', {
             matchBrackets: true,
             styleActiveLine: true,
             undoDepth: 99
-        }, mime: undefined
+        },
+
+        mime: undefined
     },
 
     statics: {
@@ -178,7 +180,7 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    setValue: function (value) {
+    setValue: function (value, option) {
         if (this.codemirror) {
             this.codemirror.setValue (value);
         } else {
@@ -188,6 +190,10 @@ Ext.define ('Webed.form.field.CodeArea', {
             } else {
                 this.callParent (arguments);
             }
+        }
+
+        if (!option||option.sync!==false) {
+            this.synchronize ();
         }
     },
 
@@ -215,9 +221,9 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    setClean: function (config) {
+    setClean: function (option) {
 
-        if (!config||!config.fake) {
+        if (!option||!option.fake) {
             if (this.codemirror) {
                 this.codemirror.markClean ();
                 this.fake_clean = undefined;
@@ -227,11 +233,15 @@ Ext.define ('Webed.form.field.CodeArea', {
         } else {
             this.fake_clean = true;
         }
+
+        if (!option||option.sync!==false) {
+            this.synchronize ();
+        }
     },
 
-    getClean: function (config) {
+    getClean: function (option) {
 
-        if (config && config.fake) {
+        if (option && option.fake) {
             if (this.fake_clean !== undefined) {
                 return this.fake_clean;
             }
@@ -248,47 +258,69 @@ Ext.define ('Webed.form.field.CodeArea', {
     ///////////////////////////////////////////////////////////////////////////
 
     getDifference: function (variation) {
+        var difference = null;
+
         var original = this.getOriginal ();
-        if (original) {
+        if (original||original=='') {
             var dmp = Webed.form.field.CodeArea.DMP ();
             var patches = assert (dmp.patch_make (original, variation));
-            return dmp.patch_toText (patches);
-        } else {
-            return undefined;
+            difference = dmp.patch_toText (patches);
         }
+
+        return difference;
     },
 
     getOriginal: function () {
+        var original = null;
+
         if (this.codemirror) {
-            return assert (this.codemirror.getTextArea ()).value;
-        } else {
-            return undefined;
+            var ta = assert (this.codemirror.getTextArea ());
+            if (ta.value != null) {
+                original = ta.value;
+            } else {
+                this.codemirror.iterLinkedDocs (function (doc) {
+                    var editor = assert (doc.getEditor ());
+                    var ta = assert (editor.getTextArea ());
+                    if (ta.value != null) original = ta.value;
+                });
+            }
         }
+
+        return original;
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     synchronize: function () {
         if (this.codemirror) {
-            this.codemirror.iterLinkedDocs (function (doc) {
-                assert (doc.getEditor ()).save ();
-            });
-
-            this.codemirror.save ();
-        }
+            var ta = assert (this.codemirror.getTextArea ());
+            if (ta.value != null) {
+                this.codemirror.save ();
+            } else {
+                this.codemirror.iterLinkedDocs (function (doc) {
+                    var editor = assert (doc.getEditor ());
+                    var ta = assert (editor.getTextArea ());
+                    if (ta.value != null) editor.save ();
+                });
+            }
+       }
     },
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     onDestroy: function () {
-        var lnk_list = [];
-        this.codemirror.iterLinkedDocs (function (lnk) {
+        var lnk_list = []; this.codemirror.iterLinkedDocs (function (lnk) {
             lnk_list.push (lnk);
         });
 
-        var doc = assert (this.codemirror.getDoc ());
-        lnk_list.forEach (function (lnk) {
-            lnk.unlinkDoc (doc);
-        });
+        var ta_source = assert (this.codemirror.getTextArea ());
+        if (ta_source.value != null) {
+            var anchor = lnk_list.pop ();
+            if (anchor) {
+                var editor = assert (anchor.getEditor ());
+                var ta = assert (editor.getTextArea ());
+                ta.value = ta_source.value;
+            }
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
