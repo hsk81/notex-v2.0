@@ -6,7 +6,8 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
     }],
 
     config: {
-        delay: 125
+        delay: 125,
+        ratio: 10
     },
 
     init: function () {
@@ -31,27 +32,27 @@ Ext.define ('Webed.controller.panel.ImageViewer', {
             Ext.defer (function () { me.center (viewer, 0, stop); }, ms);
         } else {
             var inner = viewer.down ('box');
-            if (inner || stop>=1) {
+            if (inner || stop>=this.getRatio ()) {
                 var outer = viewer.body;
-                if (outer || stop>=2) {
+                if (outer || stop>=this.getRatio () * 2) {
                     var W = outer.getWidth ();
                     var H = outer.getHeight ();
                     var w = inner.getWidth ();
                     var h = inner.getHeight ();
 
-                    if (w>0 && h>0 || stop>=3) {
+                    if (w>0 && h>0 || stop>=this.getRatio () * 3) {
                         var innerDx = (W - w) / 2.0;
                         var innerDy = (H - h) / 2.0;
 
                         inner.setPosition (innerDx, innerDy);
                     } else {
-                        this.center (viewer, this.getDelay (), 3);
+                        this.center (viewer, this.getDelay (), stop+1);
                     }
                 } else {
-                    this.center (viewer, this.getDelay (), 2);
+                    this.center (viewer, this.getDelay (), stop+1);
                 }
             } else {
-                this.center (viewer, this.getDelay (), 1);
+                this.center (viewer, this.getDelay (), stop+1);
             }
         }
     }
