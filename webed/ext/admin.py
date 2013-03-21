@@ -5,7 +5,7 @@ __author__ = 'hsk81'
 
 from flask.ext.login import current_user, login_user, logout_user
 from flask.ext.admin import Admin, AdminIndexView, expose
-from flask import redirect
+from flask import redirect, request
 
 from ..app import app
 
@@ -24,6 +24,8 @@ class IndexView (AdminIndexView):
 
     @expose ('/login', methods=['GET', 'POST'])
     def login (self):
+
+        print 'REQ remote-addr:', request.remote_addr
 
         from ..util.linq import Q
         from ..models import User
