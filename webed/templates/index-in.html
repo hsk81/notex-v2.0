@@ -61,9 +61,6 @@
         src="{{ url_for('static', filename='lib/codemirror/addon/mode/overlay.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/codemirror/mode/meta.js') }}"></script>
-{% else -%}
-<script type="text/javascript"
-        src="{{ url_for('static', filename='lib.min.js') }}"></script>
 {% endif -%}
 
 {% if debug -%}
@@ -75,9 +72,6 @@
         src="{{ url_for('static', filename='webed-ext/app/uuid.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/mime.js') }}"></script>
-{% else -%}
-<script type="text/javascript"
-        src="{{ url_for('static', filename='webed-ext.min.js') }}"></script>
 {% endif -%}
 
 {% if debug -%}
@@ -87,7 +81,7 @@
         src="{{ url_for('static', filename='webed-ext/app/app.js') }}"></script>
 {% elif True -%}
 <script type="text/javascript"
-        src="{{ url_for('static', filename='all-classes.incl.js') }}"></script>
+        src="{{ url_for('static', filename='all-classes.js') }}"></script>
 {% else -%}
 <!-- <x-compile> -->
 <!-- <x-bootstrap> -->

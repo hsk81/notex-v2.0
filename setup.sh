@@ -103,12 +103,16 @@ function minify () {
 
     yuicompressor $WEBED_EXT/resources/theme/theme-blue.css \
                 > $WEBED_EXT/resources/theme/theme-blue.new.css
+               rm $WEBED_EXT/resources/theme/theme-blue.css
     yuicompressor $WEBED_EXT/resources/theme/theme-gray.css \
                 > $WEBED_EXT/resources/theme/theme-gray.new.css
+               rm $WEBED_EXT/resources/theme/theme-gray.css
     yuicompressor $WEBED_EXT/resources/theme/theme-standard.css \
                 > $WEBED_EXT/resources/theme/theme-standard.new.css
+               rm $WEBED_EXT/resources/theme/theme-standard.css
     yuicompressor $WEBED_EXT/resources/theme/theme-ie.css \
                 > $WEBED_EXT/resources/theme/theme-ie.new.css
+               rm $WEBED_EXT/resources/theme/theme-ie.css
 
     ###########################################################################
     ## $STATIC/lib.new.js
@@ -126,8 +130,9 @@ function minify () {
     FROMs=$FROMs,$STATIC/lib/codemirror/addon/mode/overlay.js
     FROMs=$FROMs,$STATIC/lib/codemirror/mode/meta.js
 
-    sencha fs concatenate -f $FROMs -t $STATIC/lib.js
+    sencha fs concat -f $FROMs -t $STATIC/lib.js
     yuicompressor $STATIC/lib.js > $STATIC/lib.new.js
+    rm $STATIC/lib.js
 
     ###########################################################################
     ## $STATIC/webed-ext.new.js
@@ -137,14 +142,13 @@ function minify () {
     FROMs=$FROMs,$WEBED_EXT/app/uuid.js
     FROMs=$FROMs,$WEBED_EXT/app/mime.js
 
-    sencha fs concatenate -f $FROMs -t $STATIC/webed-ext.js
+    sencha fs concat -f $FROMs -t $STATIC/webed-ext.js
     yuicompressor $STATIC/webed-ext.js > $STATIC/webed-ext.new.js
+    rm $STATIC/webed-ext.js
 
     ###########################################################################
     ## swap from `*.new.{css,js}` to `*.min.{css,js}`
 
-    mv $STATIC/webed-ext.new.js $STATIC/webed-ext.min.js
-    mv $STATIC/lib.new.js $STATIC/lib.min.js
     mv $WEBED_EXT/resources/theme/theme-blue.new.css \
        $WEBED_EXT/resources/theme/theme-blue.min.css
     mv $WEBED_EXT/resources/theme/theme-gray.new.css \
@@ -153,6 +157,14 @@ function minify () {
        $WEBED_EXT/resources/theme/theme-standard.min.css
     mv $WEBED_EXT/resources/theme/theme-ie.new.css \
        $WEBED_EXT/resources/theme/theme-ie.min.css
+
+    cat $STATIC/lib.new.js \
+        $STATIC/webed-ext.new.js \
+        $STATIC/all-classes.incl.js \
+      > $STATIC/all-classes.js
+
+    rm $STATIC/lib.new.js
+    rm $STATIC/webed-ext.new.js
 }
 
 ###############################################################################
