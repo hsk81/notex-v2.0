@@ -80,12 +80,15 @@
         src="{{ url_for('static', filename='webed-ext.min.js') }}"></script>
 {% endif -%}
 
-{% if debug and not lazy -%}
+{% if debug -%}
 <script type="text/javascript"
         src="{{ url_for('static', filename='ext/ext-dev.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/app.js') }}"></script>
-{% elif debug -%}
+{% elif True -%}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='all-classes.incl.js') }}"></script>
+{% else -%}
 <!-- <x-compile> -->
 <!-- <x-bootstrap> -->
 <script src="../static/ext/ext-dev.js"></script>
@@ -93,9 +96,6 @@
 <!-- </x-bootstrap> -->
 <script src="../static/webed-ext/app/app.js"></script>
 <!-- </x-compile> -->
-{% else -%}
-<script type="text/javascript"
-        src="{{ url_for('static', filename='all-classes.incl.js') }}"></script>
 {% endif -%}
 
 <script type="text/javascript">

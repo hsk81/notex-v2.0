@@ -57,10 +57,8 @@ def main (page='home', template='index.html'):
 
     debug = False if 'no-debug' in request.args else app.debug
     theme = request.args.get ('theme', 'blue')
-    lazy = 'lazy' in request.args
 
-    return cached_template (
-        template, page=page, debug=debug, lazy=lazy, theme=theme)
+    return cached_template (template, page=page, debug=debug, theme=theme)
 
 ###############################################################################
 ###############################################################################
