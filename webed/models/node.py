@@ -8,7 +8,7 @@ from sqlalchemy.dialects import postgres as pg
 from uuid import uuid4 as uuid_random
 
 from ..ext.db import db
-from ..ext.cache import ver_cache
+from ..ext.cache import dbs_cache
 from .polymorphic import Polymorphic
 
 import os.path
@@ -84,7 +84,7 @@ class Node (db.Model, Polymorphic):
 
     def get_path (self, field):
 
-        @ver_cache.version (key=[self.uuid, 'path', field])
+        @dbs_cache.version (key=[self.uuid, 'path', field])
         def cached_path (self, field):
 
             if self.root:
@@ -112,7 +112,7 @@ class Node (db.Model, Polymorphic):
 
     def get_size (self, **kwargs):
 
-        @ver_cache.version (key=[self.uuid, 'size'] + kwargs.values ())
+        @dbs_cache.version (key=[self.uuid, 'size'] + kwargs.values ())
         def cached_size (node, **kwargs):
 
             props = node.props.filter_by (**kwargs).all ()
