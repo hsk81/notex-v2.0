@@ -5,9 +5,11 @@ __author__ = 'hsk81'
 
 from flask.ext.admin.contrib.sqlamodel import ModelView
 from flask.ext.login import current_user
+from flask import request
 
-from webed.ext import db, admin
+from webed.app import app
 from webed.models import Node
+from webed.ext import db, admin
 
 ###############################################################################
 ###############################################################################
@@ -24,7 +26,10 @@ class NodeAdmin (ModelView):
         super (NodeAdmin, self).__init__ (Node, session)
 
     def is_accessible(self):
-        return current_user.is_authenticated ()
+        if request.remote_addr in app.config['PRIVILEGED_ADDRESSES']:
+            return current_user.is_authenticated ()
+
+        return False
 
 admin.add_view (NodeAdmin (db.session))
 

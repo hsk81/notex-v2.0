@@ -10,11 +10,12 @@ from ..models.user import User
 ###############################################################################
 ###############################################################################
 
-login = LoginManager (); login.init_app (app)
+login = LoginManager ()
+login.init_app (app)
 
 @login.user_loader
-def load_user (id):
-    return User.query.get (id)
+def load_user (identifier):
+    return User.query.get (identifier)
 
 ###############################################################################
 ###############################################################################

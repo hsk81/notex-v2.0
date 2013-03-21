@@ -51,6 +51,13 @@ class DefaultConfig:
     SECRET_KEY = '000000000000000000000000000000000000000='
 
     ##
+    ## PRIVILEGED_ADDRESSES is a list of IP addresses privileged actions can be
+    ## executed from, i.e. admin views.
+    ##
+
+    PRIVILEGED_ADDRESSES = ['127.0.0.1']
+
+    ##
     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
     ## stores *user defined* mime to file extensions combinations.
     ##

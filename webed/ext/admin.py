@@ -17,21 +17,25 @@ class IndexView (AdminIndexView):
     @expose ('/')
     def index (self):
 
+        if current_user.is_authenticated ():
+            if request.remote_addr not in app.config['PRIVILEGED_ADDRESSES']:
+                logout_user () ## authentication double check failed!
+
         if current_user.is_anonymous ():
             current_user.name = u'anonymous'
 
         return self.render ('admin.html', debug=app.debug, user=current_user)
 
-    @expose ('/login', methods=['GET', 'POST'])
+    @expose ('/login', methods=['GET'])
     def login (self):
 
-        print 'REQ remote-addr:', request.remote_addr
+        if request.remote_addr in app.config['PRIVILEGED_ADDRESSES']:
 
-        from ..util.linq import Q
-        from ..models import User
+            from ..util.linq import Q
+            from ..models import User
 
-        user = Q (User.query).one_or_default (mail=u'admin@mail.net')
-        if user: login_user (user)
+            user = Q (User.query).one_or_default (mail=u'admin@mail.net')
+            if user: login_user (user)
 
         return redirect ('/admin/')
 
