@@ -29,7 +29,7 @@ class IndexView (AdminIndexView):
     @expose ('/login', methods=['GET'])
     def login (self):
 
-        if login.is_privileged:
+        if login.is_privileged ():
             user = Q (User.query).one_or_default (mail=u'admin@mail.net')
             if user: login_user (user)
 

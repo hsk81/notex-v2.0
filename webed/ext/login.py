@@ -23,14 +23,14 @@ class WebedLoginManager (LoginManager):
         def decorator (*args, **kwargs):
 
             if current_user.is_authenticated ():
-                if not WebedLoginManager.is_privileged:
+                if not WebedLoginManager.is_privileged ():
                     logout_user () ## double check failed!
 
             return fn (*args, **kwargs)
         return decorator
 
-    @property
-    def is_privileged (self):
+    @staticmethod
+    def is_privileged ():
 
         privileged_addresses = app.config['PRIVILEGED_ADDRESSES']
         assert privileged_addresses and len (privileged_addresses) > 0
