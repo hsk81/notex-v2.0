@@ -32,9 +32,7 @@ class WebedLoginManager (LoginManager):
     @staticmethod
     def is_privileged ():
 
-        privileged_addresses = app.config['PRIVILEGED_ADDRESSES']
-        assert privileged_addresses and len (privileged_addresses) > 0
-        return request.remote_addr in privileged_addresses
+        return request.remote_addr in app.config['PRIVILEGED_ADDRESSES']
 
 ###############################################################################
 
