@@ -92,13 +92,13 @@ function minify () {
     FROMs=$FROMs,$STATIC/lib/codemirror/lib/codemirror.css
     FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
 
-    sencha fs concat -f $WEBED_EXT/resources/theme/app-blue.css,$FROMs \
+    sencha fs concat -f $STATIC/ext/resources/css/ext-all.css,$FROMs \
                      -t $WEBED_EXT/resources/theme/theme-blue.css
-    sencha fs concat -f $WEBED_EXT/resources/theme/app-gray.css,$FROMs \
+    sencha fs concat -f $STATIC/ext/resources/css/ext-all-gray.css,$FROMs \
                      -t $WEBED_EXT/resources/theme/theme-gray.css
-    sencha fs concat -f $WEBED_EXT/resources/theme/app-standard.css,$FROMs \
+    sencha fs concat -f $STATIC/ext/resources/css/ext-standard.css,$FROMs \
                      -t $WEBED_EXT/resources/theme/theme-standard.css
-    sencha fs concat -f $WEBED_EXT/resources/theme/app-ie.css,$FROMs \
+    sencha fs concat -f $STATIC/ext/resources/css/ext-ie.css,$FROMs \
                      -t $WEBED_EXT/resources/theme/theme-ie.css
 
     yuicompressor $WEBED_EXT/resources/theme/theme-blue.css \
