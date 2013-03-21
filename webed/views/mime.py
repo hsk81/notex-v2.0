@@ -284,7 +284,7 @@ def mimes ():
         'exts': ['rq']
     }, {
         'name': 'SQL',
-        'mime': 'text/x-sql',
+        'mime': 'text/x-mariadb',
         'icon': 'icon-page_white_database',
         'exts': ['sql']
     }, {

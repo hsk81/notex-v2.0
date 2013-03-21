@@ -112,6 +112,9 @@ Ext.define ('Webed.form.field.CodeArea', {
         var codemirror = CodeMirror.fromTextArea (ta, options);
         if (options.mode) CodeMirror.autoLoadMode (codemirror, options.mode);
 
+        var mime = assert (this.getMime ());
+        codemirror.setOption ('mode', mime);
+
         var me = this;
         codemirror.on ('cursorActivity', function (self) {
             me.fireEvent ('cursor', me, self.getCursor ());
