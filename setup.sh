@@ -158,10 +158,21 @@ function minify () {
     mv $WEBED_EXT/resources/theme/theme-ie.new.css \
        $WEBED_EXT/resources/theme/theme-ie.min.css
 
-    cat $STATIC/lib.new.js \
-        $STATIC/webed-ext.new.js \
+    gzip --best -c $WEBED_EXT/resources/theme/theme-blue.min.css \
+                 > $WEBED_EXT/resources/theme/theme-blue.min.css.gz
+    gzip --best -c $WEBED_EXT/resources/theme/theme-gray.min.css \
+                 > $WEBED_EXT/resources/theme/theme-gray.min.css.gz
+    gzip --best -c $WEBED_EXT/resources/theme/theme-standard.min.css \
+                 > $WEBED_EXT/resources/theme/theme-standard.min.css.gz
+    gzip --best -c $WEBED_EXT/resources/theme/theme-ie.min.css \
+                 > $WEBED_EXT/resources/theme/theme-ie.min.css.gz
+
+    cat $STATIC/lib.new.js $STATIC/webed-ext.new.js \
         $STATIC/all-classes.incl.js \
       > $STATIC/all-classes.js
+
+    gzip --best -c $STATIC/all-classes.js \
+                 > $STATIC/all-classes.js.gz
 
     rm $STATIC/lib.new.js
     rm $STATIC/webed-ext.new.js
