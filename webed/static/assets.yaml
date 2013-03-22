@@ -2,11 +2,11 @@ theme-base:
     filters: yui_css
     output: webed-ext/resources/theme/theme-base.min.css
     contents:
+        - lib/codemirror/lib/codemirror.css
+        - lib/codemirror/addon/dialog/dialog.css
         - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
         - webed-ext/resources/theme/icons-16.css
-        - lib/codemirror/lib/codemirror.css
-        - lib/codemirror/addon/dialog/dialog.css
 
 theme-blue:
     output: webed-ext/resources/theme/theme-blue.min.css
