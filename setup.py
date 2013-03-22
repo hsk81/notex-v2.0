@@ -33,8 +33,10 @@ setup (
         'ipython>=0.13.1',
         'hiredis>=0.1.1',
         'pylibmc>=1.2.3',
+        'PyYAML>=3.10',
         'redis>=2.7.2',
         'ujson>=1.30',
+        'yuicompressor>=2.4.7'
     ]
 )
 

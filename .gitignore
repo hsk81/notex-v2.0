@@ -22,10 +22,14 @@
 /webed/config/production.py
 /webed/config/production.sql
 
-/webed/static/ext
 /webed/static/.sencha/workspace/sencha.cfg
+/webed/static/.webassets-cache
+
+/webed/static/ext
 /webed/static/all-classes.js
 /webed/static/all-classes.*.js
+/webed/static/app-classes.*.js
+/webed/static/lib-classes.*.js
 /webed/static/webed-ext/resources/theme/theme-*.min.css
 
 /webed/templates/index.html

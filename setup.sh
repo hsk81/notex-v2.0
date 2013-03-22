@@ -43,10 +43,9 @@ function build_env () {
 
     STATIC=$1/static
     TEMPLATES=$1/templates
-    WEBED_EXT=$STATIC/webed-ext
 
-    CLSPATH_EXT=$WEBED_EXT/app/app.js
-    CLSPATH_EXT=$CLSPATH_EXT,$WEBED_EXT/app
+    CLSPATH_EXT=$STATIC/webed-ext/app/app.js
+    CLSPATH_EXT=$CLSPATH_EXT,$STATIC/webed-ext/app
     CLSPATH_EXT=$CLSPATH_EXT,$STATIC/ext/src
 
     if [ ! -d "$STATIC/ext" ] ; then
@@ -65,117 +64,6 @@ function build_env () {
 
     mv $STATIC/all-classes.excl.new.js $STATIC/all-classes.excl.js
     mv $STATIC/all-classes.incl.new.js $STATIC/all-classes.incl.js
-}
-
-function minify () {
-
-    STATIC=$1/static
-    WEBED_EXT=$STATIC/webed-ext
-
-    ###########################################################################
-    ## delete intermediary `*.{css,js}`
-
-    rm -f $STATIC/lib.js
-    rm -f $STATIC/webed-ext.js
-    rm -f $WEBED_EXT/resources/theme/theme-blue.css
-    rm -f $WEBED_EXT/resources/theme/theme-gray.css
-    rm -f $WEBED_EXT/resources/theme/theme-standard.css
-    rm -f $WEBED_EXT/resources/theme/theme-ie.css
-
-    ###########################################################################
-    ## $WEBED_EXT/resources/theme/theme.new.css
-
-    FROMs=$WEBED_EXT/resources/theme/reset.css
-    FROMs=$FROMs,$WEBED_EXT/resources/theme/menu.css
-    FROMs=$FROMs,$WEBED_EXT/resources/theme/webed.css
-    FROMs=$FROMs,$WEBED_EXT/resources/theme/icons-16.css
-    FROMs=$FROMs,$STATIC/lib/codemirror/lib/codemirror.css
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.css
-
-    sencha fs concat -f $STATIC/ext/resources/css/ext-all.css,$FROMs \
-                     -t $WEBED_EXT/resources/theme/theme-blue.css
-    sencha fs concat -f $STATIC/ext/resources/css/ext-all-gray.css,$FROMs \
-                     -t $WEBED_EXT/resources/theme/theme-gray.css
-    sencha fs concat -f $STATIC/ext/resources/css/ext-standard.css,$FROMs \
-                     -t $WEBED_EXT/resources/theme/theme-standard.css
-    sencha fs concat -f $STATIC/ext/resources/css/ext-ie.css,$FROMs \
-                     -t $WEBED_EXT/resources/theme/theme-ie.css
-
-    yuicompressor $WEBED_EXT/resources/theme/theme-blue.css \
-                > $WEBED_EXT/resources/theme/theme-blue.new.css
-               rm $WEBED_EXT/resources/theme/theme-blue.css
-    yuicompressor $WEBED_EXT/resources/theme/theme-gray.css \
-                > $WEBED_EXT/resources/theme/theme-gray.new.css
-               rm $WEBED_EXT/resources/theme/theme-gray.css
-    yuicompressor $WEBED_EXT/resources/theme/theme-standard.css \
-                > $WEBED_EXT/resources/theme/theme-standard.new.css
-               rm $WEBED_EXT/resources/theme/theme-standard.css
-    yuicompressor $WEBED_EXT/resources/theme/theme-ie.css \
-                > $WEBED_EXT/resources/theme/theme-ie.new.css
-               rm $WEBED_EXT/resources/theme/theme-ie.css
-
-    ###########################################################################
-    ## $STATIC/lib.new.js
-
-    FROMs=$STATIC/lib/node-uuid/uuid.js
-    FROMs=$FROMs,$STATIC/lib/dmp/javascript/diff_match_patch.js
-    FROMs=$FROMs,$STATIC/lib/typojs/typo/typo.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/lib/codemirror.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/selection/active-line.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/edit/matchbrackets.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/dialog/dialog.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/search/searchcursor.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/search/search.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/mode/loadmode.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/addon/mode/overlay.js
-    FROMs=$FROMs,$STATIC/lib/codemirror/mode/meta.js
-
-    sencha fs concat -f $FROMs -t $STATIC/lib.js
-    yuicompressor $STATIC/lib.js > $STATIC/lib.new.js
-    rm $STATIC/lib.js
-
-    ###########################################################################
-    ## $STATIC/webed-ext.new.js
-
-    FROMs=$WEBED_EXT/app/assert.js
-    FROMs=$FROMs,$WEBED_EXT/app/util.js
-    FROMs=$FROMs,$WEBED_EXT/app/uuid.js
-    FROMs=$FROMs,$WEBED_EXT/app/mime.js
-
-    sencha fs concat -f $FROMs -t $STATIC/webed-ext.js
-    yuicompressor $STATIC/webed-ext.js > $STATIC/webed-ext.new.js
-    rm $STATIC/webed-ext.js
-
-    ###########################################################################
-    ## swap from `*.new.{css,js}` to `*.min.{css,js}`
-
-    mv $WEBED_EXT/resources/theme/theme-blue.new.css \
-       $WEBED_EXT/resources/theme/theme-blue.min.css
-    mv $WEBED_EXT/resources/theme/theme-gray.new.css \
-       $WEBED_EXT/resources/theme/theme-gray.min.css
-    mv $WEBED_EXT/resources/theme/theme-standard.new.css \
-       $WEBED_EXT/resources/theme/theme-standard.min.css
-    mv $WEBED_EXT/resources/theme/theme-ie.new.css \
-       $WEBED_EXT/resources/theme/theme-ie.min.css
-
-    gzip --best -c $WEBED_EXT/resources/theme/theme-blue.min.css \
-                 > $WEBED_EXT/resources/theme/theme-blue.min.css.gz
-    gzip --best -c $WEBED_EXT/resources/theme/theme-gray.min.css \
-                 > $WEBED_EXT/resources/theme/theme-gray.min.css.gz
-    gzip --best -c $WEBED_EXT/resources/theme/theme-standard.min.css \
-                 > $WEBED_EXT/resources/theme/theme-standard.min.css.gz
-    gzip --best -c $WEBED_EXT/resources/theme/theme-ie.min.css \
-                 > $WEBED_EXT/resources/theme/theme-ie.min.css.gz
-
-    cat $STATIC/lib.new.js $STATIC/webed-ext.new.js \
-        $STATIC/all-classes.incl.js \
-      > $STATIC/all-classes.js
-
-    gzip --best -c $STATIC/all-classes.js \
-                 > $STATIC/all-classes.js.gz
-
-    rm $STATIC/lib.new.js
-    rm $STATIC/webed-ext.new.js
 }
 
 ###############################################################################
@@ -199,8 +87,6 @@ case $ACTMETH in
         setup_env $APPNAME ;;
     build)
         build_env $APPNAME ;;
-    minify)
-        minify $APPNAME ;;
     *)
         $0 init $1 $2 ;;
 esac

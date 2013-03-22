@@ -3,6 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from .assets import assets
 from .db import db
 from .login import login
 from .admin import admin

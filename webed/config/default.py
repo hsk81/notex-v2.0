@@ -34,6 +34,7 @@ class DefaultConfig:
     CACHE3_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
+    YML_FILE = os.path.join ('webed', 'static', 'assets.yaml')
     NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed-wsgi.sock')
 
     ##

@@ -4,6 +4,7 @@
 ###############################################################################
 
 from flask.ext.script import Manager, Command, Option
+from flask.ext.assets import ManageAssets
 
 from webed.util import Q
 from webed.app import app
@@ -170,6 +171,11 @@ class AppRefresh (Command):
         ObjCacheClear ().run ()
 
 manager.add_command ('refresh', AppRefresh ())
+
+###############################################################################
+###############################################################################
+
+manager.add_command ('assets', ManageAssets ())
 
 ###############################################################################
 ###############################################################################

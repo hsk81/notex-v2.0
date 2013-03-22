@@ -1,0 +1,70 @@
+theme-base:
+    filters: yui_css
+    output: webed-ext/resources/theme/theme-base.min.css
+    contents:
+        - webed-ext/resources/theme/menu.css
+        - webed-ext/resources/theme/webed.css
+        - webed-ext/resources/theme/icons-16.css
+        - lib/codemirror/lib/codemirror.css
+        - lib/codemirror/addon/dialog/dialog.css
+
+theme-blue:
+    output: webed-ext/resources/theme/theme-blue.min.css
+    contents: [ext/resources/css/ext-all.css, theme-base]
+theme-blue.gz:
+    filters: gzip
+    output: webed-ext/resources/theme/theme-blue.min.css.gz
+    contents: theme-blue
+
+theme-gray:
+    output: webed-ext/resources/theme/theme-gray.min.css
+    contents: [ext/resources/css/ext-all-gray.css, theme-base]
+theme-gray.gz:
+    filters: gzip
+    output: webed-ext/resources/theme/theme-gray.min.css.gz
+    contents: theme-gray
+
+theme-standard:
+    output: webed-ext/resources/theme/theme-standard.min.css
+    contents: [ext/resources/css/ext-standard.css, theme-base]
+theme-standard.gz:
+    filters: gzip
+    output: webed-ext/resources/theme/theme-standard.min.css.gz
+    contents: theme-standard
+
+lib-classes:
+    filters: yui_js
+    output: lib-classes.min.js
+    contents:
+        - lib/node-uuid/uuid.js
+        - lib/dmp/javascript/diff_match_patch.js
+        - lib/typojs/typo/typo.js
+        - lib/codemirror/lib/codemirror.js
+        - lib/codemirror/addon/selection/active-line.js
+        - lib/codemirror/addon/edit/matchbrackets.js
+        - lib/codemirror/addon/dialog/dialog.js
+        - lib/codemirror/addon/search/searchcursor.js
+        - lib/codemirror/addon/search/search.js
+        - lib/codemirror/addon/mode/loadmode.js
+        - lib/codemirror/addon/mode/overlay.js
+        - lib/codemirror/mode/meta.js
+
+app-classes:
+    filters: yui_js
+    output: app-classes.min.js
+    contents:
+        - webed-ext/app/assert.js
+        - webed-ext/app/util.js
+        - webed-ext/app/uuid.js
+        - webed-ext/app/mime.js
+
+all-classes:
+    output: all-classes.js
+    contents:
+        - lib-classes
+        - app-classes
+        - all-classes.incl.js
+all-classes.gz:
+    filters: gzip
+    output: all-classes.js.gz
+    contents: all-classes
