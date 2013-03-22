@@ -32,38 +32,31 @@ theme-standard.gz:
     output: webed-ext/resources/theme/theme-standard.min.css.gz
     contents: theme-standard
 
-lib-classes:
-    filters: yui_js
-    output: lib-classes.min.js
-    contents:
-        - lib/node-uuid/uuid.js
-        - lib/dmp/javascript/diff_match_patch.js
-        - lib/typojs/typo/typo.js
-        - lib/codemirror/lib/codemirror.js
-        - lib/codemirror/addon/selection/active-line.js
-        - lib/codemirror/addon/edit/matchbrackets.js
-        - lib/codemirror/addon/dialog/dialog.js
-        - lib/codemirror/addon/search/searchcursor.js
-        - lib/codemirror/addon/search/search.js
-        - lib/codemirror/addon/mode/loadmode.js
-        - lib/codemirror/addon/mode/overlay.js
-        - lib/codemirror/mode/meta.js
-
-app-classes:
-    filters: yui_js
-    output: app-classes.min.js
-    contents:
-        - webed-ext/app/assert.js
-        - webed-ext/app/util.js
-        - webed-ext/app/uuid.js
-        - webed-ext/app/mime.js
-
 all-classes:
     output: all-classes.js
     contents:
-        - lib-classes
-        - app-classes
+        - contents:
+              - lib/node-uuid/uuid.js
+              - lib/dmp/javascript/diff_match_patch.js
+              - lib/typojs/typo/typo.js
+              - lib/codemirror/lib/codemirror.js
+              - lib/codemirror/addon/selection/active-line.js
+              - lib/codemirror/addon/edit/matchbrackets.js
+              - lib/codemirror/addon/dialog/dialog.js
+              - lib/codemirror/addon/search/searchcursor.js
+              - lib/codemirror/addon/search/search.js
+              - lib/codemirror/addon/mode/loadmode.js
+              - lib/codemirror/addon/mode/overlay.js
+              - lib/codemirror/mode/meta.js
+          filters: yui_js
+        - contents:
+              - webed-ext/app/assert.js
+              - webed-ext/app/util.js
+              - webed-ext/app/uuid.js
+              - webed-ext/app/mime.js
+          filters: yui_js
         - all-classes.incl.js
+
 all-classes.gz:
     filters: gzip
     output: all-classes.js.gz
