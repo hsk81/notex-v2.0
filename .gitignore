@@ -28,9 +28,7 @@
 /webed/static/ext
 /webed/static/all-classes.js
 /webed/static/all-classes.*.js
-/webed/static/app-classes.*.js
-/webed/static/lib-classes.*.js
-/webed/static/webed-ext/resources/theme/theme-*.min.css
+/webed/static/webed-ext/resources/theme/theme-*.css
 
 /webed/templates/index.html
 
