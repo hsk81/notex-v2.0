@@ -13,7 +13,10 @@ from webed.ext import std_cache
 from webed.ext import obj_cache
 from webed.ext import sss_cache
 from webed.ext import dbs_cache
+from webed.ext import assets
 from webed.models import User
+
+from gzip import GzipFile
 
 import os
 import shutil
@@ -140,7 +143,7 @@ class AppReset (Command):
         return [
             Option ('-n', '--name', dest='name', default=u'admin'),
             Option ('-m', '--mail', dest='mail', default=u'admin@mail.net'),
-            ]
+        ]
 
     def run (self, *args, **kwargs):
 
@@ -175,6 +178,22 @@ manager.add_command ('refresh', AppRefresh ())
 ###############################################################################
 ###############################################################################
 
+class AssetsGzip (Command):
+    """Gzip assets: Helps to increase webserver performance"""
+
+    def run (self):
+
+        for asset in assets:
+            source_path = asset.resolve_output ()
+            target_path = '%s.gz' % source_path
+
+            with open (source_path, 'rb') as source:
+                with open (target_path, 'wb') as target:
+                    gz = GzipFile (mode='wb', compresslevel=6, fileobj=target)
+                    try: gz.write(source.read())
+                    finally: gz.close()
+
+manager.add_command ('assets-gzip', AssetsGzip ())
 manager.add_command ('assets', ManageAssets ())
 
 ###############################################################################

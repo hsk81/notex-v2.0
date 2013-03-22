@@ -1,6 +1,6 @@
 theme-base:
     filters: yui_css
-    output: webed-ext/resources/theme/theme-base.min.css
+    output: webed-ext/resources/theme/theme-base.css
     contents:
         - lib/codemirror/lib/codemirror.css
         - lib/codemirror/addon/dialog/dialog.css
@@ -9,31 +9,17 @@ theme-base:
         - webed-ext/resources/theme/icons-16.css
 
 theme-blue:
-    output: webed-ext/resources/theme/theme-blue.min.css
+    output: webed-ext/resources/theme/theme-blue.%(version)s.css
     contents: [ext/resources/css/ext-all.css, theme-base]
-theme-blue.gz:
-    filters: gzip
-    output: webed-ext/resources/theme/theme-blue.min.css.gz
-    contents: theme-blue
-
 theme-gray:
-    output: webed-ext/resources/theme/theme-gray.min.css
+    output: webed-ext/resources/theme/theme-gray.%(version)s.css
     contents: [ext/resources/css/ext-all-gray.css, theme-base]
-theme-gray.gz:
-    filters: gzip
-    output: webed-ext/resources/theme/theme-gray.min.css.gz
-    contents: theme-gray
-
 theme-standard:
-    output: webed-ext/resources/theme/theme-standard.min.css
+    output: webed-ext/resources/theme/theme-standard.%(version)s.css
     contents: [ext/resources/css/ext-standard.css, theme-base]
-theme-standard.gz:
-    filters: gzip
-    output: webed-ext/resources/theme/theme-standard.min.css.gz
-    contents: theme-standard
 
 all-classes:
-    output: all-classes.js
+    output: all-classes.%(version)s.js
     contents:
         - contents:
               - lib/node-uuid/uuid.js
@@ -56,8 +42,3 @@ all-classes:
               - webed-ext/app/mime.js
           filters: yui_js
         - all-classes.incl.js
-
-all-classes.gz:
-    filters: gzip
-    output: all-classes.js.gz
-    contents: all-classes
