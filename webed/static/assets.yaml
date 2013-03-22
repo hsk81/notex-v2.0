@@ -1,5 +1,5 @@
 theme-base:
-    filters: cssrewrite, yui_css
+    filters: yui_css
     output: webed-ext/resources/theme/theme-base.min.css
     contents:
         - lib/codemirror/lib/codemirror.css
@@ -9,7 +9,6 @@ theme-base:
         - webed-ext/resources/theme/icons-16.css
 
 theme-blue:
-    filters: cssrewrite
     output: webed-ext/resources/theme/theme-blue.min.css
     contents: [ext/resources/css/ext-all.css, theme-base]
 theme-blue.gz:
@@ -18,7 +17,6 @@ theme-blue.gz:
     contents: theme-blue
 
 theme-gray:
-    filters: cssrewrite
     output: webed-ext/resources/theme/theme-gray.min.css
     contents: [ext/resources/css/ext-all-gray.css, theme-base]
 theme-gray.gz:
@@ -27,7 +25,6 @@ theme-gray.gz:
     contents: theme-gray
 
 theme-standard:
-    filters: cssrewrite
     output: webed-ext/resources/theme/theme-standard.min.css
     contents: [ext/resources/css/ext-standard.css, theme-base]
 theme-standard.gz:
