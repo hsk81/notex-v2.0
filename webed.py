@@ -179,7 +179,7 @@ manager.add_command ('refresh', AppRefresh ())
 ###############################################################################
 
 class AssetsGzip (Command):
-    """Gzip assets: Helps to increase webserver performance"""
+    """Gzip assets: Compress after assets have been built"""
 
     def run (self):
 
