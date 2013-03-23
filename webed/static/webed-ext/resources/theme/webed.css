@@ -147,7 +147,8 @@ body {
 }
 
 #page.home .subline ul li.subline-icon {
-    padding: 1px 9px;
+    padding: 1px 8px;
+    margin-right: 2px;
     background-repeat: no-repeat;
 }
 
