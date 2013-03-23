@@ -2,6 +2,7 @@ theme-base:
     filters: yui_css
     output: webed-ext/resources/theme/theme-base.css
     contents:
+        - webed-ext/resources/theme/reset.css
         - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
         - webed-ext/resources/theme/sprite.css
