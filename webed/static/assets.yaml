@@ -6,8 +6,8 @@ theme-base:
         - lib/codemirror/addon/dialog/dialog.css
         - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
-        - webed-ext/resources/theme/icons-16.css
         - webed-ext/resources/theme/sprite.css
+        - webed-ext/resources/theme/icons-16.css
 
 theme-blue:
     output: webed-ext/resources/theme/theme-blue.%(version)s.css
