@@ -36,7 +36,7 @@ app.config.from_object (DefaultConfig)
 if not app.testing:
     app.config.from_envvar ('WEBED_SETTINGS', silent=False)
 
-if not app.debug:
+if not app.dev:
     app.jinja_env.add_extension (HtmlCompressor)
 
 @app.errorhandler (Exception)
