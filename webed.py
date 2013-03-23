@@ -192,19 +192,28 @@ class AssetsGzip (Command):
 
         level = kwargs['level']
         assert 1 <= level <= 9
+        directory = assets.get_directory ()
+        assert directory
 
         for asset in assets:
             source_path = asset.resolve_output ()
             target_path = '%s.gz' % source_path
+            bundle_path = target_path[len (directory) + 1:]
 
-            with open (source_path, 'rb') as source:
-                with open (target_path, 'wb') as target:
+            if not os.path.exists (target_path):
+                print 'Compressing bundle: %s' % bundle_path
 
-                    gz = GzipFile (
-                        mode='wb', compresslevel=level, fileobj=target)
+                with open (source_path, 'rb') as source:
+                    with open (target_path, 'wb') as target:
 
-                    try: gz.write (source.read ())
-                    finally: gz.close ()
+                        gz = GzipFile (
+                            mode='wb', compresslevel=level, fileobj=target)
+
+                        try: gz.write (source.read ())
+                        finally: gz.close ()
+
+            else:
+                print 'Skipped bundle: %s' % bundle_path
 
 manager.add_command ('assets-gzip', AssetsGzip ())
 manager.add_command ('assets', ManageAssets ())
