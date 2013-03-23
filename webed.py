@@ -211,7 +211,6 @@ class AssetsGzip (Command):
 
                         try: gz.write (source.read ())
                         finally: gz.close ()
-
             else:
                 print 'Skipped bundle: %s' % bundle_path
 
