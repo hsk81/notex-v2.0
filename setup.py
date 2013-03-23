@@ -36,6 +36,7 @@ setup (
         'pylibmc>=1.2.3',
         'PyYAML>=3.10',
         'redis>=2.7.2',
+        'spritemapper>=1.0.0',
         'ujson>=1.30',
         'yuicompressor>=2.4.7'
     ]
