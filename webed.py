@@ -20,6 +20,7 @@ from gzip import GzipFile
 
 import os
 import shutil
+import subprocess
 
 ###############################################################################
 ###############################################################################
@@ -178,6 +179,26 @@ manager.add_command ('refresh', AppRefresh ())
 ###############################################################################
 ###############################################################################
 
+class AssetsSprite (Command):
+    """Creates a CSS sprite using `spritemapper`"""
+
+    def run (self, *args, **kwargs):
+
+        theme_path = os.path.join (
+            'webed', 'static', 'webed-ext', 'resources', 'theme')
+
+        ini_path = os.path.join (theme_path, 'sprite.ini')
+        src_path = os.path.join (theme_path, 'sprite-in.css')
+        css_path = os.path.join (theme_path, 'sprite.css')
+
+        subprocess.check_call ([
+            'spritemapper', '--conf=' + ini_path, src_path
+        ])
+
+        subprocess.check_call ([
+            'sed', '--in-place', 's/; \}/ !important; \}/g', css_path
+        ])
+
 class AssetsGzip (Command):
     """Gzip assets: Pre-compresses assets"""
 
@@ -219,6 +240,7 @@ class AssetsGzip (Command):
             else:
                 print 'Skipped bundle: %s' % bundle_path
 
+manager.add_command ('assets-sprite', AssetsSprite ())
 manager.add_command ('assets-gzip', AssetsGzip ())
 manager.add_command ('assets', ManageAssets ())
 
