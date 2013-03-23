@@ -186,12 +186,17 @@ class AssetsGzip (Command):
         return [
             Option ('-l', '--compress-level', dest='level', default=6,
                     choices=range (1, 10), type=int),
+            Option ('-f', '--force', dest='force', action='store_true',
+                    default=False, help='Overrides existing compressed asset')
         ]
 
     def run (self, *args, **kwargs):
 
         level = kwargs['level']
         assert 1 <= level <= 9
+        force = kwargs['force']
+        assert type (force) == bool
+
         directory = assets.get_directory ()
         assert directory
 
@@ -200,7 +205,7 @@ class AssetsGzip (Command):
             target_path = '%s.gz' % source_path
             bundle_path = target_path[len (directory) + 1:]
 
-            if not os.path.exists (target_path):
+            if not os.path.exists (target_path) or force:
                 print 'Compressing bundle: %s' % bundle_path
 
                 with open (source_path, 'rb') as source:
