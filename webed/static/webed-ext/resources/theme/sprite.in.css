@@ -1,17 +1,17 @@
-.icon-add-16s { background: url(../../../ico/fatcow/16x16/add.png) !important; }
-.icon-blogger-16s { background: url(../../../ico/fatcow/16x16/blogger.png) !important; }
-.icon-delete-16s { background: url(../../../ico/fatcow/16x16/delete.png) !important; }
-.icon-disk-16s { background: url(../../../ico/fatcow/16x16/disk.png) !important; }
-.icon-facebook-16s { background: url(../../../ico/fatcow/16x16/facebook.png) !important; }
-.icon-folder-16s { background: url(../../../ico/fatcow/16x16/folder.png) !important; }
-.icon-folder_page-16s { background: url(../../../ico/fatcow/16x16/folder_page.png) !important; }
-.icon-page_white-16s { background: url(../../../ico/fatcow/16x16/page_white.png) !important; }
-.icon-page_white_zip-16s { background: url(../../../ico/fatcow/16x16/page_white_zip.png) !important; }
-.icon-pencil-16s { background: url(../../../ico/fatcow/16x16/pencil.png) !important; }
-.icon-report-16s { background: url(../../../ico/fatcow/16x16/report.png) !important; }
-.icon-report_add-16s { background: url(../../../ico/fatcow/16x16/report_add.png) !important; }
-.icon-report_disk-16s { background: url(../../../ico/fatcow/16x16/report_disk.png) !important; }
-.icon-report_edit-16s { background: url(../../../ico/fatcow/16x16/report_edit.png) !important; }
-.icon-report_go-16s { background: url(../../../ico/fatcow/16x16/report_go.png) !important; }
-.icon-twitter_1-16s { background: url(../../../ico/fatcow/16x16/twitter_1.png) !important; }
-.icon-youtube-16s { background: url(../../../ico/fatcow/16x16/youtube.png) !important; }
+.icon-add-16s { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/add.png); }
+.icon-blogger-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/blogger.png); }
+.icon-delete-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/delete.png); }
+.icon-disk-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/disk.png); }
+.icon-facebook-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/facebook.png); }
+.icon-folder-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/folder.png); }
+.icon-folder_page-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/folder_page.png); }
+.icon-page_white-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/page_white.png); }
+.icon-page_white_zip-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/page_white_zip.png); }
+.icon-pencil-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/pencil.png); }
+.icon-report-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/report.png); }
+.icon-report_add-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/report_add.png); }
+.icon-report_disk-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/report_disk.png); }
+.icon-report_edit-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/report_edit.png); }
+.icon-report_go-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/report_go.png); }
+.icon-twitter_1-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/twitter_1.png); }
+.icon-youtube-16s { width: 16px; height: 16px;  background: url(../../../ico/fatcow/16x16/youtube.png); }

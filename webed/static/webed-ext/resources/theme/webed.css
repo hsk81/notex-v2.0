@@ -92,7 +92,7 @@ body {
 }
 
 #page.home .link-icon {
-    height:16px; width:16px; padding-top:4px;
+    padding-top:4px;
     background-repeat: no-repeat;
     text-align:center;
     text-decoration:none;
@@ -149,8 +149,6 @@ body {
 #page.home .subline ul li.subline-icon {
     display: inline-block;
     overflow: hidden;
-    height: 16px;
-    width: 16px;
     position: relative;
     top: 4px;
 }
