@@ -3,6 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from compressinja.html import HtmlCompressor
 from flask.globals import session
 from flask.app import Flask
 
@@ -34,6 +35,9 @@ app.config.from_object (DefaultConfig)
 
 if not app.testing:
     app.config.from_envvar ('WEBED_SETTINGS', silent=False)
+
+if not app.debug:
+    app.jinja_env.add_extension (HtmlCompressor)
 
 @app.errorhandler (Exception)
 def exception_logger (ex):
