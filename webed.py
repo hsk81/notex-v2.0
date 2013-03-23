@@ -179,9 +179,19 @@ manager.add_command ('refresh', AppRefresh ())
 ###############################################################################
 
 class AssetsGzip (Command):
-    """Gzip assets: Compress after assets have been built"""
+    """Gzip assets: Pre-compresses assets"""
 
-    def run (self):
+    def get_options (self):
+
+        return [
+            Option ('-l', '--compress-level', dest='level', default=6,
+                    choices=range (1, 10), type=int),
+        ]
+
+    def run (self, *args, **kwargs):
+
+        level = kwargs['level']
+        assert 1 <= level <= 9
 
         for asset in assets:
             source_path = asset.resolve_output ()
@@ -189,9 +199,12 @@ class AssetsGzip (Command):
 
             with open (source_path, 'rb') as source:
                 with open (target_path, 'wb') as target:
-                    gz = GzipFile (mode='wb', compresslevel=6, fileobj=target)
-                    try: gz.write(source.read())
-                    finally: gz.close()
+
+                    gz = GzipFile (
+                        mode='wb', compresslevel=level, fileobj=target)
+
+                    try: gz.write (source.read ())
+                    finally: gz.close ()
 
 manager.add_command ('assets-gzip', AssetsGzip ())
 manager.add_command ('assets', ManageAssets ())
