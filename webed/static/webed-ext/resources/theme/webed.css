@@ -147,8 +147,12 @@ body {
 }
 
 #page.home .subline ul li.subline-icon {
-    padding: 1px 8px;
-    margin-right: 2px;
+    display: inline-block;
+    overflow: hidden;
+    height: 16px;
+    width: 16px;
+    position: relative;
+    top: 4px;
 }
 
 /******************************************************************************
