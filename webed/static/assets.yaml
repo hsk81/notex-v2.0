@@ -11,13 +11,13 @@ theme-base:
 
 theme-blue:
     output: webed-ext/resources/theme/theme-blue.%(version)s.css
-    contents: [ext/resources/css/ext-all.css, theme-base]
+    contents: [theme-base, ext/resources/css/ext-all.css]
 theme-gray:
     output: webed-ext/resources/theme/theme-gray.%(version)s.css
-    contents: [ext/resources/css/ext-all-gray.css, theme-base]
+    contents: [theme-base, ext/resources/css/ext-all-gray.css]
 theme-standard:
     output: webed-ext/resources/theme/theme-standard.%(version)s.css
-    contents: [ext/resources/css/ext-standard.css, theme-base]
+    contents: [theme-base, ext/resources/css/ext-standard.css]
 
 all-classes:
     output: all-classes.%(version)s.js
