@@ -182,14 +182,23 @@ manager.add_command ('refresh', AppRefresh ())
 class AssetsSprite (Command):
     """Creates a CSS sprite using `spritemapper`"""
 
+    def get_options (self):
+
+        return [
+            Option ('-n', '--name', dest='name', default='sprite'),
+        ]
+
     def run (self, *args, **kwargs):
 
         theme_path = os.path.join (
             'webed', 'static', 'webed-ext', 'resources', 'theme')
 
-        ini_path = os.path.join (theme_path, 'sprite.ini')
-        src_path = os.path.join (theme_path, 'sprite-in.css')
-        css_path = os.path.join (theme_path, 'sprite.css')
+        name = kwargs['name']
+        assert name
+
+        ini_path = os.path.join (theme_path, '%s.ini' % name)
+        src_path = os.path.join (theme_path, '%s-in.css' % name)
+        css_path = os.path.join (theme_path, '%s.css' % name)
 
         subprocess.check_call ([
             'spritemapper', '--conf=' + ini_path, src_path
