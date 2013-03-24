@@ -186,6 +186,7 @@ class AssetsSprite (Command):
 
         return [
             Option ('-n', '--name', dest='name', default='sprite-main'),
+            Option ('-p', '--padding', dest='padding', default=2, type=int),
         ]
 
     def run (self, *args, **kwargs):
@@ -195,13 +196,15 @@ class AssetsSprite (Command):
 
         name = kwargs['name']
         assert name
+        padding = kwargs['padding']
+        assert padding
 
         ini_path = os.path.join (theme_path, '%s.ini' % name)
         src_path = os.path.join (theme_path, '%s-in.css' % name)
         css_path = os.path.join (theme_path, '%s.css' % name)
 
-        subprocess.check_call ([
-            'spritemapper', '--conf=' + ini_path, src_path
+        subprocess.check_call (['spritemapper',
+            '--padding=%d' % padding, '--conf=%s' % ini_path, src_path
         ])
 
         subprocess.check_call ([
@@ -214,7 +217,7 @@ class AssetsGzip (Command):
     def get_options (self):
 
         return [
-            Option ('-l', '--compress-level', dest='level', default=6,
+            Option ('-l', '--compress-level', dest='level', default=9,
                     choices=range (1, 10), type=int),
             Option ('-f', '--force', dest='force', action='store_true',
                     default=False, help='Overrides existing compressed asset')
