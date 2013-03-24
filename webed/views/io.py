@@ -17,8 +17,10 @@ from ..models import Leaf
 from ..models import TextProperty
 from ..models import Base64Property
 
-import subprocess
 import mimetypes
+mimetypes.init (app.config['MIMETYPES_PATHS'])
+
+import subprocess
 import tempfile
 import zipfile
 import base64
@@ -248,9 +250,7 @@ def create_bin (name, root, mime, path=None, file=None):
 
 def guess_mime (name):
 
-    if not mimetypes.inited: mimetypes.init (app.config['MIMETYPES_PATHS'])
     mime, _ = mimetypes.guess_type (name)
-
     return mime
 
 def guess_mime_ex (name, path):
