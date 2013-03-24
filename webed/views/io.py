@@ -17,9 +17,7 @@ from ..models import Leaf
 from ..models import TextProperty
 from ..models import Base64Property
 
-import mimetypes
-mimetypes.init (app.config['MIMETYPES_PATHS'])
-
+import mimetypes; mimetypes.init (app.config['MIMETYPES_PATHS'])
 import subprocess
 import tempfile
 import zipfile
