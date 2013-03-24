@@ -48,8 +48,6 @@ def main (page='home', template='index.html'):
         director.reset (json=False)
     elif 'refresh' in request.args:
         director.refresh (json=False)
-    else:
-        director.setup (json=False)
 
     @std_cache.memoize (name='views.main.cached_template', unless=app.is_dev)
     def cached_template (*args, **kwargs):

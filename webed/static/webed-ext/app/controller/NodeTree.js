@@ -82,9 +82,14 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     expand: function () {
+        var ctrl = this;
         var view = assert (this.getNodeTree ());
         var root = assert (view.getRootNode ());
-        if (!root.get ('loaded')) this.refresh (null);
+        if (!root.get ('loaded')) Ext.Ajax.request ({
+            url: '/setup/', callback: function () {
+                ctrl.refresh (null);
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
