@@ -185,7 +185,7 @@ class AssetsSprite (Command):
     def get_options (self):
 
         return [
-            Option ('-n', '--name', dest='name', default='sprite'),
+            Option ('-n', '--name', dest='name', default='sprite-main'),
         ]
 
     def run (self, *args, **kwargs):
