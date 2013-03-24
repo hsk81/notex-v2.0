@@ -71,8 +71,10 @@ def node_create (leafs=True, json=True):
 
 def node_read (leafs=True, json=True):
 
-    base = Q (Node.query).one (uuid=app.session_manager.anchor)
-    assert base
+    base = Q (Node.query).one_or_default (uuid=app.session_manager.anchor)
+    if not base:
+        app.session_manager.setup ()
+        base = Q (Node.query).one (uuid=app.session_manager.anchor)
 
     omit_top = request.args.get ('omit_top', False)
     if omit_top: omit_top = JSON.decode (omit_top)

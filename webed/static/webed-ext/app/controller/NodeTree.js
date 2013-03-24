@@ -82,26 +82,9 @@ Ext.define ('Webed.controller.NodeTree', {
     },
 
     expand: function () {
-        var ctrl = this;
         var view = assert (this.getNodeTree ());
-        view.setLoading ('Loading ..');
-
         var root = assert (view.getRootNode ());
-        if (!root.get ('loaded')) Ext.Ajax.request ({
-            url: '/setup/', callback: function () {
-
-                var node = assert (ctrl.get_selection ());
-                var root = assert (view.getRootNode ());
-                var store = assert (ctrl.getNodesStore ());
-
-                root.removeAll (false);
-
-                store.load ({node: root, scope: this, callback: function () {
-                    ctrl.set_selection (node);
-                    view.setLoading (false);
-                }});
-            }
-        });
+        if (!root.get ('loaded')) this.refresh (null);
     },
 
     ///////////////////////////////////////////////////////////////////////////
