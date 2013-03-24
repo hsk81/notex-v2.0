@@ -8,7 +8,8 @@ from flask import Blueprint
 
 from ..app import app
 from ..ext import std_cache
-from ..util import jsonify
+from ..util import Q, jsonify
+from ..models import Node
 
 from datetime import datetime
 
@@ -30,10 +31,11 @@ def setup (json=True):
     """
     if app.session_manager.virgin:
         app.session_manager.setup ()
-        result = dict (success=True, timestamp=datetime.now ())
     else:
-        result = dict (success=False, timestamp=datetime.now ())
+        base = Q (Node.query).one_or_default (uuid=app.session_manager.anchor)
+        if not base: app.session_manager.setup ()
 
+    result = dict (success=True, timestamp=datetime.now ())
     return jsonify (result) if json else result
 
 @director.route ('/refresh/')
