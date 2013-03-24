@@ -6,6 +6,7 @@ theme-base:
         - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
         - webed-ext/resources/theme/sprite-main.css
+        - webed-ext/resources/theme/sprite-mime.css
         - lib/codemirror/lib/codemirror.css
         - lib/codemirror/addon/dialog/dialog.css
 
