@@ -84,10 +84,22 @@ Ext.define ('Webed.controller.NodeTree', {
     expand: function () {
         var ctrl = this;
         var view = assert (this.getNodeTree ());
+        view.setLoading ('Loading ..');
+
         var root = assert (view.getRootNode ());
         if (!root.get ('loaded')) Ext.Ajax.request ({
             url: '/setup/', callback: function () {
-                ctrl.refresh (null);
+
+                var node = assert (ctrl.get_selection ());
+                var root = assert (view.getRootNode ());
+                var store = assert (ctrl.getNodesStore ());
+
+                root.removeAll (false);
+
+                store.load ({node: root, scope: this, callback: function () {
+                    ctrl.set_selection (node);
+                    view.setLoading (false);
+                }});
             }
         });
     },
@@ -164,8 +176,7 @@ Ext.define ('Webed.controller.NodeTree', {
         var root = assert (view.getRootNode ());
         var store = assert (this.getNodesStore ());
 
-        var table = assert (view.getView ());
-        table.el.mask ('Loading ..');
+        view.setLoading ('Loading ..');
         root.removeAll (false);
 
         store.load ({node: root, scope: this, callback: function (recs, op) {
@@ -173,7 +184,7 @@ Ext.define ('Webed.controller.NodeTree', {
                 args.callback.call (args.scope||this, recs, op);
             } else {
                 this.set_selection (node);
-            } table.el.unmask ();
+            } view.setLoading (false);
         }});
     },
 
