@@ -22,6 +22,9 @@ Ext.define ('Webed.controller.NodeTree', {
             'node-tree': {
                 afterrender: this.afterrender,
                 itemclick: this.itemclick
+            },
+            'viewport panel[name=projects]': {
+                expand: this.expand
             }
         });
 
@@ -69,13 +72,19 @@ Ext.define ('Webed.controller.NodeTree', {
         this.select_base ();
     },
 
-    itemclick: function (view, record, item, index, e, eOpts) {
+    itemclick: function (self, record) {
         this.application.fireEvent ('create_tab', this, {
             record: record
         });
         this.application.fireEvent ('select_leaf', this, {
             record: record
         });
+    },
+
+    expand: function () {
+        var view = assert (this.getNodeTree ());
+        var root = assert (view.getRootNode ());
+        if (!root.get ('loaded')) this.refresh (null);
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -95,10 +104,8 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     get_selection: function () {
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
+        var view = assert (this.getNodeTree ());
+        var semo = assert (view.getSelectionModel ());
 
         return semo.getLastSelected ();
     },
@@ -106,23 +113,16 @@ Ext.define ('Webed.controller.NodeTree', {
     set_selection: function (record) {
         assert (record);
 
-        var uuid = record.get ('uuid');
-        assert (uuid);
-        var path = record.get ('uuid_path');
-        assert (path);
+        var uuid = assert (record.get ('uuid'));
+        var path = assert (record.get ('uuid_path'));
+        path = assert (Ext.clone (path));
 
-        path = Ext.clone (path);
-        assert (path);
-
-        var view = this.getNodeTree ();
-        assert (view);
-        var semo = view.getSelectionModel ();
-        assert (semo);
-        var base = view.getRootNode ();
-        assert (base);
+        var view = assert (this.getNodeTree ());
+        var semo = assert (view.getSelectionModel ());
+        var root = assert (view.getRootNode ());
 
         // ['aa..aa','bb..bb',..,'ff..ff'] => ['00..00','bb..bb'','ff..ff']
-        path[0] = base.get ('uuid'); assert (path[0])
+        path[0] = assert (root.get ('uuid'));
         // ['00..00','bb..bb',..,'ff..ff'] => ['','00..00','bb..bb'']
         path.unshift (''); path.pop ();
         // ['','00..00','bb..bb''] => /00..00/bb..bb
@@ -141,21 +141,11 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     select_base: function () {
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-        var semo = view.getSelectionModel ();
-        assert (semo);
+        var view = assert (this.getNodeTree ());
+        var root = assert (view.getRootNode ());
+        var semo = assert (view.getSelectionModel ());
 
-        semo.select (base);
-    },
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    settings: function () {
-        console.debug ('[NodeTree.settings]');
+        semo.select (root);
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -164,22 +154,16 @@ Ext.define ('Webed.controller.NodeTree', {
     refresh: function (source, args) {
         if (source == this) return;
 
-        var node = this.get_selection ();
-        assert (node);
-        var view = this.getNodeTree ();
-        assert (view);
-        var base = view.getRootNode ();
-        assert (base);
-        var store = this.getNodesStore ();
-        assert (store);
+        var node = assert (this.get_selection ());
+        var view = assert (this.getNodeTree ());
+        var root = assert (view.getRootNode ());
+        var store = assert (this.getNodesStore ());
 
-        var table = view.getView ();
-        assert (table); table.el.mask ('Loading ..');
+        var table = assert (view.getView ());
+        table.el.mask ('Loading ..');
+        root.removeAll (false);
 
-        base = base.removeAll (false);
-        assert (base);
-
-        store.load ({node: base, scope: this, callback: function (recs, op) {
+        store.load ({node: root, scope: this, callback: function (recs, op) {
             if (args && args.callback && args.callback.call) {
                 args.callback.call (args.scope||this, recs, op);
             } else {
