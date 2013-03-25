@@ -1,8 +1,8 @@
-Ext.define ('Webed.controller.toolbar.RestToolbar', {
+Ext.define ('Webed.controller.toolbar.MarkdownToolbar', {
     extend: 'Webed.controller.toolbar.TextToolbar',
 
     refs: [{
-        selector: 'rest-toolbar', ref: 'toolbar'
+        selector: 'md-toolbar', ref: 'toolbar'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -10,124 +10,103 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
     init: function () {
         this.control ({
-            'rest-toolbar component[action=undo]': {
+            'md-toolbar component[action=undo]': {
                 click: this.undo
             },
-            'rest-toolbar component[action=redo]': {
+            'md-toolbar component[action=redo]': {
                 click: this.redo
             },
-            'rest-toolbar component[action=cut]': {
+            'md-toolbar component[action=cut]': {
                 click: this.cut
             },
-            'rest-toolbar component[action=copy]': {
+            'md-toolbar component[action=copy]': {
                 click: this.copy
             },
-            'rest-toolbar component[action=paste]': {
+            'md-toolbar component[action=paste]': {
                 click: this.paste
             },
 
-            'rest-toolbar component[action=apply-heading-0]': {
+            'md-toolbar component[action=apply-heading-0]': {
                 click: function (button) {
                     EDITOR = assert (this.codemirror (button));
                 }
             },
-            'rest-toolbar menuitem[action=apply-heading-1]': {
+            'md-toolbar menuitem[action=apply-heading-1]': {
                 click: Ext.pass (this.apply_heading, [1], this)
             },
-            'rest-toolbar menuitem[action=apply-heading-2]': {
+            'md-toolbar menuitem[action=apply-heading-2]': {
                 click: Ext.pass (this.apply_heading, [2], this)
             },
-            'rest-toolbar menuitem[action=apply-heading-3]': {
-                click: Ext.pass (this.apply_heading, [3], this)
-            },
-            'rest-toolbar menuitem[action=apply-heading-4]': {
-                click: Ext.pass (this.apply_heading, [4], this)
-            },
-            'rest-toolbar menuitem[action=apply-heading-5]': {
-                click: Ext.pass (this.apply_heading, [5], this)
-            },
-            'rest-toolbar menuitem[action=apply-heading-6]': {
-                click: Ext.pass (this.apply_heading, [6], this)
-            },
 
-            'rest-toolbar component[action=toggle-strong]': {
+            'md-toolbar component[action=toggle-strong]': {
                 click: this.toggle_strong
             },
-            'rest-toolbar component[action=toggle-italic]': {
+            'md-toolbar component[action=toggle-italic]': {
                 click: this.toggle_italic
             },
-            'rest-toolbar component[action=toggle-literal]': {
+            'md-toolbar component[action=toggle-literal]': {
                 click: this.toggle_literal
             },
 
-            'rest-toolbar component[action=toggle-subscript]': {
+            'md-toolbar component[action=toggle-subscript]': {
                 click: this.toggle_subscript
             },
-            'rest-toolbar component[action=toggle-supscript]': {
+            'md-toolbar component[action=toggle-supscript]': {
                 click: this.toggle_supscript
             },
 
-            'rest-toolbar component[action=lower-case]': {
+            'md-toolbar component[action=lower-case]': {
                 click: this.lower_case
             },
-            'rest-toolbar component[action=upper-case]': {
+            'md-toolbar component[action=upper-case]': {
                 click: this.upper_case
             },
 
-            'rest-toolbar component[action=decrease-indent]': {
+            'md-toolbar component[action=decrease-indent]': {
                 click: this.decrease_indent
             },
-            'rest-toolbar component[action=increase-indent]': {
+            'md-toolbar component[action=increase-indent]': {
                 click: this.increase_indent
             },
 
-            'rest-toolbar component[action=toggle-bullet-list]': {
+            'md-toolbar component[action=toggle-bullet-list]': {
                 click: this.toggle_bullet_list
             },
-            'rest-toolbar component[action=toggle-number-list]': {
+            'md-toolbar component[action=toggle-number-list]': {
                 click: this.toggle_number_list
             },
 
-            'rest-toolbar component[action=insert-figure]': {
-                click: this.insert_figure
-            },
-            'rest-toolbar component[action=insert-image]': {
-                click: this.insert_image
-            },
-            'rest-toolbar component[action=insert-hyperlink]': {
+            'md-toolbar component[action=insert-hyperlink]': {
                 click: this.insert_hyperlink
             },
-            'rest-toolbar component[action=insert-footnote]': {
-                click: this.insert_footnote
-            },
-            'rest-toolbar component[action=insert-horizontal-line]': {
+            'md-toolbar component[action=insert-horizontal-line]': {
                 click: this.insert_horizontal_line
             },
 
-            'rest-toolbar component[action=split-vertical]': {
+            'md-toolbar component[action=split-vertical]': {
                 click: this.split_vertical
             },
-            'rest-toolbar component[action=split-horizontal]': {
+            'md-toolbar component[action=split-horizontal]': {
                 click: this.split_horizontal
             },
 
-            'rest-toolbar component[action=find]': {
+            'md-toolbar component[action=find]': {
                 click: this.find
             },
-            'rest-toolbar component[action=find-next]': {
+            'md-toolbar component[action=find-next]': {
                 click: this.find_next
             },
-            'rest-toolbar component[action=find-previous]': {
+            'md-toolbar component[action=find-previous]': {
                 click: this.find_previous
             },
-            'rest-toolbar component[action=replace-all]': {
+            'md-toolbar component[action=replace-all]': {
                 click: this.replace_all
             },
-            'rest-toolbar component[action=clear-search]': {
+            'md-toolbar component[action=clear-search]': {
                 click: this.clear_search
             },
 
-            'rest-toolbar': {
+            'md-toolbar': {
                 afterrender: this.afterrender
             }
         });
@@ -138,7 +117,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
     afterrender: function (self) {
         this.keyMap = Ext.create (
-            'Webed.controller.toolbar.RestToolbar.KeyMap', {toolbar: self}
+            'Webed.controller.toolbar.MarkdownToolbar.KeyMap', {toolbar: self}
         );
     },
 
@@ -146,7 +125,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     heading_marker: function (level) {
-        return {1:'#', 2:'*', 3:'=', 4:'-', 5:'^', 6:'.. rubric::'}[level];
+        return {1:'=', 2:'-'}[level];
     },
 
     apply_heading: function (level, button) {
@@ -156,39 +135,21 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         switch (level) {
             case 1:
             case 2:
-            case 3:
-            case 4:
-            case 5:
-                apply_heading_1to5.call (this, marker, level);
-                break;
-            case 6:
-                apply_heading_6.call (this, marker);
+                apply_heading_1to2.call (this, marker, level);
                 break;
             default:
                 return;
         }
 
-        function apply_heading_1to5 (marker, level) {
+        function apply_heading_1to2 (marker, level) {
             this.remove_heading (editor, function () {
                 var sel = editor.getSelection ();
                 if (sel) {
                     var head = '';
-                    var size = (sel.length < 64) ? sel.length : 4;
+                    var size = sel.length;
                     for (var idx = 0; idx < size; idx++) head += marker;
-                    var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
+                    var tpl = '{1}\n{0}';
                     editor.replaceSelection (String.format (tpl, head, sel));
-                    editor.setCursor (editor.getCursor ('end'));
-                }
-            });
-        }
-
-        function apply_heading_6  (marker) {
-            this.remove_heading (editor, function () {
-                var sel = editor.getSelection();
-                if (sel) {
-                    var rep = sel.replace (/\s+$/, '');
-                    var tpl = marker + ' ' + '{0}';
-                    editor.replaceSelection (String.format (tpl, rep));
                     editor.setCursor (editor.getCursor ('end'));
                 }
             });
@@ -213,8 +174,6 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
         var sel = editor.getSelection ();
         if (sel) {
-            remove_heading_6.call (this);
-
             if (tok[-3] && tok[-3].className == 'header' && !low) return;
             if (tok[-2] && tok[-2].className == 'header' && !low) return;
             if (low) editor.removeLine (low.line);
@@ -230,20 +189,6 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
             );
 
             if (callback) callback.call (this);
-        }
-
-        function remove_heading_6 () {
-            var marker = assert (this.heading_marker (6));
-            var rx = new RegExp (marker + '(\\s*)');
-            if (sel.match (rx)) {
-                editor.replaceSelection (sel.replace (rx, ''));
-            } else {
-                var cur = editor.getCursor ('head');
-                var txt = editor.getLine (cur.line);
-                if (txt && txt.match (rx)) editor.setLine (
-                    cur.line, txt.replace (rx, '')
-                );
-            }
         }
 
         function reset_cursor () {
@@ -364,10 +309,10 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         var editor = assert (this.get_editor (button));
         var sel = editor.getSelection ();
         if (sel) this.all_points (
-            editor, '#. ', /^(\s*)([#0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
+            editor, '{0}. ', /^(\s*)([#0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
         );
 
-        else this.next_point (editor, '\n{0}#. \n', /^(\s*)[#0-9]\.(\s+)$/);
+        else this.next_point (editor, '\n{0}1. \n', /^(\s*)[#0-9]\.(\s+)$/);
     },
 
     all_points: function (editor, tpl, rx1, rx2, sel) {
@@ -420,67 +365,6 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    insert_figure: function (button) {
-        var editor = assert (this.get_editor (button));
-
-        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
-            scope: this, callback: callback, title: 'Insert Figure'
-        });
-
-        function callback (path, scale, alignment, caption) {
-            var rest = String.format ('\n.. figure:: {0}\n', path);
-            rest += String.format ('   :scale: {0} %\n', scale);
-            rest += String.format ('   :align: {0}\n', alignment);
-
-            if (caption) {
-                caption = caption.replace (/\n/g, '\n   '); // multi-line
-                caption = caption.replace (/\s+$/, '');
-                rest += '\n' + String.format ('   {0}\n', caption);
-            }
-
-            var cursor = editor.getCursor ();
-            var text = editor.getLine (cursor.line);
-
-            rest = this.fix_preceeding_whitespace (editor, rest, text, cursor);
-            rest = this.fix_succeeding_whitespace (editor, rest, text, cursor);
-
-            editor.replaceSelection (rest);
-            editor.setCursor (editor.getCursor ());
-        }
-
-        insertPictureBox.on ('destroy', function () { editor.focus (); });
-        insertPictureBox.show ();
-    },
-
-    insert_image: function (button) {
-        var editor = assert (this.get_editor (button));
-
-        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
-            scope: this, callback: callback, title: 'Insert Image',
-            listeners: { afterrender: function (panel) {
-                assert (panel.down ('textfield[name=caption]')).hide ();
-            }}
-        });
-
-        function callback (path, scale, alignment) {
-            var rest = String.format ('\n.. image:: {0}\n', path);
-            rest += String.format ('   :scale: {0} %\n', scale);
-            rest += String.format ('   :align: {0}\n', alignment);
-
-            var cursor = editor.getCursor ();
-            var text = editor.getLine (cursor.line);
-
-            rest = this.fix_preceeding_whitespace (editor, rest, text, cursor);
-            rest = this.fix_succeeding_whitespace (editor, rest, text, cursor);
-
-            editor.replaceSelection (rest);
-            editor.setCursor (editor.getCursor ());
-        }
-
-        insertPictureBox.on ('destroy', function () { editor.focus (); });
-        insertPictureBox.show ();
-    },
-
     insert_hyperlink: function (button) {
         var editor = assert (this.get_editor (button));
 
@@ -490,7 +374,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
         function callback (url, label) {
             editor.replaceSelection ((label)
-                ? String.format ('`{0} <{1}>`_', label, url) : url);
+                ? String.format ('[{0}]({1})', label, url) : url);
         }
 
         insertLinkBox.on ('destroy', function () { editor.focus (); });
@@ -499,38 +383,6 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-
-    insert_footnote: function (button) {
-        var editor = assert (this.get_editor (button));
-        var cursor = editor.getCursor ();
-        var range = editor.getRange ({
-            line: cursor.line, ch: cursor.ch-1
-        },{
-            line: cursor.line, ch: cursor.ch+1
-        });
-
-        var prefix = (range.match (/^\s/) || (cursor.ch -1 < 0)) ? '' : ' ';
-        var suffix = (range.match (/\s$/)) ? '' : ' ';
-        var anchor = String.format ('{0}{1}{2}', prefix, '[#]_', suffix);
-
-        if (editor.lineCount () <= cursor.line+1) {
-            editor.replaceSelection (anchor + '\n');
-            editor.setCursor ({line: cursor.line+1, ch:0});
-            editor.replaceSelection ('\n.. [#] \n');
-        } else {
-            editor.replaceSelection (anchor);
-            editor.setCursor ({line: cursor.line+1, ch:0});
-            editor.replaceSelection ('\n.. [#] \n');
-
-            var next = editor.getCursor ();
-            editor.setCursor (next);
-
-            if (editor.getLine (next.line)) editor.replaceSelection ('\n');
-        }
-
-        editor.setCursor ({line: cursor.line+2, ch: 7});
-        editor.focus ();
-    },
 
     insert_horizontal_line: function (button) {
         var editor = assert (this.get_editor (button));
@@ -583,7 +435,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Ext.define ('Webed.controller.toolbar.RestToolbar.KeyMap', {
+Ext.define ('Webed.controller.toolbar.MarkdownToolbar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
     refs: [{

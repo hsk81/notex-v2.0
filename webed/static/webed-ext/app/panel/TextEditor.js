@@ -3,8 +3,9 @@ Ext.define ('Webed.panel.TextEditor', {
     alias: 'widget.text-editor',
 
     requires: [
-        'Webed.toolbar.TextToolbar',
-        'Webed.toolbar.RestToolbar'
+        'Webed.toolbar.MarkdownToolbar',
+        'Webed.toolbar.RestToolbar',
+        'Webed.toolbar.TextToolbar'
     ],
 
     closable: true,

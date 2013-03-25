@@ -181,7 +181,7 @@ def mimes ():
         'name': 'Markdown (GitHub-flavour)',
         'mime': 'text/x-markdown',
         'icon': 'icon-page',
-        'flag': {'spell_check': True},
+        'flag': {'spell_check': True, 'tbar': 'md-toolbar'},
         'exts': ['md']
     }, {
         'name': 'NTriples',
