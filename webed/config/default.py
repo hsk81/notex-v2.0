@@ -45,6 +45,12 @@ class DefaultConfig:
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     ##
+    ## Assume by default that GEVENT is not set; override it if required.
+    ##
+
+    GEVENT = False
+
+    ##
     ## Override secret key in production environment using value from the
     ## *production.py* file to ensure proper security.
     ##

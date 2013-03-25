@@ -274,7 +274,7 @@ class ZmqPing (Command):
 
     def run (self, *args, **kwargs):
 
-        if kwargs['gevent']:
+        if kwargs.get ('gevent', app.config.get ('GEVENT')):
             import zmq.green as zmq
         else:
             import zmq
@@ -306,7 +306,7 @@ class ZmqEcho (Command):
 
     def run (self, *args, **kwargs):
 
-        if kwargs['gevent']:
+        if kwargs.get ('gevent', app.config.get ('GEVENT')):
             import zmq.green as zmq
         else:
             import zmq

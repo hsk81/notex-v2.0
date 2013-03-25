@@ -11,7 +11,7 @@ from ..models import Node
 from ..util import Q, JSON
 from ..ext import obj_cache
 
-if app.config.get ('GEVENT', False):
+if app.config.get ('GEVENT'):
     import zmq.green as zmq
 else:
     import zmq
