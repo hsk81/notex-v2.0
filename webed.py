@@ -6,7 +6,6 @@
 from flask.ext.script import Manager, Command, Option
 from flask.ext.assets import ManageAssets
 
-from webed.util import Q
 from webed.app import app
 from webed.ext import db
 from webed.ext import std_cache
@@ -14,12 +13,12 @@ from webed.ext import obj_cache
 from webed.ext import sss_cache
 from webed.ext import dbs_cache
 from webed.ext import assets
+from webed.util import Q
 from webed.models import User
 
 from gzip import GzipFile
 
 import os
-import zmq
 import base64
 import shutil
 import subprocess
@@ -267,12 +266,19 @@ class ZmqPing (Command):
     def get_options (self):
 
         return [
+            Option ('-g', '--gevent', dest='gevent', action='store_true'),
             Option ('-m', '--message', dest='message', default='PING'),
             Option ('-a', '--address', dest='address',
                     default='tcp://localhost:8080'),
         ]
 
     def run (self, *args, **kwargs):
+
+        if kwargs['gevent']:
+            import zmq.green as zmq
+        else:
+            import zmq
+
         context = zmq.Context ()
 
         message = kwargs['message']
@@ -293,14 +299,21 @@ class ZmqEcho (Command):
     def get_options (self):
 
         return [
+            Option ('-g', '--gevent', dest='gevent', action='store_true'),
             Option ('-a', '--address', dest='address', default='tcp://*:8080'),
-            Option ('-b64', '--base64', dest='b64flag', action='store_true'),
+            Option ('-b64', '--base64', dest='base64', action='store_true'),
         ]
 
     def run (self, *args, **kwargs):
+
+        if kwargs['gevent']:
+            import zmq.green as zmq
+        else:
+            import zmq
+
         context = zmq.Context ()
 
-        b64flag = kwargs['b64flag']
+        b64flag = kwargs['base64']
         address = kwargs['address']
         assert address
 

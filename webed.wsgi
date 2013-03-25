@@ -13,6 +13,7 @@ import os
 
 if __name__ == '__main__':
 
+    app.config['GEVENT'] = True
     path = app.config['NIX_FILE']
     if os.path.exists (path): os.remove (path)
     WSGIServer (path, app).serve_forever ()
