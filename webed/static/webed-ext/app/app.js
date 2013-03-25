@@ -38,6 +38,7 @@ Ext.application ({
         'statusbar.StatusBar',
         'tab.TabManager',
         'toolbar.MainToolbar',
+        'toolbar.ExportAsToolbar',
         'toolbar.MarkdownToolbar',
         'toolbar.RestToolbar',
         'toolbar.TextToolbar',

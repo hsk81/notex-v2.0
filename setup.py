@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup (
     name='webed',
-    version='0.1',
+    version='0.1.0',
     description='Browser based text editor',
     author='Hasan Karahan',
     author_email='hasan.karahan81@gmail.com',
@@ -35,6 +35,7 @@ setup (
         'hiredis>=0.1.1',
         'pylibmc>=1.2.3',
         'PyYAML>=3.10',
+        'pyzmq>=13.0.0',
         'redis>=2.7.2',
         'spritemapper>=1.0.0',
         'ujson>=1.30',

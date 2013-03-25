@@ -97,5 +97,30 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             action: 'export-project'
         }]
 
+    },{
+
+        xtype: 'buttongroup',
+        title: 'Export as ..',
+        columns: 3,
+        items: [{
+            text: 'PDF',
+            iconCls: 'icon-page_white_acrobat-16',
+            iconAlign: 'left',
+            tooltip : '<b>Export PDF</b><br/>Convert current project to PDF',
+            action: 'export-project-as-pdf'
+        },{
+            text: 'HTML',
+            iconCls: 'icon-page_white_world-16',
+            iconAlign: 'left',
+            tooltip : '<b>Export HTML</b><br/>Convert current project to HTML',
+            action: 'export-project-as-html'
+        },{
+            text: 'LaTex',
+            iconCls: 'icon-page_white_code-16',
+            iconAlign: 'left',
+            tooltip : '<b>Export LaTex</b><br/>Convert current project to LaTex',
+            action: 'export-project-as-latex'
+        }]
+
     }]
 });

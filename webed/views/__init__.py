@@ -22,6 +22,9 @@ from .resource import statusbar_worker
 from .rest import LeafApi
 from .rest import NodeApi
 from .rest import PropertyApi
+from .sphinx import rest_to_pdf
+from .sphinx import rest_to_html
+from .sphinx import rest_to_latex
 
 ###############################################################################
 ###############################################################################

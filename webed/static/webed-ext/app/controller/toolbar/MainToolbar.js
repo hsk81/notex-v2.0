@@ -50,7 +50,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function () {
-        this.keyMap = Ext.create ('Webed.controller.MainBar.KeyMap', {
+        this.keyMap = Ext.create ('Webed.controller.MainToolbar.KeyMap', {
             controller: this
         });
     },
@@ -195,7 +195,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         function onFailure (xhr, opts) {
-            console.error ('[MainBar.exportProject]', xhr, opts);
+            console.error ('[MainToolbar.exportProject]', xhr, opts);
         }
 
         Ext.Ajax.request ({
@@ -218,7 +218,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Ext.define ('Webed.controller.MainBar.KeyMap', {
+Ext.define ('Webed.controller.MainToolbar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
     config: {

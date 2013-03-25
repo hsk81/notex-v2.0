@@ -19,6 +19,8 @@ from webed.models import User
 from gzip import GzipFile
 
 import os
+import zmq
+import base64
 import shutil
 import subprocess
 
@@ -255,6 +257,64 @@ class AssetsGzip (Command):
 manager.add_command ('assets-sprite', AssetsSprite ())
 manager.add_command ('assets-gzip', AssetsGzip ())
 manager.add_command ('assets', ManageAssets ())
+
+###############################################################################
+###############################################################################
+
+class ZmqPing (Command):
+    """ZMQ Ping: Sends a request message"""
+
+    def get_options (self):
+
+        return [
+            Option ('-m', '--message', dest='message', default='PING'),
+            Option ('-a', '--address', dest='address',
+                    default='tcp://localhost:8080'),
+        ]
+
+    def run (self, *args, **kwargs):
+        context = zmq.Context ()
+
+        message = kwargs['message']
+        assert message
+        address = kwargs['address']
+        assert address
+
+        sock = context.socket (zmq.REQ)
+        sock.connect (address)
+        sock.send (message)
+        print sock.recv ()
+
+manager.add_command ('zmq-ping', ZmqPing ())
+
+class ZmqEcho (Command):
+    """ZMQ Echo: Responds with an echo"""
+
+    def get_options (self):
+
+        return [
+            Option ('-a', '--address', dest='address', default='tcp://*:8080'),
+            Option ('-b64', '--base64', dest='b64flag', action='store_true'),
+        ]
+
+    def run (self, *args, **kwargs):
+        context = zmq.Context ()
+
+        b64flag = kwargs['b64flag']
+        address = kwargs['address']
+        assert address
+
+        sock = context.socket (zmq.REP)
+        sock.bind (address)
+
+        while True:
+            message = sock.recv()
+            sock.send (message)
+
+            print '[ECHO] %s' % (
+                base64.encodestring (message) if b64flag else message)
+
+manager.add_command ('zmq-echo', ZmqEcho ())
 
 ###############################################################################
 ###############################################################################
