@@ -81,7 +81,6 @@ def rest_to_pdf (chunk_size=256 * 1024):
 ###############################################################################
 
 def convert (node):
-
     aid = '%s' % hash (app)
 
     ping_address = app.config['PING_ADDRESS']
@@ -109,6 +108,9 @@ def convert (node):
     data = data_socket.recv_pyobj ()
     assert data
     logger.debug ('[APPID:%s] received data:%s' % (aid, hash (data)))
+
+    ping_socket.close ()
+    data_socket.close ()
 
     if isinstance (data, Exception):
         raise data
