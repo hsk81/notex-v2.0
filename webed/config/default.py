@@ -70,7 +70,9 @@ class DefaultConfig:
     ##
 
     PING_ADDRESS = 'tcp://localhost:7070'
+    PING_TIMEOUT = 12 * 1000
     DATA_ADDRESS = 'tcp://localhost:9090'
+    DATA_TIMEOUT = 12 * 1000
 
     ##
     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
