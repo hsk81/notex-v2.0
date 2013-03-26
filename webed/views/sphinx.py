@@ -127,7 +127,7 @@ def worker (wid, ping_socket, data_socket):
     logger.debug ('[SPX-W:%s] received data:%s' % (wid, hash (data)))
 
     try:
-        data = worker_convert (data)
+        data = process (data)
     except Exception, ex:
         logger.exception (ex)
         data = ex
@@ -135,7 +135,7 @@ def worker (wid, ping_socket, data_socket):
     data_socket.send_pyobj (data)
     logger.debug ('[SPX-W:%s] send-ing data:%s' % (wid, hash (data)))
 
-def worker_convert (data):
+def process (data):
 
     import base64
     return base64.encodestring (data)
