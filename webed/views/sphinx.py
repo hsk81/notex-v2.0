@@ -4,17 +4,24 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from flask import Blueprint, Response, request
-from .io import compress
 
 from ..app import app
 from ..models import Node
 from ..util import Q, JSON
 from ..ext import obj_cache
+from ..ext import logger
+
+import io
+
+###############################################################################
+###############################################################################
 
 if app.config.get ('GEVENT'):
     import zmq.green as zmq
 else:
     import zmq
+
+context = zmq.Context (1)
 
 ###############################################################################
 ###############################################################################
@@ -75,32 +82,61 @@ def rest_to_pdf (chunk_size=256 * 1024):
 
 def convert (node):
 
+    aid = '%s' % hash (app)
+
     ping_address = app.config['PING_ADDRESS']
     assert ping_address
     data_address = app.config['DATA_ADDRESS']
     assert data_address
 
-    context = zmq.Context (1)
     ping_socket = context.socket (zmq.REQ)
     ping_socket.connect (ping_address)
     data_socket = context.socket (zmq.REQ)
     data_socket.connect (data_address)
 
+    ping = b'PING'
     ping_socket.send (b'PING')
-    ping = ping_socket.recv ()
-    assert ping == b'PING'
+    logger.debug ('[APPID:%s] send-ing %s' % (aid, ping))
 
-    data_socket.send (compress (node))
+    pong = ping_socket.recv ()
+    assert pong == ping
+    logger.debug ('[APPID:%s] received %s' % (aid, pong))
+
+    data = io.compress (node)
+    data_socket.send (data)
+    logger.debug ('[APPID:%s] send-ing data:%s' % (aid, hash (data)))
+
     data = data_socket.recv_pyobj ()
     assert data
+    logger.debug ('[APPID:%s] received data:%s' % (aid, hash (data)))
 
     if isinstance (data, Exception):
         raise data
     return data
 
-def worker (data):
+def worker (wid, ping_socket, data_socket):
 
-    return data ## TODO!
+    ping = ping_socket.recv ()
+    logger.debug ('[SPX-W:%s] received %s' % (wid, ping))
+    ping_socket.send (ping)
+    logger.debug ('[SPX-W:%s] send-ing %s' % (wid, ping))
+
+    data = data_socket.recv ()
+    logger.debug ('[SPX-W:%s] received data:%s' % (wid, hash (data)))
+
+    try:
+        data = worker_convert (data)
+    except Exception, ex:
+        logger.exception (ex)
+        data = ex
+
+    data_socket.send_pyobj (data)
+    logger.debug ('[SPX-W:%s] send-ing data:%s' % (wid, hash (data)))
+
+def worker_convert (data):
+
+    import base64
+    return base64.encodestring (data)
 
 ###############################################################################
 ###############################################################################
