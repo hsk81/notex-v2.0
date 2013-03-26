@@ -84,23 +84,40 @@ def rest_to_pdf (chunk_size=256 * 1024):
 def convert (node):
     aid = '%x' % hash (app)
 
+    ping_timeout = app.config['PING_TIMEOUT']
+    assert ping_timeout
     ping_address = app.config['PING_ADDRESS']
     assert ping_address
     data_address = app.config['DATA_ADDRESS']
     assert data_address
 
+    ## ========================================================================
+    ## Ping & pong: check worker availability
+    ## ========================================================================
+
     ping_socket = context.socket (zmq.REQ)
     ping_socket.connect (ping_address)
-    data_socket = context.socket (zmq.REQ)
-    data_socket.connect (data_address)
+    ping_socket.setsockopt (zmq.LINGER, 0)
 
     ping = b'ping:%x' % hash (uuid.uuid4 ())
     ping_socket.send (ping)
     logger.debug ('[APPID:%s] send-ing %s' % (aid, ping))
 
+    ping_poller = zmq.Poller ()
+    ping_poller.register (ping_socket, zmq.POLLIN)
+    if not ping_poller.poll (ping_timeout):
+        raise IOError ('timeout at %s' % ping_address)
+
     pong = ping_socket.recv ()
     assert pong == ping
     logger.debug ('[APPID:%s] received %s' % (aid, pong))
+
+    ## ========================================================================
+    ## Data transfer: Send compressed data & receive python object
+    ## ========================================================================
+
+    data_socket = context.socket (zmq.REQ)
+    data_socket.connect (data_address)
 
     data = io.compress (node)
     data_socket.send (data)
@@ -110,6 +127,10 @@ def convert (node):
     assert data
     logger.debug ('[APPID:%s] received data:%x' % (aid, hash (data)))
 
+    ## ========================================================================
+    ## Cleanup: Ensure that sockets are closed properly
+    ## ========================================================================
+
     ping_socket.close ()
     data_socket.close ()
 
@@ -117,29 +138,70 @@ def convert (node):
         raise data
     return data
 
-def worker (wid, ping_socket, data_socket):
+###############################################################################
+###############################################################################
 
-    ping = ping_socket.recv ()
-    logger.debug ('[SPX-W:%s] received %s' % (wid, ping))
-    ping_socket.send (ping)
-    logger.debug ('[SPX-W:%s] send-ing %s' % (wid, ping))
+class Worker (object):
 
-    data = data_socket.recv ()
-    logger.debug ('[SPX-W:%s] received data:%x' % (wid, hash (data)))
+    def __init__ (self, ping_address, data_address):
 
-    try:
-        data = process (data)
-    except Exception, ex:
-        logger.exception (ex)
-        data = ex
+        self.ping_address = ping_address
+        assert self.ping_address
+        self.data_address = data_address
+        assert self.data_address
+        self.data_timeout = app.config['DATA_TIMEOUT']
+        assert self.data_timeout
 
-    data_socket.send_pyobj (data)
-    logger.debug ('[SPX-W:%s] send-ing data:%x' % (wid, hash (data)))
+    def start (self):
 
-def process (data):
+        self.ping_socket = context.socket (zmq.REP)
+        self.ping_socket.connect (self.ping_address)
+        self.data_socket = context.socket (zmq.REP)
+        self.data_socket.connect (self.data_address)
+        self.data_poller = zmq.Poller ()
+        self.data_poller.register (self.data_socket, zmq.POLLIN)
 
-    import base64
-    return base64.encodestring (data)
+        self.run ()
+
+    def run (self):
+
+        while True:
+            try:
+                self._do_ping ()
+                self._do_data ()
+            except KeyboardInterrupt:
+                break
+
+    def _do_ping (self):
+
+        ping = self.ping_socket.recv ()
+        logger.debug ('%r received %s' % (self, ping))
+        self.ping_socket.send (ping)
+        logger.debug ('%r send-ing %s' % (self, ping))
+
+    def _do_data (self):
+
+        if not self.data_poller.poll (self.data_timeout):
+            error = IOError ('timeout at %s' % self.data_address)
+            logger.exception (error)
+            return ## no data!
+
+        data = self.data_socket.recv ()
+        logger.debug ('%r received data:%x' % (self, hash (data)))
+
+        try:
+            data = self._process (data)
+        except Exception, ex:
+            logger.exception (ex)
+            data = ex
+
+        self.data_socket.send_pyobj (data)
+        logger.debug ('%r send-ing data:%x' % (self, hash (data)))
+
+    def _process (self, data):
+
+        import base64
+        return base64.encodestring (data)
 
 ###############################################################################
 ###############################################################################

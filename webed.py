@@ -13,9 +13,10 @@ from webed.ext import obj_cache
 from webed.ext import sss_cache
 from webed.ext import dbs_cache
 from webed.ext import assets
+
 from webed.util import Q
-from webed.models import User
 from webed.views import sphinx
+from webed.models import User
 
 from gzip import GzipFile
 from datetime import datetime
@@ -419,25 +420,13 @@ class ZmqSphinx (Command):
 
     def run (self, *args, **kwargs):
 
-        worker_id = '%x' % hash (self)
-        context = zmq.Context (1)
-
         ping_address = kwargs['ping-address']
         assert ping_address
         data_address = kwargs['data-address']
         assert data_address
 
-        ping_socket = context.socket (zmq.REP)
-        ping_socket.connect (ping_address)
-        data_socket = context.socket (zmq.REP)
-        data_socket.connect (data_address)
-
-        while True:
-
-            try:
-                sphinx.worker (worker_id, ping_socket, data_socket)
-            except KeyboardInterrupt:
-                break
+        worker = sphinx.Worker (ping_address, data_address)
+        worker.start ()
 
 manager.add_command ('zmq-sphinx', ZmqSphinx ())
 
