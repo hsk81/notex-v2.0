@@ -13,8 +13,10 @@ from webed.ext import obj_cache
 from webed.ext import sss_cache
 from webed.ext import dbs_cache
 from webed.ext import assets
+from webed.ext import logger
 from webed.util import Q
 from webed.models import User
+from webed.views import sphinx
 
 from gzip import GzipFile
 from datetime import datetime
@@ -23,6 +25,7 @@ import os
 import zmq
 import base64
 import shutil
+import hashlib
 import subprocess
 
 ###############################################################################
@@ -400,6 +403,62 @@ class ZmqDataQueue (ZmqQueue):
 
 manager.add_command ('zmq-queue-ping', ZmqPingQueue ())
 manager.add_command ('zmq-queue-data', ZmqDataQueue ())
+
+###############################################################################
+###############################################################################
+
+class ZmqSphinx (Command):
+    """Sphinx: Converts projects to reports (PDF, HTML or LaTex)"""
+
+    def get_options (self):
+
+        return [
+            Option ('-p', '--ping-address', dest='ping-address',
+                    default='tcp://localhost:7171'),
+            Option ('-d', '--data-address', dest='data-address',
+                    default='tcp://localhost:9191'),
+        ]
+
+    def run (self, *args, **kwargs):
+
+        worker_id = hashlib.md5 ('%s' % hash (self)).hexdigest ()[:8]
+        context = zmq.Context (1)
+
+        ping_address = kwargs['ping-address']
+        assert ping_address
+        data_address = kwargs['data-address']
+        assert data_address
+
+        ping_socket = context.socket (zmq.REP)
+        ping_socket.connect (ping_address)
+        data_socket = context.socket (zmq.REP)
+        data_socket.connect (data_address)
+
+        while True:
+
+            try:
+                ping = ping_socket.recv ()
+                logger.debug ('[SPX-W:%s] received %s' % (worker_id, ping))
+                ping_socket.send (ping)
+                logger.debug ('[SPX-W:%s] answered %s' % (worker_id, ping))
+
+                data = data_socket.recv ()
+                sign = hashlib.md5 (data).hexdigest ()
+                logger.info ('[SPX-W:%s] received data:%s' % (worker_id, sign))
+
+                try:
+                    data = sphinx.worker (data)
+                except Exception, ex:
+                    logger.exception (ex)
+                    data = ex
+
+                data_socket.send_pyobj (data)
+                logger.info ('[SPX-W:%s] answered data:%s' % (worker_id, sign))
+
+            except KeyboardInterrupt:
+                break
+
+manager.add_command ('zmq-sphinx', ZmqSphinx ())
 
 ###############################################################################
 ###############################################################################

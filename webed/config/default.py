@@ -65,6 +65,14 @@ class DefaultConfig:
     PRIVILEGED_ADDRESSES = ['127.0.0.1']
 
     ##
+    ## ZeroMQ addresses for *pinging* (status) and *data* transfer: There are
+    ## two queue since status and data messages have different characteristics.
+    ##
+
+    PING_ADDRESS = 'tcp://localhost:7070'
+    DATA_ADDRESS = 'tcp://localhost:9090'
+
+    ##
     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
     ## stores *user defined* mime to file extensions combinations.
     ##
