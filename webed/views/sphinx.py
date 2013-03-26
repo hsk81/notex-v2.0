@@ -12,6 +12,7 @@ from ..ext import obj_cache
 from ..ext import logger
 
 import io
+import uuid
 
 ###############################################################################
 ###############################################################################
@@ -81,7 +82,7 @@ def rest_to_pdf (chunk_size=256 * 1024):
 ###############################################################################
 
 def convert (node):
-    aid = '%s' % hash (app)
+    aid = '%x' % hash (app)
 
     ping_address = app.config['PING_ADDRESS']
     assert ping_address
@@ -93,8 +94,8 @@ def convert (node):
     data_socket = context.socket (zmq.REQ)
     data_socket.connect (data_address)
 
-    ping = b'PING'
-    ping_socket.send (b'PING')
+    ping = b'ping:%x' % hash (uuid.uuid4 ())
+    ping_socket.send (ping)
     logger.debug ('[APPID:%s] send-ing %s' % (aid, ping))
 
     pong = ping_socket.recv ()
@@ -103,11 +104,11 @@ def convert (node):
 
     data = io.compress (node)
     data_socket.send (data)
-    logger.debug ('[APPID:%s] send-ing data:%s' % (aid, hash (data)))
+    logger.debug ('[APPID:%s] send-ing data:%x' % (aid, hash (data)))
 
     data = data_socket.recv_pyobj ()
     assert data
-    logger.debug ('[APPID:%s] received data:%s' % (aid, hash (data)))
+    logger.debug ('[APPID:%s] received data:%x' % (aid, hash (data)))
 
     ping_socket.close ()
     data_socket.close ()
@@ -124,7 +125,7 @@ def worker (wid, ping_socket, data_socket):
     logger.debug ('[SPX-W:%s] send-ing %s' % (wid, ping))
 
     data = data_socket.recv ()
-    logger.debug ('[SPX-W:%s] received data:%s' % (wid, hash (data)))
+    logger.debug ('[SPX-W:%s] received data:%x' % (wid, hash (data)))
 
     try:
         data = process (data)
@@ -133,7 +134,7 @@ def worker (wid, ping_socket, data_socket):
         data = ex
 
     data_socket.send_pyobj (data)
-    logger.debug ('[SPX-W:%s] send-ing data:%s' % (wid, hash (data)))
+    logger.debug ('[SPX-W:%s] send-ing data:%x' % (wid, hash (data)))
 
 def process (data):
 

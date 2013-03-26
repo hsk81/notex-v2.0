@@ -419,7 +419,7 @@ class ZmqSphinx (Command):
 
     def run (self, *args, **kwargs):
 
-        worker_id = '%s' % hash (self)
+        worker_id = '%x' % hash (self)
         context = zmq.Context (1)
 
         ping_address = kwargs['ping-address']
