@@ -127,7 +127,7 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
         return dict (success=True, filename=file.filename, nodes=nodes)
     else:
         return JSON.encode (dict (success=True, filename=file.filename,
-            nodes=map (lambda node:dict (uuid=node.uuid), nodes)))
+            nodes=map (lambda node: dict (uuid=node.uuid), nodes)))
 
 ###############################################################################
 
@@ -298,10 +298,10 @@ def archive_download (chunk_size=256 * 1024):
                     node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
         else:
             response = JSON.encode (dict (success=True, name=node.name))
-            obj_cache.expire (archive_key, expiry=90) ## refresh
+            obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
         response = JSON.encode (dict (success=True, name=node.name))
-        obj_cache.set_value (archive_key, compress (node), expiry=90) ##[s]
+        obj_cache.set_value (archive_key, compress (node), expiry=15) ##[s]
 
     return response
 

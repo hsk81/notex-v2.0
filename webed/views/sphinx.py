@@ -71,10 +71,10 @@ def rest_to_pdf (chunk_size=256 * 1024):
                 'attachment;filename="%s.pdf"' % node.name.encode ('utf-8')
         else:
             response = JSON.encode (dict (success=True, name=node.name))
-            obj_cache.expire (archive_key, expiry=90) ## refresh
+            obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
         response = JSON.encode (dict (success=True, name=node.name))
-        obj_cache.set_value (archive_key, convert (node), expiry=90) ##[s]
+        obj_cache.set_value (archive_key, convert (node), expiry=15) ##[s]
 
     return response
 
