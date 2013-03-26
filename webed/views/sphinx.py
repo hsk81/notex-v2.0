@@ -73,14 +73,22 @@ def rest_to_pdf (chunk_size=256 * 1024):
 ###############################################################################
 ###############################################################################
 
-def convert (node, address='tcp://localhost:8080'):
+def convert (node):
 
-    context = zmq.Context ()
-    sock = context.socket (zmq.REQ)
-    sock.connect (address)
+    ping_address = 'tcp://localhost:7070'
+    data_address = 'tcp://localhost:9090'
 
-    sock.send (compress (node))
-    return sock.recv ()
+    context = zmq.Context (1)
+    ping_socket = context.socket (zmq.REQ)
+    ping_socket.connect (ping_address)
+    data_socket = context.socket (zmq.REQ)
+    data_socket.connect (data_address)
+
+    ping_socket.send (b'PING')
+    assert b'PING' == ping_socket.recv ()
+
+    data_socket.send (compress (node))
+    return data_socket.recv ()
 
 ###############################################################################
 ###############################################################################

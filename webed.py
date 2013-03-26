@@ -17,8 +17,10 @@ from webed.util import Q
 from webed.models import User
 
 from gzip import GzipFile
+from datetime import datetime
 
 import os
+import zmq
 import base64
 import shutil
 import subprocess
@@ -266,21 +268,18 @@ class ZmqPing (Command):
     def get_options (self):
 
         return [
-            Option ('-g', '--gevent', dest='gevent', action='store_true'),
+            Option ('-n', '--number', dest='number', default=1, type=int),
             Option ('-m', '--message', dest='message', default='PING'),
-            Option ('-a', '--address', dest='address',
-                    default='tcp://localhost:8080'),
+            Option ('-a', '--address', dest='address', default=
+                'tcp://localhost:8080'),
         ]
 
     def run (self, *args, **kwargs):
 
-        if kwargs.get ('gevent', app.config.get ('GEVENT')):
-            import zmq.green as zmq
-        else:
-            import zmq
+        context = zmq.Context (1)
 
-        context = zmq.Context ()
-
+        number = kwargs['number']
+        assert number
         message = kwargs['message']
         assert message
         address = kwargs['address']
@@ -288,46 +287,119 @@ class ZmqPing (Command):
 
         sock = context.socket (zmq.REQ)
         sock.connect (address)
-        sock.send (message)
-        print sock.recv ()
+
+        for n in range (number):
+
+            try:
+                timestamp = datetime.now ()
+                sock.send (message)
+                print '[%s] %s' % (timestamp, sock.recv ())
+
+            except KeyboardInterrupt:
+                break
 
 manager.add_command ('zmq-ping', ZmqPing ())
 
+###############################################################################
+###############################################################################
+
 class ZmqEcho (Command):
-    """ZMQ Echo: Responds with an echo"""
+    """ZMQ Echo: Responds with an echo message to a request"""
 
     def get_options (self):
 
         return [
-            Option ('-g', '--gevent', dest='gevent', action='store_true'),
-            Option ('-a', '--address', dest='address', default='tcp://*:8080'),
             Option ('-b64', '--base64', dest='base64', action='store_true'),
+            Option ('-a', '--address', dest='address', default=
+                'tcp://localhost:8181'),
         ]
 
     def run (self, *args, **kwargs):
 
-        if kwargs.get ('gevent', app.config.get ('GEVENT')):
-            import zmq.green as zmq
-        else:
-            import zmq
-
-        context = zmq.Context ()
+        context = zmq.Context (1)
 
         b64flag = kwargs['base64']
         address = kwargs['address']
         assert address
 
         sock = context.socket (zmq.REP)
-        sock.bind (address)
+        sock.connect (address)
 
         while True:
-            message = sock.recv()
-            sock.send (message)
 
-            print '[ECHO] %s' % (
-                base64.encodestring (message) if b64flag else message)
+            try:
+                message = sock.recv()
+                sock.send (message)
+
+                print '[%s] %s' % (
+                    datetime.now (), base64.encodestring (message)
+                        if b64flag else message)
+
+            except KeyboardInterrupt:
+                break
 
 manager.add_command ('zmq-echo', ZmqEcho ())
+
+###############################################################################
+###############################################################################
+
+class ZmqQueue (Command):
+    """ZMQ Queue: Connects frontend clients with backend services"""
+
+    def get_options (self):
+
+        return [
+            Option ('-f', '--frontend-address', dest='frontend-address',
+                    default='tcp://*:8080'),
+            Option ('-b', '--backend-address', dest='backend-address',
+                    default='tcp://*:8181'),
+        ]
+
+    def run (self, *args, **kwargs):
+
+        frontend_address = kwargs['frontend-address']
+        assert frontend_address
+        backend_address = kwargs['backend-address']
+        assert backend_address
+
+        context = zmq.Context (1)
+
+        frontend = context.socket (zmq.ROUTER)
+        frontend.bind (frontend_address)
+        backend = context.socket (zmq.DEALER)
+        backend.bind (backend_address)
+
+        try:
+            zmq.device (zmq.QUEUE, frontend, backend)
+        except KeyboardInterrupt:
+            pass
+
+class ZmqPingQueue (ZmqQueue):
+    """ZMQ Ping Queue: Connects frontend clients with backend services"""
+
+    def get_options (self):
+
+        return [
+            Option ('-f', '--frontend-address', dest='frontend-address',
+                    default='tcp://*:7070'),
+            Option ('-b', '--backend-address', dest='backend-address',
+                    default='tcp://*:7171'),
+        ]
+
+class ZmqDataQueue (ZmqQueue):
+    """ZMQ Data Queue: Connects frontend clients with backend services"""
+
+    def get_options (self):
+
+        return [
+            Option ('-f', '--frontend-address', dest='frontend-address',
+                    default='tcp://*:9090'),
+            Option ('-b', '--backend-address', dest='backend-address',
+                    default='tcp://*:9191'),
+        ]
+
+manager.add_command ('zmq-queue-ping', ZmqPingQueue ())
+manager.add_command ('zmq-queue-data', ZmqDataQueue ())
 
 ###############################################################################
 ###############################################################################
