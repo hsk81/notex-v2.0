@@ -4,6 +4,8 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from threading import Thread, Event
+
+from ..app import app
 from ..util import PickleZlib
 
 import zmq
@@ -18,9 +20,27 @@ context = zmq.Context (1)
 
 class Worker (Thread):
 
+    class Logger (object):
+
+        def __init__ (self, app):
+
+            self.app = app
+
+        def __getattr__ (self, attr):
+
+            fn = getattr (self.app.logger, attr)
+            if callable (fn):
+                def gn (*args, **kwargs):
+                    with app.test_request_context ():
+                        fn (*args, **kwargs)
+
+                return gn
+            else:
+                return fn
+
     class ResourceManager (object):
 
-        def __init__ (self, *args, **kwargs):
+        def __init__ (self, **kwargs):
 
             self.ping_address = kwargs ['ping_address']
             assert self.ping_address
@@ -50,46 +70,49 @@ class Worker (Thread):
             self.ping_socket.close ()
             self.data_socket.close ()
 
-    def __init__ (self, *args, **kwargs):
+    def __init__ (self, **kwargs):
 
         super (Worker, self).__init__ ()
 
-        self._args = args
-        self._kwargs = kwargs
-        self._do_stop = Event ()
-        self._stopped = Event ()
+        self.logger = Worker.Logger (app)
+        self.kwargs = kwargs
+        self.do_stop = Event ()
+        self.is_stopped = Event ()
         self.setDaemon (True)
 
     @property
     def stopped (self):
 
-        return self._stopped.isSet ()
+        return self.is_stopped.isSet ()
 
     def stop (self):
 
-        self._do_stop.set ()
+        self.do_stop.set ()
 
     def run (self):
 
-        with Worker.ResourceManager (*self._args, **self._kwargs) as resource:
-            while not self._do_stop.isSet ():
+        with Worker.ResourceManager (**self.kwargs) as resource:
+            while not self.do_stop.isSet ():
 
                 self._do_ping (resource)
                 self._do_data (resource)
 
-            self._stopped.set ()
+            self.is_stopped.set ()
 
     def _do_ping (self, resource):
 
         if resource.ping_poller.poll (resource.poll_timeout):
 
             ping = resource.ping_socket.recv ()
+            self.logger.debug ('%r received ping:%s' % (self, ping))
             resource.ping_socket.send (ping)
+            self.logger.debug ('%r send-ing ping:%s' % (self, ping))
 
     def _do_data (self, resource):
 
         if resource.data_poller.poll (resource.poll_timeout):
             data = resource.data_socket.recv ()
+            self.logger.debug ('%r received data:%x' % (self, hash (data)))
 
             try:
                 data = self._process (data)
@@ -97,6 +120,7 @@ class Worker (Thread):
                 data = ex
 
             PickleZlib.send_pyobj (resource.data_socket, data)
+            self.logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 
     def _process (self, data):
 

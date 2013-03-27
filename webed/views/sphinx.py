@@ -138,16 +138,16 @@ class Converter (object):
 
     def _do_ping (self):
 
-        ping = b'ping:%x' % hash (uuid.uuid4 ())
+        ping = b'%x' % hash (uuid.uuid4 ())
         self.ping_socket.send (ping)
-        logger.debug ('%r send-ing %s' % (self, ping))
+        logger.debug ('%r send-ing ping:%s' % (self, ping))
 
         if not self.ping_poller.poll (self.ping_timeout):
             raise TimeoutError ('timeout at %s' % self.ping_address)
 
         pong = self.ping_socket.recv ()
         assert pong == ping
-        logger.debug ('%r received %s' % (self, pong))
+        logger.debug ('%r received ping:%s' % (self, pong))
 
     def _do_data (self, node):
 
