@@ -3,17 +3,16 @@
 ###############################################################################
 ###############################################################################
 
-from datetime import datetime
-import base64
-import select
-
 from flask.ext.script import Manager, Command, Option
 from zmq.devices import ThreadDevice
-import zmq
+from datetime import datetime
 
 from webed.app import app
 from webed.views import sphinx_worker
 
+import zmq
+import base64
+import select
 
 ###############################################################################
 ###############################################################################
