@@ -77,8 +77,6 @@ class ZmqEcho (Command):
 
     def run (self, *args, **kwargs):
 
-        context = zmq.Context (1)
-
         b64flag = kwargs['base64']
         address = kwargs['address']
         assert address
@@ -122,8 +120,6 @@ class ZmqQueue (Command):
         assert frontend_address
         backend_address = kwargs['backend-address']
         assert backend_address
-
-        context = zmq.Context (1)
 
         frontend = context.socket (zmq.ROUTER)
         frontend.bind (frontend_address)
@@ -185,8 +181,6 @@ class ZmqSphinx (Command):
         assert data_address
         data_timeout = app.config['DATA_TIMEOUT']
         assert data_timeout
-
-        context = zmq.Context (1)
 
         args = [context, ping_address, data_address, data_timeout]
         with sphinx.Worker (*args) as worker: worker.run ()
