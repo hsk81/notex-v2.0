@@ -424,9 +424,13 @@ class ZmqSphinx (Command):
         assert ping_address
         data_address = kwargs['data-address']
         assert data_address
+        data_timeout = app.config['DATA_TIMEOUT']
+        assert data_timeout
 
-        worker = sphinx.Worker (ping_address, data_address)
-        worker.start ()
+        context = zmq.Context (1)
+
+        args = [context, ping_address, data_address, data_timeout]
+        with sphinx.Worker (*args) as worker: worker.run ()
 
 manager.add_command ('zmq-sphinx', ZmqSphinx ())
 
