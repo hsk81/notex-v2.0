@@ -3,18 +3,17 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from threading import Thread
-import uuid
-
 from flask import Blueprint, Response, request
+from threading import Thread, Event
 
 from ..app import app
 from ..models import Node
 from ..util import Q, jsonify
 from ..ext import obj_cache
 from ..ext import logger
-import io
 
+import io
+import uuid
 
 ###############################################################################
 ###############################################################################
@@ -172,74 +171,87 @@ class Converter (object):
 
 ###############################################################################
 
-class Worker (object):
+class Worker (Thread):
 
-    def __init__ (self, context, ping_address, data_address, data_timeout):
+    class ResourceManager (object):
 
-        self.context = context
-        assert context
-        self.ping_address = ping_address
-        assert self.ping_address
-        self.data_address = data_address
-        assert self.data_address
-        self.data_timeout = data_timeout
-        assert self.data_timeout
+        def __init__ (self, *args, **kwargs):
 
-        self.args = [
-            context, ping_address, data_address, data_timeout
-        ]
+            self.context = kwargs ['context']
+            assert context
+            self.ping_address = kwargs ['ping_address']
+            assert self.ping_address
+            self.data_address = kwargs ['data_address']
+            assert self.data_address
+            self.poll_timeout = kwargs ['poll_timeout']
+            assert self.poll_timeout
 
-    def __enter__ (self):
+        def __enter__ (self):
 
-        self.ping_socket = self.context.socket (zmq.REP)
-        self.ping_socket.connect (self.ping_address)
-        self.data_socket = self.context.socket (zmq.REP)
-        self.data_socket.connect (self.data_address)
+            self.ping_socket = self.context.socket (zmq.REP)
+            self.ping_socket.connect (self.ping_address)
+            self.data_socket = self.context.socket (zmq.REP)
+            self.data_socket.connect (self.data_address)
 
-        self.data_poller = zmq.Poller ()
-        self.data_poller.register (self.data_socket, zmq.POLLIN)
+            self.ping_poller = zmq.Poller ()
+            self.ping_poller.register (self.ping_socket, zmq.POLLIN)
+            self.data_poller = zmq.Poller ()
+            self.data_poller.register (self.data_socket, zmq.POLLIN)
 
-        return self
+            return self
 
-    def __exit__ (self, exc_type, exc_val, exc_tb):
+        def __exit__ (self, exc_type, exc_val, exc_tb):
 
-        self.ping_socket.close ()
-        self.data_socket.close ()
+            self.ping_socket.close ()
+            self.data_socket.close ()
 
-    def start (self):
+    def __init__ (self, *args, **kwargs):
 
-        self.thread = Thread (target=self.run)
-        self.thread.setDaemon (True)
-        self.thread.start ()
+        super (Worker, self).__init__ ()
+
+        self._args = args
+        self._kwargs = kwargs
+        self._do_stop = Event ()
+        self._stopped = Event ()
+        self.setDaemon (True)
+
+    @property
+    def stopped (self):
+
+        return self._stopped.isSet ()
+
+    def stop (self):
+
+        self._do_stop.set ()
 
     def run (self):
 
-        with Worker (*self.args) as worker:
-            while True:
-                worker._do_ping ()
-                worker._do_data ()
+        with Worker.ResourceManager (*self._args, **self._kwargs) as rm:
+            while not self._do_stop.isSet ():
 
-    def _do_ping (self):
+                self._do_ping (rm)
+                self._do_data (rm)
 
-        ping = self.ping_socket.recv ()
-        self.ping_socket.send (ping)
+            self._stopped.set ()
 
-    def _do_data (self):
+    def _do_ping (self, rm):
 
-        if not self.data_poller.poll (self.data_timeout):
-            error = TimeoutError ('timeout at %s' % self.data_address)
-            logger.exception (error)
-            return ## no data!
+        if rm.ping_poller.poll (rm.poll_timeout):
 
-        data = self.data_socket.recv ()
+            ping = rm.ping_socket.recv ()
+            rm.ping_socket.send (ping)
 
-        try:
-            data = self._process (data)
-        except Exception, ex:
-            logger.exception (ex)
-            data = ex
+    def _do_data (self, rm):
 
-        self.data_socket.send_pyobj (data)
+        if rm.data_poller.poll (rm.poll_timeout):
+            data = rm.data_socket.recv ()
+
+            try:
+                data = self._process (data)
+            except Exception, ex:
+                data = ex
+
+            rm.data_socket.send_pyobj (data)
 
     def _process (self, data):
 

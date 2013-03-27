@@ -259,21 +259,30 @@ class Converter (Command):
 
         worker_threads = kwargs['worker-threads']
         assert worker_threads >= 0
-
         ping_address = kwargs['ping-address']
         assert ping_address
         data_address = kwargs['data-address']
         assert data_address
-        data_timeout = app.config['DATA_TIMEOUT']
-        assert data_timeout
+        poll_timeout = app.config['POLL_TIMEOUT']
+        assert poll_timeout
 
-        args = [context, ping_address, data_address, data_timeout]
-        for n in range (worker_threads): sphinx.Worker (*args).start ()
+        workers = []
+        for _ in range (worker_threads):
+
+            workers.append (sphinx.Worker (
+                context=context,
+                ping_address=ping_address,
+                data_address=data_address,
+                poll_timeout=poll_timeout
+            ))
+
+            workers[-1].start ()
 
         try:
             select.select ([], [], [])
         except KeyboardInterrupt:
-            pass
+            while any (map (lambda w: not w.stopped, workers)):
+                for worker in workers: worker.stop ()
 
 manager.add_command ('converter', Converter ())
 
