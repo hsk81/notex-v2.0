@@ -362,6 +362,16 @@ body {
     color: grey;
 }
 
+.x-statusbar .x-status-error {
+    padding-left: 20px;
+    background: url(../../../ico/fatcow/16x16/error.png) no-repeat !important;
+}
+
+.x-statusbar .x-status-exclamation {
+    padding-left: 20px;
+    background: url(../../../ico/fatcow/16x16/exclamation.png) no-repeat !important;
+}
+
 /******************************************************************************
  * CodeMirror
  *****************************************************************************/

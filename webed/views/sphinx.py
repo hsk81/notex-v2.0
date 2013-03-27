@@ -7,7 +7,7 @@ from flask import Blueprint, Response, request
 
 from ..app import app
 from ..models import Node
-from ..util import Q, JSON
+from ..util import Q, jsonify
 from ..ext import obj_cache
 from ..ext import logger
 
@@ -28,6 +28,11 @@ context = zmq.Context (1)
 ###############################################################################
 
 sphinx = Blueprint ('sphinx', __name__)
+
+###############################################################################
+###############################################################################
+
+class TimeoutError (Exception): pass
 
 ###############################################################################
 ###############################################################################
@@ -70,11 +75,14 @@ def rest_to_pdf (chunk_size=256 * 1024):
             response.headers ['Content-Disposition'] = \
                 'attachment;filename="%s.pdf"' % node.name.encode ('utf-8')
         else:
-            response = JSON.encode (dict (success=True, name=node.name))
+            response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
-        response = JSON.encode (dict (success=True, name=node.name))
-        obj_cache.set_value (archive_key, convert (node), expiry=15) ##[s]
+        try:
+            obj_cache.set_value (archive_key, convert (node), expiry=15) ##[s]
+            response = jsonify (success=True, name=node.name)
+        except TimeoutError:
+            response = jsonify (success=False, name=node.name), 503
 
     return response
 
@@ -106,7 +114,7 @@ def convert (node):
     ping_poller = zmq.Poller ()
     ping_poller.register (ping_socket, zmq.POLLIN)
     if not ping_poller.poll (ping_timeout):
-        raise IOError ('timeout at %s' % ping_address)
+        raise TimeoutError ('timeout at %s' % ping_address)
 
     pong = ping_socket.recv ()
     assert pong == ping
@@ -182,7 +190,7 @@ class Worker (object):
     def _do_data (self):
 
         if not self.data_poller.poll (self.data_timeout):
-            error = IOError ('timeout at %s' % self.data_address)
+            error = TimeoutError ('timeout at %s' % self.data_address)
             logger.exception (error)
             return ## no data!
 

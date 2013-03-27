@@ -1,6 +1,10 @@
 Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
     extend: 'Ext.app.Controller',
 
+    refs: [{
+        selector: 'webed-statusbar', ref: 'statusbar'
+    }],
+
     init: function () {
         this.control ({
             'main-toolbar button[action=export-project-as-pdf]': {
@@ -80,6 +84,20 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         }
 
         function onFailure (xhr, opts) {
+            var statusbar = assert (this.getStatusbar ());
+
+            if (xhr.status == 503) statusbar.setStatus ({
+                text: 'Conversion engine overloaded; please try later.',
+                iconCls: 'x-status-error',
+                clear: true
+            });
+
+            else statusbar.setStatus ({
+                text: "Conversion failed; check project's configuration.",
+                iconCls: 'x-status-exclamation',
+                clear: true
+            });
+
             console.error ('[ExportAsToolBar.exportProject]', xhr, opts);
         }
 
@@ -87,10 +105,10 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             url: url, scope: this, callback: function (opts, status, xhr) {
                 if (status) {
                     var res = Ext.decode (xhr.responseText);
-                    if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts);
+                    if (res.success) onSuccess.call (this, xhr, opts);
+                    else onFailure.call (this, xhr, opts);
                 } else {
-                    onFailure (xhr, opts);
+                    onFailure.call (this, xhr, opts);
                 }
 
                 application.fireEvent ('progress-stop', this);
