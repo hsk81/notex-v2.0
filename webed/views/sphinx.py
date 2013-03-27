@@ -71,8 +71,8 @@ def rest_to_pdf (chunk_size=256 * 1024):
             obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
         try:
-            args = [ping_address, data_address, ping_timeout]
-            with Converter (*args) as converter: value = converter.apply (node)
+            with Converter (ping_address, data_address, ping_timeout) as c:
+                value = c.apply (node)
             obj_cache.set_value (archive_key, value, expiry=15) ##[s]
             response = jsonify (success=True, name=node.name)
         except TimeoutError:
@@ -85,21 +85,22 @@ def rest_to_pdf (chunk_size=256 * 1024):
 
 class Converter (object):
 
-    @staticmethod
-    def import_zmq (app):
+    @classmethod
+    def import_zmq (cls, app):
+
+        if hasattr (cls, 'zmq'):
+            return getattr (cls, 'zmq')
 
         if app.config.get ('GEVENT'):
             import zmq.green as zmq
         else:
             import zmq
 
+        setattr (cls, 'zmq', zmq)
         return zmq
 
     def __init__ (self, ping_address, data_address, ping_timeout):
-        zmq = Converter.import_zmq (app)
 
-        self.context = zmq.Context (1)
-        assert self.context
         self.ping_timeout = ping_timeout
         assert self.ping_timeout
         self.ping_address = ping_address
@@ -108,12 +109,13 @@ class Converter (object):
         assert self.data_address
 
     def __enter__ (self):
-        zmq = Converter.import_zmq (app)
+        zmq = self.import_zmq (app)
+        context = zmq.Context (1)
 
-        self.ping_socket = self.context.socket (zmq.REQ)
+        self.ping_socket = context.socket (zmq.REQ)
         self.ping_socket.connect (self.ping_address)
         self.ping_socket.LINGER = 0
-        self.data_socket = self.context.socket (zmq.REQ)
+        self.data_socket = context.socket (zmq.REQ)
         self.data_socket.connect (self.data_address)
         self.data_socket.LINGER = 0
 
