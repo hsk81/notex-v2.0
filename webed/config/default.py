@@ -46,13 +46,6 @@ class DefaultConfig:
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     ##
-    ## Disable GEVENT by default; should be enabled in production environment,
-    ## since otherwise (green) concurrency will be blocked!
-    ##
-
-    GEVENT = False
-
-    ##
     ## Override secret key in production environment using value from the
     ## *production.py* file to ensure proper security.
     ##
