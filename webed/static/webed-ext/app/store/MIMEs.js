@@ -17,5 +17,5 @@ Ext.define ('Webed.store.MIMEs', {
         }
     },
 
-    autoLoad: true
+    autoLoad: false
 });

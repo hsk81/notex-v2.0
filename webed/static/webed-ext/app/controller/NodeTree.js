@@ -4,8 +4,8 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    models: ['Node'],
-    stores: ['Nodes'],
+    models: ['Node', 'MIME'],
+    stores: ['Nodes', 'MIMEs'],
 
     refs: [{
         selector: 'node-tree', ref: 'nodeTree'
@@ -84,7 +84,12 @@ Ext.define ('Webed.controller.NodeTree', {
     expand: function () {
         var view = assert (this.getNodeTree ());
         var root = assert (view.getRootNode ());
-        if (!root.get ('loaded')) this.refresh (null);
+        if (!root.get ('loaded')) {
+            var store = assert (this.getMIMEsStore ());
+            store.load ({scope: this, callback: function (recs, op, success) {
+                if (success) this.refresh (null);
+            }});
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
