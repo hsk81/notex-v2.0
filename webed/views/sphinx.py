@@ -114,10 +114,8 @@ class Converter (object):
 
         self.ping_socket = self.context.socket (zmq.REQ)
         self.ping_socket.connect (self.ping_address)
-        self.ping_socket.setsockopt (zmq.LINGER, 0)
         self.data_socket = self.context.socket (zmq.REQ)
         self.data_socket.connect (self.data_address)
-        self.data_socket.setsockopt (zmq.LINGER, 0)
 
         self.ping_poller = zmq.Poller ()
         self.ping_poller.register (self.ping_socket, zmq.POLLIN)
@@ -183,10 +181,8 @@ class Worker (object):
 
         self.ping_socket = self.context.socket (zmq.REP)
         self.ping_socket.connect (self.ping_address)
-        self.ping_socket.setsockopt (zmq.LINGER, 0)
         self.data_socket = self.context.socket (zmq.REP)
         self.data_socket.connect (self.data_address)
-        self.data_socket.setsockopt (zmq.LINGER, 0)
 
         self.data_poller = zmq.Poller ()
         self.data_poller.register (self.data_socket, zmq.POLLIN)
