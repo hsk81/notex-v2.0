@@ -3,11 +3,13 @@
 ###############################################################################
 ###############################################################################
 
+import os
+
 from flask.ext.script import Manager, Command
 from gevent_fastcgi.server import WSGIServer
+
 from webed.app import app
 
-import os
 
 ###############################################################################
 ###############################################################################
@@ -26,7 +28,7 @@ class AppServer (Command):
         if os.path.exists (path): os.remove (path)
         WSGIServer (path, app).serve_forever ()
 
-manager.add_command ('app-serve', AppServer ())
+manager.add_command ('serve', AppServer ())
 
 ###############################################################################
 ###############################################################################

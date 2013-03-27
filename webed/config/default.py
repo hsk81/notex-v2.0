@@ -4,10 +4,11 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from datetime import timedelta
-from ..util import in_rxs
-
 import os
 import socket
+
+from ..util import in_rxs
+
 
 ###############################################################################
 ###############################################################################
@@ -64,16 +65,6 @@ class DefaultConfig:
     ##
 
     PRIVILEGED_ADDRESSES = ['127.0.0.1']
-
-    ##
-    ## ZeroMQ addresses for *pinging* (status) and *data* transfer: There are
-    ## two queue since status and data messages have different characteristics.
-    ##
-
-    PING_ADDRESS = 'tcp://localhost:7070'
-    PING_TIMEOUT = 15.000 * 1000 ##[ms]
-    DATA_ADDRESS = 'tcp://localhost:9090'
-    DATA_TIMEOUT = 00.250 * 1000 ##[ms]
 
     ##
     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which

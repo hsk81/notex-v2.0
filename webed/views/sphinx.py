@@ -3,6 +3,9 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+from threading import Thread
+import uuid
+
 from flask import Blueprint, Response, request
 
 from ..app import app
@@ -10,9 +13,8 @@ from ..models import Node
 from ..util import Q, jsonify
 from ..ext import obj_cache
 from ..ext import logger
-
 import io
-import uuid
+
 
 ###############################################################################
 ###############################################################################
@@ -183,6 +185,10 @@ class Worker (object):
         self.data_timeout = data_timeout
         assert self.data_timeout
 
+        self.args = [
+            context, ping_address, data_address, data_timeout
+        ]
+
     def __enter__ (self):
 
         self.ping_socket = self.context.socket (zmq.REP)
@@ -200,21 +206,23 @@ class Worker (object):
         self.ping_socket.close ()
         self.data_socket.close ()
 
+    def start (self):
+
+        self.thread = Thread (target=self.run)
+        self.thread.setDaemon (True)
+        self.thread.start ()
+
     def run (self):
 
-        while True:
-            try:
-                self._do_ping ()
-                self._do_data ()
-            except KeyboardInterrupt:
-                break
+        with Worker (*self.args) as worker:
+            while True:
+                worker._do_ping ()
+                worker._do_data ()
 
     def _do_ping (self):
 
         ping = self.ping_socket.recv ()
-        logger.debug ('%r received %s' % (self, ping))
         self.ping_socket.send (ping)
-        logger.debug ('%r send-ing %s' % (self, ping))
 
     def _do_data (self):
 
@@ -224,7 +232,6 @@ class Worker (object):
             return ## no data!
 
         data = self.data_socket.recv ()
-        logger.debug ('%r received data:%x' % (self, hash (data)))
 
         try:
             data = self._process (data)
@@ -233,7 +240,6 @@ class Worker (object):
             data = ex
 
         self.data_socket.send_pyobj (data)
-        logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 
     def _process (self, data):
 

@@ -3,14 +3,17 @@
 ###############################################################################
 ###############################################################################
 
-from flask.ext.script import Manager, Command, Option
 from datetime import datetime
+import base64
+import select
+
+from flask.ext.script import Manager, Command, Option
+from zmq.devices import ThreadDevice
+import zmq
 
 from webed.app import app
 from webed.views import sphinx
 
-import zmq
-import base64
 
 ###############################################################################
 ###############################################################################
@@ -59,7 +62,7 @@ class ZmqPing (Command):
             except KeyboardInterrupt:
                 break
 
-manager.add_command ('ping', ZmqPing ())
+manager.add_command ('zmq-ping', ZmqPing ())
 
 ###############################################################################
 ###############################################################################
@@ -97,7 +100,7 @@ class ZmqEcho (Command):
             except KeyboardInterrupt:
                 break
 
-manager.add_command ('echo', ZmqEcho ())
+manager.add_command ('zmq-echo', ZmqEcho ())
 
 ###############################################################################
 ###############################################################################
@@ -131,42 +134,121 @@ class ZmqQueue (Command):
         except KeyboardInterrupt:
             pass
 
-class ZmqPingQueue (ZmqQueue):
-    """ZMQ Ping Queue: Connects frontend clients with backend services"""
+class ZmqQueueThread (ZmqQueue):
+    """ZMQ Q-Thread: Connects frontend clients with backend services"""
+
+    def run (self, *args, **kwargs):
+
+        frontend_address = kwargs['frontend-address']
+        assert frontend_address
+        backend_address = kwargs['backend-address']
+        assert backend_address
+
+        device = ThreadDevice (zmq.QUEUE, zmq.REP, zmq.REQ)
+        device.bind_in (frontend_address)
+        device.bind_out (backend_address)
+        device.start ()
+
+class PingQueue (ZmqQueue):
+    """Ping Queue: Connects frontend clients with backend services"""
 
     def get_options (self):
 
         return [
-            Option ('-f', '--frontend-address', dest='frontend-address',
+            Option ('-pfa', '--ping-frontend-address',
+                    dest='ping-frontend-address',
                     default='tcp://*:7070'),
-            Option ('-b', '--backend-address', dest='backend-address',
+            Option ('-pba', '--ping-backend-address',
+                    dest='ping-backend-address',
                     default='tcp://*:7171'),
         ]
 
-class ZmqDataQueue (ZmqQueue):
-    """ZMQ Data Queue: Connects frontend clients with backend services"""
+    def run (self, *args, **kwargs):
+
+        frontend_address = kwargs['ping-frontend-address']
+        assert frontend_address
+        backend_address = kwargs['ping-backend-address']
+        assert backend_address
+
+        kwargs['frontend-address'] = frontend_address
+        kwargs['backend-address'] = backend_address
+
+        super (PingQueue, self).run (*args, **kwargs)
+
+class PingQueueThread (PingQueue, ZmqQueueThread):
+    """Ping Q-Thread: Connects frontend clients with backend services"""
+
+    def run (self, *args, **kwargs):
+
+        super (PingQueueThread, self).run (*args, **kwargs)
+
+class DataQueue (ZmqQueue):
+    """Data Queue: Connects frontend clients with backend services"""
 
     def get_options (self):
 
         return [
-            Option ('-f', '--frontend-address', dest='frontend-address',
+            Option ('-dfa', '--data-frontend-address',
+                    dest='data-frontend-address',
                     default='tcp://*:9090'),
-            Option ('-b', '--backend-address', dest='backend-address',
+            Option ('-dba', '--data-backend-address',
+                    dest='data-backend-address',
                     default='tcp://*:9191'),
         ]
 
-manager.add_command ('queue-ping', ZmqPingQueue ())
-manager.add_command ('queue-data', ZmqDataQueue ())
+    def run (self, *args, **kwargs):
+
+        frontend_address = kwargs['data-frontend-address']
+        assert frontend_address
+        backend_address = kwargs['data-backend-address']
+        assert backend_address
+
+        kwargs['frontend-address'] = frontend_address
+        kwargs['backend-address'] = backend_address
+
+        super (DataQueue, self).run (*args, **kwargs)
+
+class DataQueueThread (DataQueue, ZmqQueueThread):
+    """Data Q-Thread: Connects frontend clients with backend services"""
+
+    def run (self, *args, **kwargs):
+
+        super (DataQueueThread, self).run (*args, **kwargs)
+
+class Queue (Command):
+    """Queue: Connects frontend clients with backend services"""
+
+    def get_options (self):
+
+        return PingQueue ().get_options () + DataQueue ().get_options ()
+
+    def run (self, *args, **kwargs):
+
+        PingQueueThread ().run (*args, **kwargs)
+        DataQueueThread ().run (*args, **kwargs)
+
+        try:
+            select.select ([], [], [])
+        except KeyboardInterrupt:
+            pass
+
+###############################################################################
+
+manager.add_command ('queue-ping', PingQueue ())
+manager.add_command ('queue-data', DataQueue ())
+manager.add_command ('queue', Queue ())
 
 ###############################################################################
 ###############################################################################
 
-class ZmqSphinx (Command):
-    """Sphinx: Converts projects to reports (PDF, HTML or LaTex)"""
+class Converter (Command):
+    """Converter: processes projects to reports (PDF, HTML or LaTex)"""
 
     def get_options (self):
 
         return [
+            Option ('-w', '--worker-threads', dest='worker-threads',
+                    default=1, type=int),
             Option ('-p', '--ping-address', dest='ping-address',
                     default='tcp://localhost:7171'),
             Option ('-d', '--data-address', dest='data-address',
@@ -174,6 +256,9 @@ class ZmqSphinx (Command):
         ]
 
     def run (self, *args, **kwargs):
+
+        worker_threads = kwargs['worker-threads']
+        assert worker_threads >= 0
 
         ping_address = kwargs['ping-address']
         assert ping_address
@@ -183,9 +268,14 @@ class ZmqSphinx (Command):
         assert data_timeout
 
         args = [context, ping_address, data_address, data_timeout]
-        with sphinx.Worker (*args) as worker: worker.run ()
+        for n in range (worker_threads): sphinx.Worker (*args).start ()
 
-manager.add_command ('sphinx', ZmqSphinx ())
+        try:
+            select.select ([], [], [])
+        except KeyboardInterrupt:
+            pass
+
+manager.add_command ('converter', Converter ())
 
 ###############################################################################
 ###############################################################################

@@ -8,6 +8,7 @@ from flask.globals import session
 from flask.app import Flask
 
 from .config import DefaultConfig
+from .config import SphinxConfig
 
 ###############################################################################
 ###############################################################################
@@ -32,6 +33,7 @@ class WebedApplication (Flask):
 
 app = WebedApplication (__name__)
 app.config.from_object (DefaultConfig)
+app.config.from_object (SphinxConfig)
 
 if not app.testing:
     app.config.from_envvar ('WEBED_SETTINGS', silent=False)
