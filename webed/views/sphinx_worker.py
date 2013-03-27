@@ -4,10 +4,9 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from threading import Thread, Event
+from ..util import PickleZlib
 
 import zmq
-import zlib
-import cPickle as pickle
 
 ###############################################################################
 ###############################################################################
@@ -34,8 +33,10 @@ class Worker (Thread):
 
             self.ping_socket = context.socket (zmq.REP)
             self.ping_socket.connect (self.ping_address)
+            self.ping_socket.LINGER = 0
             self.data_socket = context.socket (zmq.REP)
             self.data_socket.connect (self.data_address)
+            self.data_socket.LINGER = 0
 
             self.ping_poller = zmq.Poller ()
             self.ping_poller.register (self.ping_socket, zmq.POLLIN)
@@ -101,18 +102,6 @@ class Worker (Thread):
 
         import base64
         return base64.encodestring (data)
-
-###############################################################################
-###############################################################################
-
-class PickleZlib (object):
-
-    @staticmethod
-    def send_pyobj (socket, obj, flags=0, protocol=-1):
-
-        p = pickle.dumps (obj, protocol)
-        z = zlib.compress (p)
-        return socket.send (z, flags=flags)
 
 ###############################################################################
 ###############################################################################

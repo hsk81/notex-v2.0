@@ -6,15 +6,13 @@ __author__ = 'hsk81'
 from flask import Blueprint, Response, request
 
 from ..app import app
-from ..models import Node
-from ..util import Q, jsonify
-from ..ext import obj_cache
 from ..ext import logger
+from ..ext import obj_cache
+from ..models import Node
+from ..util import Q, PickleZlib, jsonify
 
 import io
 import uuid
-import zlib
-import cPickle as pickle
 
 ###############################################################################
 ###############################################################################
@@ -87,12 +85,18 @@ def rest_to_pdf (chunk_size=256 * 1024):
 
 class Converter (object):
 
-    def __init__ (self, ping_address, data_address, ping_timeout):
+    @staticmethod
+    def import_zmq (app):
 
         if app.config.get ('GEVENT'):
             import zmq.green as zmq
         else:
             import zmq
+
+        return zmq
+
+    def __init__ (self, ping_address, data_address, ping_timeout):
+        zmq = Converter.import_zmq (app)
 
         self.context = zmq.Context (1)
         assert self.context
@@ -104,11 +108,7 @@ class Converter (object):
         assert self.data_address
 
     def __enter__ (self):
-
-        if app.config.get ('GEVENT'):
-            import zmq.green as zmq
-        else:
-            import zmq
+        zmq = Converter.import_zmq (app)
 
         self.ping_socket = self.context.socket (zmq.REQ)
         self.ping_socket.connect (self.ping_address)
@@ -164,15 +164,6 @@ class Converter (object):
 
 ###############################################################################
 ###############################################################################
-
-class PickleZlib (object):
-
-    @staticmethod
-    def recv_pyobj (socket, flags=0):
-
-        z = socket.recv (flags)
-        p = zlib.decompress (z)
-        return pickle.loads (p)
 
 class TimeoutError (Exception):
 

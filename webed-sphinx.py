@@ -252,6 +252,8 @@ class Converter (Command):
                     default='tcp://localhost:7171'),
             Option ('-d', '--data-address', dest='data-address',
                     default='tcp://localhost:9191'),
+            Option ('-t', '--poll-timeout', dest='poll-timeout',
+                    default=app.config['POLL_TIMEOUT'], type=int),
         ]
 
     def run (self, *args, **kwargs):
@@ -262,7 +264,7 @@ class Converter (Command):
         assert ping_address
         data_address = kwargs['data-address']
         assert data_address
-        poll_timeout = app.config['POLL_TIMEOUT']
+        poll_timeout = kwargs['poll-timeout']
         assert poll_timeout
 
         workers = []
