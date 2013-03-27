@@ -5,17 +5,38 @@
 
 import os
 
+from flask.ext.script import Manager, Command
+
 from gevent_fastcgi.server import WSGIServer
+
 from webed.app import app
+
+
+###############################################################################
+###############################################################################
+
+manager = Manager (app)
+
+###############################################################################
+###############################################################################
+
+class AppServer (Command):
+    """Application server: starts WSGI instance"""
+
+    def run (self):
+
+        path = app.config['NIX_FILE']
+        if os.path.exists (path): os.remove (path)
+        WSGIServer (path, app).serve_forever ()
+
+manager.add_command ('app-serve', AppServer ())
 
 ###############################################################################
 ###############################################################################
 
 if __name__ == '__main__':
 
-    path = app.config['NIX_FILE']
-    if os.path.exists (path): os.remove (path)
-    WSGIServer (path, app).serve_forever ()
+    manager.run ()
 
 ###############################################################################
 ###############################################################################
