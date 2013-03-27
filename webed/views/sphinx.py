@@ -3,8 +3,6 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-import uuid
-
 from flask import Blueprint, Response, request
 
 from ..app import app
@@ -12,7 +10,9 @@ from ..models import Node
 from ..util import Q, jsonify
 from ..ext import obj_cache
 from ..ext import logger
+
 import io
+import uuid
 
 ###############################################################################
 ###############################################################################

@@ -3,14 +3,14 @@
 ###############################################################################
 ###############################################################################
 
-from datetime import datetime
-import base64
-
 from flask.ext.script import Manager, Command, Option
-import zmq
+from datetime import datetime
 
 from webed.app import app
 from webed.views import sphinx
+
+import zmq
+import base64
 
 ###############################################################################
 ###############################################################################

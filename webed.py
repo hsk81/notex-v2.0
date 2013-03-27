@@ -3,13 +3,9 @@
 ###############################################################################
 ###############################################################################
 
-import os
-import shutil
-import subprocess
-from gzip import GzipFile
-
 from flask.ext.script import Manager, Command, Option
 from flask.ext.assets import ManageAssets
+from gzip import GzipFile
 
 from webed.app import app
 from webed.ext import db
@@ -21,6 +17,9 @@ from webed.ext import assets
 from webed.util import Q
 from webed.models import User
 
+import os
+import shutil
+import subprocess
 
 ###############################################################################
 ###############################################################################
