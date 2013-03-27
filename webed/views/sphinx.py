@@ -247,32 +247,32 @@ class Worker (Thread):
 
     def run (self):
 
-        with Worker.ResourceManager (*self._args, **self._kwargs) as rm:
+        with Worker.ResourceManager (*self._args, **self._kwargs) as resource:
             while not self._do_stop.isSet ():
 
-                self._do_ping (rm)
-                self._do_data (rm)
+                self._do_ping (resource)
+                self._do_data (resource)
 
             self._stopped.set ()
 
-    def _do_ping (self, rm):
+    def _do_ping (self, resource):
 
-        if rm.ping_poller.poll (rm.poll_timeout):
+        if resource.ping_poller.poll (resource.poll_timeout):
 
-            ping = rm.ping_socket.recv ()
-            rm.ping_socket.send (ping)
+            ping = resource.ping_socket.recv ()
+            resource.ping_socket.send (ping)
 
-    def _do_data (self, rm):
+    def _do_data (self, resource):
 
-        if rm.data_poller.poll (rm.poll_timeout):
-            data = rm.data_socket.recv ()
+        if resource.data_poller.poll (resource.poll_timeout):
+            data = resource.data_socket.recv ()
 
             try:
                 data = self._process (data)
             except Exception, ex:
                 data = ex
 
-            PickleZlib.send_pyobj (rm.data_socket, data)
+            PickleZlib.send_pyobj (resource.data_socket, data)
 
     def _process (self, data):
 
