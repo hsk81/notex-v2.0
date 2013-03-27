@@ -3,10 +3,10 @@
 ###############################################################################
 ###############################################################################
 
-from gzip import GzipFile
 import os
 import shutil
 import subprocess
+from gzip import GzipFile
 
 from flask.ext.script import Manager, Command, Option
 from flask.ext.assets import ManageAssets
@@ -20,6 +20,7 @@ from webed.ext import dbs_cache
 from webed.ext import assets
 from webed.util import Q
 from webed.models import User
+
 
 ###############################################################################
 ###############################################################################
