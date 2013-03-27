@@ -83,11 +83,19 @@ class Worker (Thread):
     @property
     def stopped (self):
 
-        return self.is_stopped.isSet ()
+        if self.is_stopped.isSet ():
+            self.logger.info ('%r stopped' % self)
+            return True
+        return False
 
     def stop (self):
 
         self.do_stop.set ()
+
+    def start (self):
+
+        super (Worker, self).start ()
+        self.logger.info ('%r started' % self)
 
     def run (self):
 
