@@ -5,9 +5,10 @@ __author__ = 'hsk81'
 
 import os
 import socket
+from datetime import timedelta
 
 from ..util import in_rxs
-from datetime import timedelta
+
 
 ###############################################################################
 ###############################################################################
@@ -45,7 +46,8 @@ class DefaultConfig:
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     ##
-    ## Assume by default that GEVENT is not set; override it if required.
+    ## Disable GEVENT by default; should be enabled in production environment,
+    ## since otherwise (green) concurrency will be blocked!
     ##
 
     GEVENT = False
@@ -70,7 +72,7 @@ class DefaultConfig:
     ##
 
     PING_ADDRESS = 'tcp://localhost:7070'
-    PING_TIMEOUT = 15.000 * 1000 ##[ms]
+    PING_TIMEOUT = 01.250 * 1000 ##[ms]
     DATA_ADDRESS = 'tcp://localhost:9090'
     DATA_TIMEOUT = 00.250 * 1000 ##[ms]
 
