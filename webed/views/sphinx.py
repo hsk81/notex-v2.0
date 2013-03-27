@@ -3,17 +3,20 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask import Blueprint, Response, request
 from threading import Thread, Event
+import uuid
+import zlib
+import cPickle as pickle
+
+from flask import Blueprint, Response, request
 
 from ..app import app
 from ..models import Node
 from ..util import Q, jsonify
 from ..ext import obj_cache
 from ..ext import logger
-
 import io
-import uuid
+
 
 ###############################################################################
 ###############################################################################
@@ -100,8 +103,27 @@ def rest_to_pdf (chunk_size=256 * 1024):
 ###############################################################################
 ###############################################################################
 
-class TimeoutError (Exception): pass
+class TimeoutError (Exception):
 
+    pass
+
+class PickleZlib (object):
+
+    @staticmethod
+    def send_pyobj (socket, obj, flags=0, protocol=-1):
+
+        p = pickle.dumps (obj, protocol)
+        z = zlib.compress (p)
+        return socket.send (z, flags=flags)
+
+    @staticmethod
+    def recv_pyobj (socket, flags=0):
+
+        z = socket.recv (flags)
+        p = zlib.decompress (z)
+        return pickle.loads (p)
+
+###############################################################################
 ###############################################################################
 
 class Converter (object):
@@ -160,7 +182,7 @@ class Converter (object):
         self.data_socket.send (data)
         logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 
-        data = self.data_socket.recv_pyobj ()
+        data = PickleZlib.recv_pyobj (self.data_socket)
         assert data
         logger.debug ('%r received data:%x' % (self, hash (data)))
 
@@ -251,7 +273,7 @@ class Worker (Thread):
             except Exception, ex:
                 data = ex
 
-            rm.data_socket.send_pyobj (data)
+            PickleZlib.send_pyobj (rm.data_socket, data)
 
     def _process (self, data):
 
