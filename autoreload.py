@@ -17,24 +17,18 @@ import subprocess
 ###############################################################################
 ###############################################################################
 
-def file_filter (name):
-    return not name.startswith ('.') and \
-           not name.endswith ('.css') and \
-           not name.endswith ('.html') and \
-           not name.endswith ('.js') and \
-           not name.endswith ('.log') and \
-           not name.endswith ('.pyc') and \
-           not name.endswith ('.txt')
+def file_filter (filename):
+    return filename.endswith ('.py')
 
 def file_times (path):
-    for top_level in filter (file_filter, os.listdir (path)):
-        for root, dirs, files in os.walk (top_level):
-            for filename in filter (file_filter, files):
+    for root, dirs, files in os.walk (path):
+        for filename in filter (file_filter, files):
 
-                path_to = os.path.join (root, filename)
-                mo_time = os.stat (path_to).st_mtime
+            path_to = os.path.join (root, filename)
+            mo_time = os.stat (path_to).st_mtime
 
-                yield (mo_time, path_to)
+            time.sleep (0.005)
+            yield (mo_time, path_to)
 
 def print_stdout (process):
     stdout = process.stdout
@@ -47,8 +41,6 @@ def print_stdout (process):
 command = ' '.join (sys.argv[1:])
 # The path to watch
 path = '.'
-# How often we check the filesystem for changes (in seconds)
-wait = 1.000
 # The process to autoreload
 process = subprocess.Popen (command, shell=True)
 # The current maximum file modified time under the watched directory
@@ -72,7 +64,7 @@ if __name__ == '__main__':
 
                 process.kill ()
                 process = subprocess.Popen (command, shell=True)
-                time.sleep (wait)
+                time.sleep (1.000)
 
         except KeyboardInterrupt:
             break
