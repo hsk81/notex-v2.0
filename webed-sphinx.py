@@ -3,16 +3,17 @@
 ###############################################################################
 ###############################################################################
 
+from flask.ext.script import Manager, Command, Option
+from werkzeug.serving import run_with_reloader
+from zmq.devices import ThreadDevice
 from datetime import datetime
+
+from webed.views.sphinx import backend
+from webed.app import app
+
+import zmq
 import base64
 import select
-
-from flask.ext.script import Manager, Command, Option
-from webed.views.sphinx import backend
-from zmq.devices import ThreadDevice
-from webed.app import app
-import zmq
-
 
 ###############################################################################
 ###############################################################################
@@ -268,18 +269,22 @@ class Converter (Command):
         assert poll_timeout
 
         workers = []
-        for _ in range (worker_threads):
+        def start ():
+            while any (map (lambda w: not w.stopped, workers)):
+                for worker in workers: worker.stop ()
+            while len (workers) > 0:
+                workers.pop ()
 
-            workers.append (backend.Worker (
-                ping_address=ping_address,
-                data_address=data_address,
-                poll_timeout=poll_timeout
-            ))
+            for _ in range (worker_threads):
+                workers.append (backend.Worker (
+                    ping_address=ping_address,
+                    data_address=data_address,
+                    poll_timeout=poll_timeout
+                ))
 
-            workers[-1].start ()
-
+                workers[-1].start ()
         try:
-            select.select ([], [], [])
+            run_with_reloader (start)
         except KeyboardInterrupt:
             while any (map (lambda w: not w.stopped, workers)):
                 for worker in workers: worker.stop ()
