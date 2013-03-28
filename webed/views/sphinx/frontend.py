@@ -5,13 +5,13 @@ __author__ = 'hsk81'
 
 from flask import Blueprint, Response, request
 
-from ..app import app
-from ..ext import logger
-from ..ext import obj_cache
-from ..models import Node
-from ..util import Q, PickleZlib, jsonify
+from ...app import app
+from ...ext import logger
+from ...ext import obj_cache
+from ...models import Node
+from ...util import Q, PickleZlib, jsonify
+from ..io import compress
 
-import io
 import uuid
 
 ###############################################################################
@@ -152,7 +152,7 @@ class Converter (object):
 
     def _do_data (self, node):
 
-        data = io.compress (node, crlf=False)
+        data = compress (node, crlf=False)
         self.data_socket.send (data)
         logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 

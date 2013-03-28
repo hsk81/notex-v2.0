@@ -6,9 +6,9 @@ __author__ = 'hsk81'
 from threading import Thread, Event
 from uuid import uuid4 as uuid_random
 
-from ..app import app
-from ..util import PickleZlib
-from .io import extract
+from ...app import app
+from ...util import PickleZlib
+from ..io import extract
 
 import os
 import zmq

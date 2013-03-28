@@ -3,16 +3,16 @@
 ###############################################################################
 ###############################################################################
 
-from flask.ext.script import Manager, Command, Option
-from zmq.devices import ThreadDevice
 from datetime import datetime
-
-from webed.app import app
-from webed.views import sphinx_worker
-
-import zmq
 import base64
 import select
+
+from flask.ext.script import Manager, Command, Option
+from webed.views.sphinx import backend
+from zmq.devices import ThreadDevice
+from webed.app import app
+import zmq
+
 
 ###############################################################################
 ###############################################################################
@@ -270,7 +270,7 @@ class Converter (Command):
         workers = []
         for _ in range (worker_threads):
 
-            workers.append (sphinx_worker.Worker (
+            workers.append (backend.Worker (
                 ping_address=ping_address,
                 data_address=data_address,
                 poll_timeout=poll_timeout
