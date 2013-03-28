@@ -44,11 +44,11 @@ class Property (db.Model, Polymorphic):
     ###########################################################################
 
     _uuid = db.Column (pg.UUID, nullable=False, index=True, unique=True,
-        name = 'uuid')
+        name='uuid')
     _mime = db.Column (db.String (), nullable=False, index=False,
-        name = 'mime')
+        name='mime')
     _name = db.Column (db.String (), nullable=False, index=False,
-        name = 'name')
+        name='name')
 
     @hybrid_property
     def uuid (self):
@@ -147,7 +147,7 @@ class ExternalProperty (Property, DataPropertyMixin):
     def get_data (self):
 
         path_to = os.path.join (app.config['FS_DATA'], self._data)
-        with open (path_to, 'r') as file: return self.decode (file.read ())
+        with open (path_to, 'r') as source: return self.decode (source.read ())
 
     def set_data (self, value):
 
@@ -166,7 +166,9 @@ class ExternalProperty (Property, DataPropertyMixin):
 
         path_to = os.path.join (app.config['FS_DATA'], value_key)
         if not os.path.exists (path_to):
-            with open (path_to, 'w') as file: file.write (self.encode (value))
+            os.makedirs (app.config['FS_DATA'])
+            with open (path_to, 'w') as target:
+                target.write (self.encode (value))
 
         version_key = dbs_cache.make_key (value_key)
         version = dbs_cache.increase (version_key)
@@ -261,8 +263,8 @@ class TextProperty (ExternalProperty):
             path_to = os.path.join (app.config['FS_DATA'], self._data)
             if os.path.exists (path_to):
 
-                with open (path_to, 'r') as file:
-                    original = self.decode (file.read ())
+                with open (path_to, 'r') as source:
+                    original = self.decode (source.read ())
 
                 patches = self.dmp.patch_fromText (value)
                 value, results = self.dmp.patch_apply (patches, original)
