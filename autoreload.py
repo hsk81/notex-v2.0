@@ -24,7 +24,11 @@ def file_times (path):
     for top_level in filter (file_filter, os.listdir (path)):
         for root, dirs, files in os.walk (top_level):
             for filename in filter (file_filter, files):
-                yield os.stat (os.path.join (root, filename)).st_mtime
+
+                path_to = os.path.join (root, filename)
+                mo_time = os.stat (path_to).st_mtime
+
+                yield (mo_time, path_to)
 
 def print_stdout (process):
     stdout = process.stdout
@@ -42,7 +46,7 @@ wait = 1.000
 # The process to autoreload
 process = subprocess.Popen (command, shell=True)
 # The current maximum file modified time under the watched directory
-last_mtime = max (file_times (path))
+mo_time_last, _ = max (file_times (path))
 
 ###############################################################################
 ###############################################################################
@@ -52,15 +56,16 @@ if __name__ == '__main__':
     while True:
 
         try:
-            max_mtime = max (file_times (path))
+            mo_time, path_to = max (file_times (path))
             print_stdout (process)
-            if max_mtime > last_mtime:
 
-                last_mtime = max_mtime
-                print '* Restarting with reloader'
+            if mo_time > mo_time_last:
+                mo_time_last = mo_time
+
+                print '* Restarting with reloader due: %s' % path_to
+
                 process.kill ()
                 process = subprocess.Popen (command, shell=True)
-
                 time.sleep (wait)
 
         except KeyboardInterrupt:
