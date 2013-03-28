@@ -109,6 +109,7 @@ class Converter (object):
         assert self.data_address
 
     def __enter__ (self):
+
         zmq = self.import_zmq (app)
         context = zmq.Context (1)
 
