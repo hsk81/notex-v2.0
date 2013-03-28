@@ -18,14 +18,7 @@ import subprocess
 ###############################################################################
 
 def file_filter (name):
-    return not name.startswith ('.') and \
-           not name.endswith ('.css') and \
-           not name.endswith ('.html') and \
-           not name.endswith ('.js') and \
-           not name.endswith ('.log') and \
-           not name.endswith ('.pyc') and \
-           not name.endswith ('.txt') and \
-           True
+    return not name.startswith ('.') and name.endswith ('.py')
 
 def file_times (path):
     for top_level in filter (file_filter, os.listdir (path)):
