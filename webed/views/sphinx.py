@@ -124,7 +124,7 @@ class Converter (object):
 
         return self
 
-    def __exit__ (self, exc_type, exc_val, exc_tb):
+    def __exit__ (self, *args):
 
         self.ping_socket.close ()
         self.data_socket.close ()
