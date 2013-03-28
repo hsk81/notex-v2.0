@@ -85,10 +85,20 @@ Ext.define ('Webed.controller.NodeTree', {
         var view = assert (this.getNodeTree ());
         var root = assert (view.getRootNode ());
         if (!root.get ('loaded')) {
-            var store = assert (this.getMIMEsStore ());
-            store.load ({scope: this, callback: function (recs, op, success) {
-                if (success) this.refresh (null);
-            }});
+            view.setLoading ('Loading ..');
+            assert (this.getMIMEsStore ()).load ({
+                scope: this, callback: function (recs, op, success) {
+                    if (success) {
+                        assert (this.getNodesStore ()).load ({
+                            node: root, scope: this, callback: function () {
+                                view.setLoading (false);
+                            }
+                        });
+                    } else {
+                        view.setLoading (false);
+                    }
+                }
+            });
         }
     },
 
