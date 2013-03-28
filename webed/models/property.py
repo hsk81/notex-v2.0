@@ -164,9 +164,12 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
-        path_to = os.path.join (app.config['FS_DATA'], value_key)
+        path_to = app.config['FS_DATA']
         if not os.path.exists (path_to):
-            os.makedirs (app.config['FS_DATA'])
+            os.makedirs (path_to)
+
+        path_to = os.path.join (path_to, value_key)
+        if not os.path.exists (path_to):
             with open (path_to, 'w') as target:
                 target.write (self.encode (value))
 
