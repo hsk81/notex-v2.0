@@ -156,10 +156,10 @@ class PingQueue (ZmqQueue):
         return [
             Option ('-pfa', '--ping-frontend-address',
                     dest='ping-frontend-address',
-                    default='tcp://*:7070'),
+                    default=app.config['PING_QUEUE_ADDRESS']),
             Option ('-pba', '--ping-backend-address',
                     dest='ping-backend-address',
-                    default='tcp://*:7171'),
+                    default=app.config['PING_QUEUE_BACKEND_ADDRESS']),
         ]
 
     def run (self, *args, **kwargs):
@@ -189,10 +189,10 @@ class DataQueue (ZmqQueue):
         return [
             Option ('-dfa', '--data-frontend-address',
                     dest='data-frontend-address',
-                    default='tcp://*:9090'),
+                    default=app.config['DATA_QUEUE_ADDRESS']),
             Option ('-dba', '--data-backend-address',
                     dest='data-backend-address',
-                    default='tcp://*:9191'),
+                    default=app.config['DATA_QUEUE_BACKEND_ADDRESS']),
         ]
 
     def run (self, *args, **kwargs):
@@ -249,9 +249,9 @@ class Converter (Command):
             Option ('-w', '--worker-threads', dest='worker-threads',
                     default=1, type=int),
             Option ('-p', '--ping-address', dest='ping-address',
-                    default='tcp://localhost:7171'),
+                    default=app.config['PING_BACKEND_ADDRESS']),
             Option ('-d', '--data-address', dest='data-address',
-                    default='tcp://localhost:9191'),
+                    default=app.config['DATA_BACKEND_ADDRESS']),
             Option ('-t', '--poll-timeout', dest='poll-timeout',
                     default=app.config['POLL_TIMEOUT'], type=int),
         ]

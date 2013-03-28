@@ -119,6 +119,7 @@ class Worker (Thread):
     def _do_data (self, resource):
 
         if resource.data_poller.poll (resource.poll_timeout):
+
             data = resource.data_socket.recv ()
             self.logger.debug ('%r received data:%x' % (self, hash (data)))
 
