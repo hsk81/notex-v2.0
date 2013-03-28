@@ -3,7 +3,19 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
+import os
+
+###############################################################################
+###############################################################################
+
 class SphinxConfig:
+
+    ##
+    ## The SPHINX_PATH is the working directory of the converters: It keeps
+    ## *temporarily* the data that is being processed.
+    ##
+
+    SPHINX_PATH = os.path.join (os.path.sep, 'var', 'www', 'webed', 'sphinx')
 
     ##
     ## The ZeroMQ *frontend* addresses to which the ping & data queues bind to.

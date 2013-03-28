@@ -4,11 +4,16 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from threading import Thread, Event
+from uuid import uuid4 as uuid_random
 
 from ..app import app
 from ..util import PickleZlib
+from .io import extract
 
+import os
 import zmq
+import shutil
+import tempfile
 
 ###############################################################################
 ###############################################################################
@@ -133,8 +138,20 @@ class Worker (Thread):
 
     def _process (self, data):
 
-        import base64
-        return base64.encodestring (data)
+        root_path = app.config['SPHINX_PATH']
+        temp_path = os.path.join (root_path, str (uuid_random ()))
+        os.makedirs (temp_path)
+
+        with tempfile.TemporaryFile () as zip_file:
+
+            zip_file.write (data)
+            zip_file.flush ()
+            extract (zip_file, path=temp_path)
+
+        if not app.dev:
+            shutil.rmtree (temp_path, ignore_errors=True)
+
+        return data
 
 ###############################################################################
 ###############################################################################

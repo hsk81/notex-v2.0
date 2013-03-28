@@ -152,7 +152,7 @@ class Converter (object):
 
     def _do_data (self, node):
 
-        data = io.compress (node)
+        data = io.compress (node, crlf=False)
         self.data_socket.send (data)
         logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 

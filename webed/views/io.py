@@ -307,7 +307,7 @@ def archive_download (chunk_size=256 * 1024):
 
 ###############################################################################
 
-def compress (root):
+def compress (root, crlf=True):
 
     str_buffer = StringIO ()
     zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
@@ -326,7 +326,10 @@ def compress (root):
         assert prop
 
         if type (prop) == TextProperty:
-            data = prop.data.replace ('\n', '\r\n').encode ('utf-8')
+            if crlf:
+                data = prop.data.replace ('\n', '\r\n').encode ('utf-8')
+            else:
+                data = prop.data.encode ('utf-8')
         elif type (prop) == Base64Property:
             data = base64.decodestring (prop.data.split (',')[1])
         else:
