@@ -47,7 +47,29 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             node = node.parentNode;
         }
 
-        if (node.isRoot ()) return;
+        var statusbar = assert (this.getStatusbar ());
+        if (node.isRoot () || node.isLeaf ()) {
+
+            statusbar.setStatus ({
+                text: 'Please select a project!',
+                iconCls: 'x-status-exclamation',
+                clear: true
+            });
+
+            return;
+        }
+
+        if (node.get ('mime') != 'application/project+rest') {
+
+            statusbar.setStatus ({
+                text: 'Only <i>rST</i> projects can be converted.',
+                iconCls: 'x-status-information',
+                clear: true
+            });
+
+            return;
+        }
+
         button.disable ();
 
         var application = assert (this.application);
@@ -84,7 +106,6 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         }
 
         function onFailure (xhr, opts) {
-            var statusbar = assert (this.getStatusbar ());
 
             if (xhr.status == 503) statusbar.setStatus ({
                 text: 'Conversion engine overloaded; please try later.',
@@ -93,7 +114,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             });
 
             else statusbar.setStatus ({
-                text: "Conversion failed; check project's configuration.",
+                text: "Conversion failed; check your project's configuration.",
                 iconCls: 'x-status-exclamation',
                 clear: true
             });

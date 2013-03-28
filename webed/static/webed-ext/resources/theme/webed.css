@@ -372,6 +372,11 @@ body {
     background: url(../../../ico/fatcow/16x16/exclamation.png) no-repeat !important;
 }
 
+.x-statusbar .x-status-information {
+    padding-left: 20px;
+    background: url(../../../ico/fatcow/16x16/information.png) no-repeat !important;
+}
+
 /******************************************************************************
  * CodeMirror
  *****************************************************************************/
