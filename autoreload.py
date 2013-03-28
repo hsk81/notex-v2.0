@@ -27,7 +27,7 @@ def file_times (path):
             path_to = os.path.join (root, filename)
             mo_time = os.stat (path_to).st_mtime
 
-            time.sleep (0.005)
+            time.sleep (0.005) ## slow down!
             yield (mo_time, path_to)
 
 def print_stdout (process):
