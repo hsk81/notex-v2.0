@@ -146,7 +146,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     def get_data (self):
 
-        path_to = os.path.join (app.config['FS_CACHE'], self._data)
+        path_to = os.path.join (app.config['FS_DATA'], self._data)
         with open (path_to, 'r') as file: return self.decode (file.read ())
 
     def set_data (self, value):
@@ -164,7 +164,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
-        path_to = os.path.join (app.config['FS_CACHE'], value_key)
+        path_to = os.path.join (app.config['FS_DATA'], value_key)
         if not os.path.exists (path_to):
             with open (path_to, 'w') as file: file.write (self.encode (value))
 
@@ -201,7 +201,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         version_key = dbs_cache.make_key (target._data)
         version = dbs_cache.decrease (key=version_key)
         if version <= 0:
-            path_to = os.path.join (app.config['FS_CACHE'], target._data)
+            path_to = os.path.join (app.config['FS_DATA'], target._data)
             if os.path.exists (path_to): os.unlink (path_to)
 
     @classmethod
@@ -258,7 +258,7 @@ class TextProperty (ExternalProperty):
     def patch (self, value):
 
         if self._data:
-            path_to = os.path.join (app.config['FS_CACHE'], self._data)
+            path_to = os.path.join (app.config['FS_DATA'], self._data)
             if os.path.exists (path_to):
 
                 with open (path_to, 'r') as file:

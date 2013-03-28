@@ -35,7 +35,7 @@ class DefaultConfig:
 
     LOG_FILE = os.path.join ('..', 'webed.log')
     YML_FILE = os.path.join ('webed', 'static', 'assets.yaml')
-    NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed-wsgi.sock')
+    NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed', 'webed-wsgi.sock')
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since
@@ -87,8 +87,8 @@ class DefaultConfig:
     ## point to the data part of it.
     ##
 
-    FS_ROOT = os.path.join (os.path.sep, 'var', 'lib', 'webed')
-    FS_CACHE = os.path.join (FS_ROOT, 'cache')
+    FS_ROOT = os.path.join (os.path.sep, 'var', 'www', 'webed')
+    FS_DATA = os.path.join (FS_ROOT, 'data')
 
     ##
     ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who

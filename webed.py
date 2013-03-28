@@ -123,15 +123,15 @@ class DbsCacheClear (Command):
 
 manager.add_command ('clear-cache-dbs', DbsCacheClear ())
 
-class FsbCacheClear (Command):
-    """Clear file system backend cache (data etc.) [!!]"""
+class FsbClear (Command):
+    """Clear file system backend (data etc.) [!!]"""
 
     def run (self):
-        path = app.config['FS_CACHE']
+        path = app.config['FS_DATA']
         if os.path.exists (path): shutil.rmtree (path)
         os.mkdir (path)
 
-manager.add_command ('clear-cache-fsb', FsbCacheClear ())
+manager.add_command ('clear-fsb', FsbClear ())
 
 ###############################################################################
 
@@ -156,7 +156,7 @@ class AppReset (Command):
         ObjCacheClear ().run ()
         SssCacheClear ().run ()
         DbsCacheClear ().run ()
-        FsbCacheClear ().run ()
+        FsbClear ().run ()
 
         DbClear ().run ()
         DbSetup ().run (name=name, mail=mail)
