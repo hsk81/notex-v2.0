@@ -51,7 +51,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         if (node.isRoot () || node.isLeaf ()) {
 
             statusbar.setStatus ({
-                text: 'Please select a project!',
+                text: 'Please select a proper project.',
                 iconCls: 'x-status-exclamation',
                 clear: true
             });
