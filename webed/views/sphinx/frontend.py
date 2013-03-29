@@ -22,18 +22,19 @@ sphinx = Blueprint ('sphinx', __name__)
 ###############################################################################
 ###############################################################################
 
-@sphinx.route ('/rest-to-latex/', methods=['GET', 'POST'])
-def rest_to_latex (chunk_size=256 * 1024):
-
-    pass ## TODO!
-
 @sphinx.route ('/rest-to-html/', methods=['GET', 'POST'])
-def rest_to_html (chunk_size=256 * 1024):
+def rest_to_html ():
+    return rest_to (ext='zip', converter_cls=HtmlConverter)
 
-    pass ## TODO!
+@sphinx.route ('/rest-to-latex/', methods=['GET', 'POST'])
+def rest_to_latex ():
+    return rest_to (ext='zip', converter_cls=LatexConverter)
 
 @sphinx.route ('/rest-to-pdf/', methods=['GET', 'POST'])
-def rest_to_pdf (chunk_size=256 * 1024):
+def rest_to_pdf ():
+    return rest_to (ext='pdf', converter_cls=PdfConverter)
+
+def rest_to (ext, converter_cls, chunk_size=256 * 1024):
 
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
@@ -49,7 +50,7 @@ def rest_to_pdf (chunk_size=256 * 1024):
     data_address = app.config['DATA_ADDRESS']
     assert data_address
 
-    archive_key = obj_cache.make_key (node_uuid, 'rest2pdf')
+    archive_key = obj_cache.make_key (node_uuid, converter_cls)
     content_val = obj_cache.get_value (archive_key)
 
     if content_val:
@@ -65,16 +66,16 @@ def rest_to_pdf (chunk_size=256 * 1024):
             response = Response (next_chunk (content_len, content_csz))
             response.headers ['Content-Length'] = content_len
             response.headers ['Content-Disposition'] = \
-                'attachment;filename="%s.pdf"' % node.name.encode ('utf-8')
+                'attachment;filename="%s.%s"' % (
+                    node.name.encode ('utf-8'), ext)
         else:
             response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
         try:
-            with Converter (ping_address, data_address, ping_timeout) as c:
-                value = c.apply (node)
-            obj_cache.set_value (archive_key, value, expiry=15) ##[s]
-            response = jsonify (success=True, name=node.name)
+            with converter_cls (ping_address, data_address, ping_timeout) as c:
+                obj_cache.set_value (archive_key, c.apply (node), expiry=15)
+                response = jsonify (success=True, name=node.name)
         except TimeoutError:
             response = jsonify (success=False, name=node.name), 503
 
@@ -150,20 +151,33 @@ class Converter (object):
         assert pong == ping
         logger.debug ('%r received ping:%s' % (self, pong))
 
-    def _do_data (self, node):
+    def _do_data (self, node, prefix=None):
 
-        data = compress (node, crlf=False)
-        self.data_socket.send (data)
-        logger.debug ('%r send-ing data:%x' % (self, hash (data)))
+        payload = compress (node, crlf=False)
+        self.data_socket.send ((prefix + '-' + payload) if prefix else payload)
+        logger.debug ('%r send-ing data:%x' % (self, hash (payload)))
 
-        data = PickleZlib.recv_pyobj (self.data_socket)
-        assert data
-        logger.debug ('%r received data:%x' % (self, hash (data)))
+        payload = PickleZlib.recv_pyobj (self.data_socket)
+        assert payload
+        logger.debug ('%r received data:%x' % (self, hash (payload)))
 
-        if not isinstance (data, Exception):
-            self._data = data
-        else:
-            raise data
+        if isinstance (payload, Exception): raise payload
+        self._data = payload
+
+class HtmlConverter (Converter):
+
+    def _do_data (self, node, prefix='html'):
+        super (HtmlConverter, self)._do_data (node, prefix=prefix)
+
+class LatexConverter (Converter):
+
+    def _do_data (self, node, prefix='latex'):
+        super (LatexConverter, self)._do_data (node, prefix=prefix)
+
+class PdfConverter (Converter):
+
+    def _do_data (self, node, prefix='pdf'):
+        super (PdfConverter, self)._do_data (node, prefix=prefix)
 
 ###############################################################################
 ###############################################################################

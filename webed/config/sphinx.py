@@ -11,11 +11,20 @@ import os
 class SphinxConfig:
 
     ##
-    ## The SPHINX_PATH is the working directory of the converters: It keeps
-    ## *temporarily* the data that is being processed.
+    ## The SPHINX_TEMP_PATH is the working directory for converters: It keeps
+    ## the data - that is being processed - *temporarily*.
     ##
 
-    SPHINX_PATH = os.path.join (os.path.sep, 'var', 'www', 'webed', 'sphinx')
+    SPHINX_TEMP_PATH = os.path.join (
+        os.path.sep, 'var', 'www', 'webed', 'sphinx')
+
+    ##
+    ## The SPHINX_TEMPLATE_PATH is the path to the Sphinx template(s), which
+    ## is copied at conversion to SPHINX_TEMP_PATH for further processing.
+    ##
+
+    SPHINX_TEMPLATE_PATH = os.path.join (
+        'webed', 'static', 'webed-ext', 'dat', 'sphinx-tpl')
 
     ##
     ## The ZeroMQ *frontend* addresses to which the ping & data queues bind to.
