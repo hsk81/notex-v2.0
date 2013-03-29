@@ -218,11 +218,11 @@ class Worker (Thread):
 
         elif 'latex':
             converter = LatexConverter (target_path, latex_backend)
-            converter.translate ()
+            converter.translate (source_path)
 
         else:
             converter = LatexConverter (target_path, latex_backend)
-            converter.translate ()
+            converter.translate (source_path)
             converter = PdfConverter (target_path, latex_backend)
             converter.translate ()
 
@@ -254,7 +254,7 @@ class Converter (object):
         self.stderr_path = os.path.join (self.target_path, 'stderr.log')
 
     @abstractmethod
-    def translate (self):
+    def translate (self, source_path=None):
         pass
 
     def pack (self, title):
@@ -283,7 +283,7 @@ class HtmlConverter (Converter):
     def build_path (self):
         return os.path.join (self.target_path, 'build', 'html')
 
-    def translate (self):
+    def translate (self, source_path=None):
 
         with open (self.stdout_path, 'w') as stdout:
             with open (self.stderr_path, 'w') as stderr:
@@ -325,22 +325,26 @@ class LatexConverter (Converter):
         super (LatexConverter, self).__init__ (target_path)
         self.latex_backend = latex_backend
 
-    def translate (self):
+    def translate (self, source_path=None):
 
         with open (self.stdout_path, 'w') as stdout:
             with open (self.stderr_path, 'w') as stderr:
                 check_call (['make', '-C', self.target_path, 'latex'],
-                            stdout=stdout, stderr=stderr)
+                    stdout=stdout, stderr=stderr)
 
-        # shutil.copy (
-        #     os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
-        #     os.path.join (latex_dir, 'sphinxhowto.cls'))
-        # shutil.copy (
-        #     os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
-        #     os.path.join (latex_dir, 'sphinxmanual.cls'))
-        # shutil.copy (
-        #     os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
-        #     os.path.join (latex_dir, 'Makefile'))
+        assert source_path
+
+        shutil.copy (
+            os.path.join (source_path, 'build', 'latex', 'sphinxhowto.cls'),
+            os.path.join (self.build_path, 'sphinxhowto.cls'))
+
+        shutil.copy (
+            os.path.join (source_path, 'build', 'latex', 'sphinxmanual.cls'),
+            os.path.join (self.build_path, 'sphinxmanual.cls'))
+
+        shutil.copy (
+            os.path.join (source_path, 'build', 'latex', 'Makefile'),
+            os.path.join (self.build_path, 'Makefile'))
 
     def fill_buffer (self, zip_buffer, title):
 
@@ -378,7 +382,7 @@ class PdfConverter (Converter):
         super (PdfConverter, self).__init__ (target_path)
         self.latex_backend = latex_backend
 
-    def translate (self):
+    def translate (self, source_path=None):
         pass
 
     def fill_buffer (self, zip_buffer, title):

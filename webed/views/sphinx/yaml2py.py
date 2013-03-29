@@ -25,28 +25,20 @@ def yaml2py (yaml_path, path_to, filename='conf.py'):
 
     if umap['latex_backend'] != 'pdflatex' and \
        umap['latex_backend'] != 'xelatex':
+
         umap['latex_backend'] = 'pdflatex' # security: validation!
 
     with open (os.path.join (path_to, filename), 'w+') as target:
 
         target.write ("# -*- coding: utf-8 -*-\n")
-        target.write ("extensions = ['%s','%s','%s']\n" % (
-            'sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.mathjax'
-        ))
+        target.write ("extensions = ['%s']\n" % 'sphinx.ext.mathjax')
 
         for key, value in data:
-
             if key == 'extensions': # security: pre-defined!
                 continue
 
-            if key == 'latex_elements' and umap['latex_backend'] == 'xelatex':
-                value['inputenc'] = \
-                    '\\\\newcommand{\\\\DeclareUnicodeCharacter}[2]{}'
-                value['fontenc'] = \
-                    '\\\\usepackage{xltxtra}'
-
             target.write (
-                '%s\n' % emit (value, type (value), key).encode ("utf-8"))
+                '%s\n' % emit (value, type (value), key).encode ('utf-8'))
 
     return umap['latex_backend']
 
