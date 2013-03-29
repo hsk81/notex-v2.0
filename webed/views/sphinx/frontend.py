@@ -65,9 +65,8 @@ def rest_to (ext, converter_cls, chunk_size=256 * 1024):
 
             response = Response (next_chunk (content_len, content_csz))
             response.headers ['Content-Length'] = content_len
-            response.headers ['Content-Disposition'] = \
-                'attachment;filename="%s.%s"' % (
-                    node.name.encode ('utf-8'), ext)
+            response.headers ['Content-Disposition'] = filename_for (
+                ext, converter_cls, node)
         else:
             response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
@@ -80,6 +79,20 @@ def rest_to (ext, converter_cls, chunk_size=256 * 1024):
             response = jsonify (success=False, name=node.name), 503
 
     return response
+
+def filename_for (ext, converter_cls, node):
+
+    nodename = node.name.encode ('utf-8')
+    assert nodename
+
+    if issubclass (converter_cls, HtmlConverter):
+        filename = '%s [html]' % nodename
+    elif issubclass (converter_cls, LatexConverter):
+        filename = '%s [latex]' % nodename
+    else:
+        filename = '%s' % nodename
+
+    return 'attachment;filename="%s.%s"' % (filename, ext)
 
 ###############################################################################
 ###############################################################################
