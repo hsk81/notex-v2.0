@@ -14,6 +14,7 @@ from ..mime import is_text
 from ..io import extract, guess_mime
 from .yaml2py import yaml2py
 
+import re
 import os
 import zmq
 import shutil
@@ -291,23 +292,24 @@ class HtmlConverter (Converter):
 
     def fill_buffer (self, zip_buffer, title):
 
-        with app.test_request_context ():
-            for dirpath, dirnames, filenames in os.walk (self.build_path):
+        for dirpath, dirnames, filenames in os.walk (self.build_path):
 
-                for filename in filenames:
-                    src_path = os.path.join (dirpath, filename)
+            for filename in filenames:
+                src_path = os.path.join (dirpath, filename)
 
-                    mime = guess_mime (filename)
-                    if mime and is_text (mime):
+                mime = guess_mime (filename)
+                with app.test_request_context ():
+                    text = mime and is_text (mime)
 
-                        with open (src_path, 'r') as src_file:
-                            src_text = src_file.read ()
-                        with open (src_path, 'w') as src_file:
-                            src_file.write (src_text.replace ('\n', '\r\n'))
+                if text:
+                    with open (src_path, 'r') as src_file:
+                        src_text = src_file.read ()
+                    with open (src_path, 'w') as src_file:
+                        src_file.write (src_text.replace ('\n', '\r\n'))
 
-                    rel_path = os.path.relpath (dirpath, self.build_path)
-                    zip_path = os.path.join (title, 'html', rel_path, filename)
-                    zip_buffer.write (src_path, zip_path)
+                rel_path = os.path.relpath (dirpath, self.build_path)
+                zip_path = os.path.join (title, 'html', rel_path, filename)
+                zip_buffer.write (src_path, zip_path)
 
 ###############################################################################
 ###############################################################################
@@ -324,10 +326,43 @@ class LatexConverter (Converter):
         self.latex_backend = latex_backend
 
     def translate (self):
-        pass
+
+        with open (self.stdout_path, 'w') as stdout:
+            with open (self.stderr_path, 'w') as stderr:
+                check_call (['make', '-C', self.target_path, 'latex'],
+                            stdout=stdout, stderr=stderr)
+
+        # shutil.copy (
+        #     os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
+        #     os.path.join (latex_dir, 'sphinxhowto.cls'))
+        # shutil.copy (
+        #     os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
+        #     os.path.join (latex_dir, 'sphinxmanual.cls'))
+        # shutil.copy (
+        #     os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
+        #     os.path.join (latex_dir, 'Makefile'))
 
     def fill_buffer (self, zip_buffer, title):
-        pass
+
+        for dirpath, dirnames, filenames in os.walk (self.build_path):
+
+            for filename in filenames:
+                if re.match (r'pdf$', filename, re.IGNORECASE): continue
+                src_path = os.path.join (dirpath, filename)
+
+                mime = guess_mime (filename)
+                with app.test_request_context ():
+                    text = mime and is_text (mime)
+
+                if text:
+                    with open (src_path, 'r') as src_file:
+                        src_text = src_file.read ()
+                    with open (src_path, 'w') as src_file:
+                        src_file.write (src_text.replace ('\n', '\r\n'))
+
+                rel_path = os.path.relpath (dirpath, self.build_path)
+                zip_path = os.path.join (title, 'latex', rel_path, filename)
+                zip_buffer.write (src_path, zip_path)
 
 ###############################################################################
 ###############################################################################
