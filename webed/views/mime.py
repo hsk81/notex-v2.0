@@ -7,7 +7,7 @@ from flask import Blueprint
 
 from ..app import app
 from ..ext import std_cache
-from ..util import JSON
+from ..util import jsonify
 
 import re
 
@@ -398,7 +398,7 @@ def mime_info (mime=None, json=True):
         rx = re.compile ('^' + mime + '$')
         results = filter (lambda item: re.match (rx, item['mime']), mimes ())
 
-    return JSON.encode (dict (results=results)) if json else results
+    return jsonify (results=results) if json else results
 
 ###############################################################################
 ###############################################################################
