@@ -13,6 +13,8 @@ from ...util import Q, PickleZlib, jsonify
 from ..io import compress
 
 import uuid
+import zipfile
+import cStringIO as StringIO
 
 ###############################################################################
 ###############################################################################
@@ -192,12 +194,18 @@ class PdfConverter (Converter):
     def _do_data (self, node, prefix='pdf'):
         super (PdfConverter, self)._do_data (node, prefix=prefix)
 
+        str_buffer = StringIO.StringIO (self._data)
+        zip_buffer = zipfile.ZipFile (str_buffer, 'r', zipfile.ZIP_STORED)
+        object_vals = [zip_buffer.read (zi) for zi in zip_buffer.infolist ()
+            if zi.filename.endswith ('pdf')]
+        zip_buffer.close ()
+
+        self._data = object_vals.pop (0)
+
 ###############################################################################
 ###############################################################################
 
-class TimeoutError (Exception):
-
-    pass
+class TimeoutError (Exception): pass
 
 ###############################################################################
 ###############################################################################

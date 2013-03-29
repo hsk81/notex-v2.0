@@ -14,13 +14,12 @@ from ..mime import is_text
 from ..io import extract, guess_mime
 from .yaml2py import yaml2py
 
-import re
 import os
 import zmq
 import shutil
 import zipfile
-import StringIO
 import tempfile
+import cStringIO as StringIO
 
 ###############################################################################
 ###############################################################################
@@ -208,6 +207,9 @@ class Worker (Thread):
             if yaml_path:
                 break
 
+        if latex_backend not in ['xelatex', 'pdflatex']:
+            latex_backend = 'xelatex' ## security!
+
         ## --------------------------------------------------------------------
         ## Invoke PDF, LaTex or HTML conversion & ZIP package result
         ## --------------------------------------------------------------------
@@ -216,7 +218,7 @@ class Worker (Thread):
             converter = HtmlConverter (target_path)
             converter.translate ()
 
-        elif 'latex':
+        elif prefix == 'latex':
             converter = LatexConverter (target_path, latex_backend)
             converter.translate (source_path)
 
@@ -224,7 +226,7 @@ class Worker (Thread):
             converter = LatexConverter (target_path, latex_backend)
             converter.translate (source_path)
             converter = PdfConverter (target_path, latex_backend)
-            converter.translate ()
+            converter.translate (source_path)
 
         payload = converter.pack (title)
 
@@ -254,7 +256,7 @@ class Converter (object):
         self.stderr_path = os.path.join (self.target_path, 'stderr.log')
 
     @abstractmethod
-    def translate (self, source_path=None):
+    def translate (self, source_path):
         pass
 
     def pack (self, title):
@@ -285,29 +287,28 @@ class HtmlConverter (Converter):
 
     def translate (self, source_path=None):
 
+        args = ['make', '-C', self.target_path, 'html']
+
         with open (self.stdout_path, 'w') as stdout:
             with open (self.stderr_path, 'w') as stderr:
-                check_call (['make', '-C', self.target_path, 'html'],
-                    stdout=stdout, stderr=stderr)
+                check_call (args, stdout=stdout, stderr=stderr)
 
     def fill_buffer (self, zip_buffer, title):
 
-        for dirpath, dirnames, filenames in os.walk (self.build_path):
-
-            for filename in filenames:
-                src_path = os.path.join (dirpath, filename)
+        for path, dns, fns in os.walk (self.build_path):
+            for filename in fns:
+                src_path = os.path.join (path, filename)
 
                 mime = guess_mime (filename)
                 with app.test_request_context ():
                     text = mime and is_text (mime)
-
                 if text:
                     with open (src_path, 'r') as src_file:
                         src_text = src_file.read ()
                     with open (src_path, 'w') as src_file:
                         src_file.write (src_text.replace ('\n', '\r\n'))
 
-                rel_path = os.path.relpath (dirpath, self.build_path)
+                rel_path = os.path.relpath (path, self.build_path)
                 zip_path = os.path.join (title, 'html', rel_path, filename)
                 zip_buffer.write (src_path, zip_path)
 
@@ -325,14 +326,13 @@ class LatexConverter (Converter):
         super (LatexConverter, self).__init__ (target_path)
         self.latex_backend = latex_backend
 
-    def translate (self, source_path=None):
+    def translate (self, source_path):
+
+        args = ['make', '-C', self.target_path, 'latex']
 
         with open (self.stdout_path, 'w') as stdout:
             with open (self.stderr_path, 'w') as stderr:
-                check_call (['make', '-C', self.target_path, 'latex'],
-                    stdout=stdout, stderr=stderr)
-
-        assert source_path
+                check_call (args, stdout=stdout, stderr=stderr)
 
         shutil.copy (
             os.path.join (source_path, 'build', 'latex', 'sphinxhowto.cls'),
@@ -348,23 +348,20 @@ class LatexConverter (Converter):
 
     def fill_buffer (self, zip_buffer, title):
 
-        for dirpath, dirnames, filenames in os.walk (self.build_path):
-
-            for filename in filenames:
-                if re.match (r'pdf$', filename, re.IGNORECASE): continue
-                src_path = os.path.join (dirpath, filename)
+        for path, dns, fns in os.walk (self.build_path):
+            for filename in filter (lambda fn: not fn.endswith ('pdf'), fns):
+                src_path = os.path.join (path, filename)
 
                 mime = guess_mime (filename)
                 with app.test_request_context ():
                     text = mime and is_text (mime)
-
                 if text:
                     with open (src_path, 'r') as src_file:
                         src_text = src_file.read ()
                     with open (src_path, 'w') as src_file:
                         src_file.write (src_text.replace ('\n', '\r\n'))
 
-                rel_path = os.path.relpath (dirpath, self.build_path)
+                rel_path = os.path.relpath (path, self.build_path)
                 zip_path = os.path.join (title, 'latex', rel_path, filename)
                 zip_buffer.write (src_path, zip_path)
 
@@ -375,18 +372,31 @@ class PdfConverter (Converter):
 
     @property
     def build_path (self):
-        return os.path.join (self.target_path, 'build', 'pdf')
+        return os.path.join (self.target_path, 'build', 'latex')
 
     def __init__ (self, target_path, latex_backend):
 
         super (PdfConverter, self).__init__ (target_path)
         self.latex_backend = latex_backend
 
-    def translate (self, source_path=None):
-        pass
+    def translate (self, source_path):
+
+        LATEXEXEC = 'LATEXEXEC=%s' % self.latex_backend
+        LATEXOPTS = 'LATEXOPTS=%s' % '-no-shell-escape -halt-on-error'
+        args = ['make', '-C', self.build_path, 'all-pdf', LATEXEXEC, LATEXOPTS]
+
+        with open (self.stdout_path, 'w') as stdout:
+            with open (self.stderr_path, 'w') as stderr:
+                check_call (args, stdout=stdout, stderr=stderr)
 
     def fill_buffer (self, zip_buffer, title):
-        pass
+
+        for path, dns, fns in os.walk (self.build_path):
+            for filename in filter (lambda fn: fn.endswith ('pdf'), fns):
+
+                src_path = os.path.join (path, filename)
+                zip_path = os.path.join (title, 'pdf', '%s.pdf' % title)
+                zip_buffer.write (src_path, zip_path)
 
 ###############################################################################
 ###############################################################################
