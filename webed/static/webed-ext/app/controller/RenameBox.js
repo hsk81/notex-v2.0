@@ -90,13 +90,20 @@ Ext.define ('Webed.controller.RenameBox', {
             }
         }
 
-        var fullname = assert (record.get ('name'));
-        var array = assert (fullname.split ('.'));
+        var value = assert (textfield.getValue ());
+
+        var name = assert (record.get ('name'));
+        var array = assert (name.split ('.'));
         var ext = assert (array.pop ());
+        var name_new = value + '.' + ext;
+
+        var name_path = assert (record.get ('name_path'));
+        var name_path_new = name_path.slice (0,-1);
+        name_path_new.push (name_new);
 
         application.fireEvent ('update_node', {
             scope: this, callback: callback, node: record, to: {
-                name: textfield.getValue () + '.' + ext
+                name: name_new, name_path: name_path_new
             }
         });
 

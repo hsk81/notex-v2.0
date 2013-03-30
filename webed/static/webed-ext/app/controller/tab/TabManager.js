@@ -311,36 +311,39 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
         var uuid = assert (args.record.get ('uuid'));
         var name = assert (args.record.get ('name'));
-        var tab = this.get_tab (uuid);
-        if (tab) tab.setTitle (name);
+        this.get_tabs (uuid).forEach (function (tab) {
+            tab.setTitle (name);
+        });
     },
 
     delete_tab: function (source, args) {
         if (source == this) return;
 
         var uuid = assert (args.record.get ('uuid'));
-        var tab = this.get_tab (uuid);
-        if (tab) tab.close ();
+        this.get_tabs (uuid).forEach (function (tab) {
+            tab.close ();
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     get_tab: function (uuid) {
-        assert (uuid);
+        var tabs = this.get_tabs (uuid);
+        var result = null;
 
-        var viewport = assert (this.getViewport ());
-        var tab_managers = assert (viewport.query ('tab-manager'));
+        Ext.Array.each (tabs, function (tab) {
+            var tab_manager = assert (tab.up ('tab-manager'));
+            if (tab_manager.focused) result = tab;
+            return result == null;
+        });
 
-        for (var index=0; index<tab_managers.length; index++) {
-            var tab_manager = assert (tab_managers[index]);
-            var tabs = tab_manager.queryBy (function (el) {
-                return Boolean (el.record && el.record.get ('uuid') == uuid);
-            }, this);
+        return (result) ? result : tabs.pop ();
+    },
 
-            if (tabs.length > 0) return tabs[0];
-        }
-
-        return null;
+    get_tabs: function (uuid) {
+        return assert (this.getViewport ()).queryBy (function (el) {
+            return Boolean (el.record && el.record.get ('uuid') == uuid);
+        }, this);
     }
 });
