@@ -4,8 +4,8 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    models: ['Leaf'],
-    stores: ['Leafs'],
+    models: ['Leaf', 'MIME'],
+    stores: ['Leafs', 'MIMEs'],
 
     refs: [{
         selector: 'leaf-list', ref: 'leafList'
@@ -22,6 +22,7 @@ Ext.define ('Webed.controller.LeafList', {
             'leaf-list': {
                 afterrender: this.afterrender,
                 itemclick: this.itemclick,
+                beforeexpand: this.beforeexpand,
                 expand: this.expand
             }
         });
@@ -54,6 +55,10 @@ Ext.define ('Webed.controller.LeafList', {
     itemclick: function (self, record) {
         this.application.fireEvent ('create_tab', this, {record: record});
         this.application.fireEvent ('select_node', this, {record: record});
+    },
+
+    beforeexpand: function () {
+        return (assert (this.getMIMEsStore ()).getTotalCount () > 0);
     },
 
     expand: function () {

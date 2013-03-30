@@ -357,7 +357,7 @@ def mimes ():
         'mime': 'application/folder',
         'icon': 'icon-folder'
     }, {
-        'name': 'Default',
+        'name': 'Generic',
         'mime': 'application/project',
         'icon': 'icon-report',
         'main': 'text/plain'

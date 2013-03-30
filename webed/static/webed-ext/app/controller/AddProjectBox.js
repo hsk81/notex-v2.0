@@ -49,10 +49,34 @@ Ext.define ('Webed.controller.AddProjectBox', {
         if (!combobox.isValid ()) return;
         var mime = assert (combobox.getValue ());
 
+        if (mime == 'application/project+rest') {
+            box.close ();
+            box = Ext.create ('Webed.view.AddRestProjectBox', {project: name});
+            box.show ();
+            return;
+        }
+
+        var url = Ext.String.format ('/setup-project/?name={0}&mime={1}',
+            encodeURIComponent (name), encodeURIComponent (mime)
+        );
+
+        Ext.Ajax.request ({
+            url: url, scope: this, callback: function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText);
+                    if (res.success) onSuccess (xhr, opts);
+                    else onFailure (xhr, opts);
+                } else {
+                    onFailure (xhr, opts);
+                }
+            }
+        });
+
         function onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText);
-            assert (res.mime);
             assert (res.nodes && res.nodes.length > 0);
+            assert (res.mime);
+
             var node = assert (res.nodes[0]);
 
             function callback (recs, op) {
@@ -77,22 +101,6 @@ Ext.define ('Webed.controller.AddProjectBox', {
         function onFailure (xhr, opts) {
             console.error ('[AddProjectBox.confirm]', xhr, opts);
         }
-
-        var url = Ext.String.format ('/setup-project/?name={0}&mime={1}',
-            encodeURIComponent (name), encodeURIComponent (mime)
-        );
-
-        Ext.Ajax.request ({
-            url: url, scope: this, callback: function (opts, status, xhr) {
-                if (status) {
-                    var res = Ext.decode (xhr.responseText);
-                    if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts);
-                } else {
-                    onFailure (xhr, opts);
-                }
-            }
-        });
 
         box.close ();
     },

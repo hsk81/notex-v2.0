@@ -31,7 +31,7 @@ Ext.define ('Webed.view.AddProjectBox', {
             emptyText: 'Select type ..',
             name: 'mime',
             style: 'margin: 0;',
-            value: 'application/project',
+            value: 'application/project+rest',
             width: '100%',
             xtype: 'add-project-box-mime'
         }]

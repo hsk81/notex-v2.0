@@ -9,6 +9,10 @@ Ext.define ('Webed.controller.NodeTree', {
 
     refs: [{
         selector: 'node-tree', ref: 'nodeTree'
+    },{
+        selector: 'main-toolbar', ref: 'mainToolbar'
+    },{
+        selector: 'webed-statusbar', ref: 'statusbar'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -99,6 +103,16 @@ Ext.define ('Webed.controller.NodeTree', {
                     }
                 }
             });
+
+            var toolbar = assert (this.getMainToolbar ());
+            toolbar.getEl ().hide ();
+            toolbar.show ();
+            toolbar.getEl ().slideIn ('t');
+
+            var statusbar = assert (this.getStatusbar ());
+            statusbar.getEl ().hide ();
+            statusbar.show ();
+            statusbar.getEl ().slideIn ('b');
         }
     },
 

@@ -8,6 +8,7 @@ Ext.define ('Webed.toolbar.MainToolbar', {
         'Webed.view.AddFileBox',
         'Webed.view.AddFolderBox',
         'Webed.view.AddProjectBox',
+        'Webed.view.AddRestProjectBox',
         'Webed.view.DeleteBox',
         'Webed.view.RenameBox',
         'Webed.view.UploadBox'
@@ -122,5 +123,7 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             action: 'export-project-as-latex'
         }]
 
-    }]
+    }],
+
+    hidden: true
 });
