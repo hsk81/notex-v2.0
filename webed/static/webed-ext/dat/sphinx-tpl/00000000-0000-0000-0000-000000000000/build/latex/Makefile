@@ -26,4 +26,3 @@ clean:
 	rm -f *.dvi *.log *.ind *.aux *.toc *.syn *.idx *.out *.ilg *.pla
 
 .PHONY: all all-pdf all-dvi all-ps clean
-
