@@ -30,17 +30,17 @@ class Leaf (Node):
 ###############################################################################
 
 Node.leafs = db.orm.relationship (Leaf, cascade='all, delete-orphan',
-    lazy='dynamic', primaryjoin=Node.id==Leaf.root_id)
+    lazy='dynamic', primaryjoin=Node.id == Leaf.root_id)
 
 Node.subleafs = db.orm.relationship (Leaf, cascade='all, delete-orphan',
-    lazy='dynamic', primaryjoin=Node.id==Leaf.base_id)
+    lazy='dynamic', primaryjoin=Node.id == Leaf.base_id)
 
 Node.not_leafs = property (lambda self: self.nodes
-    .outerjoin (Leaf, Node.id==Leaf.leaf_id)
+    .outerjoin (Leaf, Node.id == Leaf.leaf_id)
     .filter_by (leaf_id=None).back ())
 
 Node.not_subleafs = property (lambda self: self.subnodes
-    .outerjoin (Leaf, Node.id==Leaf.leaf_id)
+    .outerjoin (Leaf, Node.id == Leaf.leaf_id)
     .filter_by (leaf_id=None).back ())
 
 ###############################################################################
