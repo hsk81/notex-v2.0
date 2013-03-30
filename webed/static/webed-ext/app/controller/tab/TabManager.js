@@ -1,17 +1,17 @@
 Ext.define ('Webed.controller.tab.TabManager', {
     extend: 'Ext.app.Controller',
 
-    refs: [{
-        selector: 'viewport', ref: 'viewport'
-    },{
-        selector: 'tab-manager', ref: 'tabManager'
-    }],
-
     requires: [
         'Webed.form.field.CodeArea',
         'Webed.panel.ImageViewer',
         'Webed.panel.TextEditor'
     ],
+
+    refs: [{
+        selector: 'viewport', ref: 'viewport'
+    },{
+        selector: 'tab-manager', ref: 'tabManager'
+    }],
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var tab_managers = assert (viewport.query ('tab-manager'));
 
         tab_managers.forEach (function (tab_manager) {
-            if (self != tab_manager) tab_manager.focused = false;
+            if (self != tab_manager) tab_manager.setFocused (false);
         });
 
         var active_tab = assert (self.getActiveTab ());
@@ -100,7 +100,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
             record: assert (active_tab.record)
         });
 
-        self.focused = true;
+        self.setFocused (true);
     },
 
     beforeclose: function (component) {

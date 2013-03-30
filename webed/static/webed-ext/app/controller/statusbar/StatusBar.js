@@ -6,6 +6,8 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
     ],
 
     refs: [{
+        selector: 'viewport', ref: 'viewport'
+    },{
         selector: 'webed-statusbar-progressbar', ref: 'progressBar'
     },{
         selector: 'webed-statusbar-infobutton', ref: 'infoButton'
@@ -15,8 +17,6 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         selector: 'webed-statusbar-zoomslider', ref: 'zoomSlider'
     },{
         selector: 'webed-statusbar', ref: 'statusBar'
-    },{
-        selector: 'tab-manager[focused=true]', ref: 'tabManager'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -174,6 +174,13 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         var progressBar = assert (this.getProgressBar ());
         progressBar.reset (true);
         progressBar.setTotal (0);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    getTabManager: function () {
+        return assert (this.getViewport ().down ('tab-manager[focused=true]'));
     }
 
     ///////////////////////////////////////////////////////////////////////////
