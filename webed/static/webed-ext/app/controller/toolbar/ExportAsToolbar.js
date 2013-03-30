@@ -71,7 +71,9 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             return;
         }
 
-        button.disable ();
+        button.up ('panel').query ('button').forEach (function (item) {
+            item.disable ();
+        });
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
@@ -134,7 +136,9 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 }
 
                 application.fireEvent ('progress-stop', this);
-                button.enable ();
+                button.up ('panel').query ('button').forEach (function (item) {
+                    item.enable ();
+                });
             }
         });
     }
