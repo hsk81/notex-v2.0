@@ -55,7 +55,7 @@ def do_walk (self, field, path=''):
     yield path, nodes, leafs
 
     for node in nodes:
-        node.walk (field=field, path=path)
+        yield do_walk (node, field=field, path=path).next ()
 
 Node.walk = do_walk
 

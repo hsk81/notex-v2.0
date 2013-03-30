@@ -88,6 +88,45 @@ class ModelsTestCase (BaseTestCase):
         leaf = Leaf.query.get (leaf.id)
         self.assertIsNone (leaf)
 
+    def test_walking (self):
+
+        node_l0 = Node ('node-l0', root=None)
+        db.session.add (node_l0)
+        leaf_l0 = Leaf ('leaf-l0', root=node_l0)
+        db.session.add (leaf_l0)
+
+        node_l1 = Node ('node-l1', root=node_l0)
+        db.session.add (node_l1)
+        leaf_l10 = Leaf ('leaf-l10', root=node_l1)
+        db.session.add (leaf_l10)
+        node_l10 = Node ('node-l10', root=node_l1)
+        db.session.add (node_l10)
+        leaf_l11 = Leaf ('leaf-l11', root=node_l1)
+        db.session.add (leaf_l11)
+        node_l11 = Node ('node-l11', root=node_l1)
+        db.session.add (node_l11)
+
+        node_l2 = Node ('node-l2', root=node_l0)
+        db.session.add (node_l2)
+        leaf_l20 = Leaf ('leaf-l20', root=node_l2)
+        db.session.add (leaf_l20)
+        node_l20 = Node ('node-l20', root=node_l2)
+        db.session.add (node_l20)
+        leaf_l21 = Leaf ('leaf-l21', root=node_l2)
+        db.session.add (leaf_l21)
+        node_l21 = Node ('node-l21', root=node_l2)
+        db.session.add (node_l21)
+
+        db.commit ()
+
+        for path, nodes, leafs in node_l0.walk ('name'):
+
+            self.assertIsNotNone (path)
+            self.assertIsNotNone (nodes)
+            self.assertGreater (len (nodes), 0)
+            self.assertIsNotNone (leafs)
+            self.assertGreater (len (leafs), 0)
+
 ###############################################################################
 ###############################################################################
 
