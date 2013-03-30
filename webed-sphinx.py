@@ -144,10 +144,15 @@ class ZmqQueueThread (ZmqQueue):
         backend_address = kwargs['backend-address']
         assert backend_address
 
-        device = ThreadDevice (zmq.QUEUE, zmq.REP, zmq.REQ)
+        device = ThreadDevice (zmq.QUEUE, zmq.ROUTER, zmq.DEALER)
         device.bind_in (frontend_address)
         device.bind_out (backend_address)
         device.start ()
+
+manager.add_command ('zmq-queue', ZmqQueue ())
+
+###############################################################################
+###############################################################################
 
 class PingQueue (ZmqQueue):
     """Ping Queue: Connects frontend clients with backend services"""
