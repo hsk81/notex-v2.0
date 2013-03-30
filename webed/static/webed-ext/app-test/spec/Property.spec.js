@@ -12,6 +12,12 @@ describe ('PropertyController', function () {
     beforeEach (function () {
         if (!controller) controller = window.app.getController ('Property');
         expect (controller).toBeTruthy (); controller.init ();
+
+        var MIMEs = window.app.getStore ('MIMEs');
+        expect (MIMEs).toBeTruthy ();
+        MIMEs.load ({scope: this, callback: function (recs, op, success) {
+            expect (success).toBeTruthy ();
+        }});
     });
 
     afterEach (function () {

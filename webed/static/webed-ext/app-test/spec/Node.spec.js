@@ -12,6 +12,12 @@ describe ('NodeController', function () {
     beforeEach (function () {
         if (!controller) controller = window.app.getController ('Node');
         expect (controller).toBeTruthy (); controller.init ();
+
+        var MIMEs = window.app.getStore ('MIMEs');
+        expect (MIMEs).toBeTruthy ();
+        MIMEs.load ({scope: this, callback: function (recs, op, success) {
+            expect (success).toBeTruthy ();
+        }});
     });
 
     afterEach (function () {

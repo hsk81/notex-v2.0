@@ -32,6 +32,12 @@ describe ('NodeTree', function () {
         if (!leaf_ctrl) leaf_ctrl = window.app.getController ('Leaf');
         expect (leaf_ctrl).toBeTruthy (); leaf_ctrl.init ();
 
+        var MIMEs = window.app.getStore ('MIMEs');
+        expect (MIMEs).toBeTruthy ();
+        MIMEs.load ({scope: this, callback: function (recs, op, success) {
+            expect (success).toBeTruthy ();
+        }});
+
         if (!store) store = window.app.getStore ('Nodes');
         expect (store).toBeTruthy ();
         store.loadLock.clear ();
