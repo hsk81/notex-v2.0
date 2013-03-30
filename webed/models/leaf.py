@@ -47,6 +47,9 @@ Node.not_subleafs = property (lambda self: self.subnodes
 
 def do_walk (self, field, path=''):
 
+    if self not in db.session:
+        self = db.session.query (type (self)).get (self.id)
+
     path = os.path.join (path, getattr (self, field))
     path = os.path.normpath (path)
     nodes = self.not_leafs.all ()
