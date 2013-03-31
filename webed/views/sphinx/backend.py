@@ -235,7 +235,7 @@ class Worker (Thread):
         ## --------------------------------------------------------------------
 
         if not app.dev:
-            shutil.rmtree (source_path, ignore_errors=True)
+            shutil.rmtree (target_path, ignore_errors=True)
 
         return payload
 
