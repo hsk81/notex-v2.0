@@ -33,7 +33,6 @@ def setup_rest_project (json=True):
 
     path = os.path.join ('tpl', '[application!project+rest].zip')
     path = os.path.join (archive_path, path)
-    path = os.path.abspath (path)
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
@@ -67,7 +66,6 @@ def setup_latex_project (json=True):
 
     path = os.path.join ('tpl', '[application!project+latex].zip')
     path = os.path.join (archive_path, path)
-    path = os.path.abspath (path)
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
@@ -101,7 +99,6 @@ def setup_generic_project (json=True):
 
     path = os.path.join ('tpl', '[application!project].zip')
     path = os.path.join (archive_path, path)
-    path = os.path.abspath (path)
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
