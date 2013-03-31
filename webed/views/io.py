@@ -248,6 +248,10 @@ def create_bin (name, root, mime, path=None, file=None):
 @io.route ('/archive-download/', methods=['GET', 'POST'])
 def archive_download (chunk_size=256 * 1024):
 
+    ##
+    ## TODO: Bypass flask & use nginx directly!? Test!
+    ##
+
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -333,6 +337,10 @@ def compress (root, crlf=True):
 
 @io.route ('/dictionaries/<filename>', methods=['GET'])
 def dictionary_download (filename, chunk_size=256 * 1024):
+
+    ##
+    ## TODO: Bypass flask & use nginx directly!? Test!
+    ##
 
     path = os.path.join (app.config['TYPO_DICT_PATH'], filename)
     assert os.path.exists (path)
