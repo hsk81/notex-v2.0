@@ -60,12 +60,16 @@ Ext.define ('Webed.controller.RenameBox', {
         var box = assert (this.getRenameBox ());
         var record = assert (box.getRecord ());
         var textfield = assert (box.down ('textfield'));
+        var name = assert (record.get ('name'));
 
-        var fullname = assert (record.get ('name'));
-        var array = assert (fullname.split ('.'));
-        assert (array.pop ()); // extension
-
-        textfield.setValue (array.join ('.'));
+        if (record instanceof Webed.model.Leaf ||
+            record instanceof Webed.model.Node && record.isLeaf ()) {
+            var array = assert (name.split ('.'));
+            assert (array.pop ()); // extension
+            textfield.setValue (array.join ('.'));
+        } else {
+            textfield.setValue (name);
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -91,11 +95,17 @@ Ext.define ('Webed.controller.RenameBox', {
         }
 
         var value = assert (textfield.getValue ());
-
         var name = assert (record.get ('name'));
-        var array = assert (name.split ('.'));
-        var ext = assert (array.pop ());
-        var name_new = value + '.' + ext;
+        var name_new = null;
+
+        if (record instanceof Webed.model.Leaf ||
+            record instanceof Webed.model.Node && record.isLeaf ()) {
+            var array = assert (name.split ('.'));
+            var ext = assert (array.pop ());
+            name_new = value + '.' + ext;
+        } else {
+            name_new = value;
+        }
 
         var name_path = assert (record.get ('name_path'));
         var name_path_new = name_path.slice (0,-1);
