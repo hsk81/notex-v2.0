@@ -38,6 +38,10 @@ def rest_to_pdf ():
 
 def rest_to (ext, converter_cls, chunk_size=256 * 1024):
 
+    ##
+    ## TODO: Flask & Nginx together don't like this code .. fix!
+    ##
+
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)

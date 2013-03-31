@@ -8,11 +8,9 @@ Ext.define ('Webed.controller.NodeTree', {
     stores: ['Nodes', 'MIMEs'],
 
     refs: [{
+        selector: 'viewport', ref: 'viewport'
+    },{
         selector: 'node-tree', ref: 'nodeTree'
-    },{
-        selector: 'main-toolbar', ref: 'mainToolbar'
-    },{
-        selector: 'webed-statusbar', ref: 'statusbar'
     }],
 
     ///////////////////////////////////////////////////////////////////////////
@@ -88,6 +86,7 @@ Ext.define ('Webed.controller.NodeTree', {
     expand: function () {
         var view = assert (this.getNodeTree ());
         var root = assert (view.getRootNode ());
+
         if (!root.get ('loaded')) {
             view.setLoading ('Loading ..');
             assert (this.getMIMEsStore ()).load ({
@@ -103,16 +102,33 @@ Ext.define ('Webed.controller.NodeTree', {
                     }
                 }
             });
+        }
 
-            var toolbar = assert (this.getMainToolbar ());
+        if (!root.get ('loaded')) {
+            var viewport = assert (this.getViewport ());
+            var hbox = assert (viewport.down ('panel[name=hbox]'));
+
+            var toolbar = assert (hbox.addDocked ({
+                xtype: 'main-toolbar',
+                dock: 'top'
+            }).pop ());
+
             toolbar.getEl ().hide ();
             toolbar.show ();
-            toolbar.getEl ().slideIn ('t');
+            toolbar.getEl ().slideIn ('t', {
+                easing: 'easeIn'
+            });
 
-            var statusbar = assert (this.getStatusbar ());
+            var statusbar = assert (hbox.addDocked ({
+                xtype: 'webed-statusbar',
+                dock: 'bottom'
+            }).pop ());
+
             statusbar.getEl ().hide ();
             statusbar.show ();
-            statusbar.getEl ().slideIn ('b');
+            statusbar.getEl ().slideIn ('b', {
+                easing: 'easeIn'
+            });
         }
     },
 
@@ -391,9 +407,7 @@ Ext.define ('Webed.controller.NodeTree', {
         function on_get (record) {
             assert (record);
 
-            var record = record.removeAll (false);
-            assert (record);
-
+            record.removeAll (false);
             record.destroy ({
                 scope: this, callback: function (rec, op) {
                     if (args.callback && args.callback.call) {

@@ -75,10 +75,7 @@ Ext.define ('Webed.view.Viewport', {
                     tabPosition: 'bottom',
                     flex: 1
                 }]
-            }],
-
-            tbar: {xtype: 'main-toolbar' },
-            bbar: {xtype: 'webed-statusbar'}
+            }]
         }]
     }],
 
