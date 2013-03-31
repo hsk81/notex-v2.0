@@ -31,7 +31,13 @@ def setup_rest_project (json=True):
     mime = request.args.get ('mime')
     assert mime == 'application/project+rest'
 
-    path = os.path.join ('tpl', '[application!project+rest].zip')
+    document_type = request.args.get ('documentType')
+    assert document_type in ['article', 'report']
+    latex_backend = request.args.get ('latexBackend')
+    assert latex_backend in ['xelatex', 'pdflatex']
+
+    path = os.path.join ('tpl', '[application!project+rest].{%s,%s}.zip')
+    path = path % (document_type, latex_backend)
     path = os.path.join (archive_path, path)
 
     with open (path) as stream:

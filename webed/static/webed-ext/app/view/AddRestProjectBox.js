@@ -17,7 +17,7 @@ Ext.define ('Webed.view.AddRestProjectBox', {
     config: {
         project: 'PROJECT',
         authors: 'AUTHORs',
-        documentType: 'Article',
+        documentType: 'article',
         fontSize: '12pt',
         noColumns: 2,
         titleFlag: true,
@@ -58,7 +58,7 @@ Ext.define ('Webed.view.AddRestProjectBox', {
                 xtype: 'combo',
                 name: 'document',
                 allowBlank: false,
-                store: ['Article', 'Report'],
+                store: ['article', 'report'],
                 queryMode: 'local',
                 editable: false
             },
