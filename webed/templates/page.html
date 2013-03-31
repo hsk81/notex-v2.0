@@ -1,31 +1,31 @@
 <div id="page-wrap">
-    <div id="page-wrap-content">
-        <div id='cssmenu'>
-            <ul>
-                <li active="{{ page == 'home' }}">
-                    <a href="{{ url_for('.home') }}"><span>Home</span></a>
-                </li>
-                <li active="{{ page == 'overview' }}">
-                    <a href="{{ url_for('.overview') }}"><span>WebEd</span></a>
-                </li>
-                <li active="{{ page == 'tutorial' }}">
-                    <a href="{{ url_for('.tutorial') }}"><span>Tutorial</span></a>
-                </li>
-                <li active="{{ page == 'faq' }}">
-                    <a href="{{ url_for('.faq') }}"><span>FAQ</span></a>
-                </li>
-                <li active="{{ page == 'contact' }}" style="float: right;">
-                    <a href="{{ url_for('.contact') }}"><span>Contact</span></a>
-                </li>
-            </ul>
-        </div>
-
-        {% if page == 'home' %}
-            {% include 'home-page.html' %}
-        {% elif page == 'contact' %}
-            {% include 'contact-page.html' %}
-        {% else %}
-            {% include 'generic-page.html' %}
-        {% endif %}
+<div id="page-wrap-content">
+    <div id='cssmenu'>
+        <ul>
+        <li active="{{ page == 'home' }}">
+        <a href="{{ url_for('.home', theme=theme) }}"><span>Home</span></a>
+        </li>
+        <li active="{{ page == 'overview' }}">
+        <a href="{{ url_for('.overview', theme=theme) }}"><span>WebEd</span></a>
+        </li>
+        <li active="{{ page == 'tutorial' }}">
+        <a href="{{ url_for('.tutorial', theme=theme) }}"><span>Tutorial</span></a>
+        </li>
+        <li active="{{ page == 'faq' }}">
+        <a href="{{ url_for('.faq', theme=theme) }}"><span>FAQ</span></a>
+        </li>
+        <li active="{{ page == 'contact' }}" style="float: right;">
+        <a href="{{ url_for('.contact', theme=theme) }}"><span>Contact</span></a>
+        </li>
+        </ul>
     </div>
+
+    {% if page == 'home' %}
+        {% include 'home-page.html' %}
+    {% elif page == 'contact' %}
+        {% include 'contact-page.html' %}
+    {% else %}
+        {% include 'generic-page.html' %}
+    {% endif %}
+</div>
 </div>
