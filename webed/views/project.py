@@ -23,22 +23,22 @@ project = Blueprint ('project', __name__)
 ###############################################################################
 
 @project.route ('/setup-rest-project/', methods=['GET', 'POST'])
-@db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def setup_rest_project (conf=None, skip_commit=None, json=True):
+@db.commit ()
+def setup_rest_project (json=True):
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
-    mime = get_for ('mime', conf)
-    assert mime
+    mime = request.args.get ('mime')
+    assert mime == 'application/project+rest'
 
-    path = os.path.join ('tpl', 'project-rest.zip')
-    path_to = os.path.join (archive_path, path)
-    path_to = os.path.abspath (path_to)
+    path = os.path.join ('tpl', '[application!project+rest].zip')
+    path = os.path.join (archive_path, path)
+    path = os.path.abspath (path)
 
-    with open (path_to) as stream:
+    with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (file=fs, skip_commit=True, json=False)
-        for node in result['nodes']: setup_rest (node, conf)
+        for node in result['nodes']: setup_rest (node)
 
     if not json:
         return dict (success=True, mime=mime, nodes=result['nodes'])
@@ -46,37 +46,33 @@ def setup_rest_project (conf=None, skip_commit=None, json=True):
         return jsonify (success=True, mime=mime, nodes=map (
             lambda node: dict (uuid=node.uuid), result['nodes']))
 
+def setup_rest (node):
+
+    name = request.args.get ('name')
+    assert name; node.name = name
+    mime = request.args.get ('mime')
+    assert mime; node.mime = mime
+
 ###############################################################################
 ###############################################################################
 
-@project.route ('/setup-project/', methods=['GET', 'POST'])
-@db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def setup_project (conf=None, skip_commit=None, json=True):
+@project.route ('/setup-latex-project/', methods=['GET', 'POST'])
+@db.commit ()
+def setup_latex_project (json=True):
 
     archive_path = app.config['ARCHIVE_PATH']
     assert archive_path
-    mime = get_for ('mime', conf)
-    assert mime
+    mime = request.args.get ('mime')
+    assert mime == 'application/project+latex'
 
-    if mime == 'application/project+latex':
-        path = os.path.join ('tpl', 'project-latex.zip')
-        setup_details = setup_latex
+    path = os.path.join ('tpl', '[application!project+latex].zip')
+    path = os.path.join (archive_path, path)
+    path = os.path.abspath (path)
 
-    elif mime == 'application/project+rest':
-        path = os.path.join ('tpl', 'project-rest.zip')
-        setup_details = setup_rest
-
-    else:
-        path = os.path.join ('tpl', 'project.zip')
-        setup_details = setup_default
-
-    path_to = os.path.join (archive_path, path)
-    path_to = os.path.abspath (path_to)
-
-    with open (path_to) as stream:
+    with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (file=fs, skip_commit=True, json=False)
-        for node in result['nodes']: setup_details (node, conf)
+        for node in result['nodes']: setup_latex (node)
 
     if not json:
         return dict (success=True, mime=mime, nodes=result['nodes'])
@@ -84,39 +80,46 @@ def setup_project (conf=None, skip_commit=None, json=True):
         return jsonify (success=True, mime=mime, nodes=map (
             lambda node: dict (uuid=node.uuid), result['nodes']))
 
-###############################################################################
-###############################################################################
+def setup_latex (node):
 
-def setup_latex (node, conf=None):
-
-    name = get_for ('name', conf)
+    name = request.args.get ('name')
     assert name; node.name = name
-    mime = get_for ('mime', conf)
-    assert mime; node.mime = mime
-
-def setup_rest (node, conf=None):
-
-    name = get_for ('name', conf)
-    assert name; node.name = name
-    mime = get_for ('mime', conf)
-    assert mime; node.mime = mime
-
-def setup_default (node, conf=None):
-
-    name = get_for ('name', conf)
-    assert name; node.name = name
-    mime = get_for ('mime', conf)
+    mime = request.args.get ('mime')
     assert mime; node.mime = mime
 
 ###############################################################################
 ###############################################################################
 
-def get_for (key, conf, default=None):
+@project.route ('/setup-generic-project/', methods=['GET', 'POST'])
+@db.commit ()
+def setup_generic_project (json=True):
 
-    if conf:
-        return conf[key] if key in conf else default
+    archive_path = app.config['ARCHIVE_PATH']
+    assert archive_path
+    mime = request.args.get ('mime')
+    assert mime == 'application/project'
+
+    path = os.path.join ('tpl', '[application!project].zip')
+    path = os.path.join (archive_path, path)
+    path = os.path.abspath (path)
+
+    with open (path) as stream:
+        fs = FileStorage (stream=stream, filename=path)
+        result = archive_upload (file=fs, skip_commit=True, json=False)
+        for node in result['nodes']: setup_generic (node)
+
+    if not json:
+        return dict (success=True, mime=mime, nodes=result['nodes'])
     else:
-        return request.args.get (key, default)
+        return jsonify (success=True, mime=mime, nodes=map (
+            lambda node: dict (uuid=node.uuid), result['nodes']))
+
+def setup_generic (node):
+
+    name = request.args.get ('name')
+    assert name; node.name = name
+    mime = request.args.get ('mime')
+    assert mime; node.mime = mime
 
 ###############################################################################
 ###############################################################################

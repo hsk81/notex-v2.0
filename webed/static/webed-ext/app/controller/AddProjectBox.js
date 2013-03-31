@@ -23,7 +23,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    blur: function (textfield, event) {
+    blur: function (textfield) {
         if (textfield.autofocus) {
             textfield.focus (true, 25);
             textfield.autofocus = false;
@@ -45,34 +45,54 @@ Ext.define ('Webed.controller.AddProjectBox', {
         var combobox = assert (box.down ('combobox[name=mime]'));
 
         if (!textfield.isValid ()) return;
-        var name = assert (textfield.getValue ());
+        var project = assert (textfield.getValue ());
         if (!combobox.isValid ()) return;
         var mime = assert (combobox.getValue ());
 
-        if (mime == 'application/project+rest') {
-            box.close ();
-            box = Ext.create ('Webed.view.AddRestProjectBox', {project: name});
-            box.show ();
-            return;
+        box.close ();
+
+        switch (mime) {
+            case 'application/project+rest':
+                this.setup_rest_project (project, mime);
+                break;
+            case 'application/project+latex':
+                this.setup_latex_project (project, mime);
+                break;
+            default:
+                this.setup_generic_project (project, mime);
         }
+    },
 
-        var url = Ext.String.format ('/setup-project/?name={0}&mime={1}',
-            encodeURIComponent (name), encodeURIComponent (mime)
-        );
+    cancel: function () {
+        assert (this.getAddProjectBox ()).close ();
+    },
 
-        Ext.Ajax.request ({
-            url: url, scope: this, callback: function (opts, status, xhr) {
-                if (status) {
-                    var res = Ext.decode (xhr.responseText);
-                    if (res.success) onSuccess (xhr, opts);
-                    else onFailure (xhr, opts);
-                } else {
-                    onFailure (xhr, opts);
-                }
-            }
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    setup_rest_project: function (project, mime) {
+        var box = Ext.create ('Webed.view.AddRestProjectBox', {
+            project: project, mime: mime
         });
 
-        function onSuccess (xhr, opts) {
+        box.show ();
+    },
+
+    setup_latex_project: function (project, mime) {
+        this.setup_project ('/setup-latex-project/', project, mime);
+    },
+
+    setup_generic_project: function (project, mime) {
+        this.setup_project ('/setup-generic-project/', project, mime);
+    },
+
+    setup_project: function (url_base, project, mime) {
+        var application = assert (this.application);
+        var url = Ext.String.format (url_base + '?name={0}&mime={1}',
+            encodeURIComponent (project), encodeURIComponent (mime)
+        );
+
+        function onSuccess (xhr) {
             var res = Ext.decode (xhr.responseText);
             assert (res.nodes && res.nodes.length > 0);
             assert (res.mime);
@@ -89,7 +109,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
                     });
                     records[0].expand ();
                 } else {
-                    console.error ('[AddProjectBox.confirm]', recs, op);
+                    console.error ('[AddProjectBox.setup_project]', recs, op);
                 }
             }
 
@@ -99,13 +119,19 @@ Ext.define ('Webed.controller.AddProjectBox', {
         }
 
         function onFailure (xhr, opts) {
-            console.error ('[AddProjectBox.confirm]', xhr, opts);
+            console.error ('[AddProjectBox.setup_project]', xhr, opts);
         }
 
-        box.close ();
-    },
-
-    cancel: function () {
-        assert (this.getAddProjectBox ()).close ();
+        Ext.Ajax.request ({
+            url: url, scope: this, callback: function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText);
+                    if (res.success) onSuccess.call (this, xhr, opts);
+                    else onFailure.call (this, xhr, opts);
+                } else {
+                    onFailure.call (this, xhr, opts);
+                }
+            }
+        });
     }
 });

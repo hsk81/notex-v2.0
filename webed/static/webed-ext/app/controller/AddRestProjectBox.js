@@ -40,9 +40,9 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
         var application = assert (this.application);
         var box = assert (this.getAddRestProjectBox ());
         var grid = assert (box.down ('propertygrid'));
-        var source = assert (grid.getSource ());
-
-        //---------------------------------------------------------------------
+        var source = Ext.apply (grid.getSource (), {
+            mime: assert (box.mime)
+        });
 
         var url = Ext.String.format ('/setup-rest-project/?' +
             'name={0}&' +
@@ -57,7 +57,7 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
             'latexBackend={9}',
 
             encodeURIComponent (source.project),
-            encodeURIComponent ('application/project+rest'),
+            encodeURIComponent (source.mime),
             encodeURIComponent (source.authors),
             encodeURIComponent (source.documentType),
             encodeURIComponent (source.fontSize),
@@ -67,6 +67,36 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
             encodeURIComponent (source.indexFlag),
             encodeURIComponent (source.latexBackend)
         );
+
+        function onSuccess (xhr) {
+            var res = Ext.decode (xhr.responseText);
+            assert (res.nodes && res.nodes.length > 0);
+            assert (res.mime);
+
+            var node = assert (res.nodes[0]);
+
+            function callback (recs, op) {
+                if (op.success) {
+                    var records = recs.filter (function (rec) {
+                        return rec.get ('uuid') == node.uuid;
+                    });
+                    application.fireEvent ('select_node', this, {
+                        record: records[0]
+                    });
+                    records[0].expand ();
+                } else {
+                    console.error ('[AddProjectBox.confirm]', recs, op);
+                }
+            }
+
+            application.fireEvent ('refresh_tree', this, {
+                scope: this, callback: callback
+            });
+        }
+
+        function onFailure (xhr, opts) {
+            console.error ('[AddRestProjectBox.confirm]', xhr, opts);
+        }
 
         Ext.Ajax.request ({
             url: url, scope: this, callback: function (opts, status, xhr) {
@@ -79,36 +109,6 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
                 }
             }
         });
-
-        function onSuccess (xhr) {
-            var res = Ext.decode (xhr.responseText);
-            assert (res.nodes && res.nodes.length > 0);
-            assert (res.mime);
-
-            var node = assert (res.nodes[0]);
-
-            application.fireEvent ('refresh_tree', this, {
-                scope: this, callback: callback
-            });
-
-            function callback (recs, op) {
-                if (op.success) {
-                    var records = recs.filter (function (rec) {
-                        return rec.get ('uuid') == node.uuid;
-                    });
-                    application.fireEvent ('select_node', this, {
-                        record: records[0]
-                    });
-                    records[0].expand ();
-                } else {
-                    console.error ('[AddRestProjectBox.confirm]', recs, op);
-                }
-            }
-        }
-
-        function onFailure (xhr, opts) {
-            console.error ('[AddRestProjectBox.confirm]', xhr, opts);
-        }
 
         box.close ();
     },

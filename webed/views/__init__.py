@@ -17,7 +17,9 @@ from .page import home
 from .page import main
 from .page import overview
 from .page import tutorial
-from .project import setup_project
+from .project import setup_generic_project
+from .project import setup_latex_project
+from .project import setup_rest_project
 from .resource import statusbar_worker
 from .rest import LeafApi
 from .rest import NodeApi
