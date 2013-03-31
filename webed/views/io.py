@@ -9,7 +9,7 @@ from flask.globals import request
 
 from ..app import app
 from ..ext import db, obj_cache, logger
-from ..util import Q, JSON
+from ..util import Q, jsonify
 from ..views import mime as MIME
 
 from ..models import Node
@@ -17,16 +17,14 @@ from ..models import Leaf
 from ..models import TextProperty
 from ..models import Base64Property
 
-import mimetypes; mimetypes.init (app.config['MIMETYPES_PATHS'])
-import subprocess
-import tempfile
-import zipfile
-import base64
-import urllib
-import shutil
-import errno
 import os
 import re
+import errno
+import shutil
+import urllib
+import base64
+import zipfile
+import tempfile
 
 from cStringIO import StringIO
 
@@ -47,7 +45,7 @@ def file_upload ():
 
     file = request.files['file']
     if not file:
-        return JSON.encode (dict (success=False))
+        return jsonify (success=False)
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid
@@ -61,7 +59,7 @@ def file_upload ():
 
     name = secure_filename (file.filename)
     assert name
-    mime = guess_mime (name) or file.mimetype
+    mime = MIME.guess_mime (name) or file.mimetype
     assert mime
 
     @db.nest ()
@@ -81,7 +79,7 @@ def file_upload ():
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
         leaf.base.id, leaf.id)]))
 
-    return JSON.encode (dict (success=True))
+    return jsonify (success=True)
 
 ###############################################################################
 ###############################################################################
@@ -92,12 +90,12 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
     file = file if file else request.files['file']
 
     if not file:
-        return JSON.encode (dict (success=False, filename=None,
-            message='file expected'))
+        return jsonify (success=False, filename=None,
+            message='file expected')
 
     if not file.filename or len (file.filename) == 0:
-        return JSON.encode (dict (success=False, filename=None,
-            message='filename invalid'))
+        return jsonify (success=False, filename=None,
+            message='filename invalid')
 
     if not base:
         base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -108,8 +106,8 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
         zip_file.flush ()
 
         if not zipfile.is_zipfile (zip_file):
-            return JSON.encode (dict (success=False, filename=file.filename,
-                message='ZIP format expected'))
+            return jsonify (success=False, filename=file.filename,
+                message='ZIP format expected')
 
         prj_mime = get_project_mime (file.filename)
         assert prj_mime
@@ -126,15 +124,15 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
     if not json:
         return dict (success=True, filename=file.filename, nodes=nodes)
     else:
-        return JSON.encode (dict (success=True, filename=file.filename,
-            nodes=map (lambda node: dict (uuid=node.uuid), nodes)))
+        return jsonify (success=True, filename=file.filename, nodes=map (
+            lambda node: dict (uuid=node.uuid), nodes))
 
 ###############################################################################
 
 def get_project_mime (filename):
     """
     Returns `mime` which should be encoded in `filename`; if it is *not* then
-    it looks, if the `mime` has been provided as a request argument; otherwise
+    it looks if the `mime` has been provided as a request argument; otherwise
     simply `application/project` is returned.
     """
     try:
@@ -200,7 +198,7 @@ def create_prj (path, base, mime):
             db.session.add (node); lookup[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
-            mime = guess_mime_ex (fn, cur_path)
+            mime = MIME.guess_mime_ex (fn, cur_path)
 
             if MIME.is_text (mime):
                 leaf, _ = create_txt (fn, root, mime, path=cur_path)
@@ -245,27 +243,6 @@ def create_bin (name, root, mime, path=None, file=None):
     return leaf, prop
 
 ###############################################################################
-
-def guess_mime (name):
-
-    mime, _ = mimetypes.guess_type (name)
-    return mime
-
-def guess_mime_ex (name, path):
-
-    mime = guess_mime (name)
-    if not mime:
-        path = os.path.join (path, name)
-        args = ['/usr/bin/file', '-b', '--mime-type', path]
-
-        try:
-            mime = subprocess.check_output (args)
-        except subprocess.CalledProcessError, ex:
-            logger.exception (ex)
-
-    return mime.strip ().lower () if mime else None
-
-###############################################################################
 ###############################################################################
 
 @io.route ('/archive-download/', methods=['GET', 'POST'])
@@ -297,10 +274,10 @@ def archive_download (chunk_size=256 * 1024):
                 'attachment;filename="%s [%s].zip"' % (
                     node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
         else:
-            response = JSON.encode (dict (success=True, name=node.name))
+            response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
-        response = JSON.encode (dict (success=True, name=node.name))
+        response = jsonify (success=True, name=node.name)
         obj_cache.set_value (archive_key, compress (node), expiry=15) ##[s]
 
     return response

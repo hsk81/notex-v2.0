@@ -10,8 +10,8 @@ from subprocess import check_call
 
 from ...app import app
 from ...util import PickleZlib
-from ..mime import is_text
-from ..io import extract, guess_mime
+from ..mime import is_text, guess_mime_ex
+from ..io import extract
 from .yaml2py import yaml2py
 
 import os
@@ -199,7 +199,7 @@ class Worker (Thread):
 
             yaml_path = None
             for filename in filenames:
-                if guess_mime (filename) == 'text/x-yaml':
+                if guess_mime_ex (filename, dirpath) == 'text/x-yaml':
                     yaml_path = os.path.join (dirpath, filename)
                     latex_backend = yaml2py (yaml_path, dirpath)
                     break
@@ -298,8 +298,8 @@ class HtmlConverter (Converter):
         for path, dns, fns in os.walk (self.build_path):
             for filename in fns:
                 src_path = os.path.join (path, filename)
+                mime = guess_mime_ex (filename, path)
 
-                mime = guess_mime (filename)
                 with app.test_request_context ():
                     text = mime and is_text (mime)
                 if text:
@@ -351,8 +351,8 @@ class LatexConverter (Converter):
         for path, dns, fns in os.walk (self.build_path):
             for filename in filter (lambda fn: not fn.endswith ('pdf'), fns):
                 src_path = os.path.join (path, filename)
+                mime = guess_mime_ex (filename, path)
 
-                mime = guess_mime (filename)
                 with app.test_request_context ():
                     text = mime and is_text (mime)
                 if text:

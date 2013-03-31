@@ -80,7 +80,7 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
             }
         });
 
-        function onSuccess (xhr, opts) {
+        function onSuccess (xhr) {
             var res = Ext.decode (xhr.responseText);
             assert (res.nodes && res.nodes.length > 0);
             assert (res.mime);

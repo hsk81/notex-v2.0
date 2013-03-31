@@ -6,15 +6,46 @@ __author__ = 'hsk81'
 from flask import Blueprint
 
 from ..app import app
-from ..ext import std_cache
+from ..ext import std_cache, logger
 from ..util import jsonify
 
+import os
 import re
+import mimetypes
+import subprocess
+
+###############################################################################
+###############################################################################
+
+mimetypes.init (app.config['MIMETYPES_PATHS'])
 
 ###############################################################################
 ###############################################################################
 
 mime = Blueprint ('mime', __name__)
+
+###############################################################################
+###############################################################################
+
+def guess_mime (name):
+
+    mime, _ = mimetypes.guess_type (name)
+    return mime
+
+
+def guess_mime_ex (name, path):
+
+    mime = guess_mime (name)
+    if not mime:
+        path = os.path.join (path, name)
+        args = ['/usr/bin/file', '-b', '--mime-type', path]
+
+        try:
+            mime = subprocess.check_output (args)
+        except subprocess.CalledProcessError, ex:
+            logger.exception (ex)
+
+    return mime.strip ().lower () if mime else None
 
 ###############################################################################
 ###############################################################################
