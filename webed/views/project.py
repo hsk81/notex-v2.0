@@ -51,12 +51,70 @@ def setup_rest_project (json=True):
         return jsonify (success=True, mime=mime, nodes=map (
             lambda node: dict (uuid=node.uuid), result['nodes']))
 
-def setup_rest (node):
+def setup_rest (node, indent=' ' * 8):
 
     name = request.args.get ('name')
     assert name; node.name = name
     mime = request.args.get ('mime')
     assert mime; node.mime = mime
+
+    authors = request.args.get ('authors')
+    assert authors
+    document_type = request.args.get ('documentType')
+    assert document_type in ['article', 'report']
+    font_size = request.args.get ('fontSize')
+    assert font_size
+    no_columns = request.args.get ('noColumns')
+    assert no_columns in ['1', '2']
+    title_flag = request.args.get ('titleFlag')
+    assert title_flag in ['true', 'false']
+    toc_flag = request.args.get ('tocFlag')
+    assert toc_flag in ['true', 'false']
+    index_flag = request.args.get ('indexFlag')
+    assert index_flag in ['true', 'false']
+
+    if no_columns == '2':
+        no_columns = '\n%s\\\\twocolumn' % indent
+    else:
+        no_columns = '\n%s\\\\onecolumn' % indent
+
+    if title_flag == 'true':
+        title_flag = '\n%s\\\\maketitle' % indent
+    else:
+        title_flag = "''"
+
+    if toc_flag == 'true':
+        if document_type == 'article':
+            toc_flag = '\n%s\\\\tableofcontents\\\\hrule' % indent
+        elif document_type == 'report':
+            toc_flag = '\n%s\\\\cleardoublepage\\\\tableofcontents' % indent
+        else:
+            toc_flag = "''"
+    else:
+        toc_flag = "''"
+
+    if index_flag == 'true':
+        index_flag = '\n%s\\\\printindex' % indent
+    else:
+        index_flag = "''"
+
+    for path, nodes, leafs in node.walk (field='name'):
+
+        for leaf in leafs:
+            if leaf.mime == 'text/x-yaml':
+
+                prop = leaf.props.filter_by (name='data').first ()
+                data = prop.data \
+                    .replace ('${PROJECT}', name) \
+                    .replace ('${AUTHORS}', authors) \
+                    .replace ('${FONTPSZ}', font_size) \
+                    .replace ('${COLUMNS}', no_columns) \
+                    .replace ('${MKTITLE}', title_flag) \
+                    .replace ('${MKTABLE}', toc_flag) \
+                    .replace ('${MKINDEX}', index_flag) \
+                    .replace ("|''", "")
+
+                prop.set_data (data, skip_patch=True)
 
 ###############################################################################
 ###############################################################################

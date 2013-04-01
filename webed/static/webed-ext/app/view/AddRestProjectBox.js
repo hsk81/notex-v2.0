@@ -21,8 +21,8 @@ Ext.define ('Webed.view.AddRestProjectBox', {
         fontSize: '12pt',
         noColumns: 2,
         titleFlag: true,
-        tocFlag: false,
-        indexFlag: false,
+        tocFlag: true,
+        indexFlag: true,
         latexBackend: 'xelatex'
     },
 

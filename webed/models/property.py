@@ -149,9 +149,9 @@ class ExternalProperty (Property, DataPropertyMixin):
         path_to = os.path.join (app.config['FS_DATA'], self._data)
         with open (path_to, 'r') as source: return self.decode (source.read ())
 
-    def set_data (self, value):
+    def set_data (self, value, skip_patch=False):
 
-        value = self.patch (value)
+        value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))
         if self._data == value_key: return
 
