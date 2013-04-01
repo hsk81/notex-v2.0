@@ -49,7 +49,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
         if (!combobox.isValid ()) return;
         var mime = assert (combobox.getValue ());
 
-        box.close ();
+        box.destroy ();
 
         switch (mime) {
             case 'application/project+rest':
@@ -64,7 +64,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
     },
 
     cancel: function () {
-        assert (this.getAddProjectBox ()).close ();
+        assert (this.getAddProjectBox ()).destroy ();
     },
 
     ///////////////////////////////////////////////////////////////////////////

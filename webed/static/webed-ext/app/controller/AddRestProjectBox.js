@@ -44,7 +44,7 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
             mime: assert (box.mime)
         });
 
-        box.close ();
+        box.destroy ();
 
         var url = Ext.String.format ('/setup-rest-project/?' +
             'name={0}&' +
@@ -114,6 +114,6 @@ Ext.define ('Webed.controller.AddRestProjectBox', {
     },
 
     cancel: function () {
-        assert (this.getAddRestProjectBox ()).close ();
+        assert (this.getAddRestProjectBox ()).destroy ();
     }
 });
