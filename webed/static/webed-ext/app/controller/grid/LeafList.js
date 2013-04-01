@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.LeafList', {
+Ext.define ('Webed.controller.grid.LeafList', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ Ext.define ('Webed.controller.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function () {
-        this.keyMap = Ext.create ('Webed.controller.LeafList.KeyMap', {
+        this.keyMap = Ext.create ('Webed.controller.grid.LeafList.KeyMap', {
             controller: this
         });
     },
@@ -125,7 +125,7 @@ Ext.define ('Webed.controller.LeafList', {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Ext.define ('Webed.controller.LeafList.KeyMap', {
+Ext.define ('Webed.controller.grid.LeafList.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
     config: {

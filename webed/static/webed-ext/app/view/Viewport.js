@@ -4,11 +4,11 @@ Ext.define ('Webed.view.Viewport', {
 
     requires: [
         'Ext.layout.container.Border',
+        'Webed.grid.LeafList',
         'Webed.statusbar.StatusBar',
         'Webed.tab.TabManager',
         'Webed.toolbar.MainToolbar',
-        'Webed.tree.NodeTree',
-        'Webed.view.LeafList'
+        'Webed.tree.NodeTree'
     ],
 
     items: [{

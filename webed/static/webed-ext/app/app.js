@@ -34,10 +34,10 @@ Ext.application ({
 
     controllers: [
         'Leaf',
-        'LeafList',
         'Node',
         'Property',
 
+        'grid.LeafList',
         'panel.ImageViewer',
         'panel.TextEditor',
         'statusbar.StatusBar',

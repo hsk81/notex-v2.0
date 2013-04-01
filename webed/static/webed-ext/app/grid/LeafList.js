@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.LeafList', {
+Ext.define ('Webed.grid.LeafList', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.leaf-list',
     store: 'Leafs',
@@ -13,7 +13,7 @@ Ext.define ('Webed.view.LeafList', {
         flex: 5,
         sortable: true,
         text: 'Path',
-        renderer: function (value, meta, record) {
+        renderer: function (value) {
             if (value) {
                 if (value.length > 1) value = value.slice (1);
                 return value.join ('/');
@@ -109,7 +109,7 @@ Ext.define ('Webed.view.LeafList', {
             },
 
             listeners: {
-                afterrender: function (self, eOpts) {
+                afterrender: function (self) {
                     self.inputEl.set ({spellcheck:false});
                 }
             }
