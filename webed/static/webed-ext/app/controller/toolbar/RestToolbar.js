@@ -423,7 +423,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     insert_figure: function (button) {
         var editor = assert (this.get_editor (button));
 
-        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
+        var insertPictureBox = Ext.create ('Webed.window.InsertPictureBox', {
             scope: this, callback: callback, title: 'Insert Figure'
         });
 
@@ -455,7 +455,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     insert_image: function (button) {
         var editor = assert (this.get_editor (button));
 
-        var insertPictureBox = Ext.create ('Webed.view.InsertPictureBox', {
+        var insertPictureBox = Ext.create ('Webed.window.InsertPictureBox', {
             scope: this, callback: callback, title: 'Insert Image',
             listeners: { afterrender: function (panel) {
                 assert (panel.down ('textfield[name=caption]')).hide ();
@@ -484,7 +484,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
     insert_hyperlink: function (button) {
         var editor = assert (this.get_editor (button));
 
-        var insertLinkBox = Ext.create ('Webed.view.InsertLinkBox', {
+        var insertLinkBox = Ext.create ('Webed.window.InsertLinkBox', {
             scope: this, callback: callback, label: editor.getSelection ()
         });
 

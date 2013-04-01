@@ -1,17 +1,17 @@
-Ext.define ('Webed.view.RenameBox', {
+Ext.define ('Webed.window.DeleteBox', {
     extend: 'Ext.window.Window',
-    alias: 'widget.rename-box',
+    alias: 'widget.delete-box',
 
     requires: [
         'Ext.form.Panel'
     ],
 
     border: false,
-    iconCls: 'icon-pencil-16',
+    iconCls: 'icon-delete-16',
     layout: 'fit',
     modal: true,
     resizable: false,
-    title: 'Rename',
+    title: 'Delete',
     width: 320,
 
     items: [{
@@ -21,16 +21,15 @@ Ext.define ('Webed.view.RenameBox', {
 
         items: [{
             xtype: 'textfield',
-            allowBlank: false,
-            emptyText: 'Enter name ..',
-            enableKeyEvents: true,
+            readOnly: true,
+            tabIndex: -1,
             width: '100%'
         }]
     }],
 
     buttons: [{
-        text: 'Rename',
-        iconCls: 'icon-tick-16',
+        text: 'Delete',
+        iconCls: 'icon-delete-16',
         action: 'confirm'
     },{
         text: 'Cancel',

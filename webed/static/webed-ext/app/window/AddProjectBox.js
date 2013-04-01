@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.AddProjectBox', {
+Ext.define ('Webed.window.AddProjectBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.add-project-box',
 
@@ -48,7 +48,7 @@ Ext.define ('Webed.view.AddProjectBox', {
     }]
 });
 
-Ext.define ('Webed.view.AddProjectBoxMime', {
+Ext.define ('Webed.window.AddProjectBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-project-box-mime',
 

@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.AddRestProjectBox', {
+Ext.define ('Webed.window.AddRestProjectBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.add-rest-project-box',
 

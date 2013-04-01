@@ -368,7 +368,7 @@ Ext.define ('Webed.controller.toolbar.MarkdownToolbar', {
     insert_hyperlink: function (button) {
         var editor = assert (this.get_editor (button));
 
-        var insertLinkBox = Ext.create ('Webed.view.InsertLinkBox', {
+        var insertLinkBox = Ext.create ('Webed.window.InsertLinkBox', {
             scope: this, callback: callback, label: editor.getSelection ()
         });
 

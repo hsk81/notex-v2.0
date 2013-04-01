@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.ConfirmBox', {
+Ext.define ('Webed.window.ConfirmBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.confirm-box',
 

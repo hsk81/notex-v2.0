@@ -1,37 +1,35 @@
-Ext.define ('Webed.view.AddFolderBox', {
+Ext.define ('Webed.window.RenameBox', {
     extend: 'Ext.window.Window',
-    alias: 'widget.add-folder-box',
+    alias: 'widget.rename-box',
 
     requires: [
         'Ext.form.Panel'
     ],
 
     border: false,
-    iconCls: 'icon-folder_add-16',
+    iconCls: 'icon-pencil-16',
     layout: 'fit',
     modal: true,
     resizable: false,
-    title: 'Add Folder',
+    title: 'Rename',
     width: 320,
 
     items: [{
         xtype: 'form',
         layout: 'fit',
-        width: '100%',
         bodyPadding: '4px',
 
         items: [{
             xtype: 'textfield',
             allowBlank: false,
+            emptyText: 'Enter name ..',
             enableKeyEvents: true,
-            emptyText: 'Enter folder name ..',
-            value: 'folder',
             width: '100%'
         }]
     }],
 
     buttons: [{
-        text: 'Confirm',
+        text: 'Rename',
         iconCls: 'icon-tick-16',
         action: 'confirm'
     },{

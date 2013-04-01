@@ -3,8 +3,8 @@ Ext.define ('Webed.toolbar.MarkdownToolbar', {
     alias: 'widget.md-toolbar',
 
     requires: [
-        'Webed.view.InsertLinkBox',
-        'Webed.view.InsertPictureBox'
+        'Webed.window.InsertLinkBox',
+        'Webed.window.InsertPictureBox'
     ],
 
     items: [{

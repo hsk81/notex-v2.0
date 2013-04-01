@@ -1,35 +1,38 @@
-Ext.define ('Webed.view.DeleteBox', {
+Ext.define ('Webed.window.AddFolderBox', {
     extend: 'Ext.window.Window',
-    alias: 'widget.delete-box',
+    alias: 'widget.add-folder-box',
 
     requires: [
         'Ext.form.Panel'
     ],
 
     border: false,
-    iconCls: 'icon-delete-16',
+    iconCls: 'icon-folder_add-16',
     layout: 'fit',
     modal: true,
     resizable: false,
-    title: 'Delete',
+    title: 'Add Folder',
     width: 320,
 
     items: [{
         xtype: 'form',
         layout: 'fit',
+        width: '100%',
         bodyPadding: '4px',
 
         items: [{
             xtype: 'textfield',
-            readOnly: true,
-            tabIndex: -1,
+            allowBlank: false,
+            enableKeyEvents: true,
+            emptyText: 'Enter folder name ..',
+            value: 'folder',
             width: '100%'
         }]
     }],
 
     buttons: [{
-        text: 'Delete',
-        iconCls: 'icon-delete-16',
+        text: 'Confirm',
+        iconCls: 'icon-tick-16',
         action: 'confirm'
     },{
         text: 'Cancel',

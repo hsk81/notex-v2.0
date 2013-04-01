@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.UploadBox', {
+Ext.define ('Webed.window.UploadBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.upload-box',
 
@@ -33,8 +33,8 @@ Ext.apply (Ext.form.field.VTypes, {
     }
 });
 
-Ext.define ('Webed.view.FileUploadBox', {
-    extend: 'Webed.view.UploadBox',
+Ext.define ('Webed.window.FileUploadBox', {
+    extend: 'Webed.window.UploadBox',
     alias: 'widget.file-upload-box',
     iconCls: 'icon-folder_page-16',
     title: 'Upload Document',
@@ -65,8 +65,8 @@ Ext.apply (Ext.form.field.VTypes, {
     }
 });
 
-Ext.define ('Webed.view.ArchiveUploadBox', {
-    extend: 'Webed.view.UploadBox',
+Ext.define ('Webed.window.ArchiveUploadBox', {
+    extend: 'Webed.window.UploadBox',
     alias: 'widget.archive-upload-box',
     iconCls: 'icon-page_white_zip-16',
     title: 'Upload Archive',

@@ -3,8 +3,8 @@ Ext.define ('Webed.toolbar.RestToolbar', {
     alias: 'widget.rest-toolbar',
 
     requires: [
-        'Webed.view.InsertLinkBox',
-        'Webed.view.InsertPictureBox'
+        'Webed.window.InsertLinkBox',
+        'Webed.window.InsertPictureBox'
     ],
 
     items: [{

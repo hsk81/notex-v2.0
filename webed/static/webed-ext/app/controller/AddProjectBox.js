@@ -1,6 +1,10 @@
 Ext.define ('Webed.controller.AddProjectBox', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'Webed.window.AddRestProjectBox'
+    ],
+
     refs: [{
         selector: 'add-project-box', ref: 'addProjectBox'
     }],
@@ -71,7 +75,7 @@ Ext.define ('Webed.controller.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     setup_rest_project: function (project, mime) {
-        var box = Ext.create ('Webed.view.AddRestProjectBox', {
+        var box = Ext.create ('Webed.window.AddRestProjectBox', {
             project: project, mime: mime
         });
 

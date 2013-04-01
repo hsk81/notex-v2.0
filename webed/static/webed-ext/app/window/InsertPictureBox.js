@@ -4,7 +4,7 @@ Ext.apply (Ext.form.field.VTypes, {
     naturalMask: /\d/i
 });
 
-Ext.define ('Webed.view.InsertPictureBox', {
+Ext.define ('Webed.window.InsertPictureBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.insert-picture-box',
 

@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.AddFileBox', {
+Ext.define ('Webed.window.AddFileBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.add-file-box',
 
@@ -79,7 +79,7 @@ Ext.define ('Webed.view.AddFileBox', {
     }
 });
 
-Ext.define ('Webed.view.AddFileBoxMime', {
+Ext.define ('Webed.window.AddFileBoxMime', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.add-file-box-mime',
 

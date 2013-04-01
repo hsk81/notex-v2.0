@@ -6,7 +6,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
     }],
 
     requires: [
-        'Webed.view.ConfirmBox'
+        'Webed.window.ConfirmBox'
     ],
 
     init: function () {
@@ -50,7 +50,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
             var title = assert (record.getTitle ());
             var iconCls = assert (record.get ('iconCls'));
 
-            var confirmBox = Ext.create ('Webed.view.ConfirmBox', {
+            var confirmBox = Ext.create ('Webed.windows.ConfirmBox', {
                 title: 'Close {0}?'.format (title),
                 iconCls: iconCls,
                 value: value,

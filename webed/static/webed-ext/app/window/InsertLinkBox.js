@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.InsertLinkBox', {
+Ext.define ('Webed.window.InsertLinkBox', {
     extend: 'Ext.window.Window',
     alias: 'widget.insert-link-box',
 

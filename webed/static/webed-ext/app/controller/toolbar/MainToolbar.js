@@ -50,9 +50,11 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function () {
-        this.keyMap = Ext.create ('Webed.controller.MainToolbar.KeyMap', {
-            controller: this
-        });
+        this.keyMap = Ext.create (
+            'Webed.controller.toolbar.MainToolbar.KeyMap', {
+                controller: this
+            }
+        );
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -83,7 +85,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     },
 
     openDocument: function () {
-        Ext.create ('Webed.view.FileUploadBox').show ();
+        Ext.create ('Webed.window.FileUploadBox').show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -94,11 +96,11 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     },
 
     addProject: function () {
-        Ext.create ('Webed.view.AddProjectBox').show ();
+        Ext.create ('Webed.window.AddProjectBox').show ();
     },
 
     addFolder: function () {
-        var addFolderBox = Ext.create ('Webed.view.AddFolderBox', {
+        var addFolderBox = Ext.create ('Webed.window.AddFolderBox', {
             record: assert (this.get_selection ())
         });
 
@@ -106,7 +108,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     },
 
     addFile: function () {
-        var addFileBox = Ext.create ('Webed.view.AddFileBox', {
+        var addFileBox = Ext.create ('Webed.window.AddFileBox', {
             record: assert (this.get_selection ())
         });
 
@@ -119,7 +121,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     rename: function () {
         var node = assert (this.get_selection ());
         if (node.isRoot () == false) {
-            var renameBox = Ext.create ('Webed.view.RenameBox', {
+            var renameBox = Ext.create ('Webed.window.RenameBox', {
                 title: Ext.String.format ('Rename {0}', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
                 record: node
@@ -135,7 +137,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     destroy: function () {
         var node = assert (this.get_selection ());
         if (node.isRoot () == false) {
-            var deleteBox = Ext.create ('Webed.view.DeleteBox', {
+            var deleteBox = Ext.create ('Webed.window.DeleteBox', {
                 title: Ext.String.format ('Delete {0}?', node.getTitle ()),
                 iconCls: node.get ('iconCls'),
                 record: node
@@ -149,7 +151,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     importProject: function () {
-        Ext.create ('Webed.view.ArchiveUploadBox').show ();
+        Ext.create ('Webed.window.ArchiveUploadBox').show ();
     },
 
     exportProject: function (button) {
@@ -218,7 +220,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Ext.define ('Webed.controller.MainToolbar.KeyMap', {
+Ext.define ('Webed.controller.toolbar.MainToolbar.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
     config: {
