@@ -101,8 +101,12 @@ def setup_rest (node, indent=' ' * 8):
     for path, nodes, leafs in node.walk (field='name'):
 
         for leaf in leafs:
-            if leaf.mime == 'text/x-yaml':
+            if leaf.mime == 'text/x-rst':
+                prop = leaf.props.filter_by (name='data').first ()
+                data = prop.data .replace ('${PROJECT}', name)
+                prop.set_data (data, skip_patch=True)
 
+            if leaf.mime == 'text/x-yaml':
                 prop = leaf.props.filter_by (name='data').first ()
                 data = prop.data \
                     .replace ('${PROJECT}', name) \
