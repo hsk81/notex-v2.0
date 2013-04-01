@@ -1,8 +1,8 @@
 describe ('NodeTree', function () {
-    Ext.require ('Webed.view.NodeTree');
+    Ext.require ('Webed.tree.NodeTree');
     Ext.require ('Webed.controller.Node');
     Ext.require ('Webed.controller.Leaf');
-    Ext.require ('Webed.controller.NodeTree');
+    Ext.require ('Webed.controller.tree.NodeTree');
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -19,12 +19,12 @@ describe ('NodeTree', function () {
         Ext.DomHelper.append (Ext.getBody (),
             "<div id='test-area' style='display:none'/>");
 
-        if (!view) view = Ext.create ( 'Webed.view.NodeTree', {
+        if (!view) view = Ext.create ('Webed.tree.NodeTree', {
             renderTo: 'test-area'
         });
 
         expect (view).toBeTruthy ();
-        if (!tree_ctrl) tree_ctrl = window.app.getController ('NodeTree');
+        if (!tree_ctrl) tree_ctrl = window.app.getController ('tree.NodeTree');
         expect (tree_ctrl).toBeTruthy (); tree_ctrl.init ();
 
         if (!node_ctrl) node_ctrl = window.app.getController ('Node');
@@ -189,7 +189,7 @@ describe ('NodeTree', function () {
 
                     lock.pop ();
                 }
-            })
+            });
 
             waitsFor (function () { return lock.empty (); }, 'unlock');
         }

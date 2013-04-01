@@ -36,7 +36,6 @@ Ext.application ({
         'Leaf',
         'LeafList',
         'Node',
-        'NodeTree',
         'Property',
 
         'panel.ImageViewer',
@@ -48,6 +47,7 @@ Ext.application ({
         'toolbar.MarkdownToolbar',
         'toolbar.RestToolbar',
         'toolbar.TextToolbar',
+        'tree.NodeTree',
         'window.AddFileBox',
         'window.AddFolderBox',
         'window.AddProjectBox',

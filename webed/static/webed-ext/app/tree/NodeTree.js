@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.NodeTree', {
+Ext.define ('Webed.tree.NodeTree', {
     extend: 'Ext.tree.Panel',
     alias: 'widget.node-tree',
     store: 'Nodes',

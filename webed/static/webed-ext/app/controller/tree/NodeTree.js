@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.NodeTree', {
+Ext.define ('Webed.controller.tree.NodeTree', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ Ext.define ('Webed.controller.NodeTree', {
     ///////////////////////////////////////////////////////////////////////////
 
     afterrender: function () {
-        this.keyMap = Ext.create ('Webed.controller.NodeTree.KeyMap', {
+        this.keyMap = Ext.create ('Webed.controller.tree.NodeTree.KeyMap', {
             controller: this
         });
 
@@ -428,7 +428,7 @@ Ext.define ('Webed.controller.NodeTree', {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Ext.define ('Webed.controller.NodeTree.KeyMap', {
+Ext.define ('Webed.controller.tree.NodeTree.KeyMap', {
     extend: 'Ext.util.KeyMap',
 
     config: {
