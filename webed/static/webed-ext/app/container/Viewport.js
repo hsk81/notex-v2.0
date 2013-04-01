@@ -15,15 +15,15 @@ Ext.define ('Webed.container.Viewport', {
         layout: 'border',
         items: [{
             border: false,
-            region: 'west',
-            title: 'Projects',
-            name: 'projects',
             collapsible: true,
             collapsed: true,
-            layout: 'border',
-            split: true,
-            minWidth: 281,
             flex: 1,
+            minWidth: 281,
+            name: 'projects',
+            layout: 'border',
+            region: 'west',
+            split: true,
+            title: 'Projects',
 
             tools: [{
                 type: 'refresh',
@@ -35,18 +35,18 @@ Ext.define ('Webed.container.Viewport', {
             }],
 
             items: [{
+                flex: 1,
                 region: 'center',
-                xtype: 'node-tree',
-                flex: 1
+                xtype: 'node-tree'
             },{
-                region: 'south',
-                xtype: 'leaf-list',
-                title: 'Documents',
-                name: 'documents',
                 collapsible: true,
                 collapseMode: 'header',
-                split: true,
                 flex: 1,
+                name: 'documents',
+                region: 'south',
+                split: true,
+                title: 'Documents',
+                xtype: 'leaf-list',
 
                 tools: [{
                     type: 'refresh',
@@ -58,29 +58,24 @@ Ext.define ('Webed.container.Viewport', {
                 }]
             }]
         },{
-            region: 'center',
-
             border: false,
-            style: {
-                borderStyle: 'solid',
-                borderWidth: '0 0 0 1px'
-            },
-
             flex: 4,
             name: 'hbox',
             layout: {type: 'hbox', align: 'stretch'},
+            region: 'center',
+            style: {borderStyle: 'solid', borderWidth: '0 0 0 1px'},
 
             items: [{
                 border: false,
                 flex: 1,
-                name: 'vbox',
                 layout: {type: 'vbox', align: 'stretch'},
+                name: 'vbox',
 
                 items: [{
                     border: false,
-                    xtype: 'tab-manager',
+                    flex: 1,
                     tabPosition: 'bottom',
-                    flex: 1
+                    xtype: 'tab-manager'
                 }]
             }]
         }]
