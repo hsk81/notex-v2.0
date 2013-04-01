@@ -68,6 +68,6 @@ Ext.application ({
     },
 
     get_selection: function () {
-        return assert (this.getController ('NodeTree')).get_selection ();
+        return assert (this.getController ('tree.NodeTree')).get_selection ();
     }
 });
