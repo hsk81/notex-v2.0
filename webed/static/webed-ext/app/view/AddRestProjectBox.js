@@ -35,6 +35,44 @@ Ext.define ('Webed.view.AddRestProjectBox', {
 
         listeners: {
             render: function (self) {
+                self.customEditors = {
+                    documentType: {
+                        xtype: 'combo',
+                        name: 'document',
+                        allowBlank: false,
+                        store: ['article', 'report'],
+                        queryMode: 'local',
+                        editable: false
+                    },
+
+                    fontSize: {
+                        xtype: 'combo',
+                        name: 'fontSize',
+                        allowBlank: false,
+                        store: ['10pt', '11pt', '12pt'],
+                        queryMode: 'local',
+                        editable: false
+                    },
+
+                    noColumns: {
+                        xtype: 'combo',
+                        name: 'noColumns',
+                        allowBlank: false,
+                        store: [1, 2],
+                        queryMode: 'local',
+                        editable: false
+                    },
+
+                    latexBackend: {
+                        xtype: 'combo',
+                        name: 'latexBackend',
+                        allowBlank: false,
+                        store: ['xelatex', 'pdflatex'],
+                        queryMode: 'local',
+                        editable: false
+                    }
+                }
+
                 var width = assert (self.getWidth ());
                 var column = assert (self.columns[0]);
                 column.setWidth (width / 2.0);
@@ -51,44 +89,6 @@ Ext.define ('Webed.view.AddRestProjectBox', {
             tocFlag: 'Table of Contents',
             indexFlag: 'Index',
             latexBackend: 'LaTex Backend'
-        },
-
-        customEditors: {
-            documentType: {
-                xtype: 'combo',
-                name: 'document',
-                allowBlank: false,
-                store: ['article', 'report'],
-                queryMode: 'local',
-                editable: false
-            },
-
-            fontSize: {
-                xtype: 'combo',
-                name: 'fontSize',
-                allowBlank: false,
-                store: ['10pt', '11pt', '12pt'],
-                queryMode: 'local',
-                editable: false
-            },
-
-            noColumns: {
-                xtype: 'combo',
-                name: 'noColumns',
-                allowBlank: false,
-                store: [1, 2],
-                queryMode: 'local',
-                editable: false
-            },
-
-            latexBackend: {
-                xtype: 'combo',
-                name: 'latexBackend',
-                allowBlank: false,
-                store: ['xelatex', 'pdflatex'],
-                queryMode: 'local',
-                editable: false
-            }
         }
     }],
 
