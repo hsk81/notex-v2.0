@@ -88,6 +88,13 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
                 click: this.toggle_number_list
             },
 
+            'rest-toolbar component[action=insert-footnote]': {
+                click: this.insert_footnote
+            },
+            'rest-toolbar component[action=toggle-index]': {
+                click: this.toggle_index
+            },
+
             'rest-toolbar component[action=insert-figure]': {
                 click: this.insert_figure
             },
@@ -96,9 +103,6 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
             },
             'rest-toolbar component[action=insert-hyperlink]': {
                 click: this.insert_hyperlink
-            },
-            'rest-toolbar component[action=insert-footnote]': {
-                click: this.insert_footnote
             },
             'rest-toolbar component[action=insert-horizontal-line]': {
                 click: this.insert_horizontal_line
@@ -298,6 +302,14 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         if (editor.cfg_supscript == undefined)
             editor.cfg_supscript = this.toggle_cfg ('meta', ':sup:`', '`');
         this.toggle_inline (editor, editor.cfg_supscript);
+        editor.focus ();
+    },
+
+    toggle_index: function (button) {
+        var editor = assert (this.get_editor (button));
+        if (editor.cfg_index == undefined)
+            editor.cfg_index = this.toggle_cfg ('meta', ':index:`', '`');
+        this.toggle_inline (editor, editor.cfg_index);
         editor.focus ();
     },
 

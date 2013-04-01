@@ -122,6 +122,16 @@ Ext.define ('Webed.toolbar.RestToolbar', {
         overflowText: 'Number List',
         tooltip: 'Number List'
     },'-',{
+        action: 'insert-footnote',
+        iconCls: 'icon-document_comment_below-16',
+        overflowText: 'Footnote',
+        tooltip: 'Footnote'
+    },{
+        action: 'toggle-index',
+        iconCls: 'icon-document_index-16',
+        overflowText: 'Index',
+        tooltip: 'Index'
+    },'-',{
         action: 'insert-figure',
         iconCls: 'icon-picture-16',
         overflowText: 'Figure',
@@ -136,11 +146,6 @@ Ext.define ('Webed.toolbar.RestToolbar', {
         iconCls: 'icon-link-16',
         overflowText: 'Hyperlink',
         tooltip: 'Hyperlink'
-    },{
-        action: 'insert-footnote',
-        iconCls: 'icon-text_horizontalrule-16',
-        overflowText: 'Footnote',
-        tooltip: 'Footnote'
     },{
         action: 'insert-horizontal-line',
         iconCls: 'icon-hrule-16',

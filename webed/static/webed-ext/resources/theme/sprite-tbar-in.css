@@ -3,6 +3,8 @@
 .icon-application_tile_vertical-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/application_tile_vertical.png) !important; }
 .icon-arrow_redo-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/arrow_redo.png) !important; }
 .icon-cut-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/cut.png) !important; }
+.icon-document_comment_below-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/document_comment_below.png) !important; }
+.icon-document_index-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/document_index.png) !important; }
 .icon-document_page_next-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/document_page_next.png) !important; }
 .icon-document_page_previous-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/document_page_previous.png) !important; }
 .icon-find-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/find.png) !important; }
@@ -24,7 +26,6 @@
 .icon-text_heading_4-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_heading_4.png) !important; }
 .icon-text_heading_5-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_heading_5.png) !important; }
 .icon-text_heading_6-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_heading_6.png) !important; }
-.icon-text_horizontalrule-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_horizontalrule.png) !important; }
 .icon-text_indent_remove-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_indent_remove.png) !important; }
 .icon-text_indent-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_indent.png) !important; }
 .icon-text_italic-16 { width: 16px; height: 16px; background: url(../../../ico/fatcow/16x16/text_italic.png) !important; }
