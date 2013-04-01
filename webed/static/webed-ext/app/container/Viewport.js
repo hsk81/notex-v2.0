@@ -1,4 +1,4 @@
-Ext.define ('Webed.view.Viewport', {
+Ext.define ('Webed.container.Viewport', {
     extend: 'Ext.container.Viewport',
     layout: 'fit',
 

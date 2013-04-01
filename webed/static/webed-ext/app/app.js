@@ -18,9 +18,7 @@ Ext.require ([
     'Webed.store.Linguas',
     'Webed.store.Nodes',
     'Webed.store.Leafs',
-    'Webed.store.Properties',
-
-    'Webed.view.Viewport'
+    'Webed.store.Properties'
 ]);
 
 Ext.application ({
@@ -29,7 +27,7 @@ Ext.application ({
     stores: ['MIMEs', 'Linguas', 'Nodes', 'Leafs', 'Properties'],
 
     requires: [
-        'Ext.container.Viewport'
+        'Webed.container.Viewport'
     ],
 
     controllers: [
@@ -66,7 +64,7 @@ Ext.application ({
     },
 
     launch: function () {
-        Ext.create ('Webed.view.Viewport');
+        Ext.create ('Webed.container.Viewport');
     },
 
     get_selection: function () {
