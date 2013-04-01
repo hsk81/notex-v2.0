@@ -26,16 +26,15 @@ class DefaultConfig:
 
     CACHE0_KEY_PREFIX = 'webed-std:'
     CACHE0_SERVERS = ['127.0.0.1']
-    CACHE1_KEY_PREFIX = 'webed-obj:'
+    CACHE1_KEY_PREFIX = 'webed-sss:'
     CACHE1_SERVERS = ['127.0.0.1']
-    CACHE2_KEY_PREFIX = 'webed-sss:'
+    CACHE2_KEY_PREFIX = 'webed-dbs:'
     CACHE2_SERVERS = ['127.0.0.1']
-    CACHE3_KEY_PREFIX = 'webed-dbs:'
+    CACHE3_KEY_PREFIX = 'webed-obj:'
     CACHE3_SERVERS = ['127.0.0.1']
 
     LOG_FILE = os.path.join ('..', 'webed.log')
     YML_FILE = os.path.join ('webed', 'static', 'assets.yaml')
-    NIX_FILE = os.path.join (os.sep, 'var', 'www', 'webed', 'webed-wsgi.sock')
 
     ##
     ## Debug Toolbar: Disables/enables the interception of redirection; since

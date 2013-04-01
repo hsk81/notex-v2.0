@@ -172,7 +172,7 @@ class WebedMemcached (WebedCache):
 
         app.config.setdefault ('CACHE_DEFAULT_SERVERS', ['127.0.0.1'])
         app.config.setdefault ('CACHE_DEFAULT_KEY_PREFIX', 'cache:')
-        app.config.setdefault ('CACHE_DEFAULT_POOL_SIZE', 2**8)
+        app.config.setdefault ('CACHE_DEFAULT_POOL_SIZE', 2 ** 8)
 
         self.SERVERS = servers \
             if servers else app.config['CACHE_DEFAULT_SERVERS']
@@ -192,7 +192,7 @@ class WebedMemcached (WebedCache):
 
     def get_value (self, key, expiry=None):
         with self.connection.reserve () as mc:
-            value = mc.get (self.KEY_PREFIX+key)
+            value = mc.get (self.KEY_PREFIX + key)
             if expiry: self.expire (key, expiry=expiry)
             return value
 
@@ -205,37 +205,37 @@ class WebedMemcached (WebedCache):
     def set_value (self, key, value, expiry=DEFAULT_TIMEOUT):
         with self.connection.reserve () as mc:
             if expiry == self.ASAP:
-                mc.delete (self.KEY_PREFIX+key)
+                mc.delete (self.KEY_PREFIX + key)
             else:
-                mc.set (self.KEY_PREFIX+key, value, time=expiry)
+                mc.set (self.KEY_PREFIX + key, value, time=expiry)
 
     def delete (self, key):
         with self.connection.reserve () as mc:
-            mc.delete (self.KEY_PREFIX+key)
+            mc.delete (self.KEY_PREFIX + key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
         with self.connection.reserve () as mc:
             if expiry == self.ASAP:
-                mc.delete (self.KEY_PREFIX+key)
+                mc.delete (self.KEY_PREFIX + key)
             else:
-                mc.touch (self.KEY_PREFIX+key, time=expiry)
+                mc.touch (self.KEY_PREFIX + key, time=expiry)
 
     def exists (self, key):
         with self.connection.reserve () as mc:
-            return self.KEY_PREFIX+key in mc
+            return self.KEY_PREFIX + key in mc
 
     def increase (self, key, expiry=DEFAULT_TIMEOUT):
-        key = self.KEY_PREFIX+key
+        key = self.KEY_PREFIX + key
         with self.connection.reserve () as mc:
-            value = mc.get (key)+1 if key in mc else +1
+            value = mc.get (key) + 1 if key in mc else +1
             if expiry == self.ASAP: mc.delete (key)
             else: mc.set (key, value, time=expiry)
             return value
 
     def decrease (self, key, expiry=DEFAULT_TIMEOUT):
-        key = self.KEY_PREFIX+key
+        key = self.KEY_PREFIX + key
         with self.connection.reserve () as mc:
-            value = mc.get (key)-1 if key in mc else -1
+            value = mc.get (key) - 1 if key in mc else -1
             if expiry == self.ASAP: mc.delete (key)
             else: mc.set (key, value, time=expiry)
             return value
@@ -316,10 +316,10 @@ class WebedRedis (WebedCache):
 
     def get_value (self, key, expiry=None):
         if not expiry:
-            return self.connection.get (self.KEY_PREFIX+key)
+            return self.connection.get (self.KEY_PREFIX + key)
         else:
-            return self.connection.pipeline ().get (self.KEY_PREFIX+key) \
-                .expire (self.KEY_PREFIX+key, time=expiry) \
+            return self.connection.pipeline ().get (self.KEY_PREFIX + key) \
+                .expire (self.KEY_PREFIX + key, time=expiry) \
                 .execute ().pop (0)
 
     def set (self, key, value, expiry=DEFAULT_TIMEOUT):
@@ -330,42 +330,42 @@ class WebedRedis (WebedCache):
 
     def set_value (self, key, value, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            self.connection.pipeline ().set (self.KEY_PREFIX+key, value) \
-                .persist (self.KEY_PREFIX+key).execute ()
+            self.connection.pipeline ().set (self.KEY_PREFIX + key, value) \
+                .persist (self.KEY_PREFIX + key).execute ()
         else:
-            self.connection.pipeline ().set (self.KEY_PREFIX+key, value) \
-                .expire (self.KEY_PREFIX+key, time=expiry).execute ()
+            self.connection.pipeline ().set (self.KEY_PREFIX + key, value) \
+                .expire (self.KEY_PREFIX + key, time=expiry).execute ()
 
     def delete (self, key):
-        self.connection.delete (self.KEY_PREFIX+key)
+        self.connection.delete (self.KEY_PREFIX + key)
 
     def expire (self, key, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            self.connection.persist (self.KEY_PREFIX+key)
+            self.connection.persist (self.KEY_PREFIX + key)
         else:
-            self.connection.expire (self.KEY_PREFIX+key, time=expiry)
+            self.connection.expire (self.KEY_PREFIX + key, time=expiry)
 
     def exists (self, key):
-        return self.connection.exists (self.KEY_PREFIX+key)
+        return self.connection.exists (self.KEY_PREFIX + key)
 
     def increase (self, key, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            return self.connection.pipeline ().incr (self.KEY_PREFIX+key) \
-                .persist (self.KEY_PREFIX+key) \
+            return self.connection.pipeline ().incr (self.KEY_PREFIX + key) \
+                .persist (self.KEY_PREFIX + key) \
                 .execute ().pop (0)
         else:
-            return self.connection.pipeline ().incr (self.KEY_PREFIX+key) \
-                .expire (self.KEY_PREFIX+key, time=expiry) \
+            return self.connection.pipeline ().incr (self.KEY_PREFIX + key) \
+                .expire (self.KEY_PREFIX + key, time=expiry) \
                 .execute ().pop (0)
 
     def decrease (self, key, expiry=DEFAULT_TIMEOUT):
         if expiry == self.NEVER:
-            return self.connection.pipeline ().decr (self.KEY_PREFIX+key) \
-                .persist (self.KEY_PREFIX+key) \
+            return self.connection.pipeline ().decr (self.KEY_PREFIX + key) \
+                .persist (self.KEY_PREFIX + key) \
                 .execute ().pop (0)
         else:
-            return self.connection.pipeline ().decr (self.KEY_PREFIX+key) \
-                .expire (self.KEY_PREFIX+key, time=expiry) \
+            return self.connection.pipeline ().decr (self.KEY_PREFIX + key) \
+                .expire (self.KEY_PREFIX + key, time=expiry) \
                 .execute ().pop (0)
 
     def flush_all (self):
@@ -391,14 +391,14 @@ class WebedRedis (WebedCache):
 std_cache = WebedRedis (app, servers=app.config.get ('CACHE0_SERVERS'),
     prefix=app.config.get ('CACHE0_KEY_PREFIX'), db=0)
 
-obj_cache = WebedRedis (app, servers=app.config.get ('CACHE1_SERVERS'),
-    prefix=app.config.get ('CACHE1_KEY_PREFIX'), db=1)
+sss_cache = WebedRedis (app, servers=app.config.get ('CACHE1_SERVERS'),
+    prefix=app.config.get ('CACHE1_KEY_PREFIX'), db=2)
 
-sss_cache = WebedRedis (app, servers=app.config.get ('CACHE2_SERVERS'),
-    prefix=app.config.get ('CACHE2_KEY_PREFIX'), db=2)
+dbs_cache = WebedRedis (app, servers=app.config.get ('CACHE2_SERVERS'),
+    prefix=app.config.get ('CACHE2_KEY_PREFIX'), db=3)
 
-dbs_cache = WebedRedis (app, servers=app.config.get ('CACHE3_SERVERS'),
-    prefix=app.config.get ('CACHE3_KEY_PREFIX'), db=3)
+obj_cache = WebedMemcached (app, servers=app.config.get ('CACHE3_SERVERS'),
+    prefix=app.config.get ('CACHE3_KEY_PREFIX'))
 
 ###############################################################################
 ###############################################################################
