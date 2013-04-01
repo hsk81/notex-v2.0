@@ -267,16 +267,20 @@ def archive_download (chunk_size=256 * 1024):
 
             content_len = len (content_val)
             content_csz = chunk_size
+            content_dsp = 'attachment;filename="%s [%s].zip"' % (
+                node.name.encode ('utf-8'), node.mime.replace ('/', '!')
+            )
 
             def next_chunk (length, size):
                 for index in range (0, length, size):
                     yield content_val[index:index + size]
 
             response = Response (next_chunk (content_len, content_csz))
-            response.headers ['Content-Length'] = content_len
-            response.headers ['Content-Disposition'] = \
-                'attachment;filename="%s [%s].zip"' % (
-                    node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
+            response.headers['Content-Description'] = 'File Transfer'
+            response.headers['Content-Disposition'] = content_dsp
+            response.headers['Content-Length'] = content_len
+            response.headers['Content-Type'] = 'application/octet-stream'
+            response.headers['Cache-Control'] = 'no-cache'
         else:
             response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
