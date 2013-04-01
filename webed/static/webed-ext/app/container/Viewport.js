@@ -77,12 +77,5 @@ Ext.define ('Webed.container.Viewport', {
                 }]
             }]
         }]
-    }],
-
-    listeners: {
-        afterlayout: function () {
-            var ld = Ext.get ('load-progress');
-            if (ld) ld.destroy ();
-        }
-    }
+    }]
 });
