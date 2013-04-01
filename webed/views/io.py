@@ -4,7 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
-from flask import Blueprint, Response
+from flask import Blueprint, Response, make_response
 from flask.globals import request
 
 from ..app import app
@@ -246,11 +246,7 @@ def create_bin (name, root, mime, path=None, file=None):
 ###############################################################################
 
 @io.route ('/archive-download/', methods=['GET', 'POST'])
-def archive_download (chunk_size=256 * 1024):
-
-    ##
-    ## TODO: Bypass flask & use nginx directly!? Test!
-    ##
+def archive_download ():
 
     node_uuid = request.args.get ('node_uuid', None)
     assert node_uuid
@@ -266,21 +262,21 @@ def archive_download (chunk_size=256 * 1024):
         if request.args.get ('fetch', False):
 
             content_len = len (content_val)
-            content_csz = chunk_size
             content_dsp = 'attachment;filename="%s [%s].zip"' % (
                 node.name.encode ('utf-8'), node.mime.replace ('/', '!')
             )
 
-            def next_chunk (length, size):
-                for index in range (0, length, size):
-                    yield content_val[index:index + size]
+            with tempfile.NamedTemporaryFile (delete=False) as target:
+                target.write (content_val)
+                path_to = target.name
 
-            response = Response (next_chunk (content_len, content_csz))
+            response = make_response ()
             response.headers['Content-Description'] = 'File Transfer'
             response.headers['Content-Disposition'] = content_dsp
             response.headers['Content-Length'] = content_len
             response.headers['Content-Type'] = 'application/octet-stream'
             response.headers['Cache-Control'] = 'no-cache'
+            response.headers['X-Accel-Redirect'] = path_to
         else:
             response = jsonify (success=True, name=node.name)
             obj_cache.expire (archive_key, expiry=15) ## refresh
