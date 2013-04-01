@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.AddProjectBox', {
+Ext.define ('Webed.controller.window.AddProjectBox', {
     extend: 'Ext.app.Controller',
 
     requires: [

@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.ConfirmBox', {
+Ext.define ('Webed.controller.window.ConfirmBox', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////

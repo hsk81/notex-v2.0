@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.InsertPictureBox', {
+Ext.define ('Webed.controller.window.InsertPictureBox', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////

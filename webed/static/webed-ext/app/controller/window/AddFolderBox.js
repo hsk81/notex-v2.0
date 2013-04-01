@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.AddFolderBox', {
+Ext.define ('Webed.controller.window.AddFolderBox', {
     extend: 'Ext.app.Controller',
 
     refs: [{

@@ -33,6 +33,12 @@ Ext.application ({
     ],
 
     controllers: [
+        'Leaf',
+        'LeafList',
+        'Node',
+        'NodeTree',
+        'Property',
+
         'panel.ImageViewer',
         'panel.TextEditor',
         'statusbar.StatusBar',
@@ -42,22 +48,17 @@ Ext.application ({
         'toolbar.MarkdownToolbar',
         'toolbar.RestToolbar',
         'toolbar.TextToolbar',
-        'AddFileBox',
-        'AddFolderBox',
-        'AddProjectBox',
-        'AddRestProjectBox',
-        'ArchiveUploadBox',
-        'ConfirmBox',
-        'DeleteBox',
-        'FileUploadBox',
-        'InsertLinkBox',
-        'InsertPictureBox',
-        'Leaf',
-        'LeafList',
-        'Node',
-        'NodeTree',
-        'Property',
-        'RenameBox'
+        'window.AddFileBox',
+        'window.AddFolderBox',
+        'window.AddProjectBox',
+        'window.AddRestProjectBox',
+        'window.ArchiveUploadBox',
+        'window.ConfirmBox',
+        'window.DeleteBox',
+        'window.FileUploadBox',
+        'window.InsertLinkBox',
+        'window.InsertPictureBox',
+        'window.RenameBox'
     ],
 
     paths: {

@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.DeleteBox', {
+Ext.define ('Webed.controller.window.DeleteBox', {
     extend: 'Ext.app.Controller',
 
     refs: [{

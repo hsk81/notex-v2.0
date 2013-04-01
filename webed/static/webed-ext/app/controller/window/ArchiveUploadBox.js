@@ -1,5 +1,5 @@
-Ext.define ('Webed.controller.ArchiveUploadBox', {
-    extend: 'Webed.controller.UploadBox',
+Ext.define ('Webed.controller.window.ArchiveUploadBox', {
+    extend: 'Webed.controller.window.UploadBox',
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////

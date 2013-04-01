@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.RenameBox', {
+Ext.define ('Webed.controller.window.RenameBox', {
     extend: 'Ext.app.Controller',
 
     refs: [{

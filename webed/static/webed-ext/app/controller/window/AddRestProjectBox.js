@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.AddRestProjectBox', {
+Ext.define ('Webed.controller.window.AddRestProjectBox', {
     extend: 'Ext.app.Controller',
 
     refs: [{

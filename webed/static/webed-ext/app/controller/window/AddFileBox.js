@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.AddFileBox', {
+Ext.define ('Webed.controller.window.AddFileBox', {
     extend: 'Ext.app.Controller',
 
     refs: [{

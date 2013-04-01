@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.InsertLinkBox', {
+Ext.define ('Webed.controller.window.InsertLinkBox', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////

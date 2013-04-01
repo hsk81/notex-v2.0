@@ -1,4 +1,4 @@
-Ext.define ('Webed.controller.UploadBox', {
+Ext.define ('Webed.controller.window.UploadBox', {
     extend: 'Ext.app.Controller',
 
     ///////////////////////////////////////////////////////////////////////////
