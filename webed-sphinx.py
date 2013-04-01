@@ -125,8 +125,10 @@ class ZmqQueue (Command):
         assert backend_address
 
         frontend = context.socket (zmq.ROUTER)
+        frontend.IDENTITY = 'ROUTER'
         frontend.bind (frontend_address)
         backend = context.socket (zmq.DEALER)
+        frontend.IDENTITY = 'DEALER'
         backend.bind (backend_address)
 
         try:
@@ -146,7 +148,9 @@ class ZmqQueueThread (ZmqQueue):
 
         device = ThreadDevice (zmq.QUEUE, zmq.ROUTER, zmq.DEALER)
         device.bind_in (frontend_address)
+        device.setsockopt_in (zmq.IDENTITY, 'ROUTER')
         device.bind_out (backend_address)
+        device.setsockopt_out (zmq.IDENTITY, 'DEALER')
         device.start ()
 
 manager.add_command ('zmq-queue', ZmqQueue ())
