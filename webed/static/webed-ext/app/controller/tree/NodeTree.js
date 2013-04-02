@@ -263,12 +263,9 @@ Ext.define ('Webed.controller.tree.NodeTree', {
         }
 
         function append_node (node) {
-            var root_uuid = node.get ('root_uuid');
-            assert (root_uuid);
-            var root = get_root.call (this, root_uuid);
-            assert (root);
-            var node = root.appendChild (node);
-            assert (node);
+            var root_uuid = assert (node.get ('root_uuid'));
+            var root = assert (get_root.call (this, root_uuid));
+            root.appendChild (node);
 
             root.expand (false, function () {
                 var view = this.getNodeTree ();
@@ -279,14 +276,12 @@ Ext.define ('Webed.controller.tree.NodeTree', {
         }
 
         function get_root (root_uuid) {
-            var view = this.getNodeTree ();
-            assert (view);
-            var base = view.getRootNode ();
-            assert (base);
+            var tree = assert (this.getNodeTree ());
+            var root = assert (tree.getRootNode ());
 
-            return (root_uuid != base.get ('uuid'))
-                ? base.findChild ('uuid', root_uuid, true)
-                : base;
+            return (root_uuid != root.get ('uuid'))
+                ? root.findChild ('uuid', root_uuid, true)
+                : root;
         }
 
         //
@@ -301,7 +296,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             assert (node.name_path[node.name_path.length - 1] == node.name);
 
             var model = Ext.create ('Webed.model.Node', node);
-            assert (model); model.phantom = false;
+            model.phantom = false;
             return model;
         }
 
@@ -309,12 +304,13 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     create_leaf: function (args) {
+        var application = assert (this.application);
 
         function creator (leaf) {
-            this.application.fireEvent ('set_leaf', this, {
+            application.fireEvent ('set_leaf', this, {
                 leaf: [leaf], scope: this, callback: function (rec, op) {
                     if (rec && op && op.success) {
-                        var store = this.application.getStore ('Leafs');
+                        var store = application.getStore ('Leafs');
                         assert (store); store.decorate (rec);
                     }
 
@@ -346,7 +342,11 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             this.application.fireEvent ('get_node', this, {
                 node: [args.node], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
-                        for (var idx in recs) on_get.call (this, recs[idx]);
+                        for (var idx in recs) {
+                            if (recs.hasOwnProperty (idx)) {
+                                on_get.call (this, recs[idx]);
+                            }
+                        }
                     }
                 }
             });
@@ -361,14 +361,11 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             var model = record.save ({
                 scope: this, callback: function (rec, op) {
 
-                    var view = this.getNodeTree ();
-                    assert (view);
-                    var base = view.getRootNode ();
-                    assert (base);
-                    var semo = view.getSelectionModel ();
-                    assert (semo);
+                    var tree = assert (this.getNodeTree ());
+                    var root = assert (tree.getRootNode ());
+                    var semo = assert (tree.getSelectionModel ());
 
-                    semo.select (base); // These two select statements seem to
+                    semo.select (root); // These two select statements seem to
                     semo.select (rec);  // fix an ExtJS bug w.r.t. selection.
 
                     if (args.callback && args.callback.call) {
@@ -398,7 +395,11 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             this.application.fireEvent ('get_node', this, {
                 node: [args.node], scope:this, callback: function (recs) {
                     if (recs && recs.length > 0) {
-                        for (var idx in recs) on_get.call (this, recs[idx]);
+                        for (var idx in recs) {
+                            if (recs.hasOwnProperty (idx)) {
+                                on_get.call (this, recs[idx]);
+                            }
+                        }
                     }
                 }
             });
@@ -445,13 +446,10 @@ Ext.define ('Webed.controller.tree.NodeTree.KeyMap', {
     binding: [{
         key: Ext.EventObject.F9,
         defaultEventAction: 'stopEvent',
-        handler: function (key, event) {
-            var controller = this.getController ();
-            assert (controller);
-            var view = controller.getNodeTree ();
-            assert (view);
-            var panel = view.up ('panel');
-            assert (panel);
+        handler: function () {
+            var controller = assert (this.getController ());
+            var tree = assert (controller.getNodeTree ());
+            var panel = assert (tree.up ('panel'));
 
             panel.toggleCollapse ();
         }
