@@ -261,9 +261,9 @@ def archive_download (uuid):
                 temp.write (obj_cache.get (data_key))
                 path, filename = os.path.split (temp.name)
 
-            response = send_from_directory (path, filename,
-                as_attachment=True, attachment_filename=
-                    filename_for (node, ext='zip'))
+            response = send_from_directory (path, filename, as_attachment=True,
+                attachment_filename=filename_for (node, ext='zip'),
+                mimetype='application/octet-stream')
 
         elif request.args.get ('fetch', False):
 
@@ -348,7 +348,8 @@ def dictionary_download (filename):
     path = os.path.abspath (app.config['TYPO_DICT_PATH'])
     assert os.path.exists (path)
 
-    return send_from_directory (path, filename, as_attachment=True)
+    return send_from_directory (path, filename, as_attachment=True,
+        mimetype='application/octet-stream')
 
 ###############################################################################
 ###############################################################################

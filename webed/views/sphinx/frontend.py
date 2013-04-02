@@ -54,15 +54,15 @@ def rest_to (uuid, ext, converter_cls):
     size_key = obj_cache.make_key (uuid, 'size', converter_cls)
 
     if obj_cache.exists (data_key):
-        if request.args.get ('fetch', False) and app.dev and False:
+        if request.args.get ('fetch', False) and app.dev:
 
             with tempfile.NamedTemporaryFile (delete=False) as temp:
                 temp.write (obj_cache.get (data_key))
                 path, filename = os.path.split (temp.name)
 
-            response = send_from_directory (path, filename,
-                as_attachment=True, attachment_filename=filename_for (
-                    node, ext, converter_cls))
+            response = send_from_directory (path, filename, as_attachment=True,
+                attachment_filename=filename_for (node, ext, converter_cls),
+                mimetype='application/octet-stream')
 
         elif request.args.get ('fetch', False):
 
@@ -70,12 +70,9 @@ def rest_to (uuid, ext, converter_cls):
                 filename_for (node, ext, converter_cls)
 
             response = make_response ()
-            response.headers['Content-Disposition'] = \
-                content_disposition
-            response.headers['Content-Length'] = \
-                obj_cache.get_value (size_key)
-            response.headers['Content-Type'] = \
-                'application/octet-stream'
+            response.headers['Content-Disposition'] = content_disposition
+            response.headers['Content-Length'] = obj_cache.get_value (size_key)
+            response.headers['Content-Type'] = 'application/octet-stream'
             response.headers['X-Accel-Redirect'] = \
                 '/cache/?' + obj_cache.prefix_key (data_key)
         else:
