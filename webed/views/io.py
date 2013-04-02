@@ -262,15 +262,14 @@ def archive_download (uuid):
                 path, filename = os.path.split (temp.name)
 
             response = send_from_directory (path, filename,
-                as_attachment=True, attachment_filename='%s [%s].zip' % (
-                    node.name.encode ('utf-8'), node.mime.replace ('/', '!')))
+                as_attachment=True, attachment_filename=
+                    filename_for (node, ext='zip'))
 
         elif request.args.get ('fetch', False):
 
             response = make_response ()
             response.headers['Content-Disposition'] = \
-                'attachment;filename="%s [%s].zip"' % (
-                    node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
+                'attachment;filename="%s"' % filename_for (node, ext='zip')
             response.headers['Content-Length'] = \
                 obj_cache.get_value (size_key)
             response.headers['Content-Type'] = \
@@ -288,6 +287,11 @@ def archive_download (uuid):
         response = jsonify (success=True, name=node.name)
 
     return response
+
+def filename_for (node, ext):
+
+    return '%s [%s].%s' % (
+        node.name.encode ('utf-8'), node.mime.replace ('/', '!'), ext)
 
 ###############################################################################
 

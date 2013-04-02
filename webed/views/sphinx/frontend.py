@@ -62,12 +62,12 @@ def rest_to (uuid, ext, converter_cls):
 
             response = send_from_directory (path, filename,
                 as_attachment=True, attachment_filename=filename_for (
-                    ext, converter_cls, node))
+                    node, ext, converter_cls))
 
         elif request.args.get ('fetch', False):
 
             content_disposition = 'attachment;filename="%s"' % \
-                filename_for (ext, converter_cls, node)
+                filename_for (node, ext, converter_cls)
 
             response = make_response ()
             response.headers['Content-Disposition'] = \
@@ -94,7 +94,7 @@ def rest_to (uuid, ext, converter_cls):
 
     return response
 
-def filename_for (ext, converter_cls, node):
+def filename_for (node, ext, converter_cls):
 
     nodename = node.name.encode ('utf-8')
     assert nodename
