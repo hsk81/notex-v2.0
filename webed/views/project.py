@@ -42,7 +42,7 @@ def setup_rest_project (json=True):
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
-        result = archive_upload (file=fs, skip_commit=True, json=False)
+        result = archive_upload (source=fs, skip_commit=True, json=False)
         for node in result['nodes']: setup_rest (node)
 
     if not json:
@@ -137,7 +137,7 @@ def setup_latex_project (json=True):
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
-        result = archive_upload (file=fs, skip_commit=True, json=False)
+        result = archive_upload (source=fs, skip_commit=True, json=False)
         for node in result['nodes']: setup_latex (node)
 
     if not json:
@@ -170,7 +170,7 @@ def setup_generic_project (json=True):
 
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
-        result = archive_upload (file=fs, skip_commit=True, json=False)
+        result = archive_upload (source=fs, skip_commit=True, json=False)
         for node in result['nodes']: setup_generic (node)
 
     if not json:

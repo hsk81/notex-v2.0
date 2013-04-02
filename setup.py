@@ -28,9 +28,6 @@ setup (
         'Flask-Script>=0.5.3',
         'Flask-SQLAlchemy>=0.16',
         'Flask-Psycopg2>=1.2',
-        'gevent>=0.13.8',
-        'gevent-fastcgi==0.1.15dev',
-        'zope.interface==4.0.5',
         'ipython>=0.13.1',
         'hiredis>=0.1.1',
         'pylibmc>=1.2.3',
@@ -39,7 +36,12 @@ setup (
         'redis>=2.7.2',
         'spritemapper>=1.0.0',
         'ujson>=1.30',
+        'uWSGI>=1.9.4',
         'yuicompressor>=2.4.7'
+    ],
+
+    dependency_links=[
+        'http://github.com/hsk81/pylibmc/tarball/master#egg=pylibmc-1.2.3'
     ]
 )
 

@@ -84,7 +84,7 @@ def setup_session ():
 
                 try:
                     fs = FileStorage (stream=stream, filename=filename)
-                    archive_upload (file=fs, base=base, skip_commit=True)
+                    archive_upload (source=fs, base=base, skip_commit=True)
                 except Exception, ex:
                     logger.exception (ex) ## no re-raise!
 

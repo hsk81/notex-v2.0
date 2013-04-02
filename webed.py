@@ -99,14 +99,6 @@ class StdCacheClear (Command):
 
 manager.add_command ('clear-cache-std', StdCacheClear ())
 
-class ObjCacheClear (Command):
-    """Clear object cache (archives etc.)"""
-
-    def run (self):
-        obj_cache.connection.flushdb () ## redis
-
-manager.add_command ('clear-cache-obj', ObjCacheClear ())
-
 class SssCacheClear (Command):
     """Clear session cache (anchor etc.) [!!]"""
 
@@ -122,6 +114,14 @@ class DbsCacheClear (Command):
         dbs_cache.connection.flushdb () ## redis
 
 manager.add_command ('clear-cache-dbs', DbsCacheClear ())
+
+class ObjCacheClear (Command):
+    """Clear object cache (archives etc.)"""
+
+    def run (self):
+        obj_cache.flush_all () ## memcached
+
+manager.add_command ('clear-cache-obj', ObjCacheClear ())
 
 class FsbClear (Command):
     """Clear file system backend (data etc.) [!!]"""

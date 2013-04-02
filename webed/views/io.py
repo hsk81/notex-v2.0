@@ -4,7 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from werkzeug.utils import secure_filename
-from flask import Blueprint, Response, make_response
+from flask import Blueprint, make_response, send_from_directory
 from flask.globals import request
 
 from ..app import app
@@ -43,8 +43,8 @@ def file_upload ():
     if not request.is_xhr:
         request.json = request.args
 
-    file = request.files['file']
-    if not file:
+    source = request.files['file']
+    if not source:
         return jsonify (success=False)
 
     root_uuid = request.json.get ('root_uuid', None)
@@ -57,18 +57,18 @@ def file_upload ():
         root = Q (Node.query).one (uuid=root_uuid)
         assert root
 
-    name = secure_filename (file.filename)
+    name = secure_filename (source.filename)
     assert name
-    mime = MIME.guess_mime (name) or file.mimetype
+    mime = MIME.guess_mime (name) or source.mimetype
     assert mime
 
     @db.nest ()
     def create_leaf (name, root, mime):
 
         if MIME.is_text (mime):
-            leaf, _ = create_txt (name, root, mime, file=file)
+            leaf, _ = create_txt (name, root, mime, source=source)
         else:
-            leaf, _ = create_bin (name, root, mime, file=file)
+            leaf, _ = create_bin (name, root, mime, source=source)
 
         db.session.add (leaf)
         return leaf
@@ -86,14 +86,14 @@ def file_upload ():
 
 @io.route ('/archive-upload/', methods=['POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def archive_upload (file=None, base=None, skip_commit=None, json=True):
-    file = file if file else request.files['file']
+def archive_upload (source=None, base=None, skip_commit=None, json=True):
+    source = source if source else request.files['file']
 
-    if not file:
+    if not source:
         return jsonify (success=False, filename=None,
             message='file expected')
 
-    if not file.filename or len (file.filename) == 0:
+    if not source.filename or len (source.filename) == 0:
         return jsonify (success=False, filename=None,
             message='filename invalid')
 
@@ -102,14 +102,14 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
 
     with tempfile.TemporaryFile () as zip_file:
 
-        file.save (zip_file)
+        source.save (zip_file)
         zip_file.flush ()
 
         if not zipfile.is_zipfile (zip_file):
-            return jsonify (success=False, filename=file.filename,
+            return jsonify (success=False, filename=source.filename,
                 message='ZIP format expected')
 
-        prj_mime = get_project_mime (file.filename)
+        prj_mime = get_project_mime (source.filename)
         assert prj_mime
 
         temp_path = tempfile.mkdtemp ()
@@ -122,9 +122,9 @@ def archive_upload (file=None, base=None, skip_commit=None, json=True):
             db.sql.select ([db.sql.func.npt_insert_node (base.id, node.id)]))
 
     if not json:
-        return dict (success=True, filename=file.filename, nodes=nodes)
+        return dict (success=True, filename=source.filename, nodes=nodes)
     else:
-        return jsonify (success=True, filename=file.filename, nodes=map (
+        return jsonify (success=True, filename=source.filename, nodes=map (
             lambda node: dict (uuid=node.uuid), nodes))
 
 ###############################################################################
@@ -214,28 +214,28 @@ def create_dir (name, root, mime):
 
     return Node (name, root, mime=mime)
 
-def create_txt (name, root, mime, path=None, file=None):
-    assert path and not file or not path and file
+def create_txt (name, root, mime, path=None, source=None):
+    assert path and not source or not path and source
 
     if path:
-        with open (os.path.join (path, name)) as file:
-            data = file.read ().replace ('\r\n','\n')
+        with open (os.path.join (path, name)) as source:
+            data = source.read ().replace ('\r\n', '\n')
     else:
-        data = file.read ().replace ('\r\n','\n')
+        data = source.read ().replace ('\r\n', '\n')
 
     leaf = Leaf (name, root, mime=mime)
     prop = TextProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
-def create_bin (name, root, mime, path=None, file=None):
-    assert path and not file or not path and file
+def create_bin (name, root, mime, path=None, source=None):
+    assert path and not source or not path and source
 
     if path:
-        with open (os.path.join (path, name)) as file:
-            data = file.read ()
+        with open (os.path.join (path, name)) as source:
+            data = source.read ()
     else:
-        data = file.read ()
+        data = source.read ()
 
     leaf = Leaf (name, root, mime=mime)
     prop = Base64Property ('data', data, leaf, mime=mime)
@@ -245,44 +245,48 @@ def create_bin (name, root, mime, path=None, file=None):
 ###############################################################################
 ###############################################################################
 
-@io.route ('/archive-download/', methods=['GET', 'POST'])
-def archive_download ():
+@io.route ('/archive-download/<uuid>', methods=['GET', 'POST'])
+def archive_download (uuid):
 
-    node_uuid = request.args.get ('node_uuid', None)
-    assert node_uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
-    assert base
-    node = Q (base.subnodes).one (uuid=node_uuid)
-    assert node
+    node = Q (base.subnodes).one (uuid=uuid)
 
-    archive_key = obj_cache.make_key (node_uuid, 'archive', 'zip')
-    content_val = obj_cache.get_value (archive_key)
+    data_key = obj_cache.make_key (uuid, 'data')
+    size_key = obj_cache.make_key (uuid, 'size')
 
-    if content_val:
-        if request.args.get ('fetch', False):
+    if obj_cache.exists (data_key):
+        if request.args.get ('fetch', False) and app.dev:
 
-            content_len = len (content_val)
-            content_dsp = 'attachment;filename="%s [%s].zip"' % (
-                node.name.encode ('utf-8'), node.mime.replace ('/', '!')
-            )
+            with tempfile.NamedTemporaryFile (delete=False) as temp:
+                temp.write (obj_cache.get (data_key))
+                path, filename = os.path.split (temp.name)
 
-            with tempfile.NamedTemporaryFile (delete=False) as target:
-                target.write (content_val)
-                path_to = target.name
+            response = send_from_directory (path, filename,
+                as_attachment=True, attachment_filename='%s [%s].zip' % (
+                    node.name.encode ('utf-8'), node.mime.replace ('/', '!')))
+
+        elif request.args.get ('fetch', False):
 
             response = make_response ()
-            response.headers['Content-Description'] = 'File Transfer'
-            response.headers['Content-Disposition'] = content_dsp
-            response.headers['Content-Length'] = content_len
-            response.headers['Content-Type'] = 'application/octet-stream'
-            response.headers['Cache-Control'] = 'no-cache'
-            response.headers['X-Accel-Redirect'] = path_to
+            response.headers['Content-Disposition'] = \
+                'attachment;filename="%s [%s].zip"' % (
+                    node.name.encode ('utf-8'), node.mime.replace ('/', '!'))
+            response.headers['Content-Length'] = \
+                obj_cache.get_value (size_key)
+            response.headers['Content-Type'] = \
+                'application/octet-stream'
+            response.headers['X-Accel-Redirect'] = \
+                '/cache/?' + obj_cache.prefix_key (data_key)
+
         else:
             response = jsonify (success=True, name=node.name)
-            obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
+        data = compress (node)
+        obj_cache.set_value (data_key, data, expiry=15) ##[s]
+        size = len (data)
+        obj_cache.set_value (size_key, size, expiry=15) ##[s]
+
         response = jsonify (success=True, name=node.name)
-        obj_cache.set_value (archive_key, compress (node), expiry=15) ##[s]
 
     return response
 
@@ -335,32 +339,13 @@ def compress (root, crlf=True):
 ###############################################################################
 ###############################################################################
 
-@io.route ('/dictionaries/<filename>', methods=['GET'])
-def dictionary_download (filename, chunk_size=256 * 1024):
+@io.route ('/dictionaries/<path:filename>', methods=['GET'])
+def dictionary_download (filename):
 
-    ##
-    ## TODO: Bypass flask & use nginx directly!? Test!
-    ##
-
-    path = os.path.join (app.config['TYPO_DICT_PATH'], filename)
+    path = os.path.abspath (app.config['TYPO_DICT_PATH'])
     assert os.path.exists (path)
 
-    with open (path) as file:
-
-        content_val = file.read ()
-        content_len = len (content_val)
-        content_csz = chunk_size
-
-    def next_chunk (length, size):
-        for index in range (0, length, size):
-            yield content_val[index:index + size]
-
-    response = Response (next_chunk (content_len, content_csz))
-    response.headers ['Content-Length'] = content_len
-    response.headers ['Content-Disposition'] = \
-        'attachment;filename="%s"' % filename
-
-    return response
+    return send_from_directory (path, filename, as_attachment=True)
 
 ###############################################################################
 ###############################################################################

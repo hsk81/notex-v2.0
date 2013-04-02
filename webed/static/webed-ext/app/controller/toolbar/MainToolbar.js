@@ -169,7 +169,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         application.fireEvent ('progress-play', this, {message: 'Exporting'});
 
         var uuid = assert (node.get ('uuid'));
-        var url = '/archive-download/?node_uuid=' + uuid;
+        var url = '/archive-download/' + uuid;
 
         function onSuccess (xhr, opts) {
             var body = Ext.getBody ();
@@ -189,7 +189,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 cls: 'x-hidden',
                 id: 'form',
                 method: 'POST',
-                action: url + '&fetch=true',
+                action: url + '?fetch=true',
                 target: 'iframe'
             });
 
