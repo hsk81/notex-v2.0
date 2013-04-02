@@ -81,7 +81,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         });
 
         var uuid = assert (node.get ('uuid'));
-        var url = url_base + '?node_uuid=' + uuid;
+        var url = url_base + uuid;
 
         function onSuccess (xhr, opts) {
             var body = Ext.getBody ();
@@ -101,7 +101,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 cls: 'x-hidden',
                 id: 'form',
                 method: 'POST',
-                action: url + '&fetch=true',
+                action: url + '?fetch=true',
                 target: 'iframe'
             });
 

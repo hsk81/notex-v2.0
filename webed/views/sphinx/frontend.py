@@ -3,7 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask import Blueprint, Response, request
+from flask import Blueprint, request, make_response, send_from_directory
 
 from ...app import app
 from ...ext import logger
@@ -13,7 +13,9 @@ from ...util import Q, PickleZlib, jsonify
 from ..io import compress
 
 import uuid
+import os.path
 import zipfile
+import tempfile
 import cStringIO as StringIO
 
 ###############################################################################
@@ -24,30 +26,22 @@ sphinx = Blueprint ('sphinx', __name__)
 ###############################################################################
 ###############################################################################
 
-@sphinx.route ('/rest-to-html/', methods=['GET', 'POST'])
-def rest_to_html ():
-    return rest_to (ext='zip', converter_cls=HtmlConverter)
+@sphinx.route ('/rest-to-html/<uuid>', methods=['GET', 'POST'])
+def rest_to_html (uuid):
+    return rest_to (uuid, ext='zip', converter_cls=HtmlConverter)
 
-@sphinx.route ('/rest-to-latex/', methods=['GET', 'POST'])
-def rest_to_latex ():
-    return rest_to (ext='zip', converter_cls=LatexConverter)
+@sphinx.route ('/rest-to-latex/<uuid>', methods=['GET', 'POST'])
+def rest_to_latex (uuid):
+    return rest_to (uuid, ext='zip', converter_cls=LatexConverter)
 
-@sphinx.route ('/rest-to-pdf/', methods=['GET', 'POST'])
-def rest_to_pdf ():
-    return rest_to (ext='pdf', converter_cls=PdfConverter)
+@sphinx.route ('/rest-to-pdf/<uuid>', methods=['GET', 'POST'])
+def rest_to_pdf (uuid):
+    return rest_to (uuid, ext='pdf', converter_cls=PdfConverter)
 
-def rest_to (ext, converter_cls, chunk_size=256 * 1024):
+def rest_to (uuid, ext, converter_cls):
 
-    ##
-    ## TODO: Flask & Nginx together don't like this code .. fix!
-    ##
-
-    node_uuid = request.args.get ('node_uuid', None)
-    assert node_uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
-    assert base
-    node = Q (base.subnodes).one (uuid=node_uuid)
-    assert node
+    node = Q (base.subnodes).one (uuid=uuid)
 
     ping_timeout = app.config['PING_TIMEOUT']
     assert ping_timeout
@@ -56,30 +50,44 @@ def rest_to (ext, converter_cls, chunk_size=256 * 1024):
     data_address = app.config['DATA_ADDRESS']
     assert data_address
 
-    archive_key = obj_cache.make_key (node_uuid, converter_cls)
-    content_val = obj_cache.get_value (archive_key)
+    data_key = obj_cache.make_key (uuid, 'data', converter_cls)
+    size_key = obj_cache.make_key (uuid, 'size', converter_cls)
 
-    if content_val:
-        if request.args.get ('fetch', False):
+    if obj_cache.exists (data_key):
+        if request.args.get ('fetch', False) and app.dev and False:
 
-            content_len = len (content_val)
-            content_csz = chunk_size
+            with tempfile.NamedTemporaryFile (delete=False) as temp:
+                temp.write (obj_cache.get (data_key))
+                path, filename = os.path.split (temp.name)
 
-            def next_chunk (length, size):
-                for index in range (0, length, size):
-                    yield content_val[index:index + size]
+            response = send_from_directory (path, filename,
+                as_attachment=True, attachment_filename=filename_for (
+                    ext, converter_cls, node))
 
-            response = Response (next_chunk (content_len, content_csz))
-            response.headers ['Content-Length'] = content_len
-            response.headers ['Content-Disposition'] = filename_for (
-                ext, converter_cls, node)
+        elif request.args.get ('fetch', False):
+
+            content_disposition = 'attachment;filename="%s"' % \
+                filename_for (ext, converter_cls, node)
+
+            response = make_response ()
+            response.headers['Content-Disposition'] = \
+                content_disposition
+            response.headers['Content-Length'] = \
+                obj_cache.get_value (size_key)
+            response.headers['Content-Type'] = \
+                'application/octet-stream'
+            response.headers['X-Accel-Redirect'] = \
+                '/cache/?' + obj_cache.prefix_key (data_key)
         else:
             response = jsonify (success=True, name=node.name)
-            obj_cache.expire (archive_key, expiry=15) ## refresh
     else:
         try:
             with converter_cls (ping_address, data_address, ping_timeout) as c:
-                obj_cache.set_value (archive_key, c.apply (node), expiry=15)
+                data = c.apply (node)
+                obj_cache.set_value (data_key, data, expiry=15) ##[s]
+                size = len (data)
+                obj_cache.set_value (size_key, size, expiry=15) ##[s]
+
                 response = jsonify (success=True, name=node.name)
         except TimeoutError:
             response = jsonify (success=False, name=node.name), 503
@@ -98,7 +106,7 @@ def filename_for (ext, converter_cls, node):
     else:
         filename = '%s' % nodename
 
-    return 'attachment;filename="%s.%s"' % (filename, ext)
+    return '%s.%s' % (filename, ext)
 
 ###############################################################################
 ###############################################################################
