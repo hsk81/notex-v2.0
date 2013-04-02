@@ -1,6 +1,10 @@
 Ext.define ('Webed.controller.toolbar.MainToolbar', {
     extend: 'Ext.app.Controller',
 
+    refs: [{
+        selector: 'webed-statusbar', ref: 'statusbar'
+    }],
+
     init: function () {
         this.control ({
             'main-toolbar button[action=save-document]': {
@@ -62,7 +66,17 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     saveDocument: function (button) {
         var node = assert (this.get_selection ());
-        if (!node.isLeaf ()) return;
+        if (!node.isLeaf ()) {
+            var statusbar = assert (this.getStatusbar ());
+            statusbar.setStatus ({
+                text: 'Select a file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
+            });
+
+            return;
+        }
+
         assert (button).disable ();
 
         var application = assert (this.application);
@@ -120,15 +134,24 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     rename: function () {
         var node = assert (this.get_selection ());
-        if (node.isRoot () == false) {
-            var renameBox = Ext.create ('Webed.window.RenameBox', {
-                title: Ext.String.format ('Rename {0}', node.getTitle ()),
-                iconCls: node.get ('iconCls'),
-                record: node
+        if (node.isRoot ()) {
+            var statusbar = assert (this.getStatusbar ());
+            statusbar.setStatus ({
+                text: 'Select a project or file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
             });
 
-            renameBox.show ();
+            return;
         }
+
+        var renameBox = Ext.create ('Webed.window.RenameBox', {
+            title: Ext.String.format ('Rename {0}', node.getTitle ()),
+            iconCls: node.get ('iconCls'),
+            record: node
+        });
+
+        renameBox.show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -136,15 +159,24 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     destroy: function () {
         var node = assert (this.get_selection ());
-        if (node.isRoot () == false) {
-            var deleteBox = Ext.create ('Webed.window.DeleteBox', {
-                title: Ext.String.format ('Delete {0}?', node.getTitle ()),
-                iconCls: node.get ('iconCls'),
-                record: node
+        if (node.isRoot ()) {
+            var statusbar = assert (this.getStatusbar ());
+            statusbar.setStatus ({
+                text: 'Select a project or file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
             });
 
-            deleteBox.show ();
+            return;
         }
+
+        var deleteBox = Ext.create ('Webed.window.DeleteBox', {
+            title: Ext.String.format ('Delete {0}?', node.getTitle ()),
+            iconCls: node.get ('iconCls'),
+            record: node
+        });
+
+        deleteBox.show ();
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -161,12 +193,22 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         if (node.isRoot ()) {
+            var statusbar = assert (this.getStatusbar ());
+            statusbar.setStatus ({
+                text: 'Select a project or file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
+            });
+
             return;
         }
 
         assert (button).disable ();
+
         var application = assert (this.application);
-        application.fireEvent ('progress-play', this, {message: 'Exporting'});
+        application.fireEvent ('progress-play', this, {
+            message: 'Exporting'
+        });
 
         var uuid = assert (node.get ('uuid'));
         var url = '/archive-download/' + uuid;

@@ -51,7 +51,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         if (node.isRoot () || node.isLeaf ()) {
 
             statusbar.setStatus ({
-                text: 'Select a project; none are selected.',
+                text: 'Select a project; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
             });
