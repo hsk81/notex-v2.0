@@ -277,7 +277,6 @@ def archive_download (uuid):
                 'application/octet-stream'
             response.headers['X-Accel-Redirect'] = \
                 '/cache/?' + obj_cache.prefix_key (data_key)
-
         else:
             response = jsonify (success=True, name=node.name)
     else:
