@@ -14,6 +14,7 @@ from ..session.anchor import SessionAnchor
 
 import re
 import sys
+import setup
 import director
 
 ###############################################################################
@@ -56,14 +57,16 @@ def main (page='home', template='index.html'):
     def cached_template (*args, **kwargs):
         return render_template (*args, **kwargs)
 
-    debug = False if 'no-debug' in request.args else app.debug
-    theme = request.args.get ('theme', 'blue')
-    keywords = get_keywords (page)
-    description = get_description (page)
     canonical = get_canonical (page)
+    debug = False if 'no-debug' in request.args else app.debug
+    description = get_description (page)
+    keywords = get_keywords (page)
+    theme = request.args.get ('theme', 'blue')
+    version = '.'.join (setup.version.split ('.')[:2])
 
-    return cached_template (template, page=page, debug=debug, theme=theme,
-        keywords=keywords, description=description, canonical=canonical)
+    return cached_template (template, debug=debug, description=description,
+        canonical=canonical, keywords=keywords, page=page, theme=theme,
+        version=version)
 
 ###############################################################################
 ###############################################################################
