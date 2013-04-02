@@ -393,17 +393,17 @@ class WebedRedis (WebedCache):
 ###############################################################################
 ###############################################################################
 
-std_cache = WebedRedis (app, servers=app.config.get ('CACHE0_SERVERS'),
-    prefix=app.config.get ('CACHE0_KEY_PREFIX'), db=0)
+std_cache = WebedMemcached (app, servers=app.config.get ('CACHE0_SERVERS'),
+    prefix=app.config.get ('CACHE0_KEY_PREFIX'))
 
-sss_cache = WebedRedis (app, servers=app.config.get ('CACHE1_SERVERS'),
-    prefix=app.config.get ('CACHE1_KEY_PREFIX'), db=2)
+obj_cache = WebedMemcached (app, servers=app.config.get ('CACHE1_SERVERS'),
+    prefix=app.config.get ('CACHE1_KEY_PREFIX'))
 
-dbs_cache = WebedRedis (app, servers=app.config.get ('CACHE2_SERVERS'),
-    prefix=app.config.get ('CACHE2_KEY_PREFIX'), db=3)
+sss_cache = WebedRedis (app, servers=app.config.get ('CACHE2_SERVERS'),
+    prefix=app.config.get ('CACHE2_KEY_PREFIX'), db=0)
 
-obj_cache = WebedMemcached (app, servers=app.config.get ('CACHE3_SERVERS'),
-    prefix=app.config.get ('CACHE3_KEY_PREFIX'))
+dbs_cache = WebedRedis (app, servers=app.config.get ('CACHE3_SERVERS'),
+    prefix=app.config.get ('CACHE3_KEY_PREFIX'), db=1)
 
 ###############################################################################
 ###############################################################################
