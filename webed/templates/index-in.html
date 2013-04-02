@@ -2,11 +2,27 @@
 <html>
 <head>
 
-<meta charset="UTF-8"/>
-<title>WebEd</title>
+<meta charset="utf-8">
+<meta name="keywords" content="{{ keywords }}"/>
+<meta name="description" content="{{ description }}"/>
+
+{% if title %}
+<title>{{ title }}</title>
+{% else %}
+<title>WebEd - A browser based text editor</title>
+{% endif %}
 
 <link rel="shortcut icon"
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
+<link rel="canonical"
+      href="{{ canonical }}">
+
+{% if debug -%}
+<script type="text/javascript">var _gaq = undefined;</script>
+{%- else -%}
+<script type="text/javascript">{% include 'analytics.js' %}</script>
+{% endif %}
+
 {% if debug -%}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/menu.css') }}" />
