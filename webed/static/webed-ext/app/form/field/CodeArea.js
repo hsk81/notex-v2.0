@@ -126,6 +126,9 @@ Ext.define ('Webed.form.field.CodeArea', {
         codemirror.on ('blur', function (self) {
             me.fireEvent ('blur', me);
         });
+        codemirror.on ('change', function (self, diff) {
+            me.fireEvent ('change', me, diff);
+        });
 
         if (this.needSpellChecker (this.getMime ())) {
             this.spellChecker = this.getSpellChecker ();
@@ -230,11 +233,14 @@ Ext.define ('Webed.form.field.CodeArea', {
             if (this.codemirror) {
                 this.codemirror.markClean ();
                 this.fake_clean = undefined;
+                this.fireEvent ('clean', this);
             } else {
                 this.fake_clean = true;
+                this.fireEvent ('clean', this, {fake: true});
             }
         } else {
             this.fake_clean = true;
+            this.fireEvent ('clean', this, {fake: true});
         }
 
         if (!option||option.sync!==false) {
