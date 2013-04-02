@@ -3,13 +3,13 @@
 <head>
 
 <meta charset="utf-8">
-<meta name="keywords" content="{{ keywords }}"/>
+<meta name="keywords" content="{{ keywords|join(',') }}"/>
 <meta name="description" content="{{ description }}"/>
 
 {% if title %}
 <title>{{ title }}</title>
 {% else %}
-<title>WebEd - A browser based text editor</title>
+<title>NoTex - A browser based text editor</title>
 {% endif %}
 
 <link rel="shortcut icon"
