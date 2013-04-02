@@ -137,6 +137,11 @@ class WebedCache (object):
 
         return hashed.hexdigest ()
 
+    def prefix_key (self, key):
+        return self.KEY_PREFIX + key
+
+    KEY_PREFIX = ''
+
     def increase_version (self, *args, **kwargs):
         self.increase (self.version_key (*args, **kwargs))
 
