@@ -1,0 +1,1 @@
+CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
