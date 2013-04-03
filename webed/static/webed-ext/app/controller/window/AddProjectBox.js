@@ -68,6 +68,10 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
     },
 
     cancel: function () {
+        TRACKER.event ({
+            category: 'AddProjectBox', action: 'cancel', value: 1
+        });
+
         assert (this.getAddProjectBox ()).close ();
     },
 
@@ -104,7 +108,7 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
             var node = assert (res.nodes[0]);
 
             function callback (recs, op) {
-                if (op.success) {
+                if (op && op.success) {
                     var records = recs.filter (function (rec) {
                         return rec.get ('uuid') == node.uuid;
                     });
@@ -115,6 +119,11 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
                 } else {
                     console.error ('[AddProjectBox.setup_project]', recs, op);
                 }
+
+                TRACKER.event ({
+                    category: 'AddProjectBox', action: 'confirm', label: mime,
+                    value: (op && op.success) ? 1 : 0
+                });
             }
 
             application.fireEvent ('refresh_tree', this, {
@@ -123,6 +132,11 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
         }
 
         function onFailure (xhr, opts) {
+            TRACKER.event ({
+                category: 'AddProjectBox', action: 'confirm', label: mime,
+                value: 0
+            });
+
             console.error ('[AddProjectBox.setup_project]', xhr, opts);
         }
 

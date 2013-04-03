@@ -40,7 +40,14 @@ Ext.define ('Webed.controller.grid.LeafList', {
     ///////////////////////////////////////////////////////////////////////////
 
     refresh: function () {
-        assert (this.getLeafsStore ()).load ();
+        assert (this.getLeafsStore ()).load ({
+            scope: this, callback: function (recs, op, success) {
+                if (typeof (success) == 'boolean') TRACKER.event ({
+                    category: 'LeafList', action: 'refresh',
+                    value: (op && op.success) ? 1 : 0
+                });
+            }
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -63,7 +70,18 @@ Ext.define ('Webed.controller.grid.LeafList', {
 
     expand: function () {
         var store = assert (this.getLeafsStore ());
-        if (store.getTotalCount () == 0) store.load ();
+        if (store.getTotalCount () == 0) {
+            store.load (function (recs, op, success) {
+                if (typeof (success) == 'boolean') TRACKER.event ({
+                    category: 'LeafList', action: 'expand', label: "1'st",
+                    value: (op && op.success) ? 1 : 0
+                });
+            });
+        } else {
+            TRACKER.event ({
+                category: 'LeafList', action: 'expand', label: "n'th"
+            });
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////

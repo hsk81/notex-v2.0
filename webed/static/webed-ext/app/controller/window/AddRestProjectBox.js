@@ -39,9 +39,10 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
     confirm: function () {
         var application = assert (this.application);
         var box = assert (this.getAddRestProjectBox ());
+        var mime = assert (box.mime);
         var grid = assert (box.down ('propertygrid'));
         var source = Ext.apply (grid.getSource (), {
-            mime: assert (box.mime)
+            mime: mime
         });
 
         var url = Ext.String.format ('/setup-rest-project/?' +
@@ -87,6 +88,11 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
                 } else {
                     console.error ('[AddProjectBox.confirm]', recs, op);
                 }
+
+                TRACKER.event ({
+                    category: 'AddProjectBox', action: 'confirm', label: mime,
+                    value: (op && op.success) ? 1 : 0
+                });
             }
 
             application.fireEvent ('refresh_tree', this, {
@@ -95,6 +101,11 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
         }
 
         function onFailure (xhr, opts) {
+            TRACKER.event ({
+                category: 'AddProjectBox', action: 'confirm', label: mime,
+                value: 0
+            });
+
             console.error ('[AddRestProjectBox.confirm]', xhr, opts);
         }
 
@@ -114,6 +125,10 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
     },
 
     cancel: function () {
+        TRACKER.event ({
+            category: 'AddProjectBox', action: 'cancel', value: 1
+        });
+
         assert (this.getAddRestProjectBox ()).close ();
     }
 });

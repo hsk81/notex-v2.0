@@ -78,9 +78,13 @@ Ext.define ('Webed.grid.LeafList', {
                     this.search = null;
                     this.setValue ('');
                     var store = this.getStore (); assert (store);
-                    store.clearFilter (true); Ext.Function.defer(function() {
-                        store.load (); //Firefox timing issue fix!
+                    store.clearFilter (true); Ext.Function.defer (function () {
+                        store.load (); //FF timing issue fix!
                     }, 25);
+
+                    TRACKER.event ({
+                        category: 'LeafList', action: 'clear', value: 1
+                    });
                 }
             },
 
@@ -92,6 +96,10 @@ Ext.define ('Webed.grid.LeafList', {
                     store.clearFilter (true); store.filter ({
                         property: this.paramName,
                         regex: new RegExp (value, 'i')
+                    });
+
+                    TRACKER.event ({
+                        category: 'LeafList', action: 'filter', value: 1
                     });
                 }
             },

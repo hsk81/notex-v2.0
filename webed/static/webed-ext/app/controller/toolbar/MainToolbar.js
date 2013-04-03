@@ -211,6 +211,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         });
 
         var uuid = assert (node.get ('uuid'));
+        var mime = assert (node.get ('mime'));
         var url = '/archive-download/' + uuid;
 
         function onSuccess (xhr, opts) {
@@ -235,10 +236,20 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 target: 'iframe'
             });
 
+            TRACKER.event ({
+                category: 'MainToolbar', action: 'exportProject', label: mime,
+                value: 1
+            });
+
             form.dom.submit ();
         }
 
         function onFailure (xhr, opts) {
+            TRACKER.event ({
+                category: 'MainToolbar', action: 'exportProject', label: mime,
+                value: 1
+            });
+
             console.error ('[MainToolbar.exportProject]', xhr, opts);
         }
 

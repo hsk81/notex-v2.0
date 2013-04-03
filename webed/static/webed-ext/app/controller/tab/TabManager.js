@@ -162,6 +162,12 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     ca.setValue (data);
                     ca.setClean ();
 
+                    TRACKER.event ({
+                        category: 'TabManager', action: 'create',
+                        label: (record) ? record.get ('mime') : '*/*',
+                        value: 1
+                    });
+
                     if (callback && callback.call) {
                         callback.call (scope||this, props);
                     }
@@ -170,9 +176,18 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 }
             }
 
+            function on_destroy (self) {
+                TRACKER.event ({
+                    category: 'TabManager', action: 'delete',
+                    label: (record) ? record.get ('mime') : '*/*',
+                    value: 1
+                });
+            }
+
             var code_area = Ext.create ('Webed.form.field.CodeArea', {
                 mime: assert (record.get ('mime')), listeners: {
-                    render: on_render
+                    render: on_render,
+                    destroy: on_destroy
                 }
             });
 
@@ -217,6 +232,12 @@ Ext.define ('Webed.controller.tab.TabManager', {
                         }
                     });
 
+                    TRACKER.event ({
+                        category: 'TabManager', action: 'create',
+                        label: (record) ? record.get ('mime') : '*/*',
+                        value: 1
+                    });
+
                     if (callback && callback.call) {
                         callback.call (scope||this, props);
                     }
@@ -225,8 +246,19 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 }
             }
 
+            function on_destroy (self) {
+                TRACKER.event ({
+                    category: 'TabManager', action: 'delete',
+                    label: (record) ? record.get ('mime') : '*/*',
+                    value: 1
+                });
+            }
+
             var viewer_tab = Ext.create ('Webed.panel.ImageViewer', {
-                record: record, listeners: {render: on_render}
+                record: record, listeners: {
+                    render: on_render,
+                    destroy: on_destroy
+                }
             });
 
             tab = tab_manager.add (viewer_tab);
@@ -282,6 +314,12 @@ Ext.define ('Webed.controller.tab.TabManager', {
                             ca.setClean ();
                         }
 
+                        TRACKER.event ({
+                            category: 'TabManager', action: 'update',
+                            label: (record) ? record.get ('mime') : '*/*',
+                            value: (op && op.success) ? 1 : 0
+                        });
+
                         if (callback && callback.call) callback.call (
                             scope||this, [prop], op
                         );
@@ -298,6 +336,14 @@ Ext.define ('Webed.controller.tab.TabManager', {
     },
 
     update_image_tab: function (tab, callback, scope) {
+        var record = assert (tab.record);
+
+        TRACKER.event ({
+            category: 'TabManager', action: 'update',
+            label: (record) ? record.get ('mime') : '*/*',
+            value: 1
+        });
+
         if (callback && callback.call) callback.call (
             scope||this, [], {success: true}
         );
@@ -309,17 +355,25 @@ Ext.define ('Webed.controller.tab.TabManager', {
     rename_tab: function (source, args) {
         if (source == this) return;
 
-        var uuid = assert (args.record.get ('uuid'));
-        var name = assert (args.record.get ('name'));
+        var record = assert (args.record);
+        var uuid = assert (record.get ('uuid'));
+        var name = assert (record.get ('name'));
         this.get_tabs (uuid).forEach (function (tab) {
             tab.setTitle (name);
+        });
+
+        TRACKER.event ({
+            category: 'TabManager', action: 'rename',
+            label: (record) ? record.get ('mime') : '*/*',
+            value: 1
         });
     },
 
     delete_tab: function (source, args) {
         if (source == this) return;
 
-        var uuid = assert (args.record.get ('uuid'));
+        var record = assert (args.record);
+        var uuid = assert (record.get ('uuid'));
         this.get_tabs (uuid).forEach (function (tab) {
             tab.close ();
         });

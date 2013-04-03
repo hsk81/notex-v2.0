@@ -7,6 +7,19 @@ Ext.define ('Webed.controller.window.UploadBox', {
     get_url: null, //@abstract
     get_root: null, //@abstract
 
+    class_name: function (view) {
+        return Ext.getClassName (view).split ('.').pop ()
+    },
+
+    get_value: function (view) {
+        var value =  assert (view.down ('filefield[name=file]')).getValue ();
+        // [text!plain] (0).zip|[text!plain](0).zip|[text!plain].zip|.zip|.txt
+        var rx = /(?:\[(?:[^\]!]+)!(?:[^\]!]+)\])?(?:\s*\(\d+\))?\.(?:\w+)$/;
+        var match = value.match (rx);
+
+        return (match) ? match.pop () : undefined;
+    },
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -25,10 +38,13 @@ Ext.define ('Webed.controller.window.UploadBox', {
     ///////////////////////////////////////////////////////////////////////////
 
     confirm: function () {
+        var application = assert (this.application);
         var view = assert (this.getUploadBox ());
         var panel = assert (view.down ('form'));
         var form = assert (panel.getForm ());
-        var application = assert (this.application);
+
+        var class_name = this.class_name (view);
+        var value = this.get_value (view);
 
         if (form.isValid ()) {
             form.submit ({
@@ -36,11 +52,21 @@ Ext.define ('Webed.controller.window.UploadBox', {
                 waitMsg: 'Uploading file ..',
 
                 success: function () {
+                    TRACKER.event ({
+                        category: class_name, action: 'confirm',
+                        label: value, value: 1
+                    });
+
                     view.destroy ();
                     application.fireEvent ('refresh_tree');
                 },
 
                 failure: function () {
+                    TRACKER.event ({
+                        category: class_name, action: 'confirm',
+                        label: value, value: 0
+                    });
+
                     view.destroy ();
                     console.debug ('[UploadBox.confirmUpload]', 'failed');
                 }
@@ -49,7 +75,14 @@ Ext.define ('Webed.controller.window.UploadBox', {
     },
 
     cancel: function () {
-        assert (this.getUploadBox ()).destroy ();
+        var view = assert (this.getUploadBox ());
+
+        TRACKER.event ({
+            category: this.class_name (view), action: 'cancel',
+            label:  this.get_value (view), value: 1
+        });
+
+        view.destroy ();
     }
 
     ///////////////////////////////////////////////////////////////////////////

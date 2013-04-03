@@ -81,6 +81,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         });
 
         var uuid = assert (node.get ('uuid'));
+        var mime = assert (node.get ('mime'));
         var url = url_base + uuid;
 
         function onSuccess (xhr, opts) {
@@ -105,6 +106,11 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 target: 'iframe'
             });
 
+            TRACKER.event ({
+                category: 'ExportAsToolbar', action: 'exportProject',
+                label: mime, value: 1
+            });
+
             form.dom.submit ();
         }
 
@@ -120,6 +126,11 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 text: "Conversion failed; check your project.",
                 iconCls: 'x-status-exclamation',
                 clear: true
+            });
+
+            TRACKER.event ({
+                category: 'ExportAsToolbar', action: 'exportProject',
+                label: mime, value: (xhr.status==503) ? Math.pow (2,31)-1 : 0
             });
 
             console.error ('[ExportAsToolBar.exportProject]', xhr, opts);

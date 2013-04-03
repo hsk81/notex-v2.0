@@ -92,19 +92,29 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             assert (this.getMIMEsStore ()).load ({
                 scope: this, callback: function (recs, op, success) {
                     if (success) {
-                        assert (this.getNodesStore ()).load ({
-                            node: root, scope: this, callback: function () {
+                        assert (this.getNodesStore ()).load ({node: root,
+                            scope: this, callback: function (recs, op) {
+                                TRACKER.event ({
+                                    category: 'NodeTree',
+                                    action: 'expand',
+                                    label: "1'st",
+                                    value: (op && op.success) ? 1 : 0
+                                });
+
                                 view.setLoading (false);
                             }
                         });
                     } else {
+                        TRACKER.event ({
+                            category: 'NodeTree', action: 'expand',
+                            label: "1'st", value: 0
+                        });
+
                         view.setLoading (false);
                     }
                 }
             });
-        }
 
-        if (!root.get ('loaded')) {
             var viewport = assert (this.getViewport ());
             var hbox = assert (viewport.down ('panel[name=hbox]'));
 
@@ -128,6 +138,11 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             statusbar.show ();
             statusbar.getEl ().slideIn ('b', {
                 easing: 'easeIn'
+            });
+
+        } else {
+            TRACKER.event ({
+                category: 'NodeTree', action: 'expand', label: "n'th"
             });
         }
     },
@@ -212,7 +227,14 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                 args.callback.call (args.scope||this, recs, op);
             } else {
                 this.set_selection (node);
-            } view.setLoading (false);
+            }
+
+            TRACKER.event ({
+                category: 'NodeTree', action: 'refresh',
+                value: (op && op.success) ? 1 : 0
+            });
+
+            view.setLoading (false);
         }});
     },
 
@@ -250,6 +272,12 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                         var store = this.getNodesStore ();
                         assert (store); store.decorate (rec);
                     }
+
+                    TRACKER.event ({
+                        category: 'NodeTree', action: 'create',
+                        label: (rec) ? rec.get ('mime') : '*/*',
+                        value: (op && op.success) ? 1 : 0
+                    });
 
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
@@ -314,6 +342,12 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                         assert (store); store.decorate (rec);
                     }
 
+                    TRACKER.event ({
+                        category: 'NodeTree', action: 'create',
+                        label: (rec) ? rec.get ('mime') : '*/*',
+                        value: (op && op.success) ? 1 : 0
+                    });
+
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
                     }
@@ -368,6 +402,12 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                     semo.select (root); // These two select statements seem to
                     semo.select (rec);  // fix an ExtJS bug w.r.t. selection.
 
+                    TRACKER.event ({
+                        category: 'NodeTree', action: 'update',
+                        label: (rec) ? rec.get ('mime') : '*/*',
+                        value: (op && op.success) ? 1 : 0
+                    });
+
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
                     }
@@ -411,6 +451,12 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             record.removeAll (false);
             record.destroy ({
                 scope: this, callback: function (rec, op) {
+                    TRACKER.event ({
+                        category: 'NodeTree', action: 'delete',
+                        label: (rec) ? rec.get ('mime') : '*/*',
+                        value: (op && op.success) ? 1 : 0
+                    });
+
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
                     }
