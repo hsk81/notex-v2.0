@@ -238,8 +238,6 @@ var TRACKER = function () {
                 args['flag']
             ]);
         }
-
-        console.debug ('_event', args);
     }
 
     return {
