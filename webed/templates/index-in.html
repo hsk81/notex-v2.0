@@ -54,7 +54,7 @@
 {% endif -%}
 
 </head>
-<body onload="ga_init ();">
+<body onload="{% if not debug %}ga_init ();{%- endif -%}">
 
 <div id="content-wrap">
 <div id="content">
