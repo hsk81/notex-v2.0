@@ -5,6 +5,7 @@ theme-base:
         - webed-ext/resources/theme/reset.css
         - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
+        - webed-ext/resources/theme/sprite-home.css
         - webed-ext/resources/theme/sprite-main.css
         - webed-ext/resources/theme/sprite-mime.css
         - webed-ext/resources/theme/sprite-tbar.css
@@ -46,3 +47,4 @@ all-classes:
               - webed-ext/app/mime.js
           filters: yui_js
         - all-classes.incl.js
+
