@@ -64,6 +64,9 @@ function build_env () {
 
     mv $STATIC/all-classes.excl.new.js $STATIC/all-classes.excl.js
     mv $STATIC/all-classes.incl.new.js $STATIC/all-classes.incl.js
+
+    wget -O- http://www.google-analytics.com/ga.js > $STATIC/ga/ga-www.in.js
+    wget -O- http://www.google-analytics.com/ga.js > $STATIC/ga/ga-ssl.in.js
 }
 
 ###############################################################################

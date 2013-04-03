@@ -6,11 +6,11 @@
 <meta name="keywords" content="{{ keywords|join(',') }}"/>
 <meta name="description" content="{{ description }}"/>
 
-{% if title %}
+{% if title -%}
 <title>{{ title }}</title>
-{% else %}
+{%- else -%}
 <title>NoTex - A browser based text editor</title>
-{% endif %}
+{%- endif %}
 
 <link rel="shortcut icon"
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
@@ -21,7 +21,7 @@
 <script type="text/javascript">var _gaq = undefined;</script>
 {%- else -%}
 <script type="text/javascript">{% include 'analytics-head.js' %}</script>
-{% endif %}
+{%- endif %}
 
 {% if debug -%}
 <link rel="stylesheet" type="text/css"
@@ -104,11 +104,11 @@
         src="{{ url_for('static', filename='ext/ext-dev.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='webed-ext/app/app.js') }}"></script>
-{% elif True -%}
-{% assets 'all-classes' -%}
+{%- elif True -%}
+{%- assets 'all-classes' -%}
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets -%}
-{% else -%}
+{%- endassets -%}
+{%- else -%}
 <!-- <x-compile> -->
 <!-- <x-bootstrap> -->
 <script src="../static/ext/ext-dev.js"></script>
@@ -116,7 +116,7 @@
 <!-- </x-bootstrap> -->
 <script src="../static/webed-ext/app/app.js"></script>
 <!-- </x-compile> -->
-{% endif -%}
+{%- endif %}
 
 <script type="text/javascript">
 CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
@@ -124,7 +124,7 @@ CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N
 
 {% if not debug -%}
 <script type="text/javascript">{% include 'analytics-body.js' %}</script>
-{% endif %}
+{%- endif %}
 
 </body>
 </html>

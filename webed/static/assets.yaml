@@ -48,3 +48,10 @@ all-classes:
           filters: yui_js
         - all-classes.incl.js
 
+ga-ssl:
+    output: ga/ga-ssl.js
+    contents: [ga/ga-ssl.in.js]
+
+ga-www:
+    output: ga/ga-www.js
+    contents: [ga/ga-www.in.js]
