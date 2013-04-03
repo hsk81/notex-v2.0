@@ -67,7 +67,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         var name = assert (record.get ('name'));
         var direction = assert (record.get ('direction'));
 
-        var worker = new Worker ('StatusBar.worker.js');
+        var worker = new Worker ('/StatusBar.worker.js');
         worker.onmessage = function (event) {
             clearTimeout (timeoutId);
 
