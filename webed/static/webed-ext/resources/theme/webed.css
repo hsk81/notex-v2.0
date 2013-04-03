@@ -375,7 +375,7 @@ body {
     border-bottom: #d3d3d3 solid thin;
 }
 
-#page-wrap-content .ssl-seal-wrap .placeholder p {
+#page-wrap-content .ssl-seal-wrap .placeholder span {
     display:table-cell;
     vertical-align: middle;
     text-align: center;
