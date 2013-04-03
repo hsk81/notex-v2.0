@@ -23,7 +23,7 @@ Ext.define ('Webed.container.Viewport', {
             layout: 'border',
             region: 'west',
             split: true,
-            title: 'Projects',
+            title: '·····',
 
             tools: [{
                 type: 'refresh',
@@ -33,6 +33,11 @@ Ext.define ('Webed.container.Viewport', {
                 type: 'help',
                 tooltip: '<div>Project Tree&nbsp;<div class="w-shortcut">[F9]</div></div>'
             }],
+
+            listeners: {
+                expand: function (self) { self.setTitle ('Projects'); },
+                collapse: function (self) { self.setTitle ('·····'); }
+            },
 
             items: [{
                 flex: 1,

@@ -88,6 +88,10 @@ Ext.define ('Webed.controller.tree.NodeTree', {
         var root = assert (view.getRootNode ());
 
         if (!root.get ('loaded')) {
+
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
             view.setLoading ('Loading ..');
             assert (this.getMIMEsStore ()).load ({
                 scope: this, callback: function (recs, op, success) {
@@ -115,8 +119,10 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                 }
             });
 
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
+
             var viewport = assert (this.getViewport ());
-            var hbox = assert (viewport.down ('panel[name=hbox]'));
 
             var toolbar = assert (hbox.addDocked ({
                 xtype: 'main-toolbar',
@@ -139,6 +145,9 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             statusbar.getEl ().slideIn ('b', {
                 easing: 'easeIn'
             });
+
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
 
         } else {
             TRACKER.event ({
