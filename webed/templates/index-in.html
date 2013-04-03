@@ -20,7 +20,7 @@
 {% if debug -%}
 <script type="text/javascript">var _gaq = undefined;</script>
 {%- else -%}
-<script type="text/javascript">{% include 'analytics.js' %}</script>
+<script type="text/javascript">{% include 'analytics-head.js' %}</script>
 {% endif %}
 
 {% if debug -%}
@@ -118,7 +118,13 @@
 <!-- </x-compile> -->
 {% endif -%}
 
-<script type="text/javascript">CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";</script>
+<script type="text/javascript">
+CodeMirror.modeURL = "{{ url_for('static', filename='lib/codemirror/mode/') }}%N/%N.js";
+</script>
+
+{% if not debug -%}
+<script type="text/javascript">{% include 'analytics-body.js' %}</script>
+{% endif %}
 
 </body>
 </html>
