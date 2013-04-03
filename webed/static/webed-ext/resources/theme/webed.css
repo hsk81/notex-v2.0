@@ -59,7 +59,7 @@ body {
  *****************************************************************************/
 
 #page.home {
-    padding: 7.5% 0;
+    padding: 2.75% 0;
 }
 
 #page.home .title {
@@ -73,7 +73,10 @@ body {
 }
 
 #page.home .sub-title {
-    margin-left:auto; margin-right: auto; width:75%; height:32px;
+    margin-left:auto;
+    margin-right: auto;
+    margin-bottom: 64px;
+    width:75%; height:32px;
 }
 
 #page.home .sub-title hr {
@@ -87,7 +90,7 @@ body {
     float:left;
     position:relative;
     font-weight:bold;
-    font-size: 12px;
+    font-size: 13px;
     color:#888888;
 }
 
@@ -117,40 +120,6 @@ body {
 
 #page.home .facebook {
     float:right; position:relative; top:-2px;
-}
-
-#page.home .subline {
-    width: 100%;
-    margin-top: 36px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#page.home .subline ul {
-    list-style-type:none;
-    text-align:center;
-    background-color:#f0f0f0;
-    border-top: 1px solid #888888;
-    border-bottom: 1px solid #888888;
-}
-
-#page.home .subline ul li {
-    display:inline;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 32px;
-}
-
-#page.home .subline ul li.subline-text {
-    padding: 6.5px 32px 6.5px 1px;
-    border-left: 1px solid #888888;
-}
-
-#page.home .subline ul li.subline-icon {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    top: 4px;
 }
 
 /******************************************************************************
@@ -282,6 +251,89 @@ body {
 #page.textual div.figure p {
     text-align: justify;
     font-size: xx-small;
+}
+
+/******************************************************************************
+ * Page: Box
+ *****************************************************************************/
+
+#page .box {
+    width: auto;
+    height: 72px;
+    text-align: center;
+    background-color:#f0f0f0;
+    border: 3px dotted white;
+    margin: 16px;
+}
+
+#page .notex {
+    -moz-box-shadow: inset 0 1px 0 0 #ffffff;
+    -webkit-box-shadow: inset 0 1px 0 0 #ffffff;
+    box-shadow: inset 0 1px 0 0 #ffffff;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
+    background:-moz-linear-gradient(center top, #f9f9f9 5%, #e9e9e9 100%);
+    background-color: #f9f9f9;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    border: 2px solid #888888;
+    display: inline-block;
+    color: #666666;
+    font-family: arial,sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 6px 25%;
+    text-decoration: none;
+    text-shadow: 1px 1px 4px #ffffff;
+    margin-top: 11px;
+}
+
+#page .notex:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+    background:-moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+}
+
+#page .notex:active {
+    position:relative;
+    top:1px;
+}
+
+/******************************************************************************
+ * Page: Subline
+ *****************************************************************************/
+
+#page .subline {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page .subline ul {
+    list-style-type:none;
+    text-align:center;
+    background-color:#f0f0f0;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+
+#page .subline ul li {
+    display:inline;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 32px;
+}
+
+#page .subline ul li.subline-text {
+    padding: 6.5px 48px 6.5px 1px;
+    border-left: 1px solid #888888;
+}
+
+#page .subline ul li.subline-icon {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    top: 4px;
 }
 
 /******************************************************************************

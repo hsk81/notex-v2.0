@@ -1,6 +1,12 @@
-.icon-blogger-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat 0 0 !important; }
-.icon-facebook-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -18px 0 !important; }
-.icon-report_add-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -90px 0 !important; }
-.icon-report_disk-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -36px 0 !important; }
-.icon-report_edit-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -72px 0 !important; }
-.icon-twitter_1-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -54px 0 !important; }
+.icon-blogger-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -72px 0 !important; }
+.icon-email-16 { width: 16px; height: 16px; background-image: url(../../../ico/fatcow/16x16/email.png) !important !important; }
+.icon-facebook-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -162px 0 !important; }
+.icon-link-16 { width: 16px; height: 16px; background-image: url(../../../ico/fatcow/16x16/link.png) !important !important; }
+.icon-html-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -126px 0 !important; }
+.icon-page_white_acrobat-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -36px 0 !important; }
+.icon-report-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -90px 0 !important; }
+.icon-report_edit-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -54px 0 !important; }
+.icon-report_go-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -180px 0 !important; }
+.icon-report_latex-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -18px 0 !important; }
+.icon-report_rest-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -198px 0 !important; }
+.icon-twitter_1-16 { width: 16px; height: 16px; background: url('sprite-home.png') no-repeat -108px 0 !important; }

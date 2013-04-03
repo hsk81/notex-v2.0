@@ -2,7 +2,7 @@
     <div class="title">NѻTeξ</div>
     <div class="sub-title">
         <hr>
-        <div class="text">A browser based text editor, v{{ version }}</div>
+        <div class="text">A browser based text editor, v{{ version }}-rci; it supports ..</div>
 
         <a class="icon-facebook-16 link-icon facebook"
            target="_blank" href="http://www.facebook.com/notexeditor">_</a>
@@ -14,12 +14,39 @@
 
     <div class="subline">
         <ul>
-            <li class="subline-icon icon-report_add-16"></li>
-            <li class="subline-text">&laquo;Create&raquo; a project,</li>
+            <li class="subline-icon icon-report_rest-16"></li>
+            <li class="subline-text">&nbsp;reStructuredText</li>
             <li class="subline-icon icon-report_edit-16"></li>
-            <li class="subline-text">&laquo;edit&raquo; the project</li>
-            <li class="subline-icon icon-report_disk-16"></li>
-            <li class="subline-text">and &laquo;save&raquo; it.</li>
+            <li class="subline-text">&nbsp;Markdown</li>
+            <li class="subline-icon icon-report_latex-16"></li>
+            <li class="subline-text">&nbsp;LaTex</li>
+            <li class="subline-icon icon-report-16"></li>
+            <li class="subline-text">&nbsp;.. and more!</li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">function start_notex () {
+        var viewport = Ext.ComponentQuery.query ('viewport').pop ();
+        if (viewport) {
+            var projects = viewport.down ('panel[name=projects]');
+            if (projects) projects.expand ();
+        }
+    }</script>
+
+    <div class="box" onclick="start_notex ()">
+        <a href="#" class="notex">Start NoTex</a>
+    </div>
+
+    <div class="subline">
+        <ul>
+            <li class="subline-icon icon-report_go-16"></li>
+            <li class="subline-text">&nbsp;Export projects as ..</li>
+            <li class="subline-icon icon-page_white_acrobat-16"></li>
+            <li class="subline-text">&nbsp;PDF reports</li>
+            <li class="subline-icon icon-html-16"></li>
+            <li class="subline-text">&nbsp;HTML pages</li>
+            <li class="subline-icon icon-report_latex-16"></li>
+            <li class="subline-text">&nbsp;or LaTex scripts.</li>
         </ul>
     </div>
 </div>

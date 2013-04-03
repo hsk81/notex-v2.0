@@ -123,6 +123,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             ///////////////////////////////////////////////////////////////////
 
             var viewport = assert (this.getViewport ());
+            var hbox = assert (viewport.down ('panel[name=hbox]'));
 
             var toolbar = assert (hbox.addDocked ({
                 xtype: 'main-toolbar',
