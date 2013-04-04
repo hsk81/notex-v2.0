@@ -79,7 +79,7 @@ Ext.define ('Webed.controller.grid.LeafList', {
             });
         } else {
             TRACKER.event ({
-                category: 'LeafList', action: 'expand', label: "n'th"
+                category: 'LeafList', action: 'expand', label: "n'th", value: 1
             });
         }
     },

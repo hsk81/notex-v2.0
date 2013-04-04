@@ -152,7 +152,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
 
         } else {
             TRACKER.event ({
-                category: 'NodeTree', action: 'expand', label: "n'th"
+                category: 'NodeTree', action: 'expand', label: "n'th", value: 1
             });
         }
     },
