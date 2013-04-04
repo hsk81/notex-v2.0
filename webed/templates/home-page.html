@@ -25,13 +25,7 @@
         </ul>
     </div>
 
-    <script type="text/javascript">function start_notex () {
-        var viewport = Ext.ComponentQuery.query ('viewport').pop ();
-        if (viewport) {
-            var projects = viewport.down ('panel[name=projects]');
-            if (projects) projects.expand ();
-        }
-    }</script>
+    <script type="text/javascript">{% include 'start-notex.js' %}</script>
 
     <div class="box" onclick="start_notex ()">
         <a href="#" class="notex">Start NoTex</a>
