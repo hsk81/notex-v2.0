@@ -155,7 +155,14 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 });
 
                 function on_get (props) {
-                    assert (props && props.length > 0);
+                    if (!props || props.length == 0) {
+                        TRACKER.event ({
+                            category: 'TabManager', action: 'create-text-tab',
+                            label: (record) ? record.get ('mime') : '*/*',
+                            value: 0
+                        }); return;
+                    }
+
                     var data = props[0].get ('data');
                     assert (data || data == '');
 
@@ -163,7 +170,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     ca.setClean ();
 
                     TRACKER.event ({
-                        category: 'TabManager', action: 'create',
+                        category: 'TabManager', action: 'create-text-tab',
                         label: (record) ? record.get ('mime') : '*/*',
                         value: 1
                     });
@@ -176,9 +183,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 }
             }
 
-            function on_destroy (self) {
+            function on_destroy () {
                 TRACKER.event ({
-                    category: 'TabManager', action: 'delete',
+                    category: 'TabManager', action: 'delete-text-tab',
                     label: (record) ? record.get ('mime') : '*/*',
                     value: 1
                 });
@@ -220,7 +227,14 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 });
 
                 function on_get (props) {
-                    assert (props && props.length > 0);
+                    if (!props || props.length == 0) {
+                        TRACKER.event ({
+                            category: 'TabManager', action: 'create-image-tab',
+                            label: (record) ? record.get ('mime') : '*/*',
+                            value: 0
+                        }); return;
+                    }
+
                     var data = props[0].get ('data');
                     assert (data || data == '');
 
@@ -233,7 +247,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                     });
 
                     TRACKER.event ({
-                        category: 'TabManager', action: 'create',
+                        category: 'TabManager', action: 'create-image-tab',
                         label: (record) ? record.get ('mime') : '*/*',
                         value: 1
                     });
@@ -246,9 +260,9 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 }
             }
 
-            function on_destroy (self) {
+            function on_destroy () {
                 TRACKER.event ({
-                    category: 'TabManager', action: 'delete',
+                    category: 'TabManager', action: 'delete-image-tab',
                     label: (record) ? record.get ('mime') : '*/*',
                     value: 1
                 });
@@ -315,7 +329,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
                         }
 
                         TRACKER.event ({
-                            category: 'TabManager', action: 'update',
+                            category: 'TabManager', action: 'update-text-tab',
                             label: (record) ? record.get ('mime') : '*/*',
                             value: (op && op.success) ? 1 : 0
                         });
@@ -339,7 +353,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var record = assert (tab.record);
 
         TRACKER.event ({
-            category: 'TabManager', action: 'update',
+            category: 'TabManager', action: 'update-image-tab',
             label: (record) ? record.get ('mime') : '*/*',
             value: 1
         });
@@ -363,7 +377,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
         });
 
         TRACKER.event ({
-            category: 'TabManager', action: 'rename',
+            category: 'TabManager', action: 'rename-tab',
             label: (record) ? record.get ('mime') : '*/*',
             value: 1
         });
@@ -376,6 +390,12 @@ Ext.define ('Webed.controller.tab.TabManager', {
         var uuid = assert (record.get ('uuid'));
         this.get_tabs (uuid).forEach (function (tab) {
             tab.close ();
+        });
+
+        TRACKER.event ({
+            category: 'TabManager', action: 'delete-tab',
+            label: (record) ? record.get ('mime') : '*/*',
+            value: 1
         });
     },
 
