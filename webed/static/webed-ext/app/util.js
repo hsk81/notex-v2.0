@@ -228,20 +228,25 @@ var sprintf = (function () {
 
 var TRACKER = function () {
 
-    function _event (args) {
+    function _event (arg) {
         if (_gaq && _gaq.push) {
             _gaq.push (['_trackEvent',
-                args['category'],
-                args['action'],
-                args['label'],
-                args['value'],
-                args['flag']
+                arg['category'],
+                arg['action'],
+                arg['label'],
+                arg['value'],
+                arg['flag']
             ]);
         }
     }
 
+    function _events (args) {
+        Ext.Array.each (args, _event);
+    }
+
     return {
-        event: _event
+        event: _event,
+        events: _events
     }
 }();
 

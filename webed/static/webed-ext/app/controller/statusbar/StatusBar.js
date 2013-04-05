@@ -50,10 +50,18 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
             'progress-stop': this.progress_stop, scope: this});
     },
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     lingua_change: function (self, newValue, oldValue) {
         if (oldValue && !newValue) {
             Webed.form.field.CodeArea.setTypoEngine (null);
             Webed.form.field.CodeArea.setDirection (null);
+
+            TRACKER.event ({
+                category: 'StatusBar', action: 'lingua_change',
+                label: oldValue, value: 1
+            });
         }
     },
 
@@ -75,14 +83,30 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
                 var typo_engine = Typo.prototype.load (event.data.typo);
                 Webed.form.field.CodeArea.setTypoEngine (typo_engine);
                 Webed.form.field.CodeArea.setDirection (direction);
+
+                TRACKER.event ({
+                    category: 'StatusBar', action: 'lingua_select',
+                    label: lingua, value: 1
+                });
             } else {
-                self.reset (); statusBar.setStatus ({
+                self.reset ();
+
+                statusBar.setStatus ({
                     text: 'Language: Enabling «{0}» failed!'.format (name),
+                    iconCls: 'x-status-exclamation',
                     clear: true
+                });
+
+                TRACKER.event ({
+                    category: 'StatusBar', action: 'lingua_select',
+                    label: lingua, value: 0
                 });
             }
 
-            controller.progress_stop (controller);
+            controller.progress_stop (controller, {
+                label: 'StatusBar.lingua_select'
+            });
+
             self.enable ();
         };
 
@@ -92,27 +116,18 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         }, 180 * 1000);
 
         self.disable ();
-        worker.postMessage ({lingua: lingua, charset: charset});
-        this.progress_play (this, {message: 'Loading'});
+
+        worker.postMessage ({
+            lingua: lingua, charset: charset
+        });
+
+        this.progress_play (this, {
+            message: 'Loading', label: 'StatusBar.lingua_select'
+        });
     },
 
-    cursor: function (self, cursor) {
-        var button = assert (this.getInfoButton ());
-        if (cursor) {
-            var text = '{0}:{1}'.format (cursor.line+1, cursor.ch+1);
-            if (button.getWidth () > button.minWidth) {
-                button.setText (text);
-            } else {
-                button.suspendLayouts ();
-                button.setText (text);
-                button.resumeLayouts ();
-            }
-        }
-    },
-
-    zoom_click: function () {
-        assert (this.getZoomSlider ()).setValue (100);
-    },
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     info_click: function (self) {
 
@@ -136,20 +151,69 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
                 } else {
                     self.setText ('1:0:0');
                 }
+
+                TRACKER.event ({
+                    category: 'StatusBar', action: 'info_click',
+                    label: ca.getMime (), value: 1
+                });
             }
         }
     },
 
+    cursor: function (self, cursor) {
+        var button = assert (this.getInfoButton ());
+        if (cursor) {
+            var text = '{0}:{1}'.format (cursor.line+1, cursor.ch+1);
+            if (button.getWidth () > button.minWidth) {
+                button.setText (text);
+            } else {
+                button.suspendLayouts ();
+                button.setText (text);
+                button.resumeLayouts ();
+            }
+        }
+    },
+
+    zoom_click: function () {
+        assert (this.getZoomSlider ()).setValue (100);
+        TRACKER.event ({
+            category: 'StatusBar', action: 'zoom_click', value: 1
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     slider_afterrender: function (self) {
         var value = Ext.util.Cookies.get ('editor.font-size');
-        if (value) self.setValue (value, false);
+        if (value) {
+            self.setValue (value, false);
+
+            TRACKER.event ({
+                category: 'StatusBar', action: 'slider_afterrender',
+                label: 'font-size', value: value
+            });
+        } else {
+            TRACKER.event ({
+                category: 'StatusBar', action: 'slider_afterrender',
+                label: 'font-size', value: 100
+            });
+        }
     },
 
     slider_change: function (self, value) {
         Webed.form.field.CodeArea.setFontSize (value);
         assert (this.getZoomButton ()).setText (value + '%');
         Ext.util.Cookies.set ('editor.font-size', value);
+
+        TRACKER.event ({
+            category: 'StatusBar', action: 'slider_change',
+            label: 'font-size', value: value
+        });
     },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     progress_update: function (self) {
         self.total += self.interval;
@@ -161,7 +225,12 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
     progress_play: function (source, args) {
         var progressBar = assert (this.getProgressBar ());
         if (progressBar.hidden) progressBar.show ();
-        if (args.message) progressBar.setMessage (args.message);
+        if (args && args.message) progressBar.setMessage (args.message);
+
+        if (args && args.label) TRACKER.event ({
+            category: 'StatusBar', action: 'progress_play',
+            label: args.label, value: 1
+        });
 
         progressBar.setTotal (0);
         progressBar.wait (Ext.apply ({
@@ -170,8 +239,14 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         }, args));
     },
 
-    progress_stop: function (source) {
+    progress_stop: function (source, args) {
         var progressBar = assert (this.getProgressBar ());
+
+        if (args && args.label) TRACKER.event ({
+            category: 'StatusBar', action: 'progress_stop',
+            label: args.label, value: progressBar.getTotal ()
+        });
+
         progressBar.reset (true);
         progressBar.setTotal (0);
     },

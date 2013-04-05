@@ -81,7 +81,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
-            message: 'Saving'
+            message: 'Saving', label: 'MainToolbar.saveDocument'
         });
 
         function callback (records, op) {
@@ -89,7 +89,10 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 console.error ('[MainBar.saveDocument]', records, op);
             }
 
-            application.fireEvent ('progress-stop', this);
+            application.fireEvent ('progress-stop', this, {
+                label: 'MainToolbar.saveDocument'
+            });
+
             button.enable ();
         }
 
@@ -207,7 +210,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
-            message: 'Exporting'
+            message: 'Exporting', label: 'MainToolbar.exportProject'
         });
 
         var uuid = assert (node.get ('uuid'));
@@ -263,7 +266,10 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                     onFailure (xhr, opts);
                 }
 
-                application.fireEvent ('progress-stop', this);
+                application.fireEvent ('progress-stop', this, {
+                    label: 'MainToolbar.exportProject'
+                });
+
                 button.enable ();
             }
         });

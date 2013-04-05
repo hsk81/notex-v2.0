@@ -391,12 +391,6 @@ Ext.define ('Webed.controller.tab.TabManager', {
         this.get_tabs (uuid).forEach (function (tab) {
             tab.close ();
         });
-
-        TRACKER.event ({
-            category: 'TabManager', action: 'delete-tab',
-            label: (record) ? record.get ('mime') : '*/*',
-            value: 1
-        });
     },
 
     ///////////////////////////////////////////////////////////////////////////

@@ -77,6 +77,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
+            label: 'ExportAsToolbar.' + this.url2fn (url_base),
             message: message
         });
 
@@ -136,6 +137,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             console.error ('[ExportAsToolBar.exportProject]', xhr, opts);
         }
 
+        var me = this;
         Ext.Ajax.request ({
             url: url, scope: this, callback: function (opts, status, xhr) {
                 if (status) {
@@ -146,11 +148,32 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                     onFailure.call (this, xhr, opts);
                 }
 
-                application.fireEvent ('progress-stop', this);
+                application.fireEvent ('progress-stop', this, {
+                    label: 'ExportAsToolbar.' + me.url2fn (url_base)
+                });
+
                 button.up ('panel').query ('button').forEach (function (item) {
                     item.enable ();
                 });
             }
         });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    url2fn: function (url) {
+        switch (url) {
+            case '/rest-to-pdf/':
+                return 'exportProjectAsPdf';
+            case '/rest-to-html/':
+                return 'exportProjectAsHtml';
+            case '/rest-to-latex/':
+                return 'exportProjectAsLatex';
+            default:
+                return 'exportProject';
+        }
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 });

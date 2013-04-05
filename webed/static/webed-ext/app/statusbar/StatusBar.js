@@ -34,8 +34,11 @@ Ext.define ('Webed.statusbar.ProgressBar', {
 
     total: 0, //[ms]
     setTotal: function (value) { this.total = value; },
+    getTotal: function () { return this.total; },
+
     message: 'Processing',
-    setMessage: function (value) { this.message = value; }
+    setMessage: function (value) { this.message = value; },
+    getMessage: function () { return this.message; }
 });
 
 Ext.define ('Webed.statusbar.InfoButton', {
