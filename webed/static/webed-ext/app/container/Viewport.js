@@ -36,7 +36,7 @@ Ext.define ('Webed.container.Viewport', {
 
             listeners: {
                 expand: function (self) { self.setTitle ('Projects'); },
-                collapse: function (self) { self.setTitle ('·····'); }
+                beforecollapse: function (self) { self.setTitle ('·····'); }
             },
 
             items: [{
