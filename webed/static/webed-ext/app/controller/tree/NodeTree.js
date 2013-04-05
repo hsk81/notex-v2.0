@@ -71,6 +71,9 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             controller: this
         });
 
+        var tree = assert (this.getNodeTree ());
+        tree.el.mask ();
+
         this.select_base ();
     },
 
@@ -84,15 +87,17 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     expand: function () {
-        var view = assert (this.getNodeTree ());
-        var root = assert (view.getRootNode ());
+        var tree = assert (this.getNodeTree ());
+        var root = assert (tree.getRootNode ());
 
         if (!root.get ('loaded')) {
 
-            ///////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////
+            tree.el.unmask ();
+            tree.setLoading ('Loading ..');
 
-            view.setLoading ('Loading ..');
+            ///////////////////////////////////////////////////////////////////
+            // 1'st expansion: load MIMEs' and Nodes' stores
+
             assert (this.getMIMEsStore ()).load ({
                 scope: this, callback: function (recs, op, success) {
                     if (success) {
@@ -105,7 +110,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                                     value: (op && op.success) ? 1 : 0
                                 });
 
-                                view.setLoading (false);
+                                tree.setLoading (false);
                             }
                         });
                     } else {
@@ -114,13 +119,13 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                             label: "1'st", value: 0
                         });
 
-                        view.setLoading (false);
+                        tree.setLoading (false);
                     }
                 }
             });
 
             ///////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////
+            // 1'st expansion: Add MainToolbar and Statusbar to UI
 
             var viewport = assert (this.getViewport ());
             var hbox = assert (viewport.down ('panel[name=hbox]'));
