@@ -289,7 +289,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                     }
 
                     TRACKER.event ({
-                        category: 'NodeTree', action: 'create',
+                        category: 'NodeTree', action: 'create-node',
                         label: (rec) ? rec.get ('mime') : '*/*',
                         value: (op && op.success) ? 1 : 0
                     });
@@ -358,7 +358,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                     }
 
                     TRACKER.event ({
-                        category: 'NodeTree', action: 'create',
+                        category: 'NodeTree', action: 'create-leaf',
                         label: (rec) ? rec.get ('mime') : '*/*',
                         value: (op && op.success) ? 1 : 0
                     });
@@ -417,11 +417,15 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                     semo.select (root); // These two select statements seem to
                     semo.select (rec);  // fix an ExtJS bug w.r.t. selection.
 
-                    TRACKER.event ({
-                        category: 'NodeTree', action: 'update',
-                        label: (rec) ? rec.get ('mime') : '*/*',
-                        value: (op && op.success) ? 1 : 0
-                    });
+                    if (args.tracker) {
+                        args.tracker.call (this, rec, op);
+                    } else {
+                        TRACKER.event ({
+                            category: 'NodeTree', action: 'update-node',
+                            label: (rec) ? rec.get ('mime') : '*/*',
+                            value: (op && op.success) ? 1 : 0
+                        });
+                    }
 
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
@@ -434,7 +438,16 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     update_leaf: function (args) {
-        this.update_node (args);
+
+        function tracker (rec, op) {
+            TRACKER.event ({
+                category: 'NodeTree', action: 'update-leaf',
+                label: (rec) ? rec.get ('mime') : '*/*',
+                value: (op && op.success) ? 1 : 0
+            });
+        }
+
+        this.update_node (Ext.apply (args||{}, {tracker: tracker}));
     },
 
     ///////////////////////////////////////////////////////////////////////////
@@ -466,11 +479,16 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             record.removeAll (false);
             record.destroy ({
                 scope: this, callback: function (rec, op) {
-                    TRACKER.event ({
-                        category: 'NodeTree', action: 'delete',
-                        label: (rec) ? rec.get ('mime') : '*/*',
-                        value: (op && op.success) ? 1 : 0
-                    });
+
+                    if (args.tracker) {
+                        args.tracker.call (this, rec, op);
+                    } else {
+                        TRACKER.event ({
+                            category: 'NodeTree', action: 'delete-node',
+                            label: (rec) ? rec.get ('mime') : '*/*',
+                            value: (op && op.success) ? 1 : 0
+                        });
+                    }
 
                     if (args.callback && args.callback.call) {
                         args.callback.call (args.scope||this, rec, op);
@@ -483,7 +501,16 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     delete_leaf: function (args) {
-        return this.delete_node (args);
+
+        function tracker (rec, op) {
+            TRACKER.event ({
+                category: 'NodeTree', action: 'delete-leaf',
+                label: (rec) ? rec.get ('mime') : '*/*',
+                value: (op && op.success) ? 1 : 0
+            });
+        }
+
+        return this.delete_node (Ext.apply (args||{}, {tracker: tracker}));
     }
 });
 
