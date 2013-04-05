@@ -54,11 +54,14 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
         var mime = assert (combobox.getValue ());
 
         switch (mime) {
-            case 'application/project+rest':
-                this.setup_rest_project (project, mime);
-                break;
             case 'application/project+latex':
                 this.setup_latex_project (project, mime);
+                break;
+            case 'application/project+md':
+                this.setup_latex_project (project, mime);
+                break;
+            case 'application/project+rest':
+                this.setup_rest_project (project, mime);
                 break;
             default:
                 this.setup_generic_project (project, mime);
@@ -78,16 +81,20 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    setup_latex_project: function (project, mime) {
+        this.setup_project ('/setup-latex-project/', project, mime);
+    },
+
+    setup_markdown_project: function (project, mime) {
+        this.setup_project ('/setup-markdown-project/', project, mime);
+    },
+
     setup_rest_project: function (project, mime) {
         var box = Ext.create ('Webed.window.AddRestProjectBox', {
             project: project, mime: mime
         });
 
         box.show ();
-    },
-
-    setup_latex_project: function (project, mime) {
-        this.setup_project ('/setup-latex-project/', project, mime);
     },
 
     setup_generic_project: function (project, mime) {

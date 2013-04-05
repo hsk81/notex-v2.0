@@ -393,15 +393,20 @@ def mimes ():
         'icon': 'icon-report',
         'main': 'text/plain'
     }, {
-        'name': 'ReStructuredTex',
-        'mime': 'application/project+rest',
-        'icon': 'icon-report_rest',
-        'main': 'text/x-rst'
-    }, {
         'name': 'LaTex',
         'mime': 'application/project+latex',
         'icon': 'icon-report_latex',
         'main': 'text/x-latex'
+    }, {
+        'name': 'Markdown',
+        'mime': 'application/project+md',
+        'icon': 'icon-report_markdown',
+        'main': 'text/x-markdown'
+    }, {
+        'name': 'ReStructuredTex',
+        'mime': 'application/project+rest',
+        'icon': 'icon-report_rest',
+        'main': 'text/x-rst'
     }, {
         'name': 'Text',
         'mime': 'text/*',
