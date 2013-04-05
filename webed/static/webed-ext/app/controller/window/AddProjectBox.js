@@ -58,7 +58,7 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
                 this.setup_latex_project (project, mime);
                 break;
             case 'application/project+md':
-                this.setup_latex_project (project, mime);
+                this.setup_markdown_project (project, mime);
                 break;
             case 'application/project+rest':
                 this.setup_rest_project (project, mime);
