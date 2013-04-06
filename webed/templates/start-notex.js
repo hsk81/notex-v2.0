@@ -1,7 +1,10 @@
-function start_notex () {
+function start_notex (self) {
     var viewport = Ext.ComponentQuery.query ('viewport').pop ();
     if (viewport) {
         var projects = viewport.down ('panel[name=projects]');
         if (projects) projects.expand ();
     }
+
+    var button = assert (Ext.get ('start-box-button-id'));
+    button.fadeOut ();
 }
