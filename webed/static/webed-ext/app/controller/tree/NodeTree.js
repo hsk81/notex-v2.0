@@ -88,7 +88,8 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     beforeexpand: function () {
-        assert (Ext.get ('start-box-button-id')).fadeOut ();
+        var button = Ext.get ('start-box-button-id');
+        if (button) button.fadeOut ();
     },
 
     expand: function () {
