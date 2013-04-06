@@ -90,9 +90,10 @@ def file_upload ():
 
 @io.route ('/archive-upload/', methods=['POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
-def archive_upload (source=None, base=None, skip_commit=None, json=True):
-    source = source if source else request.files['file']
+def archive_upload (source=None, base=None, skip_commit=None, do_index=None,
+                    json=True):
 
+    source = source if source else request.files['file']
     if not source:
         if not json: return dict (
             success=False, filename=None, message='file expected')
@@ -129,7 +130,7 @@ def archive_upload (source=None, base=None, skip_commit=None, json=True):
         nodes = create_prj (temp_path, base, prj_mime)
         shutil.rmtree (temp_path)
 
-    if not skip_commit:
+    if not skip_commit or do_index:
         for node in nodes: db.session.execute (
             db.sql.select ([db.sql.func.npt_insert_node (base.id, node.id)]))
 
