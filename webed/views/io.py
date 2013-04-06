@@ -36,7 +36,7 @@ io = Blueprint ('io', __name__)
 ###############################################################################
 ###############################################################################
 
-@io.route ('/file-upload/', methods=['POST'])
+@io.route ('/file-upload/', methods=['GET', 'POST'])
 @db.commit ()
 def file_upload ():
 
@@ -45,7 +45,9 @@ def file_upload ():
 
     source = request.files['file']
     if not source:
-        return jsonify (success=False)
+        response = make_response (jsonify (success=False))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
 
     root_uuid = request.json.get ('root_uuid', None)
     assert root_uuid
@@ -79,7 +81,9 @@ def file_upload ():
     db.session.execute (db.sql.select ([db.sql.func.npt_insert_node (
         leaf.base.id, leaf.id)]))
 
-    return jsonify (success=True)
+    response = make_response (jsonify (success=True))
+    response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    return response
 
 ###############################################################################
 ###############################################################################
@@ -90,12 +94,20 @@ def archive_upload (source=None, base=None, skip_commit=None, json=True):
     source = source if source else request.files['file']
 
     if not source:
-        return jsonify (success=False, filename=None,
-            message='file expected')
+        if not json: return dict (
+            success=False, filename=None, message='file expected')
+        response = make_response (jsonify (
+            success=False, filename=None, message='file expected'))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
 
     if not source.filename or len (source.filename) == 0:
-        return jsonify (success=False, filename=None,
-            message='filename invalid')
+        if not json: return dict (
+            success=False, filename=None, message='filename invalid')
+        response = make_response (jsonify (
+            success=False, filename=None, message='filename invalid'))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
 
     if not base:
         base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -122,10 +134,16 @@ def archive_upload (source=None, base=None, skip_commit=None, json=True):
             db.sql.select ([db.sql.func.npt_insert_node (base.id, node.id)]))
 
     if not json:
-        return dict (success=True, filename=source.filename, nodes=nodes)
+        return dict (
+            success=True, filename=source.filename, nodes=nodes)
     else:
-        return jsonify (success=True, filename=source.filename, nodes=map (
-            lambda node: dict (uuid=node.uuid), nodes))
+        response = jsonify (
+            success=True, filename=source.filename, nodes=map (
+                lambda node: dict (uuid=node.uuid), nodes))
+
+        response = make_response (response)
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
 
 ###############################################################################
 
