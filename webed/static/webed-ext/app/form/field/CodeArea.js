@@ -13,6 +13,7 @@ Ext.define ('Webed.form.field.CodeArea', {
             lineNumbers: true,
             lineWrapping: true,
             matchBrackets: true,
+            mode: undefined,
             styleActiveLine: true,
             undoDepth: 99
         },
@@ -93,12 +94,8 @@ Ext.define ('Webed.form.field.CodeArea', {
 
             var modeInfo = modeInfos.pop ();
             if (modeInfo) {
-                switch (modeInfo.mode) {
-                    case 'yaml':
-                        this.getOptions ().mode = 'yaml-plus'; break;
-                    default:
-                        this.getOptions ().mode = modeInfo.mode;
-                }
+                var options = assert (this.getOptions ());
+                options.mode = modeInfo.mode;
             }
         }
     },
@@ -112,8 +109,8 @@ Ext.define ('Webed.form.field.CodeArea', {
         var codemirror = CodeMirror.fromTextArea (ta, options);
         if (options.mode) CodeMirror.autoLoadMode (codemirror, options.mode);
 
-        var mime = assert (this.getMime ());
-        codemirror.setOption ('mode', mime);
+        var mime = this.getMime ();
+        if (mime) codemirror.setOption ('mode', mime);
 
         var me = this;
         codemirror.on ('cursorActivity', function (self) {
