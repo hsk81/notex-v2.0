@@ -1,2 +1,54 @@
-<div id="page" class="overview">
+<div id="page" class="textual overview">
+
+    <p>Are you tired of fighting the text processors Word or LaTex? Forget them! The browser based text editor NoTex helps you to write your thesis, report or article using a very natural markup. No wasted time with installation, no more frustration with Word and no figuring out of complicated LaTex commands; give it a try!</p>
+
+    <p>If you're a serious author writing lengthy books, a professor or a student writing complex reports or articles then NoTex is the editor for you: It allows you to <em>focus</em> on content creation and produces publication quality PDFs. For this purpose it applies the <em>reStructuredText</em> markup, which has a very natural approach to writing.</p>
+
+    <p>You'd like to convert your content not only to PDF but also HTML? Not a problem, just click one single button, and you have all your material ready as HTML to be published on the internet. And for those who don't want to give up their LaTex tool chain, just use the corresponding export button and you're done.</p>
+
+    <h1>Content vs. Presentation</h1>
+
+    <p>So what's actually wrong with Word or LaTex? Why consider another editor when you're able to write your books or reports with them? Well the problems are many, so let's bash first Word before we proceed to LaTex.</p>
+
+    <h2>Word</h2>
+    <p>Have you tried to write a book with Word or one of the other office applications? Did you enjoy writing in those word processors? Could you concentrate? Or where you constantly distracted by one of the many presentational issues? Like the image of your favorite subject not being perfectly centered, or the distance between the caption and the border at the bottom of the image being too large or too small? What about the vertical positioning on the page? Maybe you should have re-sized the image to fit another one on the same page? And so on ..</p>
+
+    <div class="slag slag-rhs">
+        <hr>What-you-see-is-what-you-get editors distract<hr>
+    </div>
+
+    <p>All you actually wanted to do, was to write the next paragraph about the subject at hand. But since it's very easy with Word to get distracted with minor presentational issues, the important task does not get done: Producing content! That's the problem with all those <em>what-you-see-is-what-you-get</em> (WYSIWYG) processors: They distract and therefore lower productivity.</p>
+
+    <p>Admittedly, if you just want to write a simple letter complaining about your taxation, then these word processors can be very handy. But the moment you introduce elements like <em>table of contents, footnotes, images, captions, indices, quotations, references, etc.</em> then they reach very quickly their boundaries.</p>
+
+    <p>To tackle such distractions and to enable you to write complex content, intelligent people came up with LaTex. But LaTex has its own share of problems. Let's investigate:</p>
+
+    <h2>LaTex</h2>
+    <p>Once there was a professor who was not happy about the presentation of his books and articles: It was simply not good enough and therefore he decided to fix it. He went into his office and created a superb system that allowed him to write his books and articles, producing output which he could show around without getting embarrassed: He called it Tex which was later-on extended to LaTex. While designing the system he focused so much on the presentational quality of the end product, that he neglected the fact that a system should also be user friendly.</p>
+
+    <div class="slag slag-lhs">
+        <hr>Separate content from presentation<hr>
+    </div>
+
+    <p>Anyway if you've ever used LaTex then you'll have noticed how complex and difficult its markup language is. The reason for this is because you use it <em>not only</em> to express your content, but <em>also</em> to describe the desired presentation.</p>
+
+    <p>LaTex mixes as much as Word content production with presentational design: While Word does it on a visual level, LaTex repeats the same mistake in the markup. This is wrong, and should be fixed. There is actually a very nice example, which implements a clean separation: HTML with CSS.</p>
+
+    <h2>HTML with CSS</h2>
+    <p>This couple is the perfect to demonstrate the need to separate content from presentation: While HTML focuses on the content (or structure) of a web application, CSS is the magic that turns a dull site into something that looks exciting. But HTML with CSS has been designed to be used for web sites and web applications inside browsers.</p>
+
+    <p>If you ever try to print a website it will usually look horrible! With CSS it is simply impossible to reach the same quality output of LaTex; it has not been designed for that purpose.</p>
+
+    <h2>ReStructuredText (rST)</h2>
+    <p>Here reStructuredText enters the arena: This incredible markup allows you to express content without worrying much about presentation. After you've written some rST, you can combine it with LaTex to produce excellent looking books, reports or articles. It's the next generation of content expression! A manuscript that has been crafted with rST is very natural to read (as compared to LaTex manuscripts or HTML code): The emphasis is to be <em>user friendly</em>.</p>
+
+    <div class="slag slag-rhs">
+        <hr>Use the rST markup for content<hr>
+    </div>
+
+    <p>But how do you combine rST with LaTex? Well, this is what NoTex does: It takes your content expressed in rST, applies a template ‒ described with LaTex ‒ and delivers auto-magically your publication ready output. If you've some LaTex knowledge then you can also edit the templates as you wish.</p>
+
+    <h2>Tutorial</h2>
+    <p>The learn more, get started with the <strong><a href="{{ url_for('.tutorial', theme=theme) }}">user interface tutorial</a></strong>: It will teach you the basics about NoTex and its UI; plus you'll get a very brief introduction to rST and write your first report with it. Go ahead!</p>
+
 </div>

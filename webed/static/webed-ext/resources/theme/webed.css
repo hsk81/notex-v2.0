@@ -210,6 +210,12 @@ body {
     width: 768px;
 }
 
+#page.textual {
+    font-family: 'Georgia', serif;
+    font-size: large;
+    color: #000000;
+}
+
 #page.textual p {
     text-align: justify;
     padding: 0.5em 0;
@@ -239,10 +245,10 @@ body {
 
 #page.textual div.slag {
     font-weight: bold;
-    font-size: large;
+    font-size: x-large;
     color: #888888;
     text-align: center;
-    width: 25%;
+    width: 27.5%;
 }
 
 #page.textual div.slag hr {
