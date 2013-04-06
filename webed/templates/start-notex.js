@@ -4,7 +4,4 @@ function start_notex (self) {
         var projects = viewport.down ('panel[name=projects]');
         if (projects) projects.expand ();
     }
-
-    var button = assert (Ext.get ('start-box-button-id'));
-    button.fadeOut ();
 }

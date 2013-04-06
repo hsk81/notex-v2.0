@@ -26,6 +26,7 @@ Ext.define ('Webed.controller.tree.NodeTree', {
                 itemclick: this.itemclick
             },
             'viewport panel[name=projects]': {
+                beforeexpand: this.beforeexpand,
                 expand: this.expand
             }
         });
@@ -84,6 +85,10 @@ Ext.define ('Webed.controller.tree.NodeTree', {
         this.application.fireEvent ('select_leaf', this, {
             record: record
         });
+    },
+
+    beforeexpand: function () {
+        assert (Ext.get ('start-box-button-id')).fadeOut ();
     },
 
     expand: function () {
