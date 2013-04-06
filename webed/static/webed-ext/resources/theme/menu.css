@@ -2,12 +2,10 @@
     margin: 24px;
     padding: 7px 6px 0;
     background: #888888 url(img/overlay.png) repeat-x 0 -110px;
-    line-height: 100%;
-    border-radius: 1em;
-    font: normal 12px/4px Arial, Helvetica, sans-serif;
+    font: normal 15px/4px Arial, Helvetica, sans-serif;
+    border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    border-radius: 5px;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
 }
