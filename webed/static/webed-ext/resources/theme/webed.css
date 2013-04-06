@@ -63,7 +63,7 @@ body {
 }
 
 #page.home .title {
-    text-shadow: #888888 -1.25px -0.75px 2px;
+    text-shadow: #888888 -1.00px -0.50px 2px;
     text-align:center;
     font-weight:bold;
     font-variant:small-caps;
