@@ -81,7 +81,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
-            message: 'Saving', label: 'MainToolbar.saveDocument'
+            message: 'Saving', label: 'MainToolbar.save-document'
         });
 
         function callback (records, op) {
@@ -90,7 +90,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             }
 
             application.fireEvent ('progress-stop', this, {
-                label: 'MainToolbar.saveDocument'
+                label: 'MainToolbar.save-document'
             });
 
             button.enable ();
@@ -240,7 +240,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             });
 
             TRACKER.event ({
-                category: 'MainToolbar', action: 'exportProject', label: mime,
+                category: 'MainToolbar', action: 'export-project', label: mime,
                 value: 1
             });
 
@@ -249,7 +249,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         function onFailure (xhr, opts) {
             TRACKER.event ({
-                category: 'MainToolbar', action: 'exportProject', label: mime,
+                category: 'MainToolbar', action: 'export-project', label: mime,
                 value: 1
             });
 

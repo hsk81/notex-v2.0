@@ -108,7 +108,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             });
 
             TRACKER.event ({
-                category: 'ExportAsToolbar', action: 'exportProject',
+                category: 'ExportAsToolbar', action: 'export-project',
                 label: mime, value: 1
             });
 
@@ -130,7 +130,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             });
 
             TRACKER.event ({
-                category: 'ExportAsToolbar', action: 'exportProject',
+                category: 'ExportAsToolbar', action: 'export-project',
                 label: mime, value: (xhr.status==503) ? Math.pow (2,31)-1 : 0
             });
 
@@ -164,13 +164,13 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
     url2fn: function (url) {
         switch (url) {
             case '/rest-to-pdf/':
-                return 'exportProjectAsPdf';
+                return 'export-project-as-pdf';
             case '/rest-to-html/':
-                return 'exportProjectAsHtml';
+                return 'export-project-as-html';
             case '/rest-to-latex/':
-                return 'exportProjectAsLatex';
+                return 'export-project-as-latex';
             default:
-                return 'exportProject';
+                return 'export-project';
         }
     }
 

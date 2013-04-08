@@ -59,7 +59,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
             Webed.form.field.CodeArea.setDirection (null);
 
             TRACKER.event ({
-                category: 'StatusBar', action: 'lingua_change',
+                category: 'StatusBar', action: 'lingua-change',
                 label: oldValue, value: 1
             });
         }
@@ -85,7 +85,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
                 Webed.form.field.CodeArea.setDirection (direction);
 
                 TRACKER.event ({
-                    category: 'StatusBar', action: 'lingua_select',
+                    category: 'StatusBar', action: 'lingua-select',
                     label: lingua, value: 1
                 });
             } else {
@@ -98,13 +98,13 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
                 });
 
                 TRACKER.event ({
-                    category: 'StatusBar', action: 'lingua_select',
+                    category: 'StatusBar', action: 'lingua-select',
                     label: lingua, value: 0
                 });
             }
 
             controller.progress_stop (controller, {
-                label: 'StatusBar.lingua_select'
+                label: 'StatusBar.lingua-select'
             });
 
             self.enable ();
@@ -122,7 +122,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         });
 
         this.progress_play (this, {
-            message: 'Loading', label: 'StatusBar.lingua_select'
+            message: 'Loading', label: 'StatusBar.lingua-select'
         });
     },
 
@@ -153,7 +153,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
                 }
 
                 TRACKER.event ({
-                    category: 'StatusBar', action: 'info_click',
+                    category: 'StatusBar', action: 'info-click',
                     label: ca.getMime (), value: 1
                 });
             }
@@ -177,7 +177,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
     zoom_click: function () {
         assert (this.getZoomSlider ()).setValue (100);
         TRACKER.event ({
-            category: 'StatusBar', action: 'zoom_click', value: 1
+            category: 'StatusBar', action: 'zoom-click', value: 1
         });
     },
 
@@ -190,12 +190,12 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
             self.setValue (value, false);
 
             TRACKER.event ({
-                category: 'StatusBar', action: 'slider_afterrender',
+                category: 'StatusBar', action: 'slider-afterrender',
                 label: 'font-size', value: value
             });
         } else {
             TRACKER.event ({
-                category: 'StatusBar', action: 'slider_afterrender',
+                category: 'StatusBar', action: 'slider-afterrender',
                 label: 'font-size', value: 100
             });
         }
@@ -207,7 +207,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         Ext.util.Cookies.set ('editor.font-size', value);
 
         TRACKER.event ({
-            category: 'StatusBar', action: 'slider_change',
+            category: 'StatusBar', action: 'slider-change',
             label: 'font-size', value: value
         });
     },
@@ -228,7 +228,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         if (args && args.message) progressBar.setMessage (args.message);
 
         if (args && args.label) TRACKER.event ({
-            category: 'StatusBar', action: 'progress_play',
+            category: 'StatusBar', action: 'progress-play',
             label: args.label, value: 1
         });
 
@@ -243,7 +243,7 @@ Ext.define ('Webed.controller.statusbar.StatusBar', {
         var progressBar = assert (this.getProgressBar ());
 
         if (args && args.label) TRACKER.event ({
-            category: 'StatusBar', action: 'progress_stop',
+            category: 'StatusBar', action: 'progress-stop',
             label: args.label, value: progressBar.getTotal ()
         });
 
