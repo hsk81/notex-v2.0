@@ -216,6 +216,13 @@ body {
     color: #000000;
 }
 
+#page.textual hr {
+    border:0;
+    height:2px;
+    color:#888888;
+    background-color:#888888;
+}
+
 #page.textual p {
     text-align: justify;
     padding: 0.5em 0;
@@ -277,8 +284,8 @@ body {
 }
 
 #page.textual div.figure p {
-    text-align: justify;
-    font-size: xx-small;
+    text-align: center;
+    font-size: small;
 }
 
 /******************************************************************************
