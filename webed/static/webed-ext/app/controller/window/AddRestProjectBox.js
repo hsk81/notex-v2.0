@@ -55,7 +55,7 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
             'titleFlag={6}&' +
             'tocFlag={7}&' +
             'indexFlag={8}&' +
-            'latexBackend={9}',
+            'backend={9}',
 
             encodeURIComponent (source.project),
             encodeURIComponent (source.mime),
@@ -66,7 +66,7 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
             encodeURIComponent (source.titleFlag),
             encodeURIComponent (source.tocFlag),
             encodeURIComponent (source.indexFlag),
-            encodeURIComponent (source.latexBackend)
+            encodeURIComponent (source.backend)
         );
 
         function onSuccess (xhr) {

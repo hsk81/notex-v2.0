@@ -6,11 +6,13 @@
 
     <p>You'd like to convert your content not only to PDF but also HTML? Not a problem, just click one single button, and you have all your material ready as HTML to be published on the internet. And for those who don't want to give up their LaTex tool chain, just use the corresponding export button and you're done.</p>
 
-    <h1>Content vs. Presentation</h1>
+    <hr>
+    <h1>Content vs. Presentation<a class="permalink" href="#content-vs-presentation" id="content-vs-presentation">¶</a></h1>
 
     <p>So what's actually wrong with Word or LaTex? Why consider another editor when you're able to write your books or reports with them? Well the problems are many, so let's bash first Word before we proceed to LaTex.</p>
 
-    <h2>Word</h2>
+    <h2>Word<a class="permalink" href="#word" id="word">¶</a></h2>
+
     <p>Have you tried to write a book with Word or one of the other office applications? Did you enjoy writing in those word processors? Could you concentrate? Or where you constantly distracted by one of the many presentational issues? Like the image of your favorite subject not being perfectly centered, or the distance between the caption and the border at the bottom of the image being too large or too small? What about the vertical positioning on the page? Maybe you should have re-sized the image to fit another one on the same page? And so on ..</p>
 
     <div class="slag slag-rhs">
@@ -23,7 +25,8 @@
 
     <p>To tackle such distractions and to enable you to write complex content, intelligent people came up with LaTex. But LaTex has its own share of problems. Let's investigate:</p>
 
-    <h2>LaTex</h2>
+    <h2>LaTex<a class="permalink" href="#latex" id="latex">¶</a></h2>
+
     <p>Once there was a professor who was not happy about the presentation of his books and articles: It was simply not good enough and therefore he decided to fix it. He went into his office and created a superb system that allowed him to write his books and articles, producing output which he could show around without getting embarrassed: He called it Tex which was later-on extended to LaTex. While designing the system he focused so much on the presentational quality of the end product, that he neglected the fact that a system should also be user friendly.</p>
 
     <div class="slag slag-lhs">
@@ -34,21 +37,25 @@
 
     <p>LaTex mixes as much as Word content production with presentational design: While Word does it on a visual level, LaTex repeats the same mistake in the markup. This is wrong, and should be fixed. There is actually a very nice example, which implements a clean separation: HTML with CSS.</p>
 
-    <h2>HTML with CSS</h2>
+    <h2>HTML with CSS<a class="permalink" href="#html-with-css" id="html-with-css">¶</a></h2>
+
     <p>This couple is the perfect to demonstrate the need to separate content from presentation: While HTML focuses on the content (or structure) of a web application, CSS is the magic that turns a dull site into something that looks exciting. But HTML with CSS has been designed to be used for web sites and web applications inside browsers.</p>
 
     <p>If you ever try to print a website it will usually look horrible! With CSS it is simply impossible to reach the same quality output of LaTex; it has not been designed for that purpose.</p>
 
-    <h2>ReStructuredText (rST)</h2>
-    <p>Here reStructuredText enters the arena: This incredible markup allows you to express content without worrying much about presentation. After you've written some rST, you can combine it with LaTex to produce excellent looking books, reports or articles. It's the next generation of content expression! A manuscript that has been crafted with rST is very natural to read (as compared to LaTex manuscripts or HTML code): The emphasis is to be <em>user friendly</em>.</p>
+    <h2>ReStructuredText (rST)<a class="permalink" href="#rst" id="rst">¶</a></h2>
 
     <div class="slag slag-rhs">
         <hr>Use the rST markup for content<hr>
     </div>
 
+    <p>Here reStructuredText enters the arena: This incredible markup allows you to express content without worrying much about presentation. After you've written some rST, you can combine it with LaTex to produce excellent looking books, reports or articles. It's the next generation of content expression! A manuscript that has been crafted with rST is very natural to read (as compared to LaTex manuscripts or HTML code): The emphasis is to be <em>user friendly</em>.</p>
+
     <p>But how do you combine rST with LaTex? Well, this is what NoTex does: It takes your content expressed in rST, applies a template ‒ described with LaTex ‒ and delivers auto-magically your publication ready output. If you've some LaTex knowledge then you can also edit the templates as you wish.</p>
 
-    <h2>Tutorial</h2>
-    <p>The learn more, get started with the <strong><a href="{{ url_for('.tutorial', theme=theme) }}">user interface tutorial</a></strong>: It will teach you the basics about NoTex and its UI; plus you'll get a very brief introduction to rST and write your first report with it. Go ahead!</p>
+    <hr>
+    <h1>Tutorial<a class="permalink" href="#tutorial" id="tutorial">¶</a></h1>
+
+    <p>The learn more, get started with the <a href="{{ url_for('.tutorial', theme=theme) }}">user interface tutorial</a>: It will teach you the basics about NoTex and its UI; plus you'll get a very brief introduction to rST and write your first report with it. Go ahead!</p>
 
 </div>

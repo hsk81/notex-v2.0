@@ -130,8 +130,35 @@
     <p>There is another so called <a href="https://notex.ch/?theme=standard">standard</a> theme, which is not as nice as the blue or gray ones, but it might be relatively faster on certain browsers or slower machines.</p>
 
     <hr>
-    <h1>First Project<a class="permalink" href="#st-project" id="st-project">¶</a></h1>
+    <h1>First Project<a class="permalink" href="#1st-project" id="1st-project">¶</a></h1>
 
-    <p>..</p>
+    <p>In the <em>Main Toolbar</em> click either directly the <em>Add</em> button, or the small arrow next to it to select then <em>Project</em>. A generic <em>Add Project</em> box will appear:</p>
+
+    <div class="figure" style="text-align:center;">
+        <img class="border-grey" src="{{ url_for('static', filename='webed-ext/resources/theme/img/ui-add-project.png') }}" alt="NoTex: Add Project Box" style="width:auto;">
+        <p><strong>NoTex: Add Project Box</strong></p>
+    </div>
+
+    <p>Enter a project name, and keep the <em>reStructuredText</em> setting in the second field; confirm. Another box will appear, allowing you to change various aspects of your rST project:</p>
+
+    <div class="figure" style="text-align:center;">
+        <img class="border-grey" src="{{ url_for('static', filename='webed-ext/resources/theme/img/ui-add-rest-project.png') }}" alt="NoTex: Add Project Box II" style="width:auto;">
+        <p><strong>NoTex: Add Project Box II</strong></p>
+    </div>
+
+    <p>Apart from the project field, all the other settings influence the PDF export (which is based on LaTex to perform the actual conversion). Enter your name in the <em>Author(s)</em> field, disable <em>Table of Contents</em> and leave the remaining values unchanged. NoTex creates a new project with the provided name, and fills the <em>options.yml</em> configuration with the values you've just provided.</p>
+
+    <p>The <em>options.yml</em> file is key: It allows you to tweak your PDF and HTML exports in many different ways. Later, please check the links inside the file to learn more about what you can do, and how you can do it! But for now simply copy and paste the following text into <em>content.rst</em> below the project's title:</p>
+
+    <p style="font-family: monospace; font-size: smaller; width: 75%; margin-left: auto; margin-right: auto;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultrices feugiat molestie. Donec fermentum massa sit amet nisi sollicitudin vitae sollicitudin erat dapibus. Morbi aliquam elit eget urna pulvinar sit amet euismod orci blandit. Nam id metus elit, in placerat nisl. Donec mattis, lectus sit amet porttitor facilisis, velit tellus tempor dolor, in gravida enim erat eget ligula. Donec suscipit, nibh et consectetur egestas, lacus libero sodales magna, eu faucibus libero eros dictum nibh. Ut non magna libero. Nulla facilisi. Vestibulum mi dui, mollis vel gravida ac, pellentesque a sapien.
+    <br><br>
+    Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc rhoncus semper sem, vitae pharetra dolor accumsan non. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer auctor ullamcorper magna, ut aliquet elit iaculis sit amet. Proin mollis risus at ante viverra imperdiet. Nulla faucibus tellus nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In congue aliquet ornare. Etiam sed porta turpis.</p>
+
+    <p>Hit the <em>Export as .. PDF</em> button, and voilà within a few seconds you should have your PDF on your machine! If NoTex' conversion engines are overloaded then you'll be notified; simply retry later.</p>
+
+    <hr>
+    <h1>What now?<a class="permalink" href="#what-now" id="what-now">¶</a></h1>
+
+    <p>To learn more about reStructuredText read the <a href="{{ url_for('.rest', theme=theme) }}"><span>rST</span></a> tutorial. Further, play around with the provided <em>Article</em> and <em>Report</em> samples and read the documentation available at the links in <em>options.yml</em>. Definitely check out <a href="http://notexeditor.blogspot.com/">notexeditor.blogspot.com</a>: Subscribe to the blog's RSS to get the latest news, hints and documentation about NoTex!</p>
 
 </div>

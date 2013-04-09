@@ -23,7 +23,7 @@ Ext.define ('Webed.window.AddRestProjectBox', {
         titleFlag: true,
         tocFlag: true,
         indexFlag: true,
-        latexBackend: 'xelatex'
+        backend: 'xelatex'
     },
 
     items: [{
@@ -63,9 +63,9 @@ Ext.define ('Webed.window.AddRestProjectBox', {
                         editable: false
                     },
 
-                    latexBackend: {
+                    backend: {
                         xtype: 'combo',
-                        name: 'latexBackend',
+                        name: 'backend',
                         allowBlank: false,
                         store: ['xelatex', 'pdflatex'],
                         queryMode: 'local',
@@ -88,7 +88,7 @@ Ext.define ('Webed.window.AddRestProjectBox', {
             titleFlag: 'Title',
             tocFlag: 'Table of Contents',
             indexFlag: 'Index',
-            latexBackend: 'LaTex Backend'
+            backend: 'Backend'
         }
     }],
 
