@@ -216,6 +216,17 @@ body {
     color: #000000;
 }
 
+#page.textual .permalink {
+    color: #dddddd;
+    padding: 0 4px;
+    text-decoration: none;
+}
+
+#page.textual .permalink:hover {
+    color: #444444;
+    background: #eaeaea;
+}
+
 #page.textual hr {
     border:0;
     height:2px;
