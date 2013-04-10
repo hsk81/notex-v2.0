@@ -1,0 +1,266 @@
+<div id="page" class="rest textual">
+
+    <p>This section is a brief introduction to reStructuredText (RST) concepts and syntax, intended to provide authors with enough information to write documents productively. Since RST was designed to be a simple, unobtrusive markup language, this will not take too long. <a href="#ft1" id="ft1-ref">[1]</a></p>
+
+    <p>See also the authoritative <a href="http://docutils.sourceforge.net/rst.html" target="_blank">RST User Documentation</a>: The <em>ref</em> links in this document point to the description of the individual constructs in the RST reference.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Paragraphs<a class="permalink" href="#paragraphs" id="paragraphs">¶</a></h1>
+
+    <p>The paragraph (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#paragraphs" target="_blank">ref</a>) is the most basic block in a RST document. Paragraphs are simply chunks of text separated by one or more blank lines. As in Python, indentation is significant in RST, so all lines of the same paragraph must be left-aligned to the same level of indentation.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Inline markup<a class="permalink" href="#inline-markup" id="inline-markup">¶</a></h1>
+
+    <p>The standard RST inline markup is quite simple: use one asterisk: <em><tt>*text*</tt></em> for emphasis (italics), two asterisks: <strong><tt>**text**</tt></strong> for strong emphasis (boldface), and back-quotes: <tt>``text``</tt> for code samples. If asterisks or back-quotes appear in running text and could be confused with inline markup delimiters, they have to be escaped with a backslash.</p>
+
+    <p>Be aware of some restrictions of this markup: (a) it may not be nested, (b) content may not start or end with whitespace: <tt>* text*</tt> is wrong, (c) it must be separated from surrounding text by non-word characters. Use a backslash escaped space to work around that: <tt>thisis\ *one*\ word</tt>. These restrictions may be lifted in future versions of the docutils.</p>
+
+    <p>RST also allows for custom "interpreted text roles", which signify that the enclosed text should be interpreted in a specific way. The general syntax is <tt>:rolename:`content`</tt>.</p>
+
+    <p>Standard RST provides the following roles:
+
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#emphasis" target="_blank">emphasis</a> – alternate spelling for <em><tt>*emphasis*</tt></em>,
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#strong" target="_blank">strong</a> – alternate spelling for <strong><tt>**strong**</tt></strong>,
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#literal" target="_blank">literal</a> – alternate spelling for <tt>``literal``</tt>,
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#subscript" target="_blank">subscript</a> – subscript text,
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#superscript" target="_blank">superscript</a> – superscript text, and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/roles.html#title-reference" target="_blank">title-reference</a> – for titles of books, periodicals, and other materials.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Lists and Quote-like blocks<a class="permalink" href="#lists-and-quote-like-blocks" id="lists-and-quote-like-blocks">¶</a></h1>
+
+    <p>List markup (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists" target="_blank">ref</a>) is natural: just place an asterisk at the start of a paragraph and indent properly. The same goes for numbered lists; they can also be auto-numbered using a <tt>#</tt> sign:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        * This is a bullet list.<br>
+        * It has two items, the second<br>
+        item uses two lines.<br>
+        <br>
+        1. This is a numbered list.<br>
+        2. It has two items too.<br>
+        <br>
+        #. This is a numbered list.<br>
+        #. It has two items too.</p>
+
+    <p>Nested lists are possible, but be aware that they must be separated from the parent list items by blank lines. Definition lists (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#definition-lists" target="_blank">ref</a>) are created as follows:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="margin-left: 0em;">term (up to a line of text)</span><br>
+        <span style="margin-left: 2em;">Definition of the term, which must be indented</span><br>
+        <span style="margin-left: 2em;">and can even consist of multiple paragraphs</span><br>
+        <span style="margin-left: 0em;"></span><br>
+        <span style="margin-left: 0em;">next term</span><br>
+        <span style="margin-left: 2em;">Description.</span>
+    </p>
+
+    <p>Note that the term cannot have more than one line of text. Quoted paragraphs (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#block-quotes" target="_blank">ref</a>) are created by just indenting them more than the surrounding paragraphs. Line blocks (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#line-blocks" target="_blank">ref</a>) are a way of preserving line breaks:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        | These lines are<br>
+        | broken exactly like in<br>
+        | the source file.</p>
+
+    <p>There are also several more special blocks available:
+
+        field lists (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists" target="_blank">ref</a>),
+        option lists (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#option-lists" target="_blank">ref</a>),
+        quoted literal blocks (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#quoted-literal-blocks" target="_blank">ref</a>), and
+        doctest blocks (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#doctest-blocks" target="_blank">ref</a>).</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Source Code<a class="permalink" href="#source-code" id="source-code">¶</a></h1>
+
+    <p>Literal code blocks (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#literal-blocks" target="_blank">ref</a>) are introduced by ending a paragraph with the special marker <tt>::</tt>. The literal block must be indented (and, like all paragraphs, separated from the surrounding ones by blank lines):</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="margin-left: 0em;">This is a normal text paragraph. The next paragraph is a code sample::</span><br>
+        <span style="margin-left: 0em;"></span><br>
+        <span style="margin-left: 2em;">It is not processed in any way, except</span><br>
+        <span style="margin-left: 2em;">that the indentation is removed.</span><br>
+        <span style="margin-left: 2em;"></span><br>
+        <span style="margin-left: 2em;">It can span multiple lines.</span><br>
+        <span style="margin-left: 0em;"></span><br>
+        <span style="margin-left: 0em;">This is a normal text paragraph again.</span>
+    </p>
+
+    <p>The handling of the <tt>::</tt> marker is smart:
+
+        (a) If it occurs as a paragraph of its own, that paragraph is completely left out of the document;
+        (b) if it is preceded by whitespace, the marker is removed; and
+        (c) if it is preceded by non-whitespace, the marker is replaced by a single colon.
+
+        That way, the second sentence in the above example's first paragraph would be rendered as "The next paragraph is a code sample:".</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Tables<a class="permalink" href="#table" id="table">¶</a></h1>
+
+    <p>Two forms of tables are supported. For <em>grid tables</em> (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#grid-tables" target="_blank">ref</a>), you have to "paint" the cell grid yourself. They look like this:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">+------------------------+------------+----------+----------+</span><br>
+        <span style="white-space: pre;">| Header row, column 1   | Header 2   | Header 3 | Header 4 |</span><br>
+        <span style="white-space: pre;">| (header rows optional) |            |          |          |</span><br>
+        <span style="white-space: pre;">+========================+============+==========+==========+</span><br>
+        <span style="white-space: pre;">| body row 1, column 1   | column 2   | column 3 | column 4 |</span><br>
+        <span style="white-space: pre;">+------------------------+------------+----------+----------+</span><br>
+        <span style="white-space: pre;">| body row 2             | ...        | ...      |          |</span><br>
+        <span style="white-space: pre;">+------------------------+------------+----------+----------+</span>
+    </p>
+
+    <p><em>Simple tables</em> (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#simple-tables" target="_blank">ref</a>) are easier to write, but limited: they must contain more than one row, and the first column cannot contain multiple lines. They look like this:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">=====  =====  =======</span><br>
+        <span style="white-space: pre;">A      B      A and B</span><br>
+        <span style="white-space: pre;">=====  =====  =======</span><br>
+        <span style="white-space: pre;">False  False  False  </span><br>
+        <span style="white-space: pre;">True   False  False  </span><br>
+        <span style="white-space: pre;">False  True   False  </span><br>
+        <span style="white-space: pre;">True   True   True   </span><br>
+        <span style="white-space: pre;">=====  =====  =======</span>
+    </p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Hyperlinks<a class="permalink" href="#hypberlinks" id="hypberlinks">¶</a></h1>
+
+    <h3 style="margin-top: 0.5em;">External links<a class="permalink" href="#external-links" id="external-links">¶</a></h3>
+
+    <p>Use <tt>`Link text &lt;http://example.com/&gt;`_</tt> for inline web links. If the link text should be the web address, you don't need special markup at all, the parser finds links and mail addresses in ordinary text. You can also separate the link and the target definition (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#hyperlink-targets" target="_blank">ref</a>), like this:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">This is a paragraph that contains `a link`_.</span><br>
+        <br>
+        <span style="white-space: pre;">.. _a link: http://example.com/</span><br>
+    </p>
+
+    <h3 style="margin-top: 0.5em;">Internal links<a class="permalink" href="#internal-links" id="internal-links">¶</a></h3>
+
+    <p>To support cross-referencing to arbitrary locations in any document, the standard RST labels are used. For this to work label names must be unique throughout the entire documentation. There are two ways in which you can refer to labels:</p>
+
+    <p>If you place a label directly before a section title, you can reference to it with <tt>:ref:`label-name`</tt>. The <tt>:ref:</tt> role would then generate a link to the section, with the link title being "Section to cross-reference". This works just as well when section and reference are in different source files.</p>
+
+    <p>Labels that aren't placed before a section title can still be referenced to, but you must give the link an explicit title, using this syntax: <tt>:ref:`Link title &lt;label-name&gt;`</tt>.</p>
+
+    <p>Using <tt>ref</tt> is advised over standard reStructuredText links to sections (like <tt>`Section title`_</tt>) because it works across files, when section headings are changed, and for all builders that support cross-references.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Sections<a class="permalink" href="#sections" id="sections">¶</a></h1>
+
+    <p>Section headers (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#sections" target="_blank">ref</a>) are created by underlining (and optionally over-lining) the section title with a punctuation character, at least as long as the text:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">=================</span><br>
+        <span style="white-space: pre;">This is a heading</span><br>
+        <span style="white-space: pre;">=================</span>
+    </p>
+
+    <p>Normally, there are no heading levels assigned to certain characters as the structure is determined from the succession of headings. However, you may follow this convention: <tt>#</tt> with over-line, for parts; <tt>*</tt> with over-line, for chapters; <tt>=</tt> for sections; <tt>-</tt> for subsections; <tt>^</tt> for sub-subsections; and <tt>"</tt> for paragraphs.</p>
+
+    <p>Of course, you are free to use your own marker characters (see the RST documentation), and use a deeper nesting level, but keep in mind that most target formats (HTML, LaTeX) have a limited supported nesting depth.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Explicit Markup<a class="permalink" href="#explicit-markup" id="explicit-markup">¶</a></h1>
+
+    <p>"Explicit markup" (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#explicit-markup-blocks" target="_blank">ref</a>) is used in RST for most constructs that need special handling, such as footnotes, specially-highlighted paragraphs, comments, and generic directives.</p>
+
+    <p>An explicit markup block begins with a line starting with <tt>..</tt> followed by whitespace and is terminated by the next paragraph at the same level of indentation. (There needs to be a blank line between explicit markup and normal paragraphs. This may all sound a bit complicated, but it is intuitive enough when you write it.)</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Directives<a class="permalink" href="#directives" id="directives">¶</a></h1>
+
+    <p>A directive (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#directives" target="_blank">ref</a>) is a generic block of explicit markup. Docutils supports the following directives:</p>
+
+    <p><em>Admonitions</em>: <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#attention" target="_blank">attention</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#caution" target="_blank">caution</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#danger" target="_blank">danger</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#error" target="_blank">error</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#hint" target="_blank">hint</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">important</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">note</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#tip" target="_blank">tip</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#warning" target="_blank">warning</a> and the generic <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#admonition" target="_blank">admonition</a>. (Most themes style only "note" and "warning" specially.)</p>
+
+    <p><em>Images</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#image" target="_blank">image</a> (see also <a href="#images">images</a> below), and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure" target="_blank">figure</a> (an image with caption and optional legend).</p>
+    <p><em>Additional body elements</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#table-of-contents" target="_blank">contents</a> (a local, i.e. for the current file only, table of contents),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#container" target="_blank">container</a> (a container with a custom class, useful to generate an outer &lt;div&gt; in HTML),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#rubric" target="_blank">rubric</a> (a heading without relation to the document sectioning),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#topic" target="_blank">topic</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#sidebar" target="_blank">sidebar</a> (special highlighted body elements),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#parsed-literal" target="_blank">parsed-literal</a> (literal block that supports inline markup),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#epigraph" target="_blank">epigraph</a> (a block quote with optional attribution line),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#highlights" target="_blank">highlights</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#pull-quote" target="_blank">pull-quote</a> (block quotes with their own class attribute), and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#compound" target="_blank">compound</a> (a compound paragraph).</p>
+    <p><em>Special tables</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#table" target="_blank">table</a> (a table with title),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#csv-table" target="_blank">csv-table</a> (a table generated from comma-separated values), and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#list-table" target="_blank">list-table</a> (a table generated from a list of lists).</p>
+    <p><em>Special directives</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#raw" target="_blank">raw</a> (include raw target-format markup),
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#include" target="_blank">include</a> (include reStructuredText from another file) – when given an absolute include file path, this directive takes it as relative to the source directory, and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#class" target="_blank">class</a> (assign a class attribute to the next element).</p>
+    <p><em>HTML specifics</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#meta" target="_blank">meta</a> (generation of HTML <meta> tags), and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#title" target="_blank">title</a> (override document title).</p>
+    <p><em>Influencing markup</em>:
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#default-role" target="_blank">default-role</a> (set a new default role), and
+        <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#role" target="_blank">role</a> (create a new role).
+        Since these are only per-file, better use <a href="http://sphinx.pocoo.org/config.html#confval-default_role" target="_blank">default_role</a>.</p>
+
+    <p>Do not use the directives <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#sectnum" target="_blank">sectnum</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#header" target="_blank">header</a> and <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#footer" target="_blank">footer</a>. Basically, a directive consists of a name, arguments, options and content. Looking at this example,</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">.. function:: foo(x)</span><br>
+        <span style="white-space: pre;">              foo(y, z)</span><br>
+        <span style="white-space: pre;">   :module: some.module.name</span><br>
+        <span style="white-space: pre;"></span><br>
+        <span style="white-space: pre;">   Return a line of text input from the user.</span>
+    </p>
+
+    <p><tt>function</tt> is the directive name. It is given two arguments here, the remainder of the first line and the second line, as well as one option <tt>module</tt> (as you can see, options are given in the lines immediately following the arguments and indicated by the colons). Options must be indented to the same level as the directive content.</p>
+
+    <p>The directive content follows after a blank line and is indented relative to the directive start.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Images<a class="permalink" href="#images" id="images">¶</a></h1>
+
+    <p>RST supports an image directive (<a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#image" target="_blank">ref</a>), used like so:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">.. image:: gnu.png</span><br>
+        <span style="white-space: pre;">   (options)</span>
+    </p>
+
+    <p>Interpretation of image size options (<tt>width</tt> and <tt>height</tt>) is as follows: if the size has no unit or the unit is pixels, the given size will only be respected for output channels that support pixels (i.e. not in LaTeX output). Other units (like pt for points) will be used for HTML and LaTeX output.</p>
+
+    <p>The standard docutils behavior is extended by allowing an asterisk for the extension:</p>
+
+    <p style="margin-left: 2em; font-family: monospace;">
+        <span style="white-space: pre;">... image:: gnu.*</span>
+    </p>
+
+    <p>All images matching the provided pattern are then search and their type determined. Each builder then chooses the best image out of these candidates. For instance, if the file name <tt>gnu.*</tt> was given and two files <tt>gnu.pdf</tt> and <tt>gnu.png</tt> existed in the source tree, the LaTeX builder would choose the former, while the HTML builder would prefer the latter.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h3>Footnotes<a class="permalink" href="#footnotes" id="footnotes">¶</a></h3>
+
+    <p><a href="#ft1-ref" id="ft1">[1]</a>&nbsp;This document is a slightly altered version of the excellent reStructuredText primer available at <a href="http://sphinx.pocoo.org/rest.html" target="_blank">sphinx.pocoo.org/rest.html</a>.</p>
+
+    <!--====================================================================-->
+</div>
