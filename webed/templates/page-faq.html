@@ -15,7 +15,7 @@
 
     <p>Your data is kept on servers in the European Union; the data itself is <em>not</em> encrypted, which means the administrators could have access to it, although internal policy forbids this. Having said that, it's planned to introduce client side encryption, in which case even a person with physical access to the hard disks would not be able to read your data.</p>
 
-    <p>To alleviate the current situation, we'll soon launch an <em>offline</em> edition of the editor. We used to offer a downloadable solution, based on a virtual machine, but due to the size of it we discontinued that product. If you're not willing to trust us, or cannot afford to do so, then we recommend <em>not</em> to use NoTex.</p>
+    <p>To alleviate the current situation, we'll soon launch an <em>offline</em> edition of the editor. We used to offer a downloadable solution, based on a virtual machine, but due to the size of it we discontinued that product. If you're not willing to trust us or cannot afford to do so, then we recommend <em>not</em> to use NoTex.</p>
 
     <h2>Where do I sign up and login?<a class="permalink" href="#sign-up-and-login" id="sign-up-and-login">¶</a></h2>
 
@@ -32,11 +32,15 @@
 
     <h2>How long do you keep my data?<a class="permalink" href="#cookie-life-span" id="cookie-life-span">¶</a></h2>
 
-    <p>If you do not revisit NoTex for longer than two weeks, then all your data becomes inaccessible. It is not recoverable and there is no support for any requests w.r.t. lost data. Therefore we recommend you to <em>export your data on a regular basis</em> as a ZIP archive. We do plan to address this situation rather soon by integrating NoTex with cloud storage services.</p>
+    <p>If you do not revisit NoTex for longer than two weeks, then all your data becomes inaccessible. It is not recoverable and there is no support for any requests with respect to lost data. Therefore we recommend you to <em>export your data on a regular basis</em> as a ZIP archive. We do plan to address this situation rather soon by integrating NoTex with cloud storage services.</p>
 
     <h2>I deleted my cookies; can I access my data?<a class="permalink" href="#cookie-deleted" id="cookie-deleted">¶</a></h2>
 
     <p>No. NoTex uses a secure cookie to identify revisiting users; if you delete it, then there is no possibility to associate you with your now inaccessible data. Export regularly your data to your computer, and re-import it in such a situation. Once NoTex has cloud storage integration, this problem will become irrelevant.</p>
+
+    <h2>I deleted the sample projects; how do I recover them?<a class="permalink" href="#samples-deleted" id="samples-deleted">¶</a></h2>
+
+    <p>Beware: By following the next instruction you'll reset your session; if you have any relevant data, then please export them first! Visit <a href="{{ url_for('.home', theme=theme, refresh=True) }}">{{ url_for('.home', theme=theme, refresh=True) }}</a> and your session will be reset to its original state (including the sample projects). For security reasons, this link will work only once every 15 minutes.</p>
 
     <!--====================================================================-->
 
