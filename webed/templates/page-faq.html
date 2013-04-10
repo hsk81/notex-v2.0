@@ -1,0 +1,104 @@
+<div id="page" class="faq textual">
+
+    <p>This section provides answers to frequently asked and important questions. If you want to ask a new one, then please feel free to use the <a href="{{ url_for('.contact', theme=theme) }}">contact</a> form.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Security<a class="permalink" href="#security" id="security">¶</a></h1>
+
+    <h2>How is my communication protected?<a class="permalink" href="#ssl-encryption" id="ssl-encryption">¶</a></h2>
+
+    <p>NoTex applies standard SSL with 256 bit encryption, based on a certificated issued by <a href="http://godaddy.com" target="_blank" rel="nofollow">GoDaddy.com</a>. This means nobody between your computer and the editor's server can eavesdrop and access the data. You can confirm this statement by clicking on the padlock icon in the address bar of your browser. Plus you should see the SSL seal at the footer of the <a href="{{ url_for('.contact', theme=theme) }}">contact</a> page: If you click on it you'll see the issuer's verification.</p>
+
+    <h2>How is my data protected?<a class="permalink" href="#data-protection" id="data-protection">¶</a></h2>
+
+    <p>Your data is kept on servers in the European Union; the data itself is <em>not</em> encrypted, which means the administrators could have access to it, although internal policy forbids this. Having said that, it's planned to introduce client side encryption, in which case even a person with physical access to the hard disks would not be able to read your data.</p>
+
+    <p>To alleviate the current situation, we'll soon launch an <em>offline</em> edition of the editor. We used to offer a downloadable solution, based on a virtual machine, but due to the size of it we discontinued that product. If you're not willing to trust us, or cannot afford to do so, then we recommend <em>not</em> to use NoTex.</p>
+
+    <h2>Where do I sign up and login?<a class="permalink" href="#sign-up-and-login" id="sign-up-and-login">¶</a></h2>
+
+    <p>NoTex does not require you to sign up or login; just use it. If you revisit the site then you're identified based on a secure cookie which has been generated and stored (in your browser) at your last visit. If you delete your cookie then there is no possibility to associate you with the last visit; therefore the editor will create a new session for you.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Data<a class="permalink" href="#data" id="data">¶</a></h1>
+
+    <h2>How much space do I have?<a class="permalink" href="#storage-space" id="storage-space">¶</a></h2>
+
+    <p>Not much; NoTex is not meant as a storage solution for large amounts of data. But it is planned to introduce <a href="http://www.dropbox.com/" target="_blank">Dropbox</a> and <a href="http://drive.google.com/" target="_blank">Google Drive</a> integrations. At the moment we recommended to <em>export regularly your data</em> to your computer.</p>
+
+    <h2>How long do you keep my data?<a class="permalink" href="#cookie-life-span" id="cookie-life-span">¶</a></h2>
+
+    <p>If you do not revisit NoTex for longer than two weeks, then all your data becomes inaccessible. It is not recoverable and there is no support for any requests w.r.t. lost data. Therefore we recommend you to <em>export your data on a regular basis</em> as a ZIP archive. We do plan to address this situation rather soon by integrating NoTex with cloud storage services.</p>
+
+    <h2>I deleted my cookies; can I access my data?<a class="permalink" href="#cookie-deleted" id="cookie-deleted">¶</a></h2>
+
+    <p>No. NoTex uses a secure cookie to identify revisiting users; if you delete it, then there is no possibility to associate you with your now inaccessible data. Export regularly your data to your computer, and re-import it in such a situation. Once NoTex has cloud storage integration, this problem will become irrelevant.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Performance<a class="permalink" href="#performance" id="performance">¶</a></h1>
+
+    <h2>PDF conversion is slow; why?<a class="permalink" href="#pdf-conversion" id="pdf-conversion">¶</a></h2>
+
+    <p>Converting reStructuredText to LaTex is not an expensive operation, but translating LaTex to PDF involves significant amount of processing; even on modern machines it can take some seconds to do that.</p>
+
+    <h2>Can the PDF conversion be accelerated?<a class="permalink" href="#pdflatex-vs-xelatex" id="pdflatex-vs-xelatex">¶</a></h2>
+
+    <p>Yes, to some extend: NoTex uses by default the <em>xelatex</em> backend to do the LaTex translation, which is compared to the <em>pdflatex</em> backend slower (not a lot, but the difference is noticeable). It can also happen, that our servers cannot cope with the user demand and you'll get no export at all: It such cases simply wait and retry later.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Documentation<a class="permalink" href="#documentation" id="documentation">¶</a></h1>
+
+    <p>There is in general not a lot of documentation available for NoTex; we're working hard to change this. You can meanwhile consult the other pages of NoTex, the <a href="http://sphinx-doc.org/contents.html">Sphinx</a> (actual engine converting rST via LaTex to PDF) documentation, the blog posts at <a href="http://notexeditor.blogspot.com/">notexeditor.blogspot.com</a> and of course you can ask a question using the <a href="{{ url_for('.contact', theme=theme) }}">contact</a> page.</p>
+
+    <p>We'll also soon launch a forum, to provide a discussion place.</p>
+
+    <h2>What is the "options.yml" configuration file about?<a class="permalink" href="#options.yml" id="options.yml">¶</a></h2>
+
+    <p>It contains meta-information (in <a href="http://www.yaml.org/">YAML</a> notation) about the project and allows you to tweak the conversion parameters. This file is only relevant for rST projects.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Miscellanea<a class="permalink" href="#miscellanea" id="miscellanea">¶</a></h1>
+
+    <h2>What does "NoTex"mean?<a class="permalink" href="#notex-meaning" id="notex-meaning">¶</a></h2>
+
+    <p>It's a pun on <em>Tex</em>, since if the NoTex editor is properly used, you can avoid using (and learning) Tex or LaTex. Knowing LaTex is not a disadvantage though, since you can use it to change NoTex' default templates.</p>
+
+    <h2>Is it open source?<a class="permalink" href="#open-source" id="open-source">¶</a></h2>
+
+    <p>Yes it is; the source code is available at the GIT repository <a href="http://github.com/hsk81/webed" target="_blank">http://github.com/hsk81/webed</a> and is GPL licenced. Execute <tt>git clone git://github.com/hsk81/webed.git</tt> to get a copy. The older version of NoTex is available at <a href="http://github.com/hsk81/notex" target="_blank">http://github.com/hsk81/notex</a>.</p>
+
+    <h2>What technology do you use?<a class="permalink" href="#technology" id="technology">¶</a></h2>
+
+    <p>The editor's front-end has entirely been written with the <a href="http://www.sencha.com/products/extjs/" target="_blank">ExtJS</a> JavaScript framework plus the JavaScript code editor <a href="http://codemirror.net/" target="_blank">CodeMirror</a>;  for the back-end the <a href="http://flask.pocoo.org/" target="_blank">Flask</a> Python micro-framework is being used. The back-end applies the Python document generator <a href="http://sphinx.pocoo.org/" target="_blank">Sphinx</a> to translate the rST input files to the various target formats; <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> is the <em>markup syntax and parser component</em> of <a href="http://docutils.sourceforge.net/index.html" target="_blank">Docutils</a>. LaTex is translated to PDF using <a href="http://www.tug.org/texlive/" target="_blank">TeX Live</a>. The communication between the workers doing the actual conversion and the main application is managed by the <a href="http://www.zeromq.org/">ZeroMQ</a> transport layer.</p>
+
+    <h2>How can I contact you?<a class="permalink" href="#contact" id="contact">¶</a></h2>
+
+    <p>Use the form provided at <a href="{{ url_for('.contact', theme=theme) }}">contact</a> page or send an email to <em>contact[at]blackhan.ch</em>. You can also participate at <a href="http://www.facebook.com/notexeditor">facebook.com/notexeditor</a> or follow <a href="http://twitter.com/notexeditor">@notexeditor</a>.</p>
+
+    <!--====================================================================-->
+
+    <hr>
+    <h1>Privacy and Refund<a class="permalink" href="#privacy-and-refund" id="privacy-and-refund">¶</a></h1>
+
+    <p>Our privacy and refund policy is with respect to the <em>offline</em> edition of NoTex (which is still in development), the corresponding order processing and the credit card payment.</p>
+
+    <h2>What is your privacy policy?<a class="permalink" href="#privacy-policy" id="privacy-policy">¶</a></h2>
+
+    <p>We take your privacy seriously and will take all measures to protect your personal information. Any personal information received will only be used to fill your order. We will not sell or redistribute your information to anyone.</p>
+
+    <h2>What is your refund policy?<a class="permalink" href="#refund-policy" id="refund-policy">¶</a></h2>
+
+    <p>Even if you are not 100% satisfied with your purchase, we will <em>not</em> refund the cost of your order under any circumstances.</p>
+
+    <!--====================================================================-->
+</div>
