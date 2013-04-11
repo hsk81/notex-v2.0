@@ -84,6 +84,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
         var uuid = assert (node.get ('uuid'));
         var mime = assert (node.get ('mime'));
         var url = url_base + uuid;
+        var me = this;
 
         function onSuccess (xhr, opts) {
             var body = Ext.getBody ();
@@ -108,7 +109,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             });
 
             TRACKER.event ({
-                category: 'ExportAsToolbar', action: 'export-project',
+                category: 'ExportAsToolbar', action: me.url2fn (url_base),
                 label: mime, value: 1
             });
 
@@ -130,14 +131,13 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             });
 
             TRACKER.event ({
-                category: 'ExportAsToolbar', action: 'export-project',
+                category: 'ExportAsToolbar', action: me.url2fn (url_base),
                 label: mime, value: (xhr.status==503) ? Math.pow (2,31)-1 : 0
             });
 
             console.error ('[ExportAsToolBar.exportProject]', xhr, opts);
         }
 
-        var me = this;
         Ext.Ajax.request ({
             url: url, scope: this, callback: function (opts, status, xhr) {
                 if (status) {
