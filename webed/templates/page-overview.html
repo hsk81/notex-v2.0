@@ -2,6 +2,12 @@
 
     <p>Are you tired of fighting Word or LaTex? Now you don’t have to. The browser based text editor NoTex helps you to write your thesis, report or article using a very natural markup, called <em>reStructuredText</em>. Don’t waste time with installation or learning complicated LaTex commands. Get publication quality results in PDF, HTML or Latex using NoTex' graphical UI. Give it a <a href="{{ url_for('.home', theme=theme) }}">try</a> today!</p>
 
+    {% if not debug %}
+    <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+    {% endif %}
+
     <p>Whether you're a serious author writing lengthy books or a professor or student writing complex reports or articles, NoTex is the editor for you. It allows you to focus on content creation rather than the complex syntax of dated markup languages.</p>
 
     <hr>
