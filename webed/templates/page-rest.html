@@ -2,6 +2,8 @@
 
     <p>This section is a brief introduction to reStructuredText (RST) concepts and syntax, intended to provide authors with enough information to write documents productively. Since RST was designed to be a simple, unobtrusive markup language, this will not take too long. <a href="#ft1" id="ft1-ref">[1]</a></p>
 
+    {% include 'ads/ad-banner.html' %}
+
     <p>See also the authoritative <a href="http://docutils.sourceforge.net/rst.html" target="_blank">RST User Documentation</a>: The <em>ref</em> links in this document point to the description of the individual constructs in the RST reference.</p>
 
     <!--====================================================================-->
@@ -108,20 +110,20 @@
     <p>Two forms of tables are supported. For <em>grid tables</em> (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#grid-tables" target="_blank">ref</a>), you have to "paint" the cell grid yourself. They look like this:</p>
 
     <p style="margin-left: 2em; font-family: monospace;">
-        <span style="white-space: pre;">+------------------------+------------+----------+----------+</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">|&nbsp;Header&nbsp;row,&nbsp;column&nbsp;1&nbsp;&nbsp;&nbsp;|&nbsp;Header&nbsp;2&nbsp;&nbsp;&nbsp;|&nbsp;Header&nbsp;3&nbsp;|&nbsp;Header&nbsp;4&nbsp;|</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">|&nbsp;(header&nbsp;rows&nbsp;optional)&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">+========================+============+==========+==========+</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">|&nbsp;body&nbsp;row&nbsp;1,&nbsp;column&nbsp;1&nbsp;&nbsp;&nbsp;|&nbsp;column&nbsp;2&nbsp;&nbsp;&nbsp;|&nbsp;column&nbsp;3&nbsp;|&nbsp;column&nbsp;4&nbsp;|</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">+------------------------+------------+----------+----------+</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">|&nbsp;body&nbsp;row&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
-        <span&nbsp;style="white-space:&nbsp;pre;">+------------------------+------------+----------+----------+</span>
+        <span style="white-space:pre;">+------------------------+------------+----------+----------+</span><br>
+        <span style="white-space:pre;">|&nbsp;Header&nbsp;row,&nbsp;column&nbsp;1&nbsp;&nbsp;&nbsp;|&nbsp;Header&nbsp;2&nbsp;&nbsp;&nbsp;|&nbsp;Header&nbsp;3&nbsp;|&nbsp;Header&nbsp;4&nbsp;|</span><br>
+        <span style="white-space:pre;">|&nbsp;(header&nbsp;rows&nbsp;optional)&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+        <span style="white-space:pre;">+========================+============+==========+==========+</span><br>
+        <span style="white-space:pre;">|&nbsp;body&nbsp;row&nbsp;1,&nbsp;column&nbsp;1&nbsp;&nbsp;&nbsp;|&nbsp;column&nbsp;2&nbsp;&nbsp;&nbsp;|&nbsp;column&nbsp;3&nbsp;|&nbsp;column&nbsp;4&nbsp;|</span><br>
+        <span style="white-space:pre;">+------------------------+------------+----------+----------+</span><br>
+        <span style="white-space:pre;">|&nbsp;body&nbsp;row&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span><br>
+        <span style="white-space:pre;">+------------------------+------------+----------+----------+</span>
     </p>
 
     <p><em>Simple tables</em> (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#simple-tables" target="_blank">ref</a>) are easier to write, but limited: they must contain more than one row, and the first column cannot contain multiple lines. They look like this:</p>
 
-    <p style="margin-left: 2em; font-family: monospace;">
-<span&nbsp;style="white-space:pre;">=====&nbsp;&nbsp;=====&nbsp;&nbsp;=======</span><br>
+    <p style="margin-left:2em; font-family:monospace;">
+<span style="white-space:pre;">=====&nbsp;&nbsp;=====&nbsp;&nbsp;=======</span><br>
 <span style="white-space:pre;">A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;and&nbsp;B</span><br>
 <span style="white-space:pre;">=====&nbsp;&nbsp;=====&nbsp;&nbsp;=======</span><br>
 <span style="white-space:pre;">False&nbsp;&nbsp;False&nbsp;&nbsp;False&nbsp;&nbsp;</span><br>
