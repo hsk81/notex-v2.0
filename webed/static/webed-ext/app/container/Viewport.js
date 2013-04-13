@@ -54,13 +54,20 @@ Ext.define ('Webed.container.Viewport', {
                 html: function () {
                     var ad = Ext.get ('ad-wrap');
                     if (ad) {
-                        var html= ad.getHTML ();
+                        var html = ad.getHTML ();
                         ad.destroy ();
                         return html;
                     } else {
                         return undefined;
                     }
-                }()
+                }(),
+
+                listeners: {
+                    afterrender: function () {
+                        var ad = Ext.get ('ad-banner-wrap');
+                        if (ad) ad.show ();
+                    }
+                }
             },{
                 collapsible: true,
                 collapseMode: 'header',
