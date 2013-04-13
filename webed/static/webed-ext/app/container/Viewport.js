@@ -18,7 +18,7 @@ Ext.define ('Webed.container.Viewport', {
             collapsible: true,
             collapsed: true,
             flex: 1,
-            minWidth: 296,
+            minWidth: 300,
             name: 'projects',
             layout: 'border',
             region: 'west',
