@@ -54,32 +54,10 @@ Ext.define ('Webed.container.Viewport', {
                 listeners: {
                     afterrender: function (self) {
                         var el = self.getEl ();
-                        el.insertHtml ('afterBegin', [
-                            '<div id="ad-wrap" style="width:100%; height:100%;">',
-                            '<span id="ad-wrap-span">',
-
-                            '<script type="text/javascript"><!--',
-                            'google_ad_client = "ca-pub-0141161703803018";',
-                            'google_ad_slot = "6190750994";',
-                            'google_ad_width = 300;',
-                            'google_ad_height = 250;',
-                            '//--></script>',
-
-                            '</span>',
-                            '</div>'
-                        ].join ('\n'));
-
-                        google_ad_client = "ca-pub-0141161703803018";
-                        google_ad_slot = "6190750994";
-                        google_ad_width = 300;
-                        google_ad_height = 250;
-
-                        var ad = document.createElement('script');
-                        ad.type = 'text/javascript';
-                        ad.src = "https://pagead2.googlesyndication.com/pagead/show_ads.js";
-
-                        var span = document.getElementById ('ad-wrap-span');
-                        span.appendChild (ad);
+                        var ad = Ext.get ('ad-wrap');
+                        if (ad) {
+                            el.appendChild (ad);
+                        }
                     }
                 }
             },{
