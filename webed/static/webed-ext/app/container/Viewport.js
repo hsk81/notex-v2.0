@@ -73,6 +73,7 @@ Ext.define ('Webed.container.Viewport', {
 
                         var ad = Ext.get ('ad-wrap');
                         if (ad) {
+                            ad.parentNode.removeChild (ad);
                             self.appendChild (ad);
                         } else {
                             self.hide ();
