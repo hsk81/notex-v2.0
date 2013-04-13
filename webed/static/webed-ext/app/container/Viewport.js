@@ -39,9 +39,9 @@ Ext.define ('Webed.container.Viewport', {
                     self.setTitle ('Projects');
 
                     var ad_panel = self.down ('panel[name=advertisement]');
-                    assert (ad_panel);
+                    if (!ad_panel) return;
                     var ad = Ext.get ('ad-wrap');
-                    assert (ad);
+                    if (!ad) return;
 
                     ad_panel.setHTML (ad.getHTML ());
                 },
