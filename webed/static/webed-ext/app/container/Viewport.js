@@ -44,6 +44,7 @@ Ext.define ('Webed.container.Viewport', {
                 region: 'center',
                 xtype: 'node-tree'
             },{
+                border: false,
                 height: 277,
                 layout: 'fit',
                 name: 'advertisement',
