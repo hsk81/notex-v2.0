@@ -18,7 +18,7 @@ Ext.define ('Webed.container.Viewport', {
             collapsible: true,
             collapsed: true,
             flex: 1,
-            minWidth: 281,
+            minWidth: 296,
             name: 'projects',
             layout: 'border',
             region: 'west',
@@ -45,7 +45,7 @@ Ext.define ('Webed.container.Viewport', {
                 xtype: 'node-tree'
             },{
                 border: false,
-                height: 277,
+                height: 275,
                 layout: 'fit',
                 name: 'advertisement',
                 region: 'south',
