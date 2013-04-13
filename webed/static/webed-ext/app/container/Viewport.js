@@ -51,15 +51,14 @@ Ext.define ('Webed.container.Viewport', {
                 region: 'south',
                 title: 'Advertisement',
 
-                listeners: {
-                    afterrender: function (self) {
-                        var el = self.getEl ();
-                        var ad = Ext.get ('ad-wrap');
-                        if (ad) {
-                            el.appendChild (ad);
-                        }
+                html: function () {
+                    var ad = Ext.get ('ad-wrap');
+                    if (ad) {
+                        return ad.getHTML ();
+                    } else {
+                        return undefined;
                     }
-                }
+                }()
             },{
                 collapsible: true,
                 collapseMode: 'header',
