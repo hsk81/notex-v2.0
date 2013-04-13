@@ -70,30 +70,8 @@ Ext.define ('Webed.container.Viewport', {
                     afterrender: function (self) {
                         var ad_banner = Ext.get ('ad-banner-wrap');
                         if (ad_banner) ad_banner.show ();
-
-                        window.google_ad_client = "ca-pub-0141161703803018";
-                        window.google_ad_slot = "6190750994";
-                        window.google_ad_width = 300;
-                        window.google_ad_height = 250;
-
                         var ad = Ext.get ('ad-wrap');
-                        if (ad) {
-                            var write = document.write;
-                            document.write = function (content) {
-                                ad.dom.innerHTML = content;
-                                document.write = write;
-                            };
-
-                            var script = document.createElement('script');
-                            script.type = 'text/javascript';
-                            script.src = "https://" +
-                                "pagead2.googlesyndication.com/" +
-                                "pagead/show_ads.js";
-
-                            ad.appendChild (script);
-                        } else {
-                            self.hide ();
-                        }
+                        if (ad == null) self.hide ();
                     }
                 }
             },{
