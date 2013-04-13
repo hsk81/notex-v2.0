@@ -51,6 +51,10 @@ Ext.define ('Webed.container.Viewport', {
                 region: 'south',
                 title: 'Advertisement',
 
+                bodyStyle: {
+                    backgroundColor: 'black'
+                },
+
                 html: function () {
                     var ad = Ext.get ('ad-wrap');
                     if (ad) {
@@ -63,9 +67,11 @@ Ext.define ('Webed.container.Viewport', {
                 }(),
 
                 listeners: {
-                    afterrender: function () {
-                        var ad = Ext.get ('ad-banner-wrap');
-                        if (ad) ad.show ();
+                    afterrender: function (self) {
+                        var ad_banner = Ext.get ('ad-banner-wrap');
+                        if (ad_banner) ad_banner.show ();
+                        var ad = Ext.get ('ad-wrap');
+                        if (ad == null) self.hide ();
                     }
                 }
             },{
