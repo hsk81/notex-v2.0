@@ -71,7 +71,17 @@ Ext.define ('Webed.container.Viewport', {
                         var ad_banner = Ext.get ('ad-banner-wrap');
                         if (ad_banner) ad_banner.show ();
                         var ad = Ext.get ('ad-wrap');
-                        if (ad == null) self.hide ();
+                        if (ad) {
+                            var script = document.createElement('script');
+                            script.type = 'text/javascript';
+                            script.src = "https://" +
+                                "pagead2.googlesyndication.com/" +
+                                "pagead/show_ads.js";
+
+                            ad.appendChild (script);
+                        } else {
+                            self.hide ();
+                        }
                     }
                 }
             },{
