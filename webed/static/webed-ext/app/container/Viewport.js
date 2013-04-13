@@ -49,16 +49,16 @@ Ext.define ('Webed.container.Viewport', {
                 layout: 'fit',
                 name: 'advertisement',
                 region: 'south',
-                title: 'Advertisement',
+                title: 'Advertisement'
 
-                html: function () {
+                /*html: function () {
                     var ad = Ext.get ('ad-wrap');
                     if (ad) {
                         return ad.getHTML ();
                     } else {
                         return undefined;
                     }
-                }()
+                }()*/
             },{
                 collapsible: true,
                 collapseMode: 'header',
