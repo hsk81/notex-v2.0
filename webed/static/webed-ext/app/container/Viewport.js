@@ -69,6 +69,11 @@ Ext.define ('Webed.container.Viewport', {
                             '</div>'
                         ].join ('\n'));
 
+                        google_ad_client = "ca-pub-0141161703803018";
+                        google_ad_slot = "6190750994";
+                        google_ad_width = 300;
+                        google_ad_height = 250;
+
                         var ad = document.createElement('script');
                         ad.type = 'text/javascript';
                         ad.src = "https://pagead2.googlesyndication.com/pagead/show_ads.js";
