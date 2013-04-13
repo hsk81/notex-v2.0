@@ -59,7 +59,7 @@ Ext.define ('Webed.container.Viewport', {
                     var ad = Ext.get ('ad-wrap');
                     if (ad) {
                         var html = ad.getHTML ();
-                        //ad.destroy ();
+                        ad.destroy ();
                         return html;
                     } else {
                         return undefined;
