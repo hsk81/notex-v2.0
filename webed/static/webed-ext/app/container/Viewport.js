@@ -52,22 +52,14 @@ Ext.define ('Webed.container.Viewport', {
                 title: 'Advertisement',
 
                 html: function () {
-
-                    return [
-                        '<div id="ad-wrap" style="width:100%; height:100%;">',
-                        '<span>',
-                        '<script type="text/javascript"><!--',
-
-                        'google_ad_client = "ca-pub-0141161703803018";',
-                        'google_ad_slot = "6190750994";',
-                        'google_ad_width = 300;',
-                        'google_ad_height = 250;',
-
-                        '//--></script>',
-                        '<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>',
-                        '</span>',
-                        '</div>'
-                    ].join ('\n');
+                    var ad = Ext.get ('ad-wrap');
+                    if (ad) {
+                        var html= ad.getHTML ();
+                        ad.destroy ();
+                        return html;
+                    } else {
+                        return undefined;
+                    }
                 }()
             },{
                 collapsible: true,
