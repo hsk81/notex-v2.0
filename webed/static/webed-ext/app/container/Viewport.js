@@ -35,20 +35,8 @@ Ext.define ('Webed.container.Viewport', {
             }],
 
             listeners: {
-                expand: function (self) {
-                    self.setTitle ('Projects');
-
-                    var ad_panel = self.down ('panel[name=advertisement]');
-                    if (!ad_panel) return;
-                    var ad = Ext.get ('ad-wrap');
-                    if (!ad) return;
-
-                    ad_panel.setHTML (ad.getHTML ());
-                },
-
-                beforecollapse: function (self) {
-                    self.setTitle ('·····');
-                }
+                expand: function (self) { self.setTitle ('Projects'); },
+                beforecollapse: function (self) { self.setTitle ('·····'); }
             },
 
             items: [{
@@ -61,7 +49,16 @@ Ext.define ('Webed.container.Viewport', {
                 layout: 'fit',
                 name: 'advertisement',
                 region: 'south',
-                title: 'Advertisement'
+                title: 'Advertisement',
+
+                html: function () {
+                    var ad = Ext.get ('ad-wrap');
+                    if (ad) {
+                        return ad.getHTML ();
+                    } else {
+                        return undefined;
+                    }
+                }()
             },{
                 collapsible: true,
                 collapseMode: 'header',
