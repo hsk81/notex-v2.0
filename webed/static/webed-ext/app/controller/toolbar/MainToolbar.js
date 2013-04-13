@@ -210,7 +210,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         var application = assert (this.application);
         application.fireEvent ('progress-play', this, {
-            message: 'Exporting', label: 'MainToolbar.exportProject'
+            message: 'Exporting', label: 'MainToolbar.export-project'
         });
 
         var uuid = assert (node.get ('uuid'));
@@ -267,7 +267,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 }
 
                 application.fireEvent ('progress-stop', this, {
-                    label: 'MainToolbar.exportProject'
+                    label: 'MainToolbar.export-project'
                 });
 
                 button.enable ();
