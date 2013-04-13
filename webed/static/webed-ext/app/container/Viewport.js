@@ -55,7 +55,7 @@ Ext.define ('Webed.container.Viewport', {
                     backgroundColor: 'black'
                 },
 
-                html: function () {
+                /*html: function () {
                     var ad = Ext.get ('ad-wrap');
                     if (ad) {
                         var html = ad.getHTML ();
@@ -64,14 +64,19 @@ Ext.define ('Webed.container.Viewport', {
                     } else {
                         return undefined;
                     }
-                }(),
+                }(),*/
 
                 listeners: {
                     afterrender: function (self) {
                         var ad_banner = Ext.get ('ad-banner-wrap');
                         if (ad_banner) ad_banner.show ();
+
                         var ad = Ext.get ('ad-wrap');
-                        if (ad == null) self.hide ();
+                        if (ad) {
+                            self.appendChild (ad);
+                        } else {
+                            self.hide ();
+                        }
                     }
                 }
             },{
