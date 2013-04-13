@@ -74,6 +74,7 @@ Ext.define ('Webed.container.Viewport', {
                         if (ad) {
                             var script = document.createElement('script');
                             script.type = 'text/javascript';
+                            script.async = true;
                             script.src = "https://" +
                                 "pagead2.googlesyndication.com/" +
                                 "pagead/show_ads.js";
