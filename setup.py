@@ -41,6 +41,7 @@ if __name__ == '__main__':
             'PyYAML>=3.10',
             'pyzmq>=13.0.0',
             'redis>=2.7.2',
+            'requests>=1.2.0',
             'spritemapper>=1.0.0',
             'ujson>=1.30',
             'uWSGI>=1.9.4',
