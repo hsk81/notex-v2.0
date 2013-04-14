@@ -28,6 +28,9 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             'viewport panel[name=projects]': {
                 beforeexpand: this.beforeexpand,
                 expand: this.expand
+            },
+            'viewport': {
+                afterlayout: this.afterlayout
             }
         });
 
@@ -88,8 +91,16 @@ Ext.define ('Webed.controller.tree.NodeTree', {
     },
 
     beforeexpand: function () {
-        var button = Ext.get ('start-box-button-id');
-        if (button) button.fadeOut ();
+        if (document.location.pathname != '/home/') {
+            var q = Ext.Object.fromQueryString (window.location.search);
+            var qs = Ext.Object.toQueryString (Ext.apply (q, {expand: true}));
+            window.location.href = '/home/?' + qs;
+            return false;
+        } else {
+            var button = Ext.get ('start-box-button-id');
+            if (button) button.fadeOut ();
+            return true;
+        }
     },
 
     expand: function () {
@@ -165,6 +176,18 @@ Ext.define ('Webed.controller.tree.NodeTree', {
             TRACKER.event ({
                 category: 'NodeTree', action: 'expand', label: "n'th", value: 1
             });
+        }
+    },
+
+    afterlayout: function (viewport) {
+        if (document.location.pathname == '/home/') {
+            var query = Ext.Object.fromQueryString (window.location.search);
+            if (query.expand) {
+                var projects = viewport.down ('panel[name=projects]');
+                if (projects && projects.getCollapsed ()) {
+                    projects.expand ();
+                }
+            }
         }
     },
 

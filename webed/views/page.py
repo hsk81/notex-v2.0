@@ -43,7 +43,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-def main (page='home', template='index.html'):
+def main (page='main', template='index.html'):
 
     if not request.args.get ('silent', False):
         print >> sys.stderr, "Session: %r" % SessionAnchor (session)
@@ -90,6 +90,7 @@ def get_keywords (page):
             'questions'],
     }
 
+    lookup['main'] = lookup['home']
     return lookup[page]
 
 ###############################################################################
@@ -145,6 +146,7 @@ def get_description (page):
             """,
     }
 
+    lookup['main'] = lookup['home']
     return re.sub (r'\s+$', '', re.sub (r'^\s+', '', lookup[page], flags=re.M)
         .replace ('\n', ' '))
 
@@ -153,10 +155,8 @@ def get_description (page):
 
 def get_canonical (page):
 
-    if page == 'home' and '%s' % request.url_rule == '/':
-        return url_for ('.home', _external=True)
-    else:
-        return request.base_url
+    return url_for ('.main', _external=True) if page == 'home' \
+        else request.base_url
 
 ###############################################################################
 ###############################################################################

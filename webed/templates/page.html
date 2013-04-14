@@ -2,7 +2,7 @@
 <div id="page-wrap-content">
     <div id='cssmenu'>
         <ul>
-        <li active="{{ page == 'home' }}">
+        <li active="{{ page == 'home' or page == 'main' }}">
         <a href="{{ url_for('.home', theme=theme) }}"><span>Home</span></a>
         </li>
         <li active="{{ page == 'overview' }}">
@@ -23,8 +23,10 @@
         </ul>
     </div>
 
-    {% if page == 'home' %}
+    {% if page == 'main' %}
         {% include 'page-home.html' %}
+    {% elif page == 'home' %}
+        {% include 'page-home.html' %}{% include 'ads/ad-medrec.html' %}
     {% elif page == 'overview' %}
         {% include 'page-overview.html' %}
     {% elif page == 'tutorial' %}
