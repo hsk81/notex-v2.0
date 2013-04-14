@@ -24,21 +24,21 @@
     </div>
 
     {% if page == 'main' %}
-        {% include 'page-home.html' %}
+        {% include 'page/page-home.html' %}
     {% elif page == 'home' %}
-        {% include 'page-home.html' %}{% include 'ads/ad-medrec.html' %}
+        {% include 'page/page-home.html' %}{% include 'ads/ad-medrec.html' %}
     {% elif page == 'overview' %}
-        {% include 'page-overview.html' %}
+        {% include 'page/page-overview.html' %}
     {% elif page == 'tutorial' %}
-        {% include 'page-tutorial.html' %}
+        {% include 'page/page-tutorial.html' %}
     {% elif page == 'rest' %}
-        {% include 'page-rest.html' %}
+        {% include 'page/page-rest.html' %}
     {% elif page == 'faq' %}
-        {% include 'page-faq.html' %}
+        {% include 'page/page-faq.html' %}
     {% elif page == 'contact' %}
-        {% include 'page-contact.html' %}
+        {% include 'page/page-contact.html' %}
     {% else %}
-        {% include 'page-generic.html' %}
+        {% include 'page/page-generic.html' %}
     {% endif %}
 </div>
 </div>

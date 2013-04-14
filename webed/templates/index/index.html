@@ -20,8 +20,8 @@
 {% if debug -%}
 <script type="text/javascript">var _gaq = undefined;</script>
 {%- else -%}
-<script type="text/javascript">{% include 'analytics-head.js' %}</script>
-<script type="text/javascript">{% include 'analytics-body.js' %}</script>
+<script type="text/javascript">{% include 'js/analytics-head.js' %}</script>
+<script type="text/javascript">{% include 'js/analytics-body.js' %}</script>
 {%- endif %}
 
 {% if debug -%}
@@ -58,7 +58,7 @@
 
 <div id="content-wrap">
 <div id="content">
-    {% include 'page.html' %}
+    {% include 'page/page.html' %}
 </div>
 </div>
 
@@ -110,15 +110,9 @@
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {%- endassets -%}
 {%- else -%}
-<!-- <x-compile> -->
-<!-- <x-bootstrap> -->
-<script src="../static/ext/ext-dev.js"></script>
-<script src="../static/webed-ext/bootstrap.js"></script>
-<!-- </x-bootstrap> -->
-<script src="../static/webed-ext/app/app.js"></script>
-<!-- </x-compile> -->
+<script type="text/javascript" src="../static/all-classes.excl.new.js"></script>
 {%- endif %}
 
-<script type="text/javascript">{% include 'codemirror.js' %}</script>
+<script type="text/javascript">{% include 'js/codemirror.js' %}</script>
 </body>
 </html>
