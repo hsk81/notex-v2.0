@@ -27,7 +27,7 @@ page = Blueprint ('page', __name__)
 
 @page.route ('/test/')
 def test ():
-    return main (page='home', template='index/index-test.html')
+    return main (page='home', template='index-test.html')
 
 @page.route ('/home/')
 def home (): return main (page='home')
@@ -43,7 +43,7 @@ def faq (): return main (page='faq')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-def main (page='main', template='index/index.html'):
+def main (page='main', template='index.html'):
 
     if not request.args.get ('silent', False):
         print >> sys.stderr, "Session: %r" % SessionAnchor (session)

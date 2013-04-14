@@ -54,8 +54,8 @@ function build_env () {
 
     sencha compile -classpath=$CLSPATH_EXT \
                    -option debug:false \
-              page -inp=$TEMPLATES/index/index-in.html \
-                   -out=$TEMPLATES/index/index.html \
+              page -inp=$TEMPLATES/index-in.html \
+                   -out=$TEMPLATES/index.html \
                    -cla=../static/all-classes.excl.new.js \
                    -strip -compress and \
            include -namespace Webed and \
