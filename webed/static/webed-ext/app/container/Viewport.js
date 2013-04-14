@@ -70,8 +70,6 @@ Ext.define ('Webed.container.Viewport', {
                     afterrender: function (self) {
                         var ad_banner = Ext.get ('ad-banner-wrap');
                         if (ad_banner) ad_banner.show ();
-                        var ad = Ext.get ('ad-wrap');
-                        //if (ad == null) self.hide ();
                     }
                 }
             },{
