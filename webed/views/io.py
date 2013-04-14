@@ -322,9 +322,13 @@ def compress (root, crlf=True):
     def compress_node (node, node_path):
 
         for path, nodes, leafs in node.walk (field='name'):
+
             for sub_node in nodes:
+                if sub_node.root != node: continue
                 compress_node (sub_node, os.path.join (node_path, path))
+
             for sub_leaf in leafs:
+                if sub_leaf.root != node: continue
                 compress_leaf (sub_leaf, os.path.join (node_path, path))
 
     def compress_leaf (leaf, leaf_path):
