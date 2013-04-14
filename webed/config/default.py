@@ -119,5 +119,15 @@ class DefaultConfig:
 
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024 ## 1MB
 
+    ##
+    ## BLOG_ID, BLOG_URL, BLOG_API_KEY and BLOG_URL should be set in the
+    ## production environment to proper values.
+    ##
+
+    BLOG_ID = None
+    BLOG_URL = None
+    BLOG_API_KEY = None
+    BLOG_HEADERS = None
+
 ###############################################################################
 ###############################################################################

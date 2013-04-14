@@ -16,6 +16,7 @@ import re
 import sys
 import setup
 import director
+import requests as req
 
 ###############################################################################
 ###############################################################################
@@ -31,19 +32,36 @@ def test ():
 
 @page.route ('/home/')
 def home (): return main (page='home')
+
 @page.route ('/overview/')
 def overview (): return main (page='overview')
+
 @page.route ('/tutorial/')
 def tutorial (): return main (page='tutorial')
+
 @page.route ('/rest/')
 def rest (): return main (page='rest')
+
 @page.route ('/faq/')
 def faq (): return main (page='faq')
+
+@page.route ('/blog/')
+def blog ():
+
+    url = app.config['BLOG_URL']
+    api_key = app.config.get ('BLOG_API_KEY')
+    headers = app.config['BLOG_HEADERS']
+
+    res = req.get (url, params=dict(key=api_key), headers=headers)
+    blog = res.json () if res.ok else dict (items=[])
+
+    return main (page='blog', blog=blog)
+
 @page.route ('/contact/')
 def contact (): return main (page='contact')
 
 @page.route ('/')
-def main (page='main', template='index.html'):
+def main (page='main', template='index.html', **kwargs):
 
     if not request.args.get ('silent', False):
         print >> sys.stderr, "Session: %r" % SessionAnchor (session)
@@ -53,7 +71,7 @@ def main (page='main', template='index.html'):
     elif 'refresh' in request.args:
         director.refresh (json=False)
 
-    @std_cache.memoize (name='views.main.cached_template', unless=app.is_dev)
+    @std_cache.memoize (900, name='views.main.cached_template', unless=app.is_dev)
     def cached_template (*args, **kwargs):
         return render_template (*args, **kwargs)
 
@@ -66,7 +84,7 @@ def main (page='main', template='index.html'):
 
     return cached_template (template, debug=debug, description=description,
         canonical=canonical, keywords=keywords, page=page, theme=theme,
-        version=version)
+        version=version, **kwargs)
 
 ###############################################################################
 ###############################################################################
@@ -86,6 +104,7 @@ def get_keywords (page):
         'rest': common + ['ReST', 'rST', 'primer', 'tutorial', 'markup',
             'language'],
         'faq': common + ['faq', 'frequently asked', 'important', 'questions'],
+        'blog': common + ['blog', 'information', 'development'],
         'contact': common + ['contact', 'form', 'e-mail', 'feedback',
             'questions'],
     }
@@ -138,6 +157,12 @@ def get_description (page):
             answers. The list covers topics about security, data,
             performance and documentation plus miscellaneous subjects like
             licencing, technology and contact information.
+            """,
+        'blog':
+            """
+            The NoTex blog provides additional information about the editor,
+            is a rich source of documentation, and allows the users to follow
+            the development process.
             """,
         'contact':
             """

@@ -17,6 +17,9 @@
         <li active="{{ page == 'faq' }}">
         <a href="{{ url_for('.faq', theme=theme) }}"><span>FAQ</span></a>
         </li>
+        <li active="{{ page == 'blog' }}">
+        <a href="{{ url_for('.blog', theme=theme) }}"><span>Blog</span></a>
+        </li>
         <li active="{{ page == 'contact' }}" style="float: right;">
         <a href="{{ url_for('.contact', theme=theme) }}"><span>Contact</span></a>
         </li>
@@ -35,6 +38,8 @@
         {% include 'page/page-rest.html' %}
     {% elif page == 'faq' %}
         {% include 'page/page-faq.html' %}
+    {% elif page == 'blog' %}
+        {% include 'page/page-blog.html' %}
     {% elif page == 'contact' %}
         {% include 'page/page-contact.html' %}
     {% else %}

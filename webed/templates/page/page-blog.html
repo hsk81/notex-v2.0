@@ -1,0 +1,12 @@
+<div id="page" class="blog textual">
+
+    {% include 'ads/ad-banner.html' %}
+
+    {% for post in blog['items'] %}
+    <hr>
+    <span class='timestamp'>{{ post.published }}</span>
+    <h1>{{ post.title }}<a class="permalink" href="#{{ post.id }}" id="{{ post.id }}">¶</a></h1>
+    {{ post.content|safe }}
+    {% endfor %}
+
+</div>

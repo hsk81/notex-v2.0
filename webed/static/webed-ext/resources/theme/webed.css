@@ -300,6 +300,49 @@ body {
 }
 
 /******************************************************************************
+ * Page: Blog
+ *****************************************************************************/
+
+#page.blog span.timestamp {
+    font-size: xx-small;
+    font-weight: bold;
+    color: #888888;
+    float: right;
+}
+
+#page.blog h1 {
+    margin-bottom: 0.5em;
+}
+
+#page.blog .tr-caption {
+    font-size: smaller;
+    padding: 0.5em 0;
+}
+
+#page.blog .tr-caption-container {
+    margin: 0.5em;
+}
+
+#page.blog .tr-caption-container img {
+    padding: 0.5em;
+    border: #d3d3d3 solid 1px;
+    box-shadow: 0 0 3px 1px #e3e3e3;
+}
+
+#page.blog .tr_bq {
+    margin: 0.5em 2em;
+}
+
+#page.blog ul {
+    margin: 0.5em 0;
+}
+
+#page.blog ul li {
+    margin-left: 2em;
+    list-style-type: square;
+}
+
+/******************************************************************************
  * Page: Subline
  *****************************************************************************/
 
@@ -310,15 +353,15 @@ body {
 }
 
 #page .subline ul {
-    list-style-type:none;
-    text-align:center;
-    background-color:#f0f0f0;
+    list-style-type: none;
+    text-align: center;
+    background-color: #f0f0f0;
     border-top: 1px solid #888888;
     border-bottom: 1px solid #888888;
 }
 
 #page .subline ul li {
-    display:inline;
+    display: inline;
     font-weight: normal;
     font-size: 13px;
     line-height: 32px;
