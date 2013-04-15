@@ -77,14 +77,15 @@ def main (page='main', template='index.html', **kwargs):
 
     canonical = get_canonical (page)
     debug = False if 'no-debug' in request.args else app.debug
+    title = get_title (page)
     description = get_description (page)
     keywords = get_keywords (page)
     theme = request.args.get ('theme', 'blue')
     version = '.'.join (setup.version.split ('.')[:2])
 
-    return cached_template (template, debug=debug, description=description,
-        canonical=canonical, keywords=keywords, page=page, theme=theme,
-        version=version, **kwargs)
+    return cached_template (template, debug=debug, keywords=keywords,
+        title=title, description=description, canonical=canonical, page=page,
+        theme=theme, version=version, **kwargs)
 
 ###############################################################################
 ###############################################################################
@@ -96,21 +97,73 @@ def get_keywords (page):
               'html', 'converter', 'sphinx']
 
     lookup = {
-        'home': common + ['home'],
-        'overview': common + ['overview', 'introduction', 'background',
-            'information'],
-        'tutorial': common + ['tutorial', 'guide', 'user interface', 'first',
-            'report', 'project'],
-        'rest': common + ['ReST', 'rST', 'primer', 'tutorial', 'markup',
-            'language'],
-        'faq': common + ['faq', 'frequently asked', 'important', 'questions'],
-        'blog': common + ['blog', 'information', 'development'],
-        'contact': common + ['contact', 'form', 'e-mail', 'feedback',
-            'questions'],
+        'home':
+            common + ['home'],
+        'overview':
+            common + ['overview', 'introduction', 'background', 'information'],
+        'tutorial':
+            common + ['tutorial', 'guide', 'user interface', 'first', 'report',
+                      'project'],
+        'rest':
+            common + ['ReST', 'rST', 'primer', 'tutorial', 'markup',
+                      'language'],
+        'faq':
+            common + ['faq', 'frequently asked', 'important', 'questions'],
+        'blog':
+            common + ['blog', 'information', 'development'],
+        'contact':
+            common + ['contact', 'form', 'e-mail', 'feedback', 'questions'],
     }
 
     lookup['main'] = lookup['home']
     return lookup[page]
+
+###############################################################################
+###############################################################################
+
+def get_title (page):
+
+    lookup = {
+        'home':
+            """
+            NoTex - A browser based text editor supporting reStructuredText,
+            Markdown, LaTex and more! Export your projects to PDF reports,
+            HTML pages or LaTex scripts.
+            """,
+        'overview':
+            """
+            Overview - NoTex: An introduction to the editor plus motivation
+            for reStructuredText (and other markups).
+            """,
+        'tutorial':
+            """
+            Tutorial - NoTex: A step by step guide explaining the editor's
+            user interface and how to create your first project.
+            """,
+        'rest':
+            """
+            ReStructuredText - NoTex: A primer about reStructuredText.
+            """,
+        'faq':
+            """
+            FAQ - NoTex: Frequently asked and important questions about
+            security, data, performance, documentation etc.
+            """,
+        'blog':
+            """
+            Blog - NoTex: Get additional information and documentation plus
+            follow the development process.
+            """,
+        'contact':
+            """
+            Contact - NoTex: For questions and feedback contact us using our
+            form or e-mail address.
+            """,
+    }
+
+    lookup['main'] = lookup['home']
+    return re.sub (r'\s+$', '', re.sub (r'^\s+', '', lookup[page], flags=re.M)
+        .replace ('\n', ' '))
 
 ###############################################################################
 ###############################################################################
