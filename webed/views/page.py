@@ -127,8 +127,7 @@ def get_title (page):
         'home':
             """
             NoTex - A browser based text editor supporting reStructuredText,
-            Markdown, LaTex and more! Export your projects to PDF reports,
-            HTML pages or LaTex scripts.
+            Markdown, LaTex and more!
             """,
         'overview':
             """
