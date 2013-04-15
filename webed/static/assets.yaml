@@ -49,9 +49,9 @@ all-classes:
         - all-classes.incl.js
 
 ga-ssl:
-    output: ga/ga-ssl.js
+    output: ga/ga-ssl.%(version)s.js
     contents: [ga/ga-ssl.in.js]
 
 ga-www:
-    output: ga/ga-www.js
+    output: ga/ga-www.%(version)s.js
     contents: [ga/ga-www.in.js]
