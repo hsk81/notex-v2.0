@@ -17,6 +17,7 @@ bundles = loader.load_bundles ()
 assets = Environment (app)
 assets.manifest = 'cache'
 assets.register (bundles)
+assets.url = app.config.get ('CDN')
 
 ###############################################################################
 ###############################################################################
