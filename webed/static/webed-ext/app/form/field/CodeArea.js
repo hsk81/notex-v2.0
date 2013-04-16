@@ -28,9 +28,12 @@ Ext.define ('Webed.form.field.CodeArea', {
                     'height', value + 'px'
                 );
             } else {
-                Ext.util.CSS.updateRule ('.CodeMirror',
+                Ext.query ('.CodeMirror').forEach (function (cm) {
+                    cm.style['height'] = value + 'px'
+                });
+                /*Ext.util.CSS.updateRule ('.CodeMirror',
                     'height', value + 'px'
-                );
+                );*/
             }
         },
 
@@ -40,9 +43,12 @@ Ext.define ('Webed.form.field.CodeArea', {
                     'font-size', value + '%'
                 );
             } else {
-                Ext.util.CSS.updateRule ('.CodeMirror',
+                Ext.query ('.CodeMirror').forEach (function (cm) {
+                    cm.style['font-size'] = value + '%'
+                });
+                /*Ext.util.CSS.updateRule ('.CodeMirror',
                     'font-size', value + '%'
-                );
+                );*/
             }
         },
 
@@ -52,9 +58,12 @@ Ext.define ('Webed.form.field.CodeArea', {
                     'direction', value
                 );
             } else {
-                Ext.util.CSS.updateRule ('.CodeMirror pre',
+                Ext.query ('.CodeMirror pre').forEach (function (cm) {
+                    cm.style['direction'] = value
+                });
+                /*Ext.util.CSS.updateRule ('.CodeMirror pre',
                     'direction', value
-                );
+                );*/
             }
         },
 
