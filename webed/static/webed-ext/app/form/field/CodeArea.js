@@ -37,34 +37,22 @@ Ext.define ('Webed.form.field.CodeArea', {
             }
         },
 
-        setFontSize: function (value, ca) {
-            if (ca && ca.id) {
-                assert (ca.getEl ().down ('.CodeMirror')).setStyle (
-                    'font-size', value + '%'
-                );
-            } else {
-                Ext.query ('.CodeMirror').forEach (function (cm) {
-                    cm.style['font-size'] = value + '%'
-                });
-                Ext.util.CSS.updateRule ('.CodeMirror',
-                    'font-size', value + '%'
-                );
-            }
+        setFontSize: function (value) {
+            var ok = Ext.util.CSS.updateRule ('.CodeMirror',
+                'font-size', value + '%'
+            );
+            if (!ok) Ext.query ('.CodeMirror').forEach (function (cm) {
+                cm.style['font-size'] = value + '%'
+            });
         },
 
-        setDirection: function (value, ca) {
-            if (ca && ca.id) {
-                assert (ca.getEl ().down ('.CodeMirror')).setStyle (
-                    'direction', value
-                );
-            } else {
-                Ext.query ('.CodeMirror pre').forEach (function (cm) {
-                    cm.style['direction'] = value
-                });
-                Ext.util.CSS.updateRule ('.CodeMirror pre',
-                    'direction', value
-                );
-            }
+        setDirection: function (value) {
+            var ok = Ext.util.CSS.updateRule ('.CodeMirror pre',
+                'direction', value
+            );
+            if (!ok) Ext.query ('.CodeMirror pre').forEach (function (pre) {
+                pre.style['direction'] = value
+            });
         },
 
         getTypoEngine: function () {
