@@ -28,12 +28,9 @@ Ext.define ('Webed.form.field.CodeArea', {
                     'height', value + 'px'
                 );
             } else {
-                var ok = Ext.util.CSS.updateRule ('.CodeMirror',
+                Ext.util.CSS.updateRule ('.CodeMirror',
                     'height', value + 'px'
                 );
-                if (!ok) Ext.query ('.CodeMirror').forEach (function (cm) {
-                    cm.style['height'] = value + 'px'
-                });
             }
         },
 
@@ -41,18 +38,12 @@ Ext.define ('Webed.form.field.CodeArea', {
             var ok = Ext.util.CSS.updateRule ('.CodeMirror',
                 'font-size', value + '%'
             );
-            if (!ok) Ext.query ('.CodeMirror').forEach (function (cm) {
-                cm.style['font-size'] = value + '%'
-            });
         },
 
         setDirection: function (value) {
-            var ok = Ext.util.CSS.updateRule ('.CodeMirror pre',
+            Ext.util.CSS.updateRule ('.CodeMirror pre',
                 'direction', value
             );
-            if (!ok) Ext.query ('.CodeMirror pre').forEach (function (pre) {
-                pre.style['direction'] = value
-            });
         },
 
         getTypoEngine: function () {

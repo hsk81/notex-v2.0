@@ -1,0 +1,24 @@
+.CodeMirror {
+}
+
+.CodeMirror .CodeMirror-activeline-background {
+    background: #e8f2ff !important;
+}
+
+.CodeMirror .CodeMirror-matchingbracket {
+    color: #0000ff !important;
+    font-weight: bold;
+}
+
+.CodeMirror .CodeMirror-nonmatchingbracket {
+    color: #ff0000 !important;
+    font-weight: bold;
+}
+
+.CodeMirror .cm-tab {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=) no-repeat right;
+}
+
+.CodeMirror .cm-spell-error {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAAGElEQVQIW2NkgIL/DAxAxMDACGcA2SABAEwWBAGHorwgAAAAAElFTkSuQmCC) bottom repeat-x;
+}
