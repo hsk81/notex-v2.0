@@ -1,6 +1,10 @@
 .CodeMirror {
 }
 
+.CodeMirror pre {
+    direction: ltr;
+}
+
 .CodeMirror .CodeMirror-activeline-background {
     background: #e8f2ff !important;
 }
