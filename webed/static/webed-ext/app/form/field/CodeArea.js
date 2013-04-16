@@ -28,12 +28,12 @@ Ext.define ('Webed.form.field.CodeArea', {
                     'height', value + 'px'
                 );
             } else {
-                Ext.query ('.CodeMirror').forEach (function (cm) {
-                    cm.style['height'] = value + 'px'
-                });
-                Ext.util.CSS.updateRule ('.CodeMirror',
+                var ok = Ext.util.CSS.updateRule ('.CodeMirror',
                     'height', value + 'px'
                 );
+                if (!ok) Ext.query ('.CodeMirror').forEach (function (cm) {
+                    cm.style['height'] = value + 'px'
+                });
             }
         },
 
