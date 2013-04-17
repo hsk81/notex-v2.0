@@ -440,7 +440,8 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         });
 
         function callback (path, scale, alignment, caption) {
-            var rest = String.format ('\n.. figure:: {0}\n', path);
+            var path_to = assert (path.split ('/').slice (1).join ('/'));
+            var rest = String.format ('\n.. figure:: {0}\n', path_to);
             rest += String.format ('   :scale: {0} %\n', scale);
             rest += String.format ('   :align: {0}\n', alignment);
 
@@ -475,7 +476,8 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         });
 
         function callback (path, scale, alignment) {
-            var rest = String.format ('\n.. image:: {0}\n', path);
+            var path_to = assert (path.split ('/').slice (1).join ('/'));
+            var rest = String.format ('\n.. image:: {0}\n', path_to);
             rest += String.format ('   :scale: {0} %\n', scale);
             rest += String.format ('   :align: {0}\n', alignment);
 
