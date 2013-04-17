@@ -12,7 +12,7 @@ Ext.define ('Webed.window.AddFolderBox', {
     modal: true,
     resizable: false,
     title: 'Add Folder',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

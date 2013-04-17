@@ -18,7 +18,7 @@ Ext.define ('Webed.window.InsertPictureBox', {
     modal: true,
     resizable: false,
     title: 'Insert Picture',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

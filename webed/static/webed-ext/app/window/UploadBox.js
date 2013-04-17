@@ -12,7 +12,7 @@ Ext.define ('Webed.window.UploadBox', {
     modal: true,
     resizable: false,
     title: 'Upload',
-    width: 320,
+    width: 360,
 
     buttons: [{
         text: 'Upload',

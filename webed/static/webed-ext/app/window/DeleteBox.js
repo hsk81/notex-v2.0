@@ -12,7 +12,7 @@ Ext.define ('Webed.window.DeleteBox', {
     modal: true,
     resizable: false,
     title: 'Delete',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

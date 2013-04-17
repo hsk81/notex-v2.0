@@ -12,7 +12,7 @@ Ext.define ('Webed.window.InsertLinkBox', {
     modal: true,
     resizable: false,
     title: 'Insert Hyperlink',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

@@ -12,7 +12,7 @@ Ext.define ('Webed.window.ConfirmBox', {
     modal: true,
     resizable: false,
     title: 'Confirm',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

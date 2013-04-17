@@ -12,7 +12,7 @@ Ext.define ('Webed.window.AddFileBox', {
     modal: true,
     resizable: false,
     title: 'Add Document',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

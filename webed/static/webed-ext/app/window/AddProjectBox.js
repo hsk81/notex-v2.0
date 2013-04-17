@@ -12,7 +12,7 @@ Ext.define ('Webed.window.AddProjectBox', {
     modal: true,
     resizable: false,
     title: 'Add Project',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',

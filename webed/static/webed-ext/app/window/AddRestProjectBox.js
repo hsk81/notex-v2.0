@@ -12,7 +12,7 @@ Ext.define ('Webed.window.AddRestProjectBox', {
     modal: true,
     resizable: false,
     title: 'Add Project',
-    width: 480,
+    width: 360,
 
     config: {
         project: 'PROJECT',

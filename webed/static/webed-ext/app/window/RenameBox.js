@@ -12,7 +12,7 @@ Ext.define ('Webed.window.RenameBox', {
     modal: true,
     resizable: false,
     title: 'Rename',
-    width: 320,
+    width: 360,
 
     items: [{
         xtype: 'form',
