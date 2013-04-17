@@ -33,12 +33,8 @@ def yaml2py (yaml_path, path_to, filename='conf.py'):
         target.write ("# -*- coding: utf-8 -*-\n")
         target.write ("extensions = ['%s']\n" % 'sphinx.ext.mathjax')
 
-        for key, value in data:
-            if key == 'extensions': # security: pre-defined!
-                continue
-
-            target.write (
-                '%s\n' % emit (value, type (value), key).encode ('utf-8'))
+        for key, value in data: target.write (
+            '%s\n' % emit (value, type (value), key).encode ('utf-8'))
 
     return umap['latex_backend']
 
