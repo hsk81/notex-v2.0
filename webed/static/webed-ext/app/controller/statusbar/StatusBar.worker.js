@@ -7,7 +7,7 @@ self.onmessage = function (event) {
     assert (args.lingua);
     assert (args.charset);
 
-    var aff = Typo.prototype.read_file (
+    var aff = Typo.prototype._readFile (
         '/dictionaries/' + args.lingua + '.aff', args.charset
     );
 
@@ -17,7 +17,7 @@ self.onmessage = function (event) {
         return;
     }
 
-    var dic = Typo.prototype.read_file (
+    var dic = Typo.prototype._readFile (
         '/dictionaries/' + args.lingua + '.dic', args.charset
     );
 
