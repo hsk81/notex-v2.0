@@ -44,7 +44,8 @@ Ext.define ('Webed.store.Linguas', {
         charset: 'utf-8',
         name: 'Český',
         country: 'Česká republika',
-        icon: 'icon-flag_czech_republic'
+        icon: 'icon-flag_czech_republic',
+        flag: {hidden: true}
     },{
         lingua: 'de_AT',
         charset: 'iso-8859-1',
