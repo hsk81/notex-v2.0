@@ -93,8 +93,11 @@ def main (page='main', template='index.html', **kwargs):
 def get_keywords (page):
 
     common = ['reStructuredText', 'Markdown', 'LaTex', 'article', 'report',
-              'thesis', 'book', 'editor', 'restructured', 'text', 'pdf',
-              'html', 'converter', 'sphinx']
+        'thesis', 'book', 'restructured', 'text', 'pdf', 'html', 'converter',
+        'online', 'web', 'browser based',
+        'online editor', 'web editor', 'browser based editor',
+        'online text editor', 'web text editor', 'browser based text editor',
+        'sphinx']
 
     lookup = {
         'home':
