@@ -25,10 +25,8 @@
         </ul>
     </div>
 
-    <script type="text/javascript">{% include 'js/expand-app.js' %}</script>
-
-    <div class="start-box" onclick="expand_app (this)">
-        <a href="#" id="start-box-button-id" class="start-box-button">Start NoTex</a>
+    <div class="start-box">
+        <a href="{{ url_for('.home', theme=theme, expand=True) }}" id="start-box-button-id" class="start-box-button">Start NoTex</a>
     </div>
 
     <div class="subline">
