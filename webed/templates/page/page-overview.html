@@ -54,8 +54,6 @@
     <hr>
     <h1>Tutorial<a class="permalink" href="#tutorial" id="tutorial">¶</a></h1>
 
-    <script type="text/javascript">{% include 'js/expand-app.js' %}</script>
-
-    <p>To learn more, get started with the <a href="{{ url_for('.tutorial', theme=theme) }}">user interface tutorial</a>: It will teach you the basics about NoTex and its UI. You will also get a very brief introduction to rST and write your first report with it. <a onclick="expand_app (this)" href="#" >Click</a> to start it now!</p>
+    <p>To learn more, get started with the <a href="{{ url_for('.tutorial', theme=theme) }}">user interface tutorial</a>: It will teach you the basics about NoTex and its UI. You will also get a very brief introduction to rST and write your first report with it. <a href="{{ url_for('.home', theme=theme, expand='true') }}" >Click</a> to start it now!</p>
 
 </div>
