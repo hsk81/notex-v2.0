@@ -288,9 +288,7 @@ def leaf_read (json=True):
     if total > 0 and leafs == []:
         leafs, total = Q (query).page (offset=0, limit=limit, **kwargs)
 
-    leaf2exts = map (leaf2ext, leafs)
-
-    result = dict (success=True, results=leaf2exts, total=total)
+    result = dict (success=True, results=map (leaf2ext, leafs), total=total)
     return jsonify (result) if json else result
 
 @db.commit ()
