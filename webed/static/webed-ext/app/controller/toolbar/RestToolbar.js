@@ -436,6 +436,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         var editor = assert (this.get_editor (button));
 
         var insertPictureBox = Ext.create ('Webed.window.InsertPictureBox', {
+            record: assert (this.application.get_selection ()),
             scope: this, callback: callback, title: 'Insert Figure'
         });
 
@@ -469,6 +470,7 @@ Ext.define ('Webed.controller.toolbar.RestToolbar', {
         var editor = assert (this.get_editor (button));
 
         var insertPictureBox = Ext.create ('Webed.window.InsertPictureBox', {
+            record: assert (this.application.get_selection ()),
             scope: this, callback: callback, title: 'Insert Image',
             listeners: { afterrender: function (panel) {
                 assert (panel.down ('textfield[name=caption]')).hide ();

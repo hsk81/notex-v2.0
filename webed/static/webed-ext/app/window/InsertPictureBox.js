@@ -12,6 +12,15 @@ Ext.define ('Webed.window.InsertPictureBox', {
         'Ext.form.Panel'
     ],
 
+    config: {
+        record: null
+    },
+
+    constructor: function () {
+        this.callParent (arguments);
+        assert (this.getRecord ());
+    },
+
     border: false,
     iconCls: 'icon-picture_add-16',
     layout: 'fit',
@@ -36,6 +45,15 @@ Ext.define ('Webed.window.InsertPictureBox', {
             width: '100%',
             xtype: 'combobox',
 
+            listeners: {
+                render: function (self) {
+                    var box = assert (self.up ('insert-picture-box'));
+                    var record = assert (box.getRecord ());
+                    var store = assert (self.getStore ());
+                    store.ref_record = record;
+                }
+            },
+
             store: Ext.create ('Ext.data.Store', {
                 model: 'Webed.model.Leaf',
                 filters: [{property: 'mime', regex: /^image\/(?:[^/]+)$/}],
@@ -50,9 +68,23 @@ Ext.define ('Webed.window.InsertPictureBox', {
                     },
 
                     load: function (store, records, successful) {
-                        if (records && successful) records.forEach (
-                            function (record) { this.decorate (record); }, this
-                        );
+                        if (records && successful) {
+                            records.forEach (function (record) {
+                                this.decorate (record);
+                            }, this);
+
+                            store.filterBy (function (record) {
+                                var ref_path = assert (this.ref_record.get (
+                                    'uuid_path'
+                                ));
+
+                                var rec_path = assert (record.get (
+                                    'uuid_path'
+                                ));
+
+                                return ref_path[1] == rec_path[1];
+                            }, this);
+                        }
                     }
                 },
 
