@@ -129,7 +129,7 @@ def get_title (page):
     lookup = {
         'home':
             """
-            NoTex - A browser based text editor supporting reStructuredText,
+            NoTex - An online text editor supporting reStructuredText,
             Markdown, LaTex and more!
             """,
         'overview':
