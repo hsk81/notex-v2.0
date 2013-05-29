@@ -521,7 +521,7 @@ def node2ext (node, leafs=True, level=1):
     if app.config['MAX_NODE_LEVEL'] < level:
         return to_ext (node, results=None)
 
-    ext_nodes = map (lambda n: node2ext (n, leafs=leafs, level=level+1),
+    ext_nodes = map (lambda n: node2ext (n, leafs=leafs, level=level + 1),
         node.not_leafs)
     ext_leafs = map (lambda l: leaf2ext (l), node.leafs) \
         if leafs else []
