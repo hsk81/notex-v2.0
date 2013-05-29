@@ -161,7 +161,6 @@ def node_delete (leafs=True, json=True):
 
     uuid = request.json.get ('uuid', None)
     assert uuid
-
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
     node = Q (base.subnodes).one (uuid=uuid)
