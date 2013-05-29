@@ -51,7 +51,7 @@ Ext.define ('Webed.window.InsertPictureBox', {
 
                     load: function (store, records, successful) {
                         if (records && successful) records.forEach (
-                            function (record) { this.decorate (record);}, this
+                            function (record) { this.decorate (record); }, this
                         );
                     }
                 },
