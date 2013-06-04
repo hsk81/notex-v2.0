@@ -73,14 +73,14 @@ class SphinxConfig:
     ## defined amount of milli-seconds: no worker is then considered available.
     ##
 
-    PING_TIMEOUT = 12.000 * 1000 ##[ms]
+    PING_TIMEOUT = 12.000 * 1000 ## [ms]
 
     ##
     ## The POLL_TIMEOUT ensures that a *waiting* worker stops waiting for an
     ## incoming message (ping or data) and moves on.
     ##
 
-    POLL_TIMEOUT = 00.250 * 1000 ##[ms]
+    POLL_TIMEOUT = 00.250 * 1000 ## [ms]
 
 ###############################################################################
 ###############################################################################
