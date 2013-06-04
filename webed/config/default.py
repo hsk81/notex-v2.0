@@ -19,7 +19,7 @@ class DefaultConfig:
         else bool (in_rxs (socket.getfqdn (), MACH_DEVS))
 
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = None
+    SQLALCHEMY_DATABASE_URI = None ## override
 
     PERMANENT_SESSION_LIFETIME = timedelta (days=14) ## session expires after!
     CACHE_DEFAULT_TIMEOUT = int (PERMANENT_SESSION_LIFETIME.total_seconds ())
@@ -44,8 +44,7 @@ class DefaultConfig:
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     ##
-    ## Override secret key in production environment using value from the
-    ## *production.py* file to ensure proper security.
+    ## Override secret key in production environment to ensure security.
     ##
 
     SECRET_KEY = '000000000000000000000000000000000000000='
@@ -120,14 +119,33 @@ class DefaultConfig:
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024 ## 1MB
 
     ##
-    ## BLOG_ID, BLOG_URL, BLOG_API_KEY and BLOG_URL should be set in the
-    ## production environment to proper values.
+    ## BLOG_ID, BLOG_URL, BLOG_API_KEY and BLOG_URL should be overridden in
+    ## production environment with proper values.
     ##
 
     BLOG_ID = None
     BLOG_URL = None
     BLOG_API_KEY = None
     BLOG_HEADERS = None
+
+    ##
+    ## Override MAIL settings in production environment with proper values.
+    ##
+
+    MAIL_SERVER = None
+    MAIL_PORT = None
+    MAIL_USE_TLS = None
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+
+    DEFAULT_MAIL_SENDER = ('sender', 'mail@address.net')
+    DEFAULT_MAIL_RECEIVERS = []
+
+    ##
+    ## Override CDN settings in production environment with proper value.
+    ##
+
+    CDN = None
 
 ###############################################################################
 ###############################################################################
