@@ -1,0 +1,9 @@
+<form action="https://bitpay.com/checkout" method="post" >
+    <input type="hidden" name="action" value="checkout" />
+    <input type="hidden" name="posData" value="" />
+    <label hidden>
+        <input type="number" name="price" min="0" step="5" value="5" />
+    </label>
+    <input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDhPrqIIkWKK6bD7Ql/GmtFQEQEDnfgNqH2uNejLkmvebMkcX08GwzGE7JfhG2T7OJGG8+uEEBMXJFvaMKe9kkpOz3jpRRMevvIVal5qsDYwBou1igcPgJuM39wiEv303+PLPIbA9oHPhzP/PwKAEKxlrqzcAWZoE120sXOMEZHfwoHomyBPT0J5gfItwSQSFGX" />
+    <input type="image" height="32px" width="83px" src="{{ url_for('static', filename='webed-ext/resources/theme/img/btc-donate.png') }}" border="0" name="submit" alt="Donate with bitcoins." />
+</form>

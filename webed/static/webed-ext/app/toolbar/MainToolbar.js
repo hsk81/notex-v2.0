@@ -123,6 +123,25 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             action: 'export-project-as-latex'
         }]
 
+    },'->',{
+
+        xtype: 'buttongroup',
+        columns: 1,
+        height: '100%',
+
+        items: [{
+            loader: {
+                url: '/btc-donate.html',
+                autoLoad: true
+            },
+
+            listeners: {
+                click: function (button) {
+                    var form = assert (button.el.down ('form'));
+                    var dom = assert (form.dom); dom.submit ();
+                }
+            }
+        }]
     }],
 
     hidden: true
