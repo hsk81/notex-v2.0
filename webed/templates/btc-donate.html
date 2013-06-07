@@ -1,9 +1,9 @@
-<form action="https://bitpay.com/checkout" method="post" >
+<form style="height: 32px; width: 83px;" action="https://bitpay.com/checkout" method="post" >
     <input type="hidden" name="action" value="checkout" />
     <input type="hidden" name="posData" value="" />
     <label hidden>
         <input type="number" name="price" min="0" step="5" value="5" />
     </label>
     <input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDhwj7KTvGxYx6yNCeUReG1dHPYRU1pDmqoIkv946IvvjaBAjRtUXnMvxrkONRIUeEi/btMlN4q6SSzJ97JUQTSWC8BndxqLXd3iYn1eW/qq44u8eX8T/Q0VEwg3lL7qcJUoyIX2HXoNz/xLvz/lzGeoLJjmzJXuoJ5H/7uLGPMK37PU+1RXc9cO7OoEBiVAiijMfJ/dC6xo9Huk+8XSshxPbaF6iK9b+fPWAAXlULHIUM=" />
-    <input type="image" height="32px" width="83px" src="{{ url_for('static', filename='webed-ext/resources/theme/img/btc-donate.png') }}" border="0" name="submit" alt="Donate with bitcoins." />
+    <input type="image" src="{{ url_for('static', filename='webed-ext/resources/theme/img/btc-donate.png') }}" border="0" name="submit" alt="Donate with bitcoins." />
 </form>
