@@ -33,7 +33,7 @@ class DefaultConfig:
     CACHE3_KEY_PREFIX = 'webed-dbs:'
     CACHE3_SERVERS = ['127.0.0.1']
 
-    LOG_FILE = os.path.join ('..', 'webed.log')
+    LOG_FILE = os.path.join ('..', 'webed.logs', 'webed.log')
     YML_FILE = os.path.join ('webed', 'static', 'assets.yaml')
 
     ##
