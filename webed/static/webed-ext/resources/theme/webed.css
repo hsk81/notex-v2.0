@@ -103,15 +103,19 @@ body {
 }
 
 #page.home .blogger {
-    float:right; position:relative; top:-2px; left:-1px;
+    float:right; position:relative; top:-3px; left:15px;
 }
 
 #page.home .twitter {
-    float:right; position:relative; top:-2px;
+    float:right; position:relative; top:-3px; left:16px;
 }
 
 #page.home .facebook {
-    float:right; position:relative; top:-2px;
+    float:right; position:relative; top:-3px; left:16px;
+}
+
+#page.home .email {
+    float:right; position:relative; top:-24px; left:-1px;
 }
 
 #page.home .start-box {
