@@ -403,7 +403,7 @@ def mimes ():
         'icon': 'icon-report_markdown',
         'main': 'text/x-markdown'
     }, {
-        'name': 'ReStructuredTex',
+        'name': 'ReStructuredText',
         'mime': 'application/project+rest',
         'icon': 'icon-report_rest',
         'main': 'text/x-rst'
