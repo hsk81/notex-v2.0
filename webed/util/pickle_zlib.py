@@ -30,8 +30,9 @@ class WrapException (Exception):
         assert hasattr (self, '_type')
         assert issubclass (self._type, Exception)
 
-        ex = self._type (**{key: self.__dict__[key] for key in self.__dict__
-            if not key.startswith ('_') ## skip private attributes
+        ex = self._type (*self.args, **{
+            key: self.__dict__[key] for key in self.__dict__
+                if not key.startswith ('_') ## no private attributes
         })
 
         for key, value in self.__dict__.items ():
