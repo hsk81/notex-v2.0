@@ -88,6 +88,9 @@ def rest_to (uuid, ext, converter_cls):
                 response = jsonify (success=True, name=node.name)
         except TimeoutError:
             response = jsonify (success=False, name=node.name), 503
+        except MetaError, ex:
+            response = jsonify (success=False, name=node.name, meta=ex.meta), \
+                       513 ## webed specific error
 
     return response
 
@@ -185,7 +188,10 @@ class Converter (object):
         assert payload
         logger.debug ('%r received data:%x' % (self, hash (payload)))
 
-        if isinstance (payload, Exception): raise payload
+        if isinstance (payload, Exception):
+            raise MetaError (payload) if hasattr (payload, '_meta') \
+                else payload
+
         self._data = payload
 
 class HtmlConverter (Converter):
@@ -213,6 +219,15 @@ class PdfConverter (Converter):
 
 ###############################################################################
 ###############################################################################
+
+class MetaError (Exception):
+
+    @property
+    def meta (self):
+        if len (self.args) > 0 and hasattr (self.args[0], '_meta'):
+            return self.args[0]._meta
+        else:
+            return None
 
 class TimeoutError (Exception): pass
 

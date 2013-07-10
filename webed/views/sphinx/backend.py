@@ -133,17 +133,25 @@ class Worker (Thread):
 
             data = resource.data_socket.recv ()
             self.logger.debug ('%r received data:%x' % (self, hash (data)))
+            meta = self._meta ()
 
             try:
-                data = self._process (data)
+                data = self._process (data, meta)
             except Exception, ex:
                 self.logger.exception (ex)
-                data = ex
+                data = ex; ex._meta = meta
 
             PickleZlib.send_pyobj (resource.data_socket, data)
             self.logger.debug ('%r send-ing data:%x' % (self, hash (data)))
 
-    def _process (self, data):
+    def _meta (self):
+        """
+        Should return a **JSON serializable** object with meta information
+        about the current conversion process.
+        """
+        return dict(uuid=str (uuid_random()))
+
+    def _process (self, data, meta):
 
         prefix, payload = data.split ('-', 1)
 
@@ -159,7 +167,7 @@ class Worker (Thread):
         temp_path = app.config['SPHINX_TEMP_PATH']
         if not os.path.exists (temp_path): os.makedirs (temp_path)
         assert os.path.exists (temp_path)
-        target_path = os.path.join (temp_path, str (uuid_random()))
+        target_path = os.path.join (temp_path, meta['uuid'])
 
         shutil.copytree (source_path, target_path)
 
