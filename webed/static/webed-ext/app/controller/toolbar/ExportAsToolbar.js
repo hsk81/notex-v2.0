@@ -118,17 +118,51 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
         function onFailure (xhr, opts) {
 
-            if (xhr.status == 503) statusbar.setStatus ({
-                text: 'Conversion engine busy; please try later.',
-                iconCls: 'x-status-error',
-                clear: true
-            });
+            if (xhr.status == 503) {
+                statusbar.setStatus ({
+                    text: 'Conversion engine busy; please try later.',
+                    iconCls: 'x-status-error',
+                    clear: true
+                });
+            }
 
-            else statusbar.setStatus ({
-                text: "Conversion failed; check your project.",
-                iconCls: 'x-status-exclamation',
-                clear: true
-            });
+            else if (xhr.status == 513) {
+                var response = Ext.JSON.decode (xhr.responseText);
+
+                assert (response);
+                assert (response.meta);
+                assert (response.meta.uuid);
+
+                var href_url = '{0}/sphinx.err/{1}'.format (
+                    location.origin, response.meta.uuid
+                );
+
+                var href_text = '<b>{0}</b>'.format (
+                    'error logs'
+                );
+
+                var href = '<a href="{0}" target="_blank">{1}</a>'.format (
+                    href_url, href_text
+                );
+
+                var status_text = 'Conversion failed; {0}!'.format (
+                    'see {0} for further information'.format (href)
+                );
+
+                statusbar.setStatus ({
+                    text: status_text,
+                    iconCls: 'x-status-exclamation',
+                    clear: true
+                });
+            }
+
+            else {
+                statusbar.setStatus ({
+                    text: "Conversion failed; check your project.",
+                    iconCls: 'x-status-exclamation',
+                    clear: true
+                });
+            }
 
             TRACKER.event ({
                 category: 'ExportAsToolbar', action: me.url2fn (url_base),
