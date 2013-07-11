@@ -142,6 +142,13 @@ class DefaultConfig:
     DEFAULT_MAIL_RECEIVERS = []
 
     ##
+    ## ADSENSE controls if the application should displays advertisement from
+    ## Google's ad network.
+    ##
+
+    ADSENSE = False
+
+    ##
     ## Override CDN settings in production environment with proper value.
     ##
 

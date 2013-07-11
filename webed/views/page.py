@@ -75,17 +75,16 @@ def main (page='main', template='index.html', **kwargs):
     def cached_template (*args, **kwargs):
         return render_template (*args, **kwargs)
 
-    canonical = get_canonical (page)
-    debug = False if 'no-debug' in request.args else app.debug
-    title = get_title (page)
-    description = get_description (page)
-    keywords = get_keywords (page)
-    theme = request.args.get ('theme', 'blue')
-    version = '.'.join (setup.version.split ('.')[:2])
-
-    return cached_template (template, debug=debug, keywords=keywords,
-        title=title, description=description, canonical=canonical, page=page,
-        theme=theme, version=version, **kwargs)
+    return cached_template (template,
+        adsense=app.config['ADSENSE'],
+        canonical=get_canonical (page),
+        debug=False if 'no-debug' in request.args else app.debug,
+        description=get_description (page),
+        keywords=get_keywords (page),
+        theme=request.args.get ('theme', 'blue'),
+        title=get_title (page),
+        version='.'.join (setup.version.split ('.')[:2]),
+        page=page, **kwargs)
 
 ###############################################################################
 ###############################################################################
