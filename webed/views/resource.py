@@ -4,7 +4,7 @@ __author__ = 'hsk81'
 ###############################################################################
 
 from flask.templating import render_template
-from flask import Blueprint, make_response
+from flask import Blueprint, make_response, send_from_directory
 from ..app import app
 
 import os
@@ -21,6 +21,19 @@ resource = Blueprint ('resource', __name__)
 def btc_donate ():
 
     return render_template ('btc-donate.html')
+
+###############################################################################
+###############################################################################
+
+@resource.route ('/sphinx.err/<uuid>/<path:file_path>', methods=['GET'])
+def sphinx_err (uuid, file_path):
+
+    temp_path = app.config['SPHINX_TEMP_PATH']
+    assert os.path.exists (temp_path)
+    uuid_path = os.path.join (temp_path, uuid)
+    assert os.path.exists (uuid_path)
+
+    return send_from_directory (uuid_path, file_path, mimetype='text/plain')
 
 ###############################################################################
 ###############################################################################

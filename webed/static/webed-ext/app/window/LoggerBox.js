@@ -8,19 +8,18 @@ Ext.define ('Webed.window.LoggerBox', {
 
     border: false,
     iconCls: 'icon-information-16',
-    height: 240,
+    height: 480,
     layout: 'fit',
     minHeight: 240,
-    minWidth: 360,
+    minWidth: 320,
     modal: false,
     resizable: true,
     title: 'Logger',
-    width: 360,
+    width: 640,
 
     items: [{
         xtype: 'form',
-        layout: 'fit',
-        bodyPadding: '4px'
+        layout: 'fit'
     }],
 
     config: {
@@ -30,7 +29,7 @@ Ext.define ('Webed.window.LoggerBox', {
     listeners: {
         render: function (self) {
             var code_area = Ext.create ('Webed.form.field.CodeArea', {
-                mime: 'text/plain', options: {readOnly: true}
+                mime: 'text/plain'
             });
 
             var form = assert (self.down ('form'));
@@ -44,7 +43,7 @@ Ext.define ('Webed.window.LoggerBox', {
             var body = assert (self.body);
             var height = body.getHeight ();
             assert (typeof (height) == 'number');
-            ca.setHeight (height - 9);
+            ca.setHeight (height - 2);
         },
 
         close: function (self) {

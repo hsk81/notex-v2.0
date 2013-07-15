@@ -119,7 +119,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
         function onFailure (xhr, opts) {
 
-            if (xhr.status == 503) {
+            function failure_503 () {
                 statusbar.setStatus ({
                     text: 'Conversion engine busy; please try later.',
                     iconCls: 'x-status-error',
@@ -127,7 +127,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 });
             }
 
-            else if (xhr.status == 513) {
+            function failure_513 () {
                 var response = Ext.JSON.decode (xhr.responseText);
 
                 assert (response);
@@ -156,22 +156,37 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                     clear: true
                 });
 
-                var log = Ext.create ('Webed.window.LoggerBox', {
-                    iconCls: 'icon-exclamation-16',
-                    title: 'Export failure: {0}'.format (name),
-                    value: 'Lorem Ipsum: ...' //TODO: fetch log content!
-                });
+                Ext.Ajax.request({
+                    url: href_url + '/stdout.log',
+                    method: 'GET',
+                    success: function (xhr, opts) {
+                        var log = Ext.create ('Webed.window.LoggerBox', {
+                            iconCls: 'icon-exclamation-16',
+                            title: 'Export failure for "{0}"'.format (name),
+                            value: xhr.responseText
+                        });
 
-                log.show ();
+                        log.show ();
+                    },
+                    failure: function (xhr, opts) {
+                        console.error ('[ExportAsToolBar.exportProject]',
+                            xhr, opts
+                        );
+                    }
+                });
             }
 
-            else {
+            function failure_5xx () {
                 statusbar.setStatus ({
                     text: "Conversion failed; check your project.",
                     iconCls: 'x-status-exclamation',
                     clear: true
                 });
             }
+
+            if (xhr.status == 503) failure_503 ();
+            else if (xhr.status == 513) failure_513 ();
+            else  failure_5xx ();
 
             TRACKER.event ({
                 category: 'ExportAsToolbar', action: me.url2fn (url_base),
