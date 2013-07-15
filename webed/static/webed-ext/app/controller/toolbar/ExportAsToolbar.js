@@ -156,21 +156,26 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                     clear: true
                 });
 
+                var log = Ext.create ('Webed.window.LoggerBox', {
+                    iconCls: 'icon-exclamation-16',
+                    title: 'Exporting "{0}" failed'.format (name),
+                    value: '..'
+                });
+
+                log.show ();
+                log.setLoading (true);
+
                 Ext.Ajax.request({
                     url: href_url + '/stdout.log',
                     method: 'GET',
                     success: function (xhr, opts) {
-                        var log = Ext.create ('Webed.window.LoggerBox', {
-                            iconCls: 'icon-exclamation-16',
-                            title: 'Export failure for "{0}"'.format (name),
-                            value: xhr.responseText
-                        });
-
-                        log.show ();
+                        var ca = assert (log.down ('code-area'));
+                        ca.setValue (xhr.responseText);
+                        log.setLoading (false);
                     },
                     failure: function (xhr, opts) {
-                        console.error ('[ExportAsToolBar.exportProject]',
-                            xhr, opts
+                        log.setLoading (false); console.error (
+                            '[ExportAsToolBar.exportProject]', xhr, opts
                         );
                     }
                 });
