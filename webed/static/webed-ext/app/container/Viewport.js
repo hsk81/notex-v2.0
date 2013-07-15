@@ -8,7 +8,8 @@ Ext.define ('Webed.container.Viewport', {
         'Webed.statusbar.StatusBar',
         'Webed.tab.TabManager',
         'Webed.toolbar.MainToolbar',
-        'Webed.tree.NodeTree'
+        'Webed.tree.NodeTree',
+        'Webed.window.LoggerBox'
     ],
 
     items: [{

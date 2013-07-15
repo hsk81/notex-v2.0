@@ -83,6 +83,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
         var uuid = assert (node.get ('uuid'));
         var mime = assert (node.get ('mime'));
+        var name = assert (node.get ('name'));
         var url = url_base + uuid;
         var me = this;
 
@@ -154,6 +155,14 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                     iconCls: 'x-status-exclamation',
                     clear: true
                 });
+
+                var log = Ext.create ('Webed.window.LoggerBox', {
+                    iconCls: 'icon-exclamation-16',
+                    title: 'Export failure: {0}'.format (name),
+                    value: 'Lorem Ipsum: ...' //TODO: fetch log content!
+                });
+
+                log.show ();
             }
 
             else {
