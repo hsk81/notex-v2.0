@@ -42,9 +42,6 @@ def tutorial (): return main (page='tutorial')
 @page.route ('/rest/')
 def rest (): return main (page='rest')
 
-@page.route ('/faq/')
-def faq (): return main (page='faq')
-
 @page.route ('/blog/')
 def blog ():
 
@@ -112,8 +109,6 @@ def get_keywords (page):
         'rest':
             common + ['ReST', 'rST', 'primer', 'tutorial', 'markup',
                       'language'],
-        'faq':
-            common + ['faq', 'frequently asked', 'important', 'questions'],
         'blog':
             common + ['blog', 'information', 'development'],
         'forum':
@@ -149,11 +144,6 @@ def get_title (page):
         'rest':
             """
             ReStructuredText - NoTex: A primer about reStructuredText.
-            """,
-        'faq':
-            """
-            FAQ - NoTex: Frequently asked and important questions about
-            security, data, performance, documentation etc.
             """,
         'blog':
             """
@@ -214,13 +204,6 @@ def get_description (page):
             blocks, source code, tables, hyperlinks, sections, explicit
             markup, directives, images, footnotes, citations, substitutions
             and comments.
-            """,
-        'faq':
-            """
-            A list of frequently asked or important question with their
-            answers. The list covers topics about security, data,
-            performance and documentation plus miscellaneous subjects like
-            licencing, technology and contact information.
             """,
         'blog':
             """
