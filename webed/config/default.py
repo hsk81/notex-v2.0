@@ -129,6 +129,13 @@ class DefaultConfig:
     BLOG_HEADERS = None
 
     ##
+    ## FORUM_URL points to an *external* address where the builtin board system
+    ## has been setup.
+    ##
+
+    FORUM_URL = None
+
+    ##
     ## Override MAIL settings in production environment with proper values.
     ##
 

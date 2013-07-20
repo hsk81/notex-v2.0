@@ -1,0 +1,22 @@
+<script type="text/javascript">
+function on_load () {
+    var pwc = document.getElementById ('page-wrap-content');
+    if (!pwc) return;
+    var bbs = document.getElementById ('bbs-frame');
+    if (!bbs) return;
+
+    var pwc_rect = pwc.getBoundingClientRect ();
+    var bbs_rect = bbs.getBoundingClientRect ();
+
+    if (window.chrome) {
+        bbs.height = pwc_rect.bottom - bbs_rect.top;
+    } else {
+        bbs.height = pwc_rect.bottom - bbs_rect.top - 3;
+    }
+}
+</script>
+
+<iframe id='bbs-frame' src='{{ bbs }}' width='100%' height='480px'
+        onload='on_load ();' style='border: none; border-top: solid gray 1px;'
+        seamless>
+</iframe>

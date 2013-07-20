@@ -57,6 +57,9 @@ def blog ():
 
     return main (page='blog', blog=blog)
 
+@page.route ('/forum/')
+def forum (): return main (page='forum', bbs=app.config['FORUM_URL'])
+
 @page.route ('/contact/')
 def contact (): return main (page='contact')
 
@@ -113,6 +116,8 @@ def get_keywords (page):
             common + ['faq', 'frequently asked', 'important', 'questions'],
         'blog':
             common + ['blog', 'information', 'development'],
+        'forum':
+            common + ['forum', 'help', 'support', 'builtin board', 'bbs'],
         'contact':
             common + ['contact', 'form', 'e-mail', 'feedback', 'questions'],
     }
@@ -154,6 +159,11 @@ def get_title (page):
             """
             Blog - NoTex: Get additional information and documentation plus
             follow the development process.
+            """,
+        'forum':
+            """
+            Forum - NoTex: A builtin board to get support and help in using the
+            editor plus a place for discussing further development.
             """,
         'contact':
             """
@@ -218,6 +228,14 @@ def get_description (page):
             is a rich source of documentation, and allows the users to follow
             the development process.
             """,
+        'forum':
+            """
+            A builtin board system (bbs) provides discussion forums about the
+            various aspects of the editor: Announcements, change log, FAQ,
+            UI interaction issues, export problems, project configuration,
+            markup language specifics (reStructuredText, Markdown and LaTex),
+            feature requests, ideas and bug reports etc.
+            """,
         'contact':
             """
             Contact information regarding the company behind; plus provides a
@@ -234,8 +252,11 @@ def get_description (page):
 
 def get_canonical (page):
 
-    return url_for ('.main', _external=True) if page == 'home' \
-        else request.base_url
+    if page == 'forum':
+        return app.config['FORUM_URL']
+    else:
+        return url_for ('.main', _external=True) if page == 'home' \
+            else request.base_url
 
 ###############################################################################
 ###############################################################################
