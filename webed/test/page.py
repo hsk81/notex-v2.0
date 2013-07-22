@@ -10,7 +10,7 @@ from base import BaseTestCase
 
 class PageTestCase (BaseTestCase):
 
-    def page (self, value = None):
+    def page (self, value=None):
 
         if value != 'index':
             response = self.app.get ('/%s/?silent=True' % value)
@@ -38,8 +38,10 @@ class PageTestCase (BaseTestCase):
         self.page (value='overview')
     def test_tutorial (self):
         self.page (value='tutorial')
-    def test_faq (self):
-        self.page (value='faq')
+    def test_rest (self):
+        self.page (value='rest')
+    def test_forum (self):
+        self.page (value='forum')
     def test_contact (self):
         self.page (value='contact')
 
