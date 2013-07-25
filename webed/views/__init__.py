@@ -12,6 +12,7 @@ from .io import archive_upload
 from .io import file_upload
 from .mime import mime_info
 from .page import contact
+from .page import faq
 from .page import home
 from .page import main
 from .page import overview

@@ -40,6 +40,8 @@ class PageTestCase (BaseTestCase):
         self.page (value='tutorial')
     def test_rest (self):
         self.page (value='rest')
+    def test_faq (self):
+        self.page (value='faq')
     def test_forum (self):
         self.page (value='forum')
     def test_contact (self):
