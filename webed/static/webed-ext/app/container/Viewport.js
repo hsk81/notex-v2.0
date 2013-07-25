@@ -57,10 +57,10 @@ Ext.define ('Webed.container.Viewport', {
                 },
 
                 html: function () {
-                    var ad = Ext.get ('ad-wrap');
-                    if (ad) {
-                        var html = ad.getHTML ();
-                        ad.destroy ();
+                    var wrap = Ext.get ('ad-medrec-wrap');
+                    if (wrap) {
+                        var html = wrap.getHTML ();
+                        wrap.destroy ();
                         return html;
                     } else {
                         return undefined;
@@ -71,8 +71,8 @@ Ext.define ('Webed.container.Viewport', {
                     afterrender: function (self) {
                         var ad_banner = Ext.get ('ad-banner-wrap');
                         if (ad_banner) ad_banner.show ();
-                        var no_adwrap = self.html == undefined;
-                        if (no_adwrap) self.hide ();
+                        var ad_medrec = Ext.get ('ad-medrec');
+                        if (!ad_medrec) self.hide ();
                     }
                 }
             },{
