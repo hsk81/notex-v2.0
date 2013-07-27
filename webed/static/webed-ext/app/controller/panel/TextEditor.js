@@ -152,7 +152,10 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         var mode_at = cm.getModeAt (cursor);
         if (mode_at && mode_at.name == 'stex') {
 
-            var marks = cm.findMarksAt (cursor);
+            var marks = cm.findMarksAt (cursor).filter (function (mark) {
+                return mark.className == 'stex';
+            });
+
             if (marks.length == 0) {
                 var lhs = {ch: cursor.ch, line: cursor.line},
                     rhs = {ch: cursor.ch, line: cursor.line};
@@ -163,29 +166,25 @@ Ext.define ('Webed.controller.panel.TextEditor', {
 
                 while (lhs.ch > size.min) {
                     var lhs_mode = cm.getModeAt (lhs);
-                    if (lhs_mode.name != 'stex') { break; }
-                    lhs.ch -= 1;
+                    if (lhs_mode.name != 'stex') break;
+                    else lhs.ch -= 1;
                 }
 
                 while (rhs.ch < size.max) {
                     var rhs_mode = cm.getModeAt (rhs);
-                    if (rhs_mode.name != 'stex') { break; };
-                    rhs.ch += 1;
+                    if (rhs_mode.name != 'stex') break;
+                    else rhs.ch += 1;
                 }
 
                 marks = [cm.markText (lhs, rhs, {
-                    className: 'stex'
+                    className: 'stex' //CSS
                 })];
-
-                console.debug ('MARKS+', marks);
-            } else {
-                console.debug ('MARKS=', marks);
             }
 
-            var mark = marks.pop ();
-            var stex = mark.find ();
-
-            console.debug ('RANGE', cm.getRange (stex.from, stex.to));
+            assert (marks.length == 1);
+            var position = marks[0].find ();
+            var range = cm.getRange (position.from, position.to);
+            console.debug ('RANGE', range);
         }
     },
 
