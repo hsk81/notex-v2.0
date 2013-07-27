@@ -18,10 +18,11 @@ Ext.define ('Webed.controller.panel.TextEditor', {
             },
 
             'text-editor code-area': {
+                blur: this.blur,
                 change: this.change,
                 clean: this.clean,
-                focus: this.focus,
-                blur: this.blur
+                cursor: this.cursor,
+                focus: this.focus
             }
         });
     },
@@ -80,6 +81,23 @@ Ext.define ('Webed.controller.panel.TextEditor', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    focus: function (code_area) {
+        var editor = assert (this.get_editor (code_area));
+        editor.bubble (function (component) {
+            component.fireEvent ('focus', component);
+        });
+    },
+
+    blur: function (code_area) {
+        var editor = assert (this.get_editor (code_area));
+        editor.bubble (function (component) {
+            component.fireEvent ('blur', component);
+        });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     clean: function (code_area, opts) {
         if (opts && opts.fake) return; {
             var editor = assert (this.get_editor (code_area));
@@ -118,18 +136,57 @@ Ext.define ('Webed.controller.panel.TextEditor', {
         }
     },
 
-    focus: function (code_area) {
-        var editor = assert (this.get_editor (code_area));
-        editor.bubble (function (component) {
-            component.fireEvent ('focus', component);
-        });
-    },
+    cursor: function (code_area, cursor) {
+        var cm = assert (code_area.codemirror);
 
-    blur: function (code_area) {
-        var editor = assert (this.get_editor (code_area));
-        editor.bubble (function (component) {
-            component.fireEvent ('blur', component);
-        });
+        /**
+         * TODO: Shift `stex` detection to `RestTextEditor` since `TextEditor`
+         *       is too generic for this rST/LaTex specialized functionality!
+         */
+
+        var mode = cm.getMode ();
+        if (!mode || mode.name != 'rst') {
+            return;
+        }
+
+        var mode_at = cm.getModeAt (cursor);
+        if (mode_at && mode_at.name == 'stex') {
+
+            var marks = cm.findMarksAt (cursor);
+            if (marks.length == 0) {
+                var lhs = {ch: cursor.ch, line: cursor.line},
+                    rhs = {ch: cursor.ch, line: cursor.line};
+
+                var size = {
+                    min: 0, max: cm.getLine (cursor.line).length
+                };
+
+                while (lhs.ch > size.min) {
+                    var lhs_mode = cm.getModeAt (lhs);
+                    if (lhs_mode.name != 'stex') { break; }
+                    lhs.ch -= 1;
+                }
+
+                while (rhs.ch < size.max) {
+                    var rhs_mode = cm.getModeAt (rhs);
+                    if (rhs_mode.name != 'stex') { break; };
+                    rhs.ch += 1;
+                }
+
+                marks = [cm.markText (lhs, rhs, {
+                    className: 'stex'
+                })];
+
+                console.debug ('MARKS+', marks);
+            } else {
+                console.debug ('MARKS=', marks);
+            }
+
+            var mark = marks.pop ();
+            var stex = mark.find ();
+
+            console.debug ('RANGE', cm.getRange (stex.from, stex.to));
+        }
     },
 
     ///////////////////////////////////////////////////////////////////////////
