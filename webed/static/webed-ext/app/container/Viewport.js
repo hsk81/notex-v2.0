@@ -9,7 +9,8 @@ Ext.define ('Webed.container.Viewport', {
         'Webed.tab.TabManager',
         'Webed.toolbar.MainToolbar',
         'Webed.tree.NodeTree',
-        'Webed.window.LoggerBox'
+        'Webed.window.LoggerBox',
+        'Webed.window.MathJaxBox'
     ],
 
     items: [{

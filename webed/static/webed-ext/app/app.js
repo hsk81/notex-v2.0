@@ -64,7 +64,7 @@ Ext.application ({
     },
 
     launch: function () {
-        Ext.create ('Webed.container.Viewport');
+        this.viewport = Ext.create ('Webed.container.Viewport');
     },
 
     get_selection: function () {

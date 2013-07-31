@@ -183,8 +183,32 @@ Ext.define ('Webed.controller.panel.TextEditor', {
 
             assert (marks.length == 1);
             var position = marks[0].find ();
-            var range = cm.getRange (position.from, position.to);
-            console.debug ('RANGE', range);
+            if (position) {
+
+                var range = cm.getRange (position.from, position.to);
+                var rx = new RegExp ("math:`([^`]*)`|[^`]+");
+                var matches = range.match (rx);
+                if (matches) {
+
+                    var value = '$${0}$$'.format (
+                        (matches[1]) ? matches[1] :
+                        (matches[2]) ? matches[2] : matches[0]
+                    );
+
+                    var mathjax_box = this.application.viewport.mjb;
+                    if (mathjax_box && !mathjax_box.isDestroyed) {
+                        mathjax_box.setValue (value).sync ();
+                        mathjax_box.show ();
+                    } else {
+                        mathjax_box = Ext.create ('Webed.window.MathJaxBox', {
+                            value: value
+                        });
+
+                        mathjax_box.show ();
+                        this.application.viewport.mjb = mathjax_box;
+                    }
+                }
+            }
         }
     },
 
