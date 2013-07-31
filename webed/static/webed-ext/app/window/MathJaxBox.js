@@ -31,16 +31,21 @@ Ext.define ('Webed.window.MathJaxBox', {
     },
 
     listeners: {
-        afterrender: function (self) {
+        beforerender: function (self) {
             var script = document.getElementById ('MathJax.script.id');
             if (script == null) {
                 script = document.createElement('script');
                 script.id = 'MathJax.script.id';
                 script.type = 'text/javascript';
-                script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML';
+                script.src  = 'http://{0}?config={1}'.format (
+                    'cdn.mathjax.org/mathjax/latest/MathJax.js', 'TeX-AMS_HTML'
+                );
+
                 document.getElementsByTagName ('head')[0].appendChild (script);
             }
+        },
 
+        afterrender: function (self) {
             self.sync ();
         },
 
