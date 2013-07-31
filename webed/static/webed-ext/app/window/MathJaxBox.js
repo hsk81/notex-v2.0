@@ -32,10 +32,10 @@ Ext.define ('Webed.window.MathJaxBox', {
 
     listeners: {
         beforerender: function (self) {
-            var script = document.getElementById ('MathJax.script.id');
+            var script = document.getElementById ('mjb-script.id');
             if (script == null) {
                 script = document.createElement('script');
-                script.id = 'MathJax.script.id';
+                script.id = 'mjb-script.id';
                 script.type = 'text/javascript';
                 script.src  = 'http://{0}?config={1}'.format (
                     'cdn.mathjax.org/mathjax/latest/MathJax.js', 'TeX-AMS_HTML'
