@@ -204,7 +204,11 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                             value: value
                         });
 
-                        mathjax_box.show ();
+                        mathjax_box.showAt ();
+                        mathjax_box.el.alignTo (this.application.viewport.el,
+                            'br-br', [-10,-65]
+                        );
+
                         this.application.viewport.mjb = mathjax_box;
                     }
                 }
