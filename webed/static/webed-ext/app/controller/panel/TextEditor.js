@@ -206,7 +206,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
 
                         mathjax_box.showAt ();
                         mathjax_box.el.alignTo (this.application.viewport.el,
-                            'br-br', [-10,-65]
+                            'br-br', [-25,-65]
                         );
 
                         this.application.viewport.mjb = mathjax_box;
