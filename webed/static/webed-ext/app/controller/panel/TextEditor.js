@@ -185,9 +185,12 @@ Ext.define ('Webed.controller.panel.TextEditor', {
             var position = marks[0].find ();
             if (position) {
 
+                if (this.rx == undefined) {
+                    this.rx = new RegExp ("math:`([^`]*)`|[^`]+");
+                }
+
                 var range = cm.getRange (position.from, position.to);
-                var rx = new RegExp ("math:`([^`]*)`|[^`]+");
-                var matches = range.match (rx);
+                var matches = range.match (this.rx);
                 if (matches) {
 
                     var value = '$${0}$$'.format (
@@ -204,7 +207,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                             value: value
                         });
 
-                        mathjax_box.showAt ();
+                        mathjax_box.show ();
                         mathjax_box.el.alignTo (this.application.viewport.el,
                             'br-br', [-25,-65]
                         );
