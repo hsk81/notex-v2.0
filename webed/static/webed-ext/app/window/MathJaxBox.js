@@ -19,10 +19,8 @@ Ext.define ('Webed.window.MathJaxBox', {
 
     items: [{
         id: 'mathjax-box.id',
-        html: '<div style="height: 100%; width: 100%;">' +
-            '<table style="height: 100%; width: 100%;">' +
-            '<tr><td style="text-align: center;" id="mjb-out.id">$${{}}$$</td></tr>' +
-            '</table>' +
+        html: '<div class="mathjax-box">' +
+            '<table><tr><td id="mjb-out.id">$${{}}$$</td></tr></table>' +
             '</div>'
     }],
 
