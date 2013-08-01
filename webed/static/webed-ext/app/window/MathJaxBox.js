@@ -35,9 +35,9 @@ Ext.define ('Webed.window.MathJaxBox', {
                 script = document.createElement('script');
                 script.id = 'mjb-script.id';
                 script.type = 'text/javascript';
-                script.src  = 'http://{0}?config={1}'.format (
-                    'cdn.mathjax.org/mathjax/latest/MathJax.js', 'TeX-AMS_HTML'
-                );
+                script.src  =('https:' == document.location.protocol)
+                    ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+                    : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML';
 
                 document.getElementsByTagName ('head')[0].appendChild (script);
             }
