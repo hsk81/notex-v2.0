@@ -72,24 +72,25 @@ Ext.define ('Webed.window.MathJaxBox', {
     },
 
     sync: function () {
-        var td = assert (this.el.down ('td'));
-        td.setHTML ('<script type="math/tex; mode=display">{0}</script>'
-            .format (this.getValue ())
-        );
+        function script (value) {
+            return '<script type="math/tex; mode=display">{0}</script>'.format (
+                value
+            );
+        }
 
-        /**
-         * TODO: Re-render formula *only* if there was actually a change; since
-         *       otherwise moving the cursor (in TextEditor) can be a little
-         *       sluggish!
-         *
-         *       Test for something like `MathJax.getValue != this.getValue`
-         *       and if different then re-render.
-         */
+        var td = this.el.down ('td');
+        assert (td);
 
-        if (typeof MathJax != 'undefined') {
-            if (MathJax && MathJax.Hub && MathJax.Hub.Queue) {
-                MathJax.Hub.Queue (['Typeset', MathJax.Hub, 'mjb-out.id']);
+        if (typeof MathJax != 'undefined' && MathJax && MathJax.Hub) {
+            var jaxes = MathJax.Hub.getAllJax (td.id);
+            if (jaxes.length > 0) {
+                MathJax.Hub.Queue (['Text', jaxes[0], this.getValue ()]);
+            } else {
+                td.setHTML (script (this.getValue ()));
+                MathJax.Hub.Queue (['Typeset', MathJax.Hub, td.id]);
             }
+        } else {
+            td.setHTML (script (this.getValue ()));
         }
     }
 });
