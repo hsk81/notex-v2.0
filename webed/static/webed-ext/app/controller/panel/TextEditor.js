@@ -224,7 +224,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                         } else {
                             Ext.Function.defer (function (panel){
                                 panel.setLoading (false);
-                            }, 2750, this, [panel]);
+                            }, 3250, this, [panel]);
                         }
 
                         this.application.viewport.mjb = mathjax_box;
