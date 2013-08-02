@@ -212,15 +212,20 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                             'br-br', [-25,-65]
                         );
 
-                        Webed.window.MathJaxBox.queue (
-                            "var viewport = assert (Webed.app.viewport);" +
-                            "var mathjax_box = assert (viewport.mjb);" +
-                            "var panel = mathjax_box.down ('panel');" +
-                            "assert (panel).setLoading (false);"
-                        );
-
                         var panel = mathjax_box.down ('panel');
                         assert (panel).setLoading (true);
+
+                        if (window.chrome) {
+                            Webed.window.MathJaxBox.queue (
+                                "var viewport = Webed.app.viewport;" +
+                                "var panel = viewport.mjb.down ('panel');" +
+                                "assert (panel).setLoading (false);"
+                            );
+                        } else {
+                            Ext.Function.defer (function (panel){
+                                panel.setLoading (false);
+                            }, 2750, this, [panel]);
+                        }
 
                         this.application.viewport.mjb = mathjax_box;
                     }
