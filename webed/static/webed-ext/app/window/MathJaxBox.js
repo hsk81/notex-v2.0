@@ -64,7 +64,18 @@ Ext.define ('Webed.window.MathJaxBox', {
 
     sync: function () {
         var td = assert (this.el.down ('td'));
-        td.setHTML (this.getValue ());
+        td.setHTML ('<script type="math/tex; mode=display">{0}</script>'
+            .format (this.getValue ())
+        );
+
+        /**
+         * TODO: Re-render formula *only* if there was actually a change; since
+         *       otherwise moving the cursor (in TextEditor) can be a little
+         *       sluggish!
+         *
+         *       Test for something like `MathJax.getValue != this.getValue`
+         *       and if different then re-render.
+         */
 
         if (typeof MathJax != 'undefined') {
             if (MathJax && MathJax.Hub && MathJax.Hub.Queue) {

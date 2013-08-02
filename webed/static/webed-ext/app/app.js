@@ -64,6 +64,7 @@ Ext.application ({
     },
 
     launch: function () {
+        Webed['app'] = this;
         this.viewport = Ext.create ('Webed.container.Viewport');
     },
 

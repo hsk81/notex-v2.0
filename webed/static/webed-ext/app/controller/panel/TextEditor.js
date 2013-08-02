@@ -182,6 +182,7 @@ Ext.define ('Webed.controller.panel.TextEditor', {
             }
 
             assert (marks.length == 1);
+
             var position = marks[0].find ();
             if (position) {
 
@@ -193,10 +194,9 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                 var matches = range.match (this.rx);
                 if (matches) {
 
-                    var value = '$${0}$$'.format (
+                    var value =
                         (matches[1]) ? matches[1] :
-                        (matches[2]) ? matches[2] : matches[0]
-                    );
+                        (matches[2]) ? matches[2] : matches[0];
 
                     var mathjax_box = this.application.viewport.mjb;
                     if (mathjax_box && !mathjax_box.isDestroyed) {
@@ -212,6 +212,19 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                             'br-br', [-25,-65]
                         );
 
+                        var script = document.createElement('script');
+                        script.type = 'text/x-mathjax-config';
+
+                        script.innerText = "MathJax.Hub.Queue (function () {" +
+                            "var pnl = Webed.app.viewport.mjb.down ('panel');" +
+                            "assert (pnl); pnl.setLoading (false);" +
+                        "});";
+
+                        document.getElementsByTagName ('head')[0].appendChild (
+                            script
+                        );
+
+                        mathjax_box.down ('panel').setLoading ();
                         this.application.viewport.mjb = mathjax_box;
                     }
                 }
