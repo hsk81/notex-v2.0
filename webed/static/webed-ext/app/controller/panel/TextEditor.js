@@ -212,19 +212,16 @@ Ext.define ('Webed.controller.panel.TextEditor', {
                             'br-br', [-25,-65]
                         );
 
-                        var script = document.createElement('script');
-                        script.type = 'text/x-mathjax-config';
-
-                        script.innerText = "MathJax.Hub.Queue (function () {" +
-                            "var pnl = Webed.app.viewport.mjb.down ('panel');" +
-                            "assert (pnl); pnl.setLoading (false);" +
-                        "});";
-
-                        document.getElementsByTagName ('head')[0].appendChild (
-                            script
+                        Webed.window.MathJaxBox.queue (
+                            "var viewport = assert (Webed.app.viewport);" +
+                            "var mathjax_box = assert (viewport.mjb);" +
+                            "var panel = mathjax_box.down ('panel');" +
+                            "assert (panel).setLoading (false);"
                         );
 
-                        mathjax_box.down ('panel').setLoading ();
+                        var panel = mathjax_box.down ('panel');
+                        assert (panel).setLoading (true);
+
                         this.application.viewport.mjb = mathjax_box;
                     }
                 }

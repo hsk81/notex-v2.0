@@ -63,8 +63,10 @@ Ext.application ({
         'Webed': '../static/webed-ext/app'
     },
 
+    appProperty: 'app',
+
     launch: function () {
-        Webed['app'] = this;
+        Webed[this.appProperty] = this; //TODO: Remove on ExtJS upgrade!
         this.viewport = Ext.create ('Webed.container.Viewport');
     },
 

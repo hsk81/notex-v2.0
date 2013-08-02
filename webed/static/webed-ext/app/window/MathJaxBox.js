@@ -31,6 +31,15 @@ Ext.define ('Webed.window.MathJaxBox', {
         value: '$${{}}$$'
     },
 
+    statics: {
+        queue: function (text, type) {
+            var script = document.createElement('script');
+            script.type = type||'text/x-mathjax-config';
+            script.innerText = "MathJax.Hub.Queue (function () {"+text+"});";
+            document.getElementsByTagName ('head')[0].appendChild (script);
+        }
+    },
+
     listeners: {
         beforerender: function (self) {
             var script = document.getElementById ('mjb-script.id');
