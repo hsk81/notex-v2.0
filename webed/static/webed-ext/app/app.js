@@ -37,6 +37,7 @@ Ext.application ({
 
         'grid.LeafList',
         'panel.ImageViewer',
+        'panel.RestTextEditor',
         'panel.TextEditor',
         'statusbar.StatusBar',
         'tab.TabManager',

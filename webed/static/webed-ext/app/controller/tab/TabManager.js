@@ -4,6 +4,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
     requires: [
         'Webed.form.field.CodeArea',
         'Webed.panel.ImageViewer',
+        'Webed.panel.RestTextEditor',
         'Webed.panel.TextEditor'
     ],
 
@@ -198,11 +199,19 @@ Ext.define ('Webed.controller.tab.TabManager', {
                 }
             });
 
-            var editor_tab = Ext.create ('Webed.panel.TextEditor', {
-                record: record, codeArea: code_area
-            });
-
-            tab = tab_manager.add (editor_tab);
+            if (record.get ('mime') == 'text/x-rst') {
+                tab = tab_manager.add (
+                    Ext.create ('Webed.panel.RestTextEditor', {
+                        record: record, codeArea: code_area
+                    })
+                );
+            } else {
+                tab = tab_manager.add (
+                    Ext.create ('Webed.panel.TextEditor', {
+                        record: record, codeArea: code_area
+                    })
+                );
+            }
         }
 
         tab_manager.setActiveTab (tab);

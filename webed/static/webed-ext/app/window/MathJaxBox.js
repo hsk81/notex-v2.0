@@ -78,8 +78,7 @@ Ext.define ('Webed.window.MathJaxBox', {
             );
         }
 
-        var td = this.el.down ('td');
-        assert (td);
+        var td = assert (this.el.down ('td'));
 
         if (typeof MathJax != 'undefined' && MathJax && MathJax.Hub) {
             var jaxes = MathJax.Hub.getAllJax (td.id);
