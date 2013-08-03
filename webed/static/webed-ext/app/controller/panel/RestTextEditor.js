@@ -62,15 +62,16 @@ Ext.define ('Webed.controller.panel.RestTextEditor', {
             if (!position) return;
 
             if (this.rx == undefined) {
-                this.rx = new RegExp ("math:`([^`]*)`|[^`]+");
+                this.rx = new RegExp ('[^`]+');
             }
 
             var range = cm.getRange (position.from, position.to);
             var matches = range.match (this.rx);
             if (!matches) return;
 
-            var value = (matches[1]) ? matches[1] :
-                        (matches[2]) ? matches[2] : matches[0];
+            var value = ((matches[1]) ? matches[1] :
+                (matches[2]) ? matches[2] : matches[0])
+                    .replace ('&=', '=').replace ('&\\', '\\');
 
             var mathjax_box = this.application.viewport.mjb;
             if (mathjax_box && !mathjax_box.isDestroyed) {
