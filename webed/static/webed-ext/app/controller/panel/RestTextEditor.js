@@ -71,7 +71,9 @@ Ext.define ('Webed.controller.panel.RestTextEditor', {
 
             var value = ((matches[1]) ? matches[1] :
                 (matches[2]) ? matches[2] : matches[0])
-                    .replace ('&=', '=').replace ('&\\', '\\');
+                    .replace ('&\\', '\\').replace ('&=', '=')
+                    .replace ('&+', '+').replace ('&*', '*')
+                    .replace ('&-', '-').replace ('&/', '/');
 
             var mathjax_box = this.application.viewport.mjb;
             if (mathjax_box && !mathjax_box.isDestroyed) {
