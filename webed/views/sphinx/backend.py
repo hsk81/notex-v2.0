@@ -430,7 +430,7 @@ class TextConverter (Converter):
     def fill_buffer (self, zip_buffer, title):
 
         for path, dns, fns in os.walk (self.build_path):
-            for filename in fns:
+            for filename in filter (lambda fn: fn.endswith ('txt'), fns):
                 src_path = os.path.join (path, filename)
                 mime = guess_mime_ex (filename, path)
 
@@ -441,6 +441,8 @@ class TextConverter (Converter):
                         src_text = src_file.read ()
                     with open (src_path, 'w') as src_file:
                         src_file.write (src_text.replace ('\n', '\r\n'))
+                else:
+                    continue
 
                 rel_path = os.path.relpath (path, self.build_path)
                 zip_path = os.path.join (title, 'text', rel_path, filename)
