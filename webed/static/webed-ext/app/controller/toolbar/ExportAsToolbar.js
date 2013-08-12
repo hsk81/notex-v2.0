@@ -15,6 +15,9 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             },
             'main-toolbar button[action=export-project-as-latex]': {
                 click: this.exportProjectAsLatex
+            },
+            'main-toolbar button[action=export-project-as-text]': {
+                click: this.exportProjectAsText
             }
         });
     },
@@ -39,6 +42,10 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
     exportProjectAsLatex: function (button) {
         this.exportProject (button, '/rest-to-latex/', 'Exporting LaTex');
+    },
+
+    exportProjectAsText: function (button) {
+        this.exportProject (button, '/rest-to-text/', 'Exporting Text');
     },
 
     exportProject: function (button, url_base, message) {

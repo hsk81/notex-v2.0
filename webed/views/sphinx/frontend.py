@@ -38,6 +38,10 @@ def rest_to_latex (uuid):
 def rest_to_pdf (uuid):
     return rest_to (uuid, ext='pdf', converter_cls=PdfConverter)
 
+@sphinx.route ('/rest-to-text/<uuid>', methods=['GET', 'POST'])
+def rest_to_text (uuid):
+    return rest_to (uuid, ext='txt', converter_cls=TextConverter)
+
 def rest_to (uuid, ext, converter_cls):
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -213,6 +217,19 @@ class PdfConverter (Converter):
         zip_buffer = zipfile.ZipFile (str_buffer, 'r', zipfile.ZIP_STORED)
         object_vals = [zip_buffer.read (zi) for zi in zip_buffer.infolist ()
             if zi.filename.endswith ('pdf')]
+        zip_buffer.close ()
+
+        self._data = object_vals.pop (0)
+
+class TextConverter (Converter):
+
+    def _do_data (self, node, prefix='text'):
+        super (TextConverter, self)._do_data (node, prefix=prefix)
+
+        str_buffer = StringIO.StringIO (self._data)
+        zip_buffer = zipfile.ZipFile (str_buffer, 'r', zipfile.ZIP_STORED)
+        object_vals = [zip_buffer.read (zi) for zi in zip_buffer.infolist ()
+            if zi.filename.endswith ('txt')]
         zip_buffer.close ()
 
         self._data = object_vals.pop (0)
