@@ -26,6 +26,10 @@ sphinx = Blueprint ('sphinx', __name__)
 ###############################################################################
 ###############################################################################
 
+@sphinx.route ('/rest-to-epub/<uuid>', methods=['GET', 'POST'])
+def rest_to_epub (uuid):
+    return rest_to (uuid, ext='zip', converter_cls=EpubConverter)
+
 @sphinx.route ('/rest-to-html/<uuid>', methods=['GET', 'POST'])
 def rest_to_html (uuid):
     return rest_to (uuid, ext='zip', converter_cls=HtmlConverter)
@@ -107,6 +111,8 @@ def filename_for (node, ext, converter_cls):
         filename = '%s [html]' % nodename
     elif issubclass (converter_cls, LatexConverter):
         filename = '%s [latex]' % nodename
+    elif issubclass (converter_cls, EpubConverter):
+        filename = '%s [epub]' % nodename
     else:
         filename = '%s' % nodename
 
@@ -197,6 +203,11 @@ class Converter (object):
                 else payload
 
         self._data = payload
+
+class EpubConverter (Converter):
+
+    def _do_data (self, node, prefix='epub'):
+        super (EpubConverter, self)._do_data (node, prefix=prefix)
 
 class HtmlConverter (Converter):
 

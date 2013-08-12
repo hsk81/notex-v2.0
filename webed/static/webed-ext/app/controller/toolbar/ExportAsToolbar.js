@@ -18,6 +18,9 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
             },
             'main-toolbar button[action=export-project-as-text]': {
                 click: this.exportProjectAsText
+            },
+            'main-toolbar button[action=export-project-as-epub]': {
+                click: this.exportProjectAsEpub
             }
         });
     },
@@ -46,6 +49,10 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
 
     exportProjectAsText: function (button) {
         this.exportProject (button, '/rest-to-text/', 'Exporting Text');
+    },
+
+    exportProjectAsEpub: function (button) {
+        this.exportProject (button, '/rest-to-epub/', 'Exporting EPUB');
     },
 
     exportProject: function (button, url_base, message) {

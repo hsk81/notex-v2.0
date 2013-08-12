@@ -222,7 +222,11 @@ class Worker (Thread):
         ## Invoke specific conversion & package result as ZIP archive
         ## --------------------------------------------------------------------
 
-        if prefix == 'html':
+        if prefix == 'epub':
+            converter = EpubConverter (target_path)
+            converter.translate ()
+
+        elif prefix == 'html':
             converter = HtmlConverter (target_path)
             converter.translate ()
 
@@ -287,6 +291,42 @@ class Converter (object):
     @abstractmethod
     def fill_buffer (self, zip_buffer, title):
         pass
+
+###############################################################################
+###############################################################################
+
+class EpubConverter (Converter):
+
+    @property
+    def build_path (self):
+        return os.path.join (self.target_path, 'build', 'epub')
+
+    def translate (self, source_path=None):
+
+        args = ['make', '-C', self.target_path, 'epub']
+
+        with open (self.stdout_path, 'w') as stdout:
+            with open (self.stderr_path, 'w') as stderr:
+                check_call (args, stdout=stdout, stderr=stderr)
+
+    def fill_buffer (self, zip_buffer, title):
+
+        for path, dns, fns in os.walk (self.build_path):
+            for filename in fns:
+                src_path = os.path.join (path, filename)
+                mime = guess_mime_ex (filename, path)
+
+                with app.test_request_context ():
+                    text = mime and is_text (mime)
+                if text:
+                    with open (src_path, 'r') as src_file:
+                        src_text = src_file.read ()
+                    with open (src_path, 'w') as src_file:
+                        src_file.write (src_text.replace ('\n', '\r\n'))
+
+                rel_path = os.path.relpath (path, self.build_path)
+                zip_path = os.path.join (title, 'epub', rel_path, filename)
+                zip_buffer.write (src_path, zip_path)
 
 ###############################################################################
 ###############################################################################

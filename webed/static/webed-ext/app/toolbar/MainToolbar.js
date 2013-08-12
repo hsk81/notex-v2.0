@@ -102,7 +102,7 @@ Ext.define ('Webed.toolbar.MainToolbar', {
 
         xtype: 'buttongroup',
         title: 'Export as ..',
-        columns: 4,
+        columns: 5,
         items: [{
             text: 'PDF',
             iconCls: 'icon-page_white_acrobat-16',
@@ -121,6 +121,12 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             iconAlign: 'left',
             tooltip : '<b>Export LaTex</b><br/>Convert current project to LaTex',
             action: 'export-project-as-latex'
+        },{
+            text: 'EPUB',
+            iconCls: 'icon-e_book_reader_white-16',
+            iconAlign: 'left',
+            tooltip : '<b>Export EPUB</b><br/>Convert current project to EPUB',
+            action: 'export-project-as-epub'
         },{
             text: 'Text',
             iconCls: 'icon-page_white_text-16',
