@@ -63,7 +63,12 @@ class Node (db.Model, Polymorphic):
         return self._name
     @name.setter
     def name (self, value):
+        old_name_path = self.name_path
         self._name = value
+        new_name_path = self.name_path
+
+        for p in filter (lambda p: hasattr (p, 'on_nnp_update'), self.props):
+            p.on_nnp_update (p, new_name_path, old_name_path, Node.name_path)
 
     ###########################################################################
 

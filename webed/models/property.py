@@ -19,7 +19,9 @@ from ..ext.cache import dbs_cache
 from .polymorphic import Polymorphic
 
 import os
+import acidfs
 import base64
+import transaction
 
 ###############################################################################
 ###############################################################################
@@ -137,6 +139,27 @@ class StringProperty (Property, DataPropertyMixin):
 
 class ExternalProperty (Property, DataPropertyMixin):
 
+    @property
+    def fs (self):
+        if not hasattr (self, '_fs'):
+            self._fs = None
+
+        if self._fs is None:
+            uuids = self.node.get_path (field='uuid')
+            assert len (uuids) > 0
+
+            if len (uuids) > 1:
+                path = os.path.join (app.config['FS_ACID'], uuids[1])
+                self._fs = acidfs.AcidFS (path, bare=True)
+            else:
+                path = os.path.join (app.config['FS_ACID'], uuids[0])
+                self._fs = acidfs.AcidFS (path, bare=True)
+
+        assert self._fs is not None
+        return self._fs
+
+    ###########################################################################
+
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
@@ -146,8 +169,15 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     def get_data (self):
 
-        path_to = os.path.join (app.config['FS_DATA'], self._data)
-        with open (path_to, 'r') as source: return self.decode (source.read ())
+        path_to = self.fix_path (self.node.name_path)
+        if self.fs.exists (path_to):
+            with self.fs.open (path_to, mode='rb') as source:
+                return self.decode (source.read ())
+
+        else:
+            path_to = os.path.join (app.config['FS_DATA'], self._data)
+            with open (path_to, 'r') as source:
+                return self.decode (source.read ())
 
     def set_data (self, value, skip_patch=False):
 
@@ -164,6 +194,8 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
+        ## FS_DATA backend ----------------------------------------------------
+
         path_to = app.config['FS_DATA']
         if not os.path.exists (path_to):
             os.makedirs (path_to)
@@ -176,6 +208,18 @@ class ExternalProperty (Property, DataPropertyMixin):
         version_key = dbs_cache.make_key (value_key)
         version = dbs_cache.increase (version_key)
         assert version > 0
+
+        ## FS_ACID backend ----------------------------------------------------
+
+        path_to, name = os.path.split (self.node.name_path)
+        path_to = self.fix_path (path_to)
+        self.fs.mkdirs (path_to)
+
+        with self.fs.cd (path_to):
+            with self.fs.open (name, mode='wb') as target:
+                target.write (self.encode (value))
+
+        transaction.commit ()
 
     def decode (self, value): return value
     def encode (self, value): return value
@@ -198,7 +242,16 @@ class ExternalProperty (Property, DataPropertyMixin):
     ###########################################################################
 
     @staticmethod
+    def on_nnp_update (target, name_path, old_name_path, initiator):
+
+        if target.fs.exists (old_name_path):
+            target.fs.mv (old_name_path, name_path)
+            transaction.commit ()
+
+    @staticmethod
     def on_delete (mapper, connection, target):
+
+        ## FS_DATA backend ----------------------------------------------------
 
         for uuid in target.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
@@ -209,9 +262,22 @@ class ExternalProperty (Property, DataPropertyMixin):
             path_to = os.path.join (app.config['FS_DATA'], target._data)
             if os.path.exists (path_to): os.unlink (path_to)
 
+        ## FS_ACID backend ----------------------------------------------------
+
+        name_path = target.fix_path (target.node.name_path)
+        if target.fs.exists (name_path):
+            target.fs.rm (name_path)
+            transaction.commit ()
+
     @classmethod
     def register (cls):
         event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
+
+    ###########################################################################
+
+    @staticmethod
+    def fix_path (path):
+        return path.replace (' ', '+') ## INFO: required due to an AcidFS bug!
 
 ###############################################################################
 
@@ -263,15 +329,9 @@ class TextProperty (ExternalProperty):
     def patch (self, value):
 
         if self._data:
-            path_to = os.path.join (app.config['FS_DATA'], self._data)
-            if os.path.exists (path_to):
-
-                with open (path_to, 'r') as source:
-                    original = self.decode (source.read ())
-
-                patches = self.dmp.patch_fromText (value)
-                value, results = self.dmp.patch_apply (patches, original)
-                assert all (results)
+            patches = self.dmp.patch_fromText (value)
+            value, results = self.dmp.patch_apply (patches, self.get_data ())
+            assert all (results)
 
         return value
 

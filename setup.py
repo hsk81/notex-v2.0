@@ -25,6 +25,7 @@ if __name__ == '__main__':
         include_package_data=True,
         zip_safe=False,
         install_requires=[
+            'acidfs>=1.0',
             'compressinja>=0.0.2',
             'Flask>=0.9',
             'Flask-Admin>=1.0.4',
