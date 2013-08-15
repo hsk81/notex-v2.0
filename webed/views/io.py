@@ -214,7 +214,9 @@ def create_prj (path, base, mime):
         for dn in dir_names:
             mime = 'application/folder' if root.root else mime
             node = create_dir (dn, root, mime)
-            db.session.add (node); lookup[os.path.join (cur_path, dn)] = node
+
+            db.session.add (node)
+            lookup[os.path.join (cur_path, dn)] = node
 
         for fn in file_names:
             mime = MIME.guess_mime_ex (fn, cur_path)
