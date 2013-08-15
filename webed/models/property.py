@@ -139,6 +139,15 @@ class StringProperty (Property, DataPropertyMixin):
 
 class ExternalProperty (Property, DataPropertyMixin):
 
+    ###########################################################################
+
+    external_property_id = db.Column (db.Integer,
+        db.Sequence ('external_property_id_seq'),
+        db.ForeignKey ('property.id', ondelete='CASCADE'),
+        primary_key=True)
+
+    ###########################################################################
+
     @property
     def fs (self):
         if not hasattr (self, '_fs'):
@@ -158,12 +167,9 @@ class ExternalProperty (Property, DataPropertyMixin):
         assert self._fs is not None
         return self._fs
 
-    ###########################################################################
-
-    external_property_id = db.Column (db.Integer,
-        db.Sequence ('external_property_id_seq'),
-        db.ForeignKey ('property.id', ondelete='CASCADE'),
-        primary_key=True)
+    @staticmethod
+    def fix_path (path):
+        return path.replace (' ', '+') ## INFO: required due to an AcidFS bug!
 
     ###########################################################################
 
@@ -272,12 +278,6 @@ class ExternalProperty (Property, DataPropertyMixin):
     @classmethod
     def register (cls):
         event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
-
-    ###########################################################################
-
-    @staticmethod
-    def fix_path (path):
-        return path.replace (' ', '+') ## INFO: required due to an AcidFS bug!
 
 ###############################################################################
 
