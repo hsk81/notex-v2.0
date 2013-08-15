@@ -157,12 +157,9 @@ class ExternalProperty (Property, DataPropertyMixin):
             uuids = self.node.get_path (field='uuid')
             assert len (uuids) > 0
 
-            if len (uuids) > 1:
-                path = os.path.join (app.config['FS_ACID'], uuids[1])
-                self._fs = acidfs.AcidFS (path, bare=True)
-            else:
-                path = os.path.join (app.config['FS_ACID'], uuids[0])
-                self._fs = acidfs.AcidFS (path, bare=True)
+            path = os.path.join (app.config['FS_ACID'],
+                uuids[1] if len (uuids) > 1 else uuids[0])
+            self._fs = acidfs.AcidFS (path, bare=True)
 
         assert self._fs is not None
         return self._fs
