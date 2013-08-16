@@ -63,12 +63,14 @@ class Node (db.Model, Polymorphic):
         return self._name
     @name.setter
     def name (self, value):
-        old_name_path = self.name_path
+        source = self.name_path
         self._name = value
-        new_name_path = self.name_path
+        target = self.name_path
 
-        for p in filter (lambda p: hasattr (p, 'on_nnp_update'), self.props):
-            p.on_nnp_update (p, new_name_path, old_name_path, Node.name_path)
+        for prop in self.base.subprops:
+            if hasattr (prop, 'on_path_update'):
+                if prop.node.name_path.startswith (target):
+                    prop.on_path_update (prop, source, target, Node.name_path)
 
     ###########################################################################
 

@@ -86,7 +86,6 @@ class DefaultConfig:
     ##
 
     FS_ROOT = os.path.join (os.path.sep, 'var', 'www', 'webed')
-    FS_DATA = os.path.join (FS_ROOT, 'data')
     FS_ACID = os.path.join (FS_ROOT, 'acid')
 
     ##

@@ -127,9 +127,10 @@ class FsbClear (Command):
     """Clear file system backend (data etc.) [!!]"""
 
     def run (self):
-        path = app.config['FS_DATA']
-        if os.path.exists (path): shutil.rmtree (path)
-        os.mkdir (path)
+        if os.path.exists (app.config['FS_ACID']):
+            for path, dns, fns in os.walk (app.config['FS_ACID']):
+                for fn in fns: os.unlink (os.path.join (path, fn))
+                for dn in dns: shutil.rmtree (os.path.join (path, dn))
 
 manager.add_command ('clear-fsb', FsbClear ())
 

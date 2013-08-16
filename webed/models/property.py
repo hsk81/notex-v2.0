@@ -139,8 +139,6 @@ class StringProperty (Property, DataPropertyMixin):
 
 class ExternalProperty (Property, DataPropertyMixin):
 
-    ###########################################################################
-
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
@@ -166,21 +164,17 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     @staticmethod
     def fix_path (path):
-        return path.replace (' ', '+') ## INFO: required due to an AcidFS bug!
+        return path.replace (' ', '_') ## INFO: required due to an AcidFS bug!
 
     ###########################################################################
 
     def get_data (self):
 
         path_to = self.fix_path (self.node.name_path)
-        if self.fs.exists (path_to):
-            with self.fs.open (path_to, mode='rb') as source:
-                return self.decode (source.read ())
+        assert self.fs.exists (path_to)
 
-        else:
-            path_to = os.path.join (app.config['FS_DATA'], self._data)
-            with open (path_to, 'r') as source:
-                return self.decode (source.read ())
+        with self.fs.open (path_to, mode='rb') as source:
+            return self.decode (source.read ())
 
     def set_data (self, value, skip_patch=False):
 
@@ -197,16 +191,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
-        ## FS_DATA backend ----------------------------------------------------
-
-        path_to = app.config['FS_DATA']
-        if not os.path.exists (path_to):
-            os.makedirs (path_to)
-
-        path_to = os.path.join (path_to, value_key)
-        if not os.path.exists (path_to):
-            with open (path_to, 'w') as target:
-                target.write (self.encode (value))
+        ## --------------------------------------------------------------------
 
         version_key = dbs_cache.make_key (value_key)
         version = dbs_cache.increase (version_key)
@@ -245,31 +230,32 @@ class ExternalProperty (Property, DataPropertyMixin):
     ###########################################################################
 
     @staticmethod
-    def on_nnp_update (target, name_path, old_name_path, initiator):
+    def on_path_update (target, src_path, dst_path, initiator):
 
-        if target.fs.exists (old_name_path):
-            target.fs.mv (old_name_path, name_path)
+        src_path = target.fix_path (src_path)
+        dst_path = target.fix_path (dst_path)
+
+        if target.fs.exists (src_path):
+            target.fs.mv (src_path, dst_path)
             transaction.commit ()
 
     @staticmethod
     def on_delete (mapper, connection, target):
 
-        ## FS_DATA backend ----------------------------------------------------
+        ## --------------------------------------------------------------------
 
         for uuid in target.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
         version_key = dbs_cache.make_key (target._data)
         version = dbs_cache.decrease (key=version_key)
-        if version <= 0:
-            path_to = os.path.join (app.config['FS_DATA'], target._data)
-            if os.path.exists (path_to): os.unlink (path_to)
+        assert version >= 0
 
         ## FS_ACID backend ----------------------------------------------------
 
-        name_path = target.fix_path (target.node.name_path)
-        if target.fs.exists (name_path):
-            target.fs.rm (name_path)
+        path_to = target.fix_path (target.node.name_path)
+        if target.fs.exists (path_to):
+            target.fs.rm (path_to)
             transaction.commit ()
 
     @classmethod
