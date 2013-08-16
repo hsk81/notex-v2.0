@@ -182,20 +182,11 @@ class ExternalProperty (Property, DataPropertyMixin):
         value_key = unicode (dbs_cache.make_key (value))
         if self._data == value_key: return
 
-        if self._data:
-            ExternalProperty.on_delete (None, None, target=self)
-
         for uuid in self.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
         self._data = value_key
         self._size = len (value) if value else 0
-
-        ## --------------------------------------------------------------------
-
-        version_key = dbs_cache.make_key (value_key)
-        version = dbs_cache.increase (version_key)
-        assert version > 0
 
         ## FS_ACID backend ----------------------------------------------------
 
@@ -242,14 +233,8 @@ class ExternalProperty (Property, DataPropertyMixin):
     @staticmethod
     def on_delete (mapper, connection, target):
 
-        ## --------------------------------------------------------------------
-
         for uuid in target.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
-
-        version_key = dbs_cache.make_key (target._data)
-        version = dbs_cache.decrease (key=version_key)
-        assert version >= 0
 
         ## FS_ACID backend ----------------------------------------------------
 
