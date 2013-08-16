@@ -81,12 +81,16 @@ class DefaultConfig:
     ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 
     ##
-    ## FS_ROOT is the root path for the file system backend, whereas FS_DATA
-    ## point to the data part of it.
+    ## FS_ROOT is the root path for the file system backend, whereas FS_ACID
+    ## point to the data part of it (based on AcidFS/GIT). The FS_ACID_USER and
+    ## FS_ACID_MAIL are used to set corresponding transaction metadata.
     ##
 
     FS_ROOT = os.path.join (os.path.sep, 'var', 'www', 'webed')
     FS_ACID = os.path.join (FS_ROOT, 'acid')
+
+    FS_ACID_USER = None
+    FS_ACID_MAIL = None
 
     ##
     ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who

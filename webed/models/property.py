@@ -164,7 +164,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     @staticmethod
     def fix_path (path):
-        return path.replace (' ', '_') ## TODO: An AcidFS bug!?
+        return path.replace (' ', '_') ## TODO: Due to an AcidFS bug!?
 
     ###########################################################################
 
@@ -196,6 +196,10 @@ class ExternalProperty (Property, DataPropertyMixin):
             with self.fs.open (name, mode='wb') as target:
                 target.write (self.encode (value))
 
+        current = transaction.get()
+        current.note ('Update %s' % self.node.name)
+        current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
+        current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
         transaction.commit ()
 
     def decode (self, value): return value
@@ -226,6 +230,11 @@ class ExternalProperty (Property, DataPropertyMixin):
 
         if target.fs.exists (src_path):
             target.fs.mv (src_path, dst_path)
+
+            current = transaction.get()
+            current.note ('Rename %s' % target.node.name)
+            current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
+            current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
             transaction.commit ()
 
     @staticmethod
@@ -239,6 +248,11 @@ class ExternalProperty (Property, DataPropertyMixin):
 
         if target.fs.exists (path_to):
             target.fs.rm (path_to)
+
+            current = transaction.get()
+            current.note ('Delete %s' % target.node.name)
+            current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
+            current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
             transaction.commit ()
 
     @classmethod
