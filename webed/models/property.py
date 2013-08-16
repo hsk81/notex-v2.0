@@ -164,7 +164,7 @@ class ExternalProperty (Property, DataPropertyMixin):
 
     @staticmethod
     def fix_path (path):
-        return path.replace (' ', '_') ## INFO: required due to an AcidFS bug!
+        return path.replace (' ', '_') ## TODO: An AcidFS bug!?
 
     ###########################################################################
 
