@@ -188,8 +188,6 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
-        ## FS_ACID backend ----------------------------------------------------
-
         path_to, name = os.path.split (self.node.name_path)
         path_to = self.fix_path (path_to)
         self.fs.mkdirs (path_to)
