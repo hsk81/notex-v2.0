@@ -234,9 +234,9 @@ class ExternalProperty (Property, DataPropertyMixin):
         for uuid in target.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
-        ## FS_ACID backend ----------------------------------------------------
+        path_to = target.node.name_path
+        path_to = target.fix_path (path_to)
 
-        path_to = target.fix_path (target.node.name_path)
         if target.fs.exists (path_to):
             target.fs.rm (path_to)
             transaction.commit ()
