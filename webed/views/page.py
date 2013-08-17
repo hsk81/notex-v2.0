@@ -84,7 +84,7 @@ def main (page='main', template='index.html', **kwargs):
         debug=False if 'no-debug' in request.args else app.debug,
         description=get_description (page),
         keywords=get_keywords (page),
-        theme=request.args.get ('theme', 'blue'),
+        theme=request.args.get ('theme', 'gray'),
         title=get_title (page),
         version='.'.join (setup.version.split ('.')[:2]),
         page=page, **kwargs)
