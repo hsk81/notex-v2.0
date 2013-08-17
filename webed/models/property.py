@@ -231,8 +231,14 @@ class ExternalProperty (Property, DataPropertyMixin):
         if target.fs.exists (src_path):
             target.fs.mv (src_path, dst_path)
 
+            src_part, src_parts = None, src_path.split (os.path.sep)
+            dst_part, dst_parts = None, dst_path.split (os.path.sep)
+
+            for src_part, dst_part in zip (src_parts, dst_parts):
+                if src_part != dst_part: break
+
             current = transaction.get()
-            current.note ('Rename %s' % target.node.name)
+            current.note ('Rename %s to %s' % (src_part, dst_part))
             current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
             current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
             transaction.commit ()
