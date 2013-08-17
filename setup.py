@@ -50,7 +50,8 @@ if __name__ == '__main__':
         ],
 
         dependency_links=[
-            'http://github.com/hsk81/pylibmc/tarball/master#egg=pylibmc-1.2.3'
+            'http://github.com/hsk81/pylibmc/tarball/master#egg=pylibmc-1.2.3',
+            'http://github.com/hsk81/acidfs/tarball/master#egg=acidfs-1.0'
         ]
     )
 

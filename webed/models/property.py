@@ -162,15 +162,11 @@ class ExternalProperty (Property, DataPropertyMixin):
         assert self._fs is not None
         return self._fs
 
-    @staticmethod
-    def fix_path (path):
-        return path.replace (' ', '_') ## TODO: Due to an AcidFS bug!?
-
     ###########################################################################
 
     def get_data (self):
 
-        path_to = self.fix_path (self.node.name_path)
+        path_to = self.node.name_path
         assert self.fs.exists (path_to)
 
         with self.fs.open (path_to, mode='rb') as source:
@@ -189,7 +185,6 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._size = len (value) if value else 0
 
         path_to, name = os.path.split (self.node.name_path)
-        path_to = self.fix_path (path_to)
         self.fs.mkdirs (path_to)
 
         with self.fs.cd (path_to):
@@ -225,9 +220,6 @@ class ExternalProperty (Property, DataPropertyMixin):
     @staticmethod
     def on_path_update (target, src_path, dst_path, initiator):
 
-        src_path = target.fix_path (src_path)
-        dst_path = target.fix_path (dst_path)
-
         if target.fs.exists (src_path):
             target.fs.mv (src_path, dst_path)
 
@@ -250,8 +242,6 @@ class ExternalProperty (Property, DataPropertyMixin):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
         path_to = target.node.name_path
-        path_to = target.fix_path (path_to)
-
         if target.fs.exists (path_to):
             target.fs.rm (path_to)
 
