@@ -21,8 +21,7 @@
 {% if debug -%}
 <script type="text/javascript">var _gaq = undefined;</script>
 {%- else -%}
-<script type="text/javascript">{% include 'js/analytics-head.js' %}</script>
-<script type="text/javascript">{% include 'js/analytics-body.js' %}</script>
+<script type="text/javascript">{% include 'js/analytics.js' %}</script>
 {%- endif %}
 
 {% if debug -%}

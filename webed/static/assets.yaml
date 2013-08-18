@@ -47,11 +47,3 @@ all-classes:
               - webed-ext/app/mime.js
           filters: yui_js
         - all-classes.incl.js
-
-ga-ssl:
-    output: ga/ga-ssl.%(version)s.js
-    contents: [ga/ga-ssl.in.js]
-
-ga-www:
-    output: ga/ga-www.%(version)s.js
-    contents: [ga/ga-www.in.js]
