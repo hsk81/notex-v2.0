@@ -220,7 +220,7 @@ class ExternalProperty (Property, DataPropertyMixin):
     @staticmethod
     def on_path_update (target, src_path, dst_path, initiator):
 
-        if target.fs.exists (src_path):
+        if src_path != dst_path and target.fs.exists (src_path):
             target.fs.mv (src_path, dst_path)
 
             src_part, src_parts = None, src_path.split (os.path.sep)
