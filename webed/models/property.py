@@ -145,14 +145,14 @@ class ExternalProperty (Property, DataPropertyMixin, VcsMixin):
     ## VcsMixin
 
     @property
-    def path (self):
+    def vcs_path (self):
         uuids = self.node.get_path (field='uuid')
         assert len (uuids) > 0
 
         return uuids[1] if len (uuids) > 1 else uuids[0]
 
     @property
-    def description (self):
+    def vcs_description (self):
         names = self.node.name_path.split (os.path.sep)
         assert len (names) > 0
 

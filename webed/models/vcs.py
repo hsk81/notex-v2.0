@@ -16,31 +16,31 @@ from ..app import app
 
 class VcsMixin (object):
 
-    @abc.abstractproperty
-    def path (self):
-        pass
-
-    @abc.abstractproperty
-    def description (self):
-        pass
-
     @property
     def vcs (self):
         if not hasattr (self, '_vcs'):
             self._vcs = None
 
         if self._vcs is None:
-            path = os.path.join (app.config['FS_ACID'], self.path)
+            path = os.path.join (app.config['FS_ACID'], self.vcs_path)
             exists = os.path.exists (path)
             self._vcs = acidfs.AcidFS (path, bare=True)
 
             if not exists:
                 with open (os.path.join (path, 'description'), 'w') as target:
-                    target.write (self.description)
+                    target.write (self.vcs_description)
                 with open (os.path.join (path, 'config'), 'a') as target:
                     target.write (app.config['FS_ACID_REPO_CFG'])
 
         return self._vcs
+
+    @abc.abstractproperty
+    def vcs_path (self):
+        pass
+
+    @abc.abstractproperty
+    def vcs_description (self):
+        pass
 
     def transact (self, note):
         current = transaction.get()
