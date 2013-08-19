@@ -42,6 +42,19 @@ class VcsMixin (object):
     def vcs_description (self):
         pass
 
+    def post_update (self):
+        target = os.path.join (self.vcs.db, 'hooks', 'post-update')
+        if not os.path.exists (target):
+            source = os.path.join (self.vcs.db, 'hooks', 'post-update.sample')
+            os.rename (source, target)
+
+        subprocess.check_call ([target], cwd=self.vcs.db)
+
+###############################################################################
+###############################################################################
+
+class VcsTransactionMixin (VcsMixin):
+
     def transact (self, note):
         current = transaction.get()
         current.note (note)
@@ -50,14 +63,6 @@ class VcsMixin (object):
 
         transaction.commit ()
         self.post_update ()
-
-    def post_update (self):
-        target = os.path.join (self.vcs.db, 'hooks', 'post-update')
-        if not os.path.exists (target):
-            source = os.path.join (self.vcs.db, 'hooks', 'post-update.sample')
-            os.rename (source, target)
-
-        subprocess.check_call ([target], cwd=self.vcs.db)
 
 ###############################################################################
 ###############################################################################

@@ -13,6 +13,7 @@ from .property import TextProperty
 from .property import Property
 from .user import User
 from .vcs import VcsMixin
+from .vcs import VcsTransactionMixin
 
 ###############################################################################
 ###############################################################################
