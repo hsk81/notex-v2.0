@@ -21,6 +21,7 @@ from .polymorphic import Polymorphic
 import os
 import acidfs
 import base64
+import subprocess
 import transaction
 
 ###############################################################################
@@ -173,8 +174,26 @@ class ExternalProperty (Property, DataPropertyMixin):
         assert self._fs is not None
         return self._fs
 
-    @staticmethod
-    def fix (path):
+    def post_update (self):
+
+        target = os.path.join (self.fs.db, 'hooks', 'post-update')
+        if not os.path.exists (target):
+            source = os.path.join (self.fs.db, 'hooks', 'post-update.sample')
+            os.rename (source, target)
+
+        subprocess.check_call ([target], cwd=self.fs.db)
+
+    def transact (self, note):
+
+        current = transaction.get()
+        current.note (note)
+        current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
+        current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
+
+        transaction.commit ()
+        self.post_update ()
+
+    def fix (self, path):
         return path.replace ('root/', '', 1)
 
     ###########################################################################
@@ -206,11 +225,7 @@ class ExternalProperty (Property, DataPropertyMixin):
             with self.fs.open (name, mode='wb') as target:
                 target.write (self.encode (value))
 
-        current = transaction.get()
-        current.note ('Update %s' % self.node.name)
-        current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
-        current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
-        transaction.commit ()
+        self.transact (note='Update %s' % self.node.name)
 
     def decode (self, value): return value
     def encode (self, value): return value
@@ -247,11 +262,7 @@ class ExternalProperty (Property, DataPropertyMixin):
             for src_part, dst_part in zip (src_parts, dst_parts):
                 if src_part != dst_part: break
 
-            current = transaction.get()
-            current.note ('Rename %s to %s' % (src_part, dst_part))
-            current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
-            current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
-            transaction.commit ()
+            target.transact (note='Rename %s to %s' % (src_part, dst_part))
 
     @staticmethod
     def on_delete (mapper, connection, target):
@@ -262,12 +273,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         path_to = target.fix (target.node.name_path)
         if target.fs.exists (path_to):
             target.fs.rm (path_to)
-
-            current = transaction.get()
-            current.note ('Delete %s' % target.node.name)
-            current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
-            current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
-            transaction.commit ()
+            target.transact (note='Delete %s' % target.node.name)
 
     @classmethod
     def register (cls):
