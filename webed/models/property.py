@@ -12,17 +12,13 @@ from sqlalchemy import event
 from uuid import uuid4 as uuid_random
 from node import Node
 
-from ..app import app
 from ..ext.db import db
 from ..ext.cache import dbs_cache
-
 from .polymorphic import Polymorphic
+from .vcs import VcsMixin
 
 import os
-import acidfs
 import base64
-import subprocess
-import transaction
 
 ###############################################################################
 ###############################################################################
@@ -138,7 +134,7 @@ class StringProperty (Property, DataPropertyMixin):
 ###############################################################################
 ###############################################################################
 
-class ExternalProperty (Property, DataPropertyMixin):
+class ExternalProperty (Property, DataPropertyMixin, VcsMixin):
 
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
@@ -146,64 +142,34 @@ class ExternalProperty (Property, DataPropertyMixin):
         primary_key=True)
 
     ###########################################################################
+    ## VcsMixin
 
     @property
-    def fs (self):
-        if not hasattr (self, '_fs'):
-            self._fs = None
+    def path (self):
+        uuids = self.node.get_path (field='uuid')
+        assert len (uuids) > 0
 
-        if self._fs is None:
-            uuids = self.node.get_path (field='uuid')
-            assert len (uuids) > 0
+        return uuids[1] if len (uuids) > 1 else uuids[0]
 
-            path = os.path.join (app.config['FS_ACID'],
-                uuids[1] if len (uuids) > 1 else uuids[0])
+    @property
+    def description (self):
+        names = self.node.name_path.split (os.path.sep)
+        assert len (names) > 0
 
-            exists = os.path.exists (path)
-            self._fs = acidfs.AcidFS (path, bare=True)
-
-            if not exists:
-                names = self.node.name_path.split (os.path.sep)
-                assert len (names) > 0
-
-                with open (os.path.join (path, 'description'), 'w') as target:
-                    target.write (names[1] if len (names) > 1 else names[0])
-                with open (os.path.join (path, 'config'), 'a') as target:
-                    target.write (app.config['FS_ACID_REPO_CFG'])
-
-        assert self._fs is not None
-        return self._fs
-
-    def post_update (self):
-
-        target = os.path.join (self.fs.db, 'hooks', 'post-update')
-        if not os.path.exists (target):
-            source = os.path.join (self.fs.db, 'hooks', 'post-update.sample')
-            os.rename (source, target)
-
-        subprocess.check_call ([target], cwd=self.fs.db)
-
-    def transact (self, note):
-
-        current = transaction.get()
-        current.note (note)
-        current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
-        current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
-
-        transaction.commit ()
-        self.post_update ()
+        return names[1] if len (names) > 1 else names[0]
 
     def fix (self, path):
         return path.replace ('root/', '', 1)
 
     ###########################################################################
+    ## DataPropertyMixin
 
     def get_data (self):
 
         path_to = self.fix (self.node.name_path)
-        assert self.fs.exists (path_to)
+        assert self.vcs.exists (path_to)
 
-        with self.fs.open (path_to, mode='rb') as source:
+        with self.vcs.open (path_to, mode='rb') as source:
             return self.decode (source.read ())
 
     def set_data (self, value, skip_patch=False):
@@ -219,10 +185,10 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._size = len (value) if value else 0
 
         path_to, name = os.path.split (self.fix (self.node.name_path))
-        self.fs.mkdirs (path_to)
+        self.vcs.mkdirs (path_to)
 
-        with self.fs.cd (path_to):
-            with self.fs.open (name, mode='wb') as target:
+        with self.vcs.cd (path_to):
+            with self.vcs.open (name, mode='wb') as target:
                 target.write (self.encode (value))
 
         self.transact (note='Update %s' % self.node.name)
@@ -253,8 +219,8 @@ class ExternalProperty (Property, DataPropertyMixin):
         src_path = target.fix (src_path)
         dst_path = target.fix (dst_path)
 
-        if src_path != dst_path and target.fs.exists (src_path):
-            target.fs.mv (src_path, dst_path)
+        if src_path != dst_path and target.vcs.exists (src_path):
+            target.vcs.mv (src_path, dst_path)
 
             src_part, src_parts = None, src_path.split (os.path.sep)
             dst_part, dst_parts = None, dst_path.split (os.path.sep)
@@ -271,8 +237,8 @@ class ExternalProperty (Property, DataPropertyMixin):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
         path_to = target.fix (target.node.name_path)
-        if target.fs.exists (path_to):
-            target.fs.rm (path_to)
+        if target.vcs.exists (path_to):
+            target.vcs.rm (path_to)
             target.transact (note='Delete %s' % target.node.name)
 
     @classmethod
