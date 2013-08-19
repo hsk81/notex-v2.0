@@ -157,16 +157,31 @@ class ExternalProperty (Property, DataPropertyMixin):
 
             path = os.path.join (app.config['FS_ACID'],
                 uuids[1] if len (uuids) > 1 else uuids[0])
+
+            exists = os.path.exists (path)
             self._fs = acidfs.AcidFS (path, bare=True)
+
+            if not exists:
+                names = self.node.name_path.split (os.path.sep)
+                assert len (names) > 0
+
+                with open (os.path.join (path, 'description'), 'w') as target:
+                    target.write (names[1] if len (names) > 1 else names[0])
+                with open (os.path.join (path, 'config'), 'a') as target:
+                    target.write (app.config['FS_ACID_REPO_CFG'])
 
         assert self._fs is not None
         return self._fs
+
+    @staticmethod
+    def fix (path):
+        return path.replace ('root/', '', 1)
 
     ###########################################################################
 
     def get_data (self):
 
-        path_to = self.node.name_path
+        path_to = self.fix (self.node.name_path)
         assert self.fs.exists (path_to)
 
         with self.fs.open (path_to, mode='rb') as source:
@@ -184,7 +199,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         self._data = value_key
         self._size = len (value) if value else 0
 
-        path_to, name = os.path.split (self.node.name_path)
+        path_to, name = os.path.split (self.fix (self.node.name_path))
         self.fs.mkdirs (path_to)
 
         with self.fs.cd (path_to):
@@ -220,6 +235,9 @@ class ExternalProperty (Property, DataPropertyMixin):
     @staticmethod
     def on_path_update (target, src_path, dst_path, initiator):
 
+        src_path = target.fix (src_path)
+        dst_path = target.fix (dst_path)
+
         if src_path != dst_path and target.fs.exists (src_path):
             target.fs.mv (src_path, dst_path)
 
@@ -241,7 +259,7 @@ class ExternalProperty (Property, DataPropertyMixin):
         for uuid in target.node.get_path ('uuid'):
             dbs_cache.increase_version (key=[uuid, 'size', 'data'])
 
-        path_to = target.node.name_path
+        path_to = target.fix (target.node.name_path)
         if target.fs.exists (path_to):
             target.fs.rm (path_to)
 
