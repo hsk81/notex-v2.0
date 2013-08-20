@@ -27,10 +27,9 @@ class Vcs (object):
             self._vcs = acidfs.AcidFS (path, bare=True)
 
             if not exists:
-                with open (os.path.join (path, 'description'), 'w') as target:
-                    target.write (self.vcs_description)
                 with open (os.path.join (path, 'config'), 'a') as target:
                     target.write (app.config['VCS_CONF'])
+                self.vcs_description_update ()
 
         return self._vcs
 
@@ -41,6 +40,11 @@ class Vcs (object):
     @abc.abstractproperty
     def vcs_description (self):
         pass
+
+    def vcs_description_update (self):
+        path = os.path.join (app.config['VCS_ROOT'], self.vcs_path)
+        with open (os.path.join (path, 'description'), 'w') as target:
+            target.write (self.vcs_description)
 
     def post_update (self):
         target = os.path.join (self.vcs.db, 'hooks', 'post-update')

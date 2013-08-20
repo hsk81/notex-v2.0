@@ -228,6 +228,7 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
             for src_part, dst_part in zip (src_parts, dst_parts):
                 if src_part != dst_part: break
 
+            if len (src_parts) == 1: target.vcs_description_update ()
             target.transact (note='Rename %s to %s' % (src_part, dst_part))
 
     @staticmethod
