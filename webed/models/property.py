@@ -15,7 +15,7 @@ from node import Node
 from ..ext.db import db
 from ..ext.cache import dbs_cache
 from .polymorphic import Polymorphic
-from .vcs import VcsTransactionMixin
+from .vcs import VcsTransaction
 
 import os
 import base64
@@ -134,7 +134,7 @@ class StringProperty (Property, DataPropertyMixin):
 ###############################################################################
 ###############################################################################
 
-class ExternalProperty (Property, DataPropertyMixin, VcsTransactionMixin):
+class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
 
     external_property_id = db.Column (db.Integer,
         db.Sequence ('external_property_id_seq'),
@@ -142,7 +142,7 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransactionMixin):
         primary_key=True)
 
     ###########################################################################
-    ## VcsTransactionMixin
+    ## VcsTransaction: vcs_path, vcs_description
 
     @property
     def vcs_path (self):
@@ -162,7 +162,7 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransactionMixin):
         return path.replace ('root/', '', 1)
 
     ###########################################################################
-    ## DataPropertyMixin
+    ## DataPropertyMixin: get_data, set_data
 
     def get_data (self):
 

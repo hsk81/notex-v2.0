@@ -14,7 +14,7 @@ from ..app import app
 ###############################################################################
 ###############################################################################
 
-class VcsMixin (object):
+class Vcs (object):
 
     @property
     def vcs (self):
@@ -53,7 +53,7 @@ class VcsMixin (object):
 ###############################################################################
 ###############################################################################
 
-class VcsTransactionMixin (VcsMixin):
+class VcsTransaction (Vcs):
 
     def transact (self, note):
         current = transaction.get()
