@@ -22,7 +22,7 @@ class VcsMixin (object):
             self._vcs = None
 
         if self._vcs is None:
-            path = os.path.join (app.config['FS_ACID'], self.vcs_path)
+            path = os.path.join (app.config['VCS_ROOT'], self.vcs_path)
             exists = os.path.exists (path)
             self._vcs = acidfs.AcidFS (path, bare=True)
 
@@ -30,7 +30,7 @@ class VcsMixin (object):
                 with open (os.path.join (path, 'description'), 'w') as target:
                     target.write (self.vcs_description)
                 with open (os.path.join (path, 'config'), 'a') as target:
-                    target.write (app.config['FS_ACID_REPO_CFG'])
+                    target.write (app.config['VCS_CONF'])
 
         return self._vcs
 
@@ -58,9 +58,6 @@ class VcsTransactionMixin (VcsMixin):
     def transact (self, note):
         current = transaction.get()
         current.note (note)
-        current.setExtendedInfo ('user', app.config['FS_ACID_USER'])
-        current.setExtendedInfo ('email', app.config['FS_ACID_MAIL'])
-
         transaction.commit ()
         self.post_update ()
 

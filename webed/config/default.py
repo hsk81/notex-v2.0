@@ -81,18 +81,17 @@ class DefaultConfig:
     ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 
     ##
-    ## FS_ROOT is the root path for the file system backend, whereas FS_ACID
-    ## point to the data part of it (based on AcidFS/GIT). The FS_ACID_USER and
-    ## FS_ACID_MAIL are used to set corresponding transaction metadata. And the
-    ## FS_ACID_REPO_CFG is used to set custom repository configuration.
+    ## VCS_BASE is the path for the storage backend, whereas VCS_ROOT contains
+    ## the actual repositories (based on AcidFS/GIT). The VCS_USER and VCS_MAIL
+    ## are used to set corresponding transaction metadata. And the VCS_CONF is
+    ## for custom repository configuration.
     ##
 
-    FS_ROOT = os.path.join (os.path.sep, 'var', 'www', 'webed')
-    FS_ACID = os.path.join (FS_ROOT, 'acid')
-
-    FS_ACID_USER = ''
-    FS_ACID_MAIL = ''
-    FS_ACID_REPO_CFG = ''
+    VCS_BASE = os.path.join (os.path.sep, 'var', 'www', 'webed')
+    VCS_ROOT = os.path.join (VCS_BASE, 'acid')
+    VCS_USER = '' ## author/committer
+    VCS_MAIL = '' ## email address
+    VCS_CONF = '' ## repo configuration
 
     ##
     ## DEFAULT_MAIL_RECEIVERS should filled with those receivers' emails, who

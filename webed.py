@@ -127,8 +127,8 @@ class FsbClear (Command):
     """Clear file system backend (data etc.) [!!]"""
 
     def run (self):
-        if os.path.exists (app.config['FS_ACID']):
-            for path, dns, fns in os.walk (app.config['FS_ACID']):
+        if os.path.exists (app.config['VCS_ROOT']):
+            for path, dns, fns in os.walk (app.config['VCS_ROOT']):
                 for fn in fns: os.unlink (os.path.join (path, fn))
                 for dn in dns: shutil.rmtree (os.path.join (path, dn))
 
