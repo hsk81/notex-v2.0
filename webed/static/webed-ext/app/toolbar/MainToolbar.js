@@ -47,7 +47,6 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             menu : {
                 xtype : 'menu',
                 plain : true,
-
                 items : [{
                     iconCls : 'icon-report-16',
                     text : 'Project',
@@ -133,6 +132,19 @@ Ext.define ('Webed.toolbar.MainToolbar', {
             iconAlign: 'left',
             tooltip : '<b>Export Text</b><br/>Convert current project to Text',
             action: 'export-project-as-text'
+        }]
+
+    },{
+
+        xtype: 'buttongroup',
+        title: 'Versioning',
+        columns: 1,
+        items: [{
+            text: 'Git History',
+            iconCls: 'icon-git_orange-16',
+            iconAlign: 'left',
+            tooltip : '<b>Git History</b><div class="w-shortcut">[CTRL+SHIFT+H]</div><br/>Show Git history for current project',
+            action: 'show-git-history'
         }]
 
     },'->',{

@@ -37,6 +37,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             'main-toolbar button[action=export-project]': {
                 click: this.exportProject
             },
+            'main-toolbar button[action=show-git-history]': {
+                click: this.showGitHistory
+            },
             'main-toolbar': {
                 afterrender: this.afterrender
             }
@@ -273,6 +276,32 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
                 button.enable ();
             }
         });
+    },
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    showGitHistory: function () {
+        var node = assert (this.get_selection ());
+        while (node.parentNode != null && node.parentNode.parentNode != null) {
+            node = node.parentNode;
+        }
+
+        if (!node.isRoot ()) {
+            var uuid = assert (node.get ('uuid'));
+
+            var protocol = location.protocol;
+            var host = ((location.hostname == 'localhost'  ||
+                         location.hostname == '127.0.0.1') &&
+                         location.port != 80)
+                ? '{0}:{1}'.format (location.hostname, 8008)
+                : location.host;
+            var path = 'git/?p={0}'.format (uuid);
+            var uri = '{0}//{1}/{2}'.format (protocol, host, path);
+
+            var tab = window.open (uri, '_blank');
+            if (tab) tab.focus();
+        }
     }
 });
 
@@ -359,6 +388,14 @@ Ext.define ('Webed.controller.toolbar.MainToolbar.KeyMap', {
             var query = 'main-toolbar button[action=export-project]';
             var button = assert (Ext.ComponentQuery.query (query).pop ());
             assert (this.getController ()).exportProject (button);
+        }
+    },{
+        key: 'h',
+        ctrl: true,
+        shift: true,
+        defaultEventAction: 'stopEvent',
+        handler: function () {
+            assert (this.getController ()).showGitHistory ();
         }
     }]
 });
