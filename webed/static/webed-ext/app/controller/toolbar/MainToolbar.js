@@ -289,6 +289,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         if (!node.isRoot ()) {
             var uuid = assert (node.get ('uuid'));
+            var mime = assert (node.get ('mime'));
 
             var protocol = location.protocol;
             var host = ((location.hostname == 'localhost'  ||
@@ -301,6 +302,12 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
             var tab = window.open (uri, '_blank');
             if (tab) tab.focus();
+
+            TRACKER.event ({
+                category: 'MainToolbar', action: 'show-git-history',
+                label: mime, value: 1
+            });
+
         }
     }
 });
