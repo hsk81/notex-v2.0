@@ -442,10 +442,12 @@ def property_update (json=True):
     assert mime
     name = request.json.get ('name', None)
     assert name
-    data = request.json.get ('data', None)
-    assert data or not data
     size = request.json.get ('size', None)
     assert size or not size
+    data = request.json.get ('data', None)
+    assert data or not data
+    meta = request.json.get ('meta', {})
+    assert meta
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
@@ -462,8 +464,9 @@ def property_update (json=True):
     if type and prop.type != type: pass ## ignore!
     if mime and prop.mime != mime: prop.mime = mime
     if name and prop.name != name: prop.name = name
-    if data and prop.data != data: prop.data = data
     if size and prop.size != size: pass ## ignore!
+    if data and prop.data != data:
+        prop.set_data (value=data, note=meta.get ('note'))
 
     result = dict (success=True, result=prop2ext (prop, omit_data=True))
     return jsonify (result) if json else result

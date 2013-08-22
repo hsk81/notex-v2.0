@@ -1,6 +1,8 @@
 Ext.define ('Webed.model.Property', {
     extend: 'Ext.data.Model',
-    fields: ['node_uuid', 'uuid', 'type', 'mime', 'name', 'data', 'size'],
+    fields: [
+        'node_uuid', 'uuid', 'type', 'mime', 'name', 'size', 'data', 'meta'
+    ],
 
     proxy: {
         type: 'rest',

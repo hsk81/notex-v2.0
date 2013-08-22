@@ -328,6 +328,7 @@ Ext.define ('Webed.controller.tab.TabManager', {
 
                 props[0].set ('data', difference);
                 props[0].set ('size', utf8Length (variation.length));
+                props[0].set ('meta', {"note": "Lorem Ipsum: .."});
 
                 props[0].save ({
                     scope: this, callback: function (prop, op) {

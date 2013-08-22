@@ -172,7 +172,7 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
         with self.vcs.open (path_to, mode='rb') as source:
             return self.decode (source.read ())
 
-    def set_data (self, value, skip_patch=False):
+    def set_data (self, value, skip_patch=False, note=None):
 
         value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))
@@ -191,7 +191,10 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
             with self.vcs.open (name, mode='wb') as target:
                 target.write (self.encode (value))
 
-        self.transact (note='Update %s' % self.node.name)
+        if not note:
+            self.transact (note='Update %s' % self.node.name)
+        else:
+            self.transact (note='Update %s\n\n%s' % (self.node.name, note))
 
     def decode (self, value): return value
     def encode (self, value): return value
