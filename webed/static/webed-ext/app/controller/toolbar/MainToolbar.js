@@ -292,7 +292,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             var mime = assert (node.get ('mime'));
 
             var protocol = location.protocol;
-            var host = ((location.hostname == 'localhost'  ||
+            var host = ((location.hostname == 'localhost' ||
                          location.hostname == '127.0.0.1') &&
                          location.port != 80)
                 ? '{0}:{1}'.format (location.hostname, 8008)
