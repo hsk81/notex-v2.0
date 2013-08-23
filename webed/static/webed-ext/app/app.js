@@ -72,16 +72,16 @@ Ext.application ({
     },
 
     global: {
-        get: function (key, clear) {
+        get: function (key, opts) {
             var value = this._cache[key];
-            if (clear) this._cache[key] = undefined;
+            if (opts && opts.clear) this._cache[key] = undefined;
             return value;
         },
         set: function (key, value) {
             this._cache[key] = value;
         },
         _cache: {
-            comment: 'Lorem Ipsum: ..!'
+            note: 'Lorem Ipsum: ..!'
         }
     },
 
