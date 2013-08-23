@@ -25,7 +25,7 @@ Ext.define ('Webed.window.AnnotateBox', {
             width: '100%'
         },{
             xtype: 'textarea',
-            emptyText: 'Enter an annotation (commit message) ..',
+            emptyText: 'Enter annotation (commit message) ..',
             width: '100%',
             height: 64,
             margin: 0
