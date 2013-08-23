@@ -9,6 +9,7 @@ Ext.define ('Webed.toolbar.MainToolbar', {
         'Webed.window.AddFolderBox',
         'Webed.window.AddProjectBox',
         'Webed.window.AddRestProjectBox',
+        'Webed.window.AnnotateBox',
         'Webed.window.DeleteBox',
         'Webed.window.RenameBox',
         'Webed.window.UploadBox'
@@ -22,9 +23,19 @@ Ext.define ('Webed.toolbar.MainToolbar', {
         items: [{
             text : 'Save',
             iconCls : 'icon-disk-16',
-            iconAlign: 'left',
+            xtype :'splitbutton',
             tooltip : '<b>Save</b><div class="w-shortcut">[CTRL+S]</div><br/>Save selected file (to <i>remote</i> storage)',
-            action: 'save-document'
+            action: 'save-document',
+            menu : {
+                xtype: 'menu',
+                plain: true,
+                items: [{
+                    iconCls: 'icon-save_as-16',
+                    text: 'Annotate',
+                    tooltip: '<b>Annotate</b><div class="w-shortcut">[CTRL+ALT+S]</div><br/>Save with an annotation (to <i>remote</i> storage)',
+                    action: 'annotate-document'
+                }]
+            }
         },{
             text : 'Open',
             iconCls : 'icon-folder_page-16',

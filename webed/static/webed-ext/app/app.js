@@ -51,6 +51,7 @@ Ext.application ({
         'window.AddFolderBox',
         'window.AddProjectBox',
         'window.AddRestProjectBox',
+        'window.AnnotateBox',
         'window.ArchiveUploadBox',
         'window.ConfirmBox',
         'window.DeleteBox',
@@ -80,9 +81,7 @@ Ext.application ({
         set: function (key, value) {
             this._cache[key] = value;
         },
-        _cache: {
-            note: 'Lorem Ipsum: ..!'
-        }
+        _cache: {}
     },
 
     get_selection: function () {

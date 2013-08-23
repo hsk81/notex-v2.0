@@ -10,6 +10,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             'main-toolbar button[action=save-document]': {
                 click: this.saveDocument
             },
+            'main-toolbar menuitem[action=annotate-document]': {
+                click: this.annotateDocument
+            },
             'main-toolbar button[action=open-document]': {
                 click: this.openDocument
             },
@@ -70,8 +73,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     saveDocument: function (button) {
         var node = assert (this.get_selection ());
         if (!node.isLeaf ()) {
-            var statusbar = assert (this.getStatusbar ());
-            statusbar.setStatus ({
+            assert (this.getStatusbar ()).setStatus ({
                 text: 'Select a file; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
@@ -102,6 +104,27 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         application.fireEvent ('update_tab', this, {
             scope: this, callback: callback, record: node
         });
+    },
+
+    annotateDocument: function (button) {
+        var node = assert (this.get_selection ());
+        if (!node.isLeaf ()) {
+            assert (this.getStatusbar ()).setStatus ({
+                text: 'Select a file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
+            });
+
+            return;
+        }
+
+        var annotateBox = Ext.create ('Webed.window.AnnotateBox', {
+            title: Ext.String.format ('Annotate {0}', node.getTitle ()),
+            iconCls: node.get ('iconCls'),
+            record: node
+        });
+
+        annotateBox.show ();
     },
 
     openDocument: function () {
@@ -141,8 +164,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     rename: function () {
         var node = assert (this.get_selection ());
         if (node.isRoot ()) {
-            var statusbar = assert (this.getStatusbar ());
-            statusbar.setStatus ({
+            assert (this.getStatusbar ()).setStatus ({
                 text: 'Select a project or file; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
@@ -166,8 +188,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     destroy: function () {
         var node = assert (this.get_selection ());
         if (node.isRoot ()) {
-            var statusbar = assert (this.getStatusbar ());
-            statusbar.setStatus ({
+            assert (this.getStatusbar ()).setStatus ({
                 text: 'Select a project or file; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
@@ -199,8 +220,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         if (node.isRoot ()) {
-            var statusbar = assert (this.getStatusbar ());
-            statusbar.setStatus ({
+            assert (this.getStatusbar ()).setStatus ({
                 text: 'Select a project or file; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
@@ -287,28 +307,35 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             node = node.parentNode;
         }
 
-        if (!node.isRoot ()) {
-            var uuid = assert (node.get ('uuid'));
-            var mime = assert (node.get ('mime'));
-
-            var protocol = location.protocol;
-            var host = ((location.hostname == 'localhost' ||
-                         location.hostname == '127.0.0.1') &&
-                         location.port != 80)
-                ? '{0}:{1}'.format (location.hostname, 8008)
-                : location.host;
-            var path = 'git/?p={0}'.format (uuid);
-            var uri = '{0}//{1}/{2}'.format (protocol, host, path);
-
-            var tab = window.open (uri, '_blank');
-            if (tab) tab.focus();
-
-            TRACKER.event ({
-                category: 'MainToolbar', action: 'show-git-history',
-                label: mime, value: 1
+        if (node.isRoot ()) {
+            assert (this.getStatusbar ()).setStatus ({
+                text: 'Select a project or file; none is selected.',
+                iconCls: 'x-status-error',
+                clear: true
             });
 
+            return;
         }
+
+        var uuid = assert (node.get ('uuid'));
+        var mime = assert (node.get ('mime'));
+
+        var protocol = location.protocol;
+        var host = ((location.hostname == 'localhost' ||
+            location.hostname == '127.0.0.1') &&
+            location.port != 80)
+            ? '{0}:{1}'.format (location.hostname, 8008)
+            : location.host;
+        var path = 'git/?p={0}'.format (uuid);
+        var uri = '{0}//{1}/{2}'.format (protocol, host, path);
+
+        var tab = window.open (uri, '_blank');
+        if (tab) tab.focus();
+
+        TRACKER.event ({
+            category: 'MainToolbar', action: 'show-git-history',
+            label: mime, value: 1
+        });
     }
 });
 
