@@ -106,7 +106,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         });
     },
 
-    annotateDocument: function (button) {
+    annotateDocument: function () {
         var node = assert (this.get_selection ());
         if (!node.isLeaf ()) {
             assert (this.getStatusbar ()).setStatus ({
@@ -358,11 +358,20 @@ Ext.define ('Webed.controller.toolbar.MainToolbar.KeyMap', {
     binding: [{
         key: 's',
         ctrl: true,
+        shift: false,
         defaultEventAction: 'stopEvent',
         handler: function () {
             var query = 'main-toolbar button[action=save-document]';
             var button = assert (Ext.ComponentQuery.query (query).pop ());
             assert (this.getController ()).saveDocument (button);
+        }
+    },{
+        key: 's',
+        ctrl: true,
+        shift: true,
+        defaultEventAction: 'stopEvent',
+        handler: function () {
+            assert (this.getController ()).annotateDocument ();
         }
     },{
         key: 'o',

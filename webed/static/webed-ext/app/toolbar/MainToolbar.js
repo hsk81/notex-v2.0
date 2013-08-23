@@ -32,7 +32,7 @@ Ext.define ('Webed.toolbar.MainToolbar', {
                 items: [{
                     iconCls: 'icon-save_as-16',
                     text: 'Annotate',
-                    tooltip: '<b>Annotate</b><div class="w-shortcut">[CTRL+ALT+S]</div><br/>Save with an annotation (to <i>remote</i> storage)',
+                    tooltip: '<b>Annotate</b><div class="w-shortcut">[CTRL+SHIFT+S]</div><br/>Save with an annotation (to <i>remote</i> storage)',
                     action: 'annotate-document'
                 }]
             }
