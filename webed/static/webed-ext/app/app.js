@@ -67,8 +67,22 @@ Ext.application ({
     appProperty: 'app',
 
     launch: function () {
-        Webed[this.appProperty] = this; //TODO: Remove on ExtJS upgrade!
+        Webed[this.appProperty] = this;
         this.viewport = Ext.create ('Webed.container.Viewport');
+    },
+
+    global: {
+        get: function (key, clear) {
+            var value = this._cache[key];
+            if (clear) this._cache[key] = undefined;
+            return value;
+        },
+        set: function (key, value) {
+            this._cache[key] = value;
+        },
+        _cache: {
+            comment: 'Lorem Ipsum: ..!'
+        }
     },
 
     get_selection: function () {

@@ -322,13 +322,15 @@ Ext.define ('Webed.controller.tab.TabManager', {
             assert (variation != null);
             var difference = ca.getDifference (variation);
             assert (difference != null);
+            var comment = this.application.global.get ('comment', true);
+            assert (comment||!comment);
 
             function on_get (props) {
                 assert (props && props.length > 0);
 
                 props[0].set ('data', difference);
                 props[0].set ('size', utf8Length (variation.length));
-                props[0].set ('meta', {"note": "Lorem Ipsum: .."});
+                props[0].set ('meta', {'note': comment});
 
                 props[0].save ({
                     scope: this, callback: function (prop, op) {
