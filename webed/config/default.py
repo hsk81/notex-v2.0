@@ -158,7 +158,7 @@ class DefaultConfig:
     ## Google's ad network.
     ##
 
-    ADSENSE = False
+    ADSENSE = True
 
     ##
     ## Override CDN settings in production environment with proper value.
