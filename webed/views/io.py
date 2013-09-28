@@ -270,8 +270,8 @@ def create_bin (name, root, mime, path=None, source=None, vcs=None):
         data = source.read ()
 
     leaf = Leaf (name, root, mime=mime)
-    prop = Base64CowProperty ('data', data, leaf, mime=mime) if vcs else \
-           Base64VcsProperty ('data', data, leaf, mime=mime)
+    prop = Base64VcsProperty ('data', data, leaf, mime=mime) if vcs else \
+           Base64CowProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
