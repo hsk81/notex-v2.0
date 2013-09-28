@@ -30,12 +30,14 @@ Ext.define ('Webed.controller.window.ArchiveUploadBox', {
 
     get_url: function () {
         var view = assert (this.getUploadBox ());
+        var checkbox = assert (view.down ('checkbox[name=vcs]'));
+        var vcs = checkbox.getValue ();
         var combobox = assert (view.down ('combobox[name=mime]'));
         var mime = assert (combobox.getValue ());
 
-        return Ext.String.format ('/archive-upload/?mime={0}',
-            encodeURIComponent (mime)
-        );
+        return '/archive-upload/?' + Ext.Object.toQueryString ({
+            mime: mime, vcs: vcs
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////

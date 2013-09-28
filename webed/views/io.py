@@ -27,6 +27,7 @@ import urllib
 import base64
 import zipfile
 import tempfile
+import ujson as JSON
 
 from cStringIO import StringIO
 
@@ -45,9 +46,9 @@ def file_upload (vcs=None):
     if not request.is_xhr:
         request.json = request.args
 
-    if vcs is None:
-        vcs = request.json.get ('vcs', False) if request.json else False
-        assert vcs in [True, False]
+    if vcs is None: vcs = False if request.json is None \
+        else JSON.decode (request.json.get ('vcs', 'false'))
+    assert vcs in [True, False]
 
     source = request.files['file']
     if not source:
@@ -99,9 +100,12 @@ def file_upload (vcs=None):
 def archive_upload (source=None, base=None, skip_commit=None, do_index=None,
                     json=True, vcs=None):
 
-    if vcs is None:
-        vcs = request.json.get ('vcs', False) if request.json else False
-        assert vcs in [True, False]
+    if not request.is_xhr:
+        request.json = request.args
+
+    if vcs is None: vcs = False if request.json is None \
+        else JSON.decode (request.json.get ('vcs', 'false'))
+    assert vcs in [True, False]
 
     source = source if source else request.files['file']
     if not source:

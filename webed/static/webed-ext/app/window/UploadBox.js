@@ -15,6 +15,13 @@ Ext.define ('Webed.window.UploadBox', {
     width: 360,
 
     buttons: [{
+        xtype: 'fieldcontainer',
+        defaultType: 'checkboxfield',
+        items: [{
+            boxLabel: 'Enable GIT Versioning',
+            name: 'vcs'
+        }]
+    },'->',{
         text: 'Upload',
         iconCls: 'icon-tick-16',
         action: 'confirm'
