@@ -275,7 +275,7 @@ class CowExternalProperty (Property, DataPropertyMixin):
         path_to = os.path.join (app.config['COW_ROOT'], self._data)
         assert os.path.exists (path_to)
 
-        with open (path_to, 'r') as source: ## TODO: 'r' => 'rb'?
+        with open (path_to, 'rb') as source:
             return self.decode (source.read ())
 
     def set_data (self, value, skip_patch=False, meta=None):
@@ -299,7 +299,7 @@ class CowExternalProperty (Property, DataPropertyMixin):
 
         path_to = os.path.join (path_to, value_key)
         if not os.path.exists (path_to):
-            with open (path_to, 'w') as target: ## TODO: 'w' => 'wb'?
+            with open (path_to, 'wb') as target:
                 target.write (self.encode (value))
 
         version_key = dbs_cache.make_key (value_key)
