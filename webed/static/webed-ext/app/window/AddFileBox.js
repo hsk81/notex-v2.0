@@ -3,7 +3,9 @@ Ext.define ('Webed.window.AddFileBox', {
     alias: 'widget.add-file-box',
 
     requires: [
-        'Ext.form.Panel'
+        'Ext.form.Panel',
+        'Ext.form.FieldContainer',
+        'Ext.form.field.Checkbox'
     ],
 
     border: false,
@@ -59,6 +61,13 @@ Ext.define ('Webed.window.AddFileBox', {
     }],
 
     buttons: [{
+        xtype: 'fieldcontainer',
+        defaultType: 'checkboxfield',
+        items: [{
+            boxLabel: 'Enable GIT Versioning',
+            name: 'vcs'
+        }]
+    },'->',{
         text: 'Confirm',
         iconCls: 'icon-tick-16',
         action: 'confirm'

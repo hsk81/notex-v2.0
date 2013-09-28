@@ -83,6 +83,7 @@ Ext.define ('Webed.controller.window.AddFileBox', {
         var box = assert (this.getAddFileBox ());
         var textfield = assert (box.down ('textfield[name=name]'));
         var combobox = assert (box.down ('combobox[name=mime]'));
+        var checkbox = assert (box.down ('checkbox[name=vcs]'));
 
         if (!textfield.isValid ()) return;
         var name = assert (textfield.getValue ());
@@ -109,7 +110,9 @@ Ext.define ('Webed.controller.window.AddFileBox', {
                         name: 'data',
                         node_uuid: leaf.get ('uuid'),
                         size: 5,
-                        type: 'TextCowProperty' //TODO: 'TextVcsProperty'
+                        type: (checkbox.getValue ())
+                            ? 'TextVcsProperty'
+                            : 'TextCowProperty'
                     }]
                 });
             } else {
