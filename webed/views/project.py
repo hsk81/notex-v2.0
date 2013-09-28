@@ -30,6 +30,8 @@ def setup_generic_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project'
+    vcs = request.args.get ('vcs', False)
+    assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project].zip')
     path = os.path.join (archive_path, path)
@@ -37,7 +39,7 @@ def setup_generic_project (json=True):
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (
-            source=fs, skip_commit=True, do_index=True, json=False)
+            source=fs, skip_commit=True, do_index=True, json=False, vcs=vcs)
         for node in result['nodes']: setup_generic (node)
 
     if not json:
@@ -64,6 +66,8 @@ def setup_latex_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+latex'
+    vcs = request.args.get ('vcs', False)
+    assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project+latex].zip')
     path = os.path.join (archive_path, path)
@@ -71,7 +75,7 @@ def setup_latex_project (json=True):
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (
-            source=fs, skip_commit=True, do_index=True, json=False)
+            source=fs, skip_commit=True, do_index=True, json=False, vcs=vcs)
         for node in result['nodes']: setup_latex (node)
 
     if not json:
@@ -98,6 +102,8 @@ def setup_markdown_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+md'
+    vcs = request.args.get ('vcs', False)
+    assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project+md].zip')
     path = os.path.join (archive_path, path)
@@ -105,7 +111,7 @@ def setup_markdown_project (json=True):
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (
-            source=fs, skip_commit=True, do_index=True, json=False)
+            source=fs, skip_commit=True, do_index=True, json=False, vcs=vcs)
         for node in result['nodes']: setup_markdown (node)
 
     if not json:
@@ -132,6 +138,8 @@ def setup_rest_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+rest'
+    vcs = request.args.get ('vcs', False)
+    assert vcs in [True, False]
 
     document_type = request.args.get ('documentType')
     assert document_type in ['article', 'report']
@@ -145,7 +153,7 @@ def setup_rest_project (json=True):
     with open (path) as stream:
         fs = FileStorage (stream=stream, filename=path)
         result = archive_upload (
-            source=fs, skip_commit=True, do_index=True, json=False)
+            source=fs, skip_commit=True, do_index=True, json=False, vcs=vcs)
         for node in result['nodes']: setup_rest (node)
 
     if not json:

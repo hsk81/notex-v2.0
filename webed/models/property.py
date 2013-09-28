@@ -12,6 +12,7 @@ from sqlalchemy import event
 from uuid import uuid4 as uuid_random
 from node import Node
 
+from ..app import app
 from ..ext.db import db
 from ..ext.cache import dbs_cache
 from .polymorphic import Polymorphic
@@ -99,7 +100,7 @@ class DataPropertyMixin (object):
 
     def get_data (self):
         return self._data
-    def set_data (self, value):
+    def set_data(self, value, meta=None):
         self._data = value
         self._size = len (value) if value else 0
 
@@ -134,10 +135,10 @@ class StringProperty (Property, DataPropertyMixin):
 ###############################################################################
 ###############################################################################
 
-class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
+class VcsExternalProperty (Property, DataPropertyMixin, VcsTransaction):
 
     external_property_id = db.Column (db.Integer,
-        db.Sequence ('external_property_id_seq'),
+        db.Sequence ('vcs_external_property_id_seq'),
         db.ForeignKey ('property.id', ondelete='CASCADE'),
         primary_key=True)
 
@@ -172,7 +173,7 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
         with self.vcs.open (path_to, mode='rb') as source:
             return self.decode (source.read ())
 
-    def set_data (self, value, skip_patch=False, note=None):
+    def set_data (self, value, skip_patch=False, meta=None):
 
         value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))
@@ -191,6 +192,9 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
             with self.vcs.open (name, mode='wb') as target:
                 target.write (self.encode (value))
 
+        if meta is None: meta = {}
+        note = meta.get ('note')
+
         if not note:
             self.transact (note='Update %s' % self.node.name)
         else:
@@ -204,14 +208,14 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (ExternalProperty, self).__init__ (name, node, mime=mime
+        super (VcsExternalProperty, self).__init__ (name, node, mime=mime
             if mime else 'application/octet-stream', uuid=uuid)
 
         self.set_data (data)
 
     def __repr__ (self):
 
-        return u'<ExternalProperty@%x: %s>' % (self.id if self.id else 0,
+        return u'<VcsExternalProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
 
     ###########################################################################
@@ -251,12 +255,101 @@ class ExternalProperty (Property, DataPropertyMixin, VcsTransaction):
 
 ###############################################################################
 
-ExternalProperty.register () ## events
+VcsExternalProperty.register () ## events
 
 ###############################################################################
 ###############################################################################
 
-class Base64Property (ExternalProperty):
+class CowExternalProperty (Property, DataPropertyMixin):
+
+    external_property_id = db.Column (db.Integer,
+        db.Sequence ('cow_external_property_id_seq'),
+        db.ForeignKey ('property.id', ondelete='CASCADE'),
+        primary_key=True)
+
+    ###########################################################################
+    ## DataPropertyMixin: get_data, set_data
+
+    def get_data (self):
+
+        path_to = os.path.join (app.config['COW_ROOT'], self._data)
+        assert os.path.exists (path_to)
+
+        with open (path_to, 'r') as source: ## TODO: 'r' => 'rb'?
+            return self.decode (source.read ())
+
+    def set_data (self, value, skip_patch=False, meta=None):
+
+        value = value if skip_patch else self.patch (value)
+        value_key = unicode (dbs_cache.make_key (value))
+        if self._data == value_key: return
+
+        if self._data:
+            CowExternalProperty.on_delete (None, None, target=self)
+
+        for uuid in self.node.get_path ('uuid'):
+            dbs_cache.increase_version (key=[uuid, 'size', 'data'])
+
+        self._data = value_key
+        self._size = len (value) if value else 0
+
+        path_to = app.config['COW_ROOT']
+        if not os.path.exists (path_to):
+            os.makedirs (path_to)
+
+        path_to = os.path.join (path_to, value_key)
+        if not os.path.exists (path_to):
+            with open (path_to, 'w') as target: ## TODO: 'w' => 'wb'?
+                target.write (self.encode (value))
+
+        version_key = dbs_cache.make_key (value_key)
+        version = dbs_cache.increase (version_key)
+        assert version > 0
+
+    def decode (self, value): return value
+    def encode (self, value): return value
+    def patch (self, value): return value
+
+    ###########################################################################
+
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (CowExternalProperty, self).__init__ (name, node, mime=mime
+            if mime else 'application/octet-stream', uuid=uuid)
+
+        self.set_data (data)
+
+    def __repr__ (self):
+
+        return u'<CowExternalProperty@%x: %s>' % (self.id if self.id else 0,
+            self._name)
+
+    ###########################################################################
+
+    @staticmethod
+    def on_delete (mapper, connection, target):
+
+        for uuid in target.node.get_path ('uuid'):
+            dbs_cache.increase_version (key=[uuid, 'size', 'data'])
+
+        version_key = dbs_cache.make_key (target._data)
+        version = dbs_cache.decrease (key=version_key)
+        if version <= 0:
+            path_to = os.path.join (app.config['COW_ROOT'], target._data)
+            if os.path.exists (path_to): os.unlink (path_to)
+
+    @classmethod
+    def register (cls):
+        event.listen (cls, 'after_delete', cls.on_delete, propagate=True)
+
+###############################################################################
+
+CowExternalProperty.register () ## events
+
+###############################################################################
+###############################################################################
+
+class Base64VcsProperty (VcsExternalProperty):
     __tablename__ = None
 
     def encode (self, value):
@@ -271,15 +364,15 @@ class Base64Property (ExternalProperty):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (Base64Property, self).__init__ (name, data, node, mime=mime
+        super (Base64VcsProperty, self).__init__ (name, data, node, mime=mime
             if mime else 'application/octet-stream', uuid=uuid)
 
     def __repr__ (self):
 
-        return u'<Base64Property@%x: %s>' % (self.id if self.id else 0,
+        return u'<Base64VcsProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
 
-class TextProperty (ExternalProperty):
+class TextVcsProperty (VcsExternalProperty):
     __tablename__ = None
 
     def encode (self, value):
@@ -307,12 +400,82 @@ class TextProperty (ExternalProperty):
 
     def __init__ (self, name, data, node, mime=None, uuid=None):
 
-        super (TextProperty, self).__init__ (name, data, node, mime=mime
+        super (TextVcsProperty, self).__init__ (name, data, node, mime=mime
             if mime else 'text/plain', uuid=uuid)
 
     def __repr__ (self):
 
-        return u'<TextProperty@%x: %s>' % (self.id if self.id else 0,
+        return u'<TextVcsProperty@%x: %s>' % (self.id if self.id else 0,
+            self._name)
+
+    @property
+    def dmp (self):
+
+        if not hasattr (self, '_dmp') or not self._dmp:
+            self._dmp = DMP ()
+
+        return self._dmp
+
+###############################################################################
+###############################################################################
+
+class Base64CowProperty (CowExternalProperty):
+    __tablename__ = None
+
+    def encode (self, value):
+
+        if value:
+            return 'data:%s;base64,%s' % (
+                self._mime, base64.encodestring (value))
+
+    def decode (self, value):
+
+        return value ## keep b64 encoding!
+
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (Base64CowProperty, self).__init__ (name, data, node, mime=mime
+            if mime else 'application/octet-stream', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<Base64CowProperty@%x: %s>' % (self.id if self.id else 0,
+            self._name)
+
+class TextCowProperty (CowExternalProperty):
+    __tablename__ = None
+
+    def encode (self, value):
+
+        try:
+            return value.encode ('utf-8')
+        except ValueError:
+            return value
+
+    def decode (self, value):
+
+        try:
+            return value.decode ('utf-8')
+        except ValueError:
+            return value
+
+    def patch (self, value):
+
+        if self._data:
+            patches = self.dmp.patch_fromText (value)
+            value, results = self.dmp.patch_apply (patches, self.get_data ())
+            assert all (results)
+
+        return value
+
+    def __init__ (self, name, data, node, mime=None, uuid=None):
+
+        super (TextCowProperty, self).__init__ (name, data, node, mime=mime
+            if mime else 'text/plain', uuid=uuid)
+
+    def __repr__ (self):
+
+        return u'<TextCowProperty@%x: %s>' % (self.id if self.id else 0,
             self._name)
 
     @property

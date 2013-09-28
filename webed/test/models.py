@@ -249,44 +249,87 @@ class PropertyModelsTestCase (BaseTestCase):
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
 
-    def test_text_property (self):
+    def test_vcs_text_property (self):
 
         node = Node ('node', root=None)
         db.session.add (node)
 
-        prop = TextProperty ('text', data=u'...', node=node)
+        prop = TextVcsProperty ('text', data=u'...', node=node)
         db.session.add (prop)
         db.session.commit ()
 
         [prop] = node.props.all ()
 
-        self.assertEqual (type (prop), TextProperty)
+        self.assertEqual (type (prop), TextVcsProperty)
         self.assertTrue (isinstance (prop, Property))
-        self.assertTrue (isinstance (prop, TextProperty))
+        self.assertTrue (isinstance (prop, TextVcsProperty))
 
         self.assertEqual (prop.name, 'text')
-        self.assertEqual (prop.type, 'TextProperty')
+        self.assertEqual (prop.type, 'TextVcsProperty')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data, u'...')
         self.assertEqual (type (prop.data), unicode)
 
-    def test_base64_property (self):
+    def test_cow_text_property (self):
 
         node = Node ('node', root=None)
         db.session.add (node)
 
-        prop = Base64Property ('base64', data= '...', node=node)
+        prop = TextCowProperty ('text', data=u'...', node=node)
         db.session.add (prop)
         db.session.commit ()
 
         [prop] = node.props.all ()
 
-        self.assertEqual (type (prop), Base64Property)
+        self.assertEqual (type (prop), TextCowProperty)
         self.assertTrue (isinstance (prop, Property))
-        self.assertTrue (isinstance (prop, Base64Property))
+        self.assertTrue (isinstance (prop, TextCowProperty))
+
+        self.assertEqual (prop.name, 'text')
+        self.assertEqual (prop.type, 'TextCowProperty')
+        self.assertEqual (prop.node, node)
+        self.assertEqual (prop.data, u'...')
+        self.assertEqual (type (prop.data), unicode)
+
+    def test_vcs_base64_property (self):
+
+        node = Node ('node', root=None)
+        db.session.add (node)
+
+        prop = Base64VcsProperty ('base64', data='...', node=node)
+        db.session.add (prop)
+        db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertEqual (type (prop), Base64VcsProperty)
+        self.assertTrue (isinstance (prop, Property))
+        self.assertTrue (isinstance (prop, Base64VcsProperty))
 
         self.assertEqual (prop.name, 'base64')
-        self.assertEqual (prop.type, 'Base64Property')
+        self.assertEqual (prop.type, 'Base64VcsProperty')
+        self.assertEqual (prop.node, node)
+        self.assertEqual (prop.data,
+            'data:application/octet-stream;base64,Li4u\n')
+        self.assertEqual (type (prop.data), str)
+
+    def test_cow_base64_property (self):
+
+        node = Node ('node', root=None)
+        db.session.add (node)
+
+        prop = Base64CowProperty ('base64', data='...', node=node)
+        db.session.add (prop)
+        db.session.commit ()
+
+        [prop] = node.props.all ()
+
+        self.assertEqual (type (prop), Base64CowProperty)
+        self.assertTrue (isinstance (prop, Property))
+        self.assertTrue (isinstance (prop, Base64CowProperty))
+
+        self.assertEqual (prop.name, 'base64')
+        self.assertEqual (prop.type, 'Base64CowProperty')
         self.assertEqual (prop.node, node)
         self.assertEqual (prop.data,
             'data:application/octet-stream;base64,Li4u\n')

@@ -387,7 +387,7 @@ def property_create (json=True):
 
     Type = getattr (sys.modules[__name__], type)
     assert issubclass (Type, Property)
-    assert issubclass (TextProperty, DataPropertyMixin)
+    assert issubclass (Type, DataPropertyMixin)
     prop = Type (name, data, node, mime=mime, uuid=uuid)
 
     db.nest (fn=lambda: db.session.add (prop))
@@ -446,8 +446,8 @@ def property_update (json=True):
     assert size or not size
     data = request.json.get ('data', None)
     assert data or not data
-    meta = request.json.get ('meta', {})
-    assert meta
+    meta = request.json.get ('meta', None)
+    assert meta or not meta
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
@@ -466,7 +466,7 @@ def property_update (json=True):
     if name and prop.name != name: prop.name = name
     if size and prop.size != size: pass ## ignore!
     if data and prop.data != data:
-        prop.set_data (value=data, note=meta.get ('note'))
+        prop.set_data (value=data, meta=meta)
 
     result = dict (success=True, result=prop2ext (prop, omit_data=True))
     return jsonify (result) if json else result

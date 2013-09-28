@@ -109,7 +109,7 @@ Ext.define ('Webed.controller.window.AddFileBox', {
                         name: 'data',
                         node_uuid: leaf.get ('uuid'),
                         size: 5,
-                        type: 'TextProperty'
+                        type: 'TextCowProperty' //TODO: 'TextVcsProperty'
                     }]
                 });
             } else {

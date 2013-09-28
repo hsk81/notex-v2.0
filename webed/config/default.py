@@ -81,6 +81,14 @@ class DefaultConfig:
     ARCHIVE_EXCLUDE = [r'^_', r'^\.']
 
     ##
+    ## COW_BASE is the base path for the copy-on-write storage backend, whereas
+    ## the actual data is kept in COW_ROOT.
+    ##
+
+    COW_BASE = os.path.join (os.path.sep, 'var', 'www', 'webed')
+    COW_ROOT = os.path.join (COW_BASE, 'conw')
+
+    ##
     ## VCS_BASE is the path for the storage backend, whereas VCS_ROOT contains
     ## the actual repositories (based on AcidFS/GIT). The VCS_USER and VCS_MAIL
     ## are used to set corresponding transaction metadata. And the VCS_CONF is

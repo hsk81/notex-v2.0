@@ -14,8 +14,10 @@ from ..views import mime as MIME
 
 from ..models import Node
 from ..models import Leaf
-from ..models import TextProperty
-from ..models import Base64Property
+from ..models import TextCowProperty
+from ..models import TextVcsProperty
+from ..models import Base64CowProperty
+from ..models import Base64VcsProperty
 
 import os
 import re
@@ -38,10 +40,14 @@ io = Blueprint ('io', __name__)
 
 @io.route ('/file-upload/', methods=['GET', 'POST'])
 @db.commit ()
-def file_upload ():
+def file_upload (vcs=None):
 
     if not request.is_xhr:
         request.json = request.args
+
+    if vcs is None:
+        vcs = request.json.get ('vcs', False) if request.json else False
+        assert vcs in [True, False]
 
     source = request.files['file']
     if not source:
@@ -68,9 +74,9 @@ def file_upload ():
     def create_leaf (name, root, mime):
 
         if MIME.is_text (mime):
-            leaf, _ = create_txt (name, root, mime, source=source)
+            leaf, _ = create_txt (name, root, mime, source=source, vcs=vcs)
         else:
-            leaf, _ = create_bin (name, root, mime, source=source)
+            leaf, _ = create_bin (name, root, mime, source=source, vcs=vcs)
 
         db.session.add (leaf)
         return leaf
@@ -91,7 +97,11 @@ def file_upload ():
 @io.route ('/archive-upload/', methods=['POST'])
 @db.commit (lest=lambda *a, **kw: 'skip_commit' in kw and kw['skip_commit'])
 def archive_upload (source=None, base=None, skip_commit=None, do_index=None,
-                    json=True):
+                    json=True, vcs=None):
+
+    if vcs is None:
+        vcs = request.json.get ('vcs', False) if request.json else False
+        assert vcs in [True, False]
 
     source = source if source else request.files['file']
     if not source:
@@ -127,7 +137,7 @@ def archive_upload (source=None, base=None, skip_commit=None, do_index=None,
 
         temp_path = tempfile.mkdtemp ()
         extract (zip_file, path=temp_path)
-        nodes = create_prj (temp_path, base, prj_mime)
+        nodes = create_prj (temp_path, base, prj_mime, vcs=vcs)
         shutil.rmtree (temp_path)
 
     if not skip_commit or do_index:
@@ -204,7 +214,7 @@ def extract (zip_file, path):
 ###############################################################################
 
 @db.nest ()
-def create_prj (path, base, mime):
+def create_prj (path, base, mime, vcs=None):
     lookup = {path: base}
 
     for cur_path, dir_names, file_names in os.walk (path):
@@ -222,9 +232,9 @@ def create_prj (path, base, mime):
             mime = MIME.guess_mime_ex (fn, cur_path)
 
             if MIME.is_text (mime):
-                leaf, _ = create_txt (fn, root, mime, path=cur_path)
+                leaf, _ = create_txt (fn, root, mime, path=cur_path, vcs=vcs)
             else:
-                leaf, _ = create_bin (fn, root, mime, path=cur_path)
+                leaf, _ = create_bin (fn, root, mime, path=cur_path, vcs=vcs)
 
             db.session.add (leaf)
             lookup[os.path.join (cur_path, fn)] = leaf
@@ -235,7 +245,7 @@ def create_dir (name, root, mime):
 
     return Node (name, root, mime=mime)
 
-def create_txt (name, root, mime, path=None, source=None):
+def create_txt (name, root, mime, path=None, source=None, vcs=None):
     assert path and not source or not path and source
 
     if path:
@@ -245,11 +255,12 @@ def create_txt (name, root, mime, path=None, source=None):
         data = source.read ().replace ('\r\n', '\n')
 
     leaf = Leaf (name, root, mime=mime)
-    prop = TextProperty ('data', data, leaf, mime=mime)
+    prop = TextVcsProperty ('data', data, leaf, mime=mime) if vcs else \
+           TextCowProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
-def create_bin (name, root, mime, path=None, source=None):
+def create_bin (name, root, mime, path=None, source=None, vcs=None):
     assert path and not source or not path and source
 
     if path:
@@ -259,7 +270,8 @@ def create_bin (name, root, mime, path=None, source=None):
         data = source.read ()
 
     leaf = Leaf (name, root, mime=mime)
-    prop = Base64Property ('data', data, leaf, mime=mime)
+    prop = Base64CowProperty ('data', data, leaf, mime=mime) if vcs else \
+           Base64VcsProperty ('data', data, leaf, mime=mime)
 
     return leaf, prop
 
@@ -338,12 +350,10 @@ def compress (root, crlf=True):
         prop = Q (leaf.props).one (name='data')
         assert prop
 
-        if type (prop) == TextProperty:
-            if crlf:
-                data = prop.data.replace ('\n', '\r\n').encode ('utf-8')
-            else:
-                data = prop.data.encode ('utf-8')
-        elif type (prop) == Base64Property:
+        if type (prop) in [TextCowProperty, TextVcsProperty]:
+            data = prop.data.replace ('\n', '\r\n').encode ('utf-8') \
+                if crlf else prop.data.encode ('utf-8')
+        elif type (prop) in [Base64CowProperty, Base64VcsProperty]:
             data = base64.decodestring (prop.data.split (',')[1])
         else:
             raise Exception ('invalid property: %r' % prop)
