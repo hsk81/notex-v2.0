@@ -13,6 +13,7 @@ from ..util import jsonify
 from .io import archive_upload
 
 import os.path
+import ujson as JSON
 
 ###############################################################################
 ###############################################################################
@@ -30,7 +31,7 @@ def setup_generic_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project'
-    vcs = request.args.get ('vcs', False)
+    vcs = JSON.decode (request.args.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project].zip')
@@ -66,7 +67,7 @@ def setup_latex_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+latex'
-    vcs = request.args.get ('vcs', False)
+    vcs = JSON.decode (request.args.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project+latex].zip')
@@ -102,7 +103,7 @@ def setup_markdown_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+md'
-    vcs = request.args.get ('vcs', False)
+    vcs = JSON.decode (request.args.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     path = os.path.join ('tpl', '[application!project+md].zip')
@@ -138,7 +139,7 @@ def setup_rest_project (json=True):
     assert archive_path
     mime = request.args.get ('mime')
     assert mime == 'application/project+rest'
-    vcs = request.args.get ('vcs', False)
+    vcs = JSON.decode (request.args.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     document_type = request.args.get ('documentType')

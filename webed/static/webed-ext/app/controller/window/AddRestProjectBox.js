@@ -14,7 +14,8 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
               click: this.cancel
             },
             'add-rest-project-box': {
-                render: this.render
+                render: this.render,
+                afterrender: this.afterrender
             }
         });
     },
@@ -33,6 +34,11 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
         grid.setSource (source);
     },
 
+    afterrender: function (self) {
+        var checkbox = assert (self.down ('checkbox[name=vcs]'));
+        checkbox.setValue (self.vcs);
+    },
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -40,34 +46,25 @@ Ext.define ('Webed.controller.window.AddRestProjectBox', {
         var application = assert (this.application);
         var box = assert (this.getAddRestProjectBox ());
         var mime = assert (box.mime);
+        var vcs = assert (box.down ('checkbox[name=vcs]')).getValue ();
         var grid = assert (box.down ('propertygrid'));
         var source = Ext.apply (grid.getSource (), {
-            mime: mime
+            mime: mime, vcs: vcs
         });
 
-        var url = Ext.String.format ('/setup-rest-project/?' +
-            'name={0}&' +
-            'mime={1}&' +
-            'authors={2}&' +
-            'documentType={3}&' +
-            'fontSize={4}&' +
-            'noColumns={5}&' +
-            'titleFlag={6}&' +
-            'tocFlag={7}&' +
-            'indexFlag={8}&' +
-            'backend={9}',
-
-            encodeURIComponent (source.project),
-            encodeURIComponent (source.mime),
-            encodeURIComponent (source.authors),
-            encodeURIComponent (source.documentType),
-            encodeURIComponent (source.fontSize),
-            encodeURIComponent (source.noColumns),
-            encodeURIComponent (source.titleFlag),
-            encodeURIComponent (source.tocFlag),
-            encodeURIComponent (source.indexFlag),
-            encodeURIComponent (source.backend)
-        );
+        var url = '/setup-rest-project/?' + Ext.Object.toQueryString ({
+            name: source.project,
+            mime: source.mime,
+            authors: source.authors,
+            documentType: source.documentType,
+            fontSize: source.fontSize,
+            noColumns: source.noColumns,
+            titleFlag: source.titleFlag,
+            tocFlag: source.tocFlag,
+            indexFlag: source.indexFlag,
+            backend: source.backend,
+            vcs: source.vcs
+        });
 
         function onSuccess (xhr) {
             var res = Ext.decode (xhr.responseText);

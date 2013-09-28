@@ -47,24 +47,27 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
         var box = assert (this.getAddProjectBox ());
         var textfield = assert (box.down ('textfield[name=name]'));
         var combobox = assert (box.down ('combobox[name=mime]'));
+        var checkbox = assert (box.down ('checkbox[name=vcs]'));
 
         if (!textfield.isValid ()) return;
         var project = assert (textfield.getValue ());
         if (!combobox.isValid ()) return;
         var mime = assert (combobox.getValue ());
+        if (!checkbox.isValid ()) return;
+        var vcs = checkbox.getValue ();
 
         switch (mime) {
             case 'application/project+latex':
-                this.setup_latex_project (project, mime);
+                this.setup_latex_project (project, mime, vcs);
                 break;
             case 'application/project+md':
-                this.setup_markdown_project (project, mime);
+                this.setup_markdown_project (project, mime, vcs);
                 break;
             case 'application/project+rest':
-                this.setup_rest_project (project, mime);
+                this.setup_rest_project (project, mime, vcs);
                 break;
             default:
-                this.setup_generic_project (project, mime);
+                this.setup_generic_project (project, mime, vcs);
         }
 
         box.close ();
@@ -81,31 +84,31 @@ Ext.define ('Webed.controller.window.AddProjectBox', {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    setup_latex_project: function (project, mime) {
-        this.setup_project ('/setup-latex-project/', project, mime);
+    setup_latex_project: function (project, mime, vcs) {
+        this.setup_project ('/setup-latex-project/', project, mime, vcs);
     },
 
-    setup_markdown_project: function (project, mime) {
-        this.setup_project ('/setup-markdown-project/', project, mime);
+    setup_markdown_project: function (project, mime, vcs) {
+        this.setup_project ('/setup-markdown-project/', project, mime, vcs);
     },
 
-    setup_rest_project: function (project, mime) {
+    setup_rest_project: function (project, mime, vcs) {
         var box = Ext.create ('Webed.window.AddRestProjectBox', {
-            project: project, mime: mime
+            project: project, mime: mime, vcs: vcs
         });
 
         box.show ();
     },
 
-    setup_generic_project: function (project, mime) {
-        this.setup_project ('/setup-generic-project/', project, mime);
+    setup_generic_project: function (project, mime, vcs) {
+        this.setup_project ('/setup-generic-project/', project, mime, vcs);
     },
 
-    setup_project: function (url_base, project, mime) {
+    setup_project: function (url_base, project, mime, vcs) {
         var application = assert (this.application);
-        var url = Ext.String.format (url_base + '?name={0}&mime={1}',
-            encodeURIComponent (project), encodeURIComponent (mime)
-        );
+        var url = url_base + '?' + Ext.Object.toQueryString ({
+            name: project, mime: mime, vcs: vcs
+        });
 
         function onSuccess (xhr) {
             var res = Ext.decode (xhr.responseText);

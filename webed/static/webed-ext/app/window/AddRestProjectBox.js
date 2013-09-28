@@ -93,6 +93,13 @@ Ext.define ('Webed.window.AddRestProjectBox', {
     }],
 
     buttons: [{
+        xtype: 'fieldcontainer',
+        defaultType: 'checkboxfield',
+        items: [{
+            boxLabel: 'Enable GIT Versioning',
+            name: 'vcs'
+        }]
+    },'->',{
         text: 'Confirm',
         iconCls: 'icon-tick-16',
         action: 'confirm'
