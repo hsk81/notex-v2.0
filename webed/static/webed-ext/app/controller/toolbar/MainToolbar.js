@@ -322,10 +322,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
         var protocol = location.protocol;
         var host = ((location.hostname == 'localhost' ||
-            location.hostname == '127.0.0.1') &&
-            location.port != 80)
-            ? '{0}:{1}'.format (location.hostname, 8008)
-            : location.host;
+                     location.hostname == '127.0.0.1') && location.port != 80)
+                        ? '{0}:{1}'.format (location.hostname, 8008)
+                        : location.host;
         var path = 'git/?p={0}'.format (uuid);
         var uri = '{0}//{1}/{2}'.format (protocol, host, path);
 
