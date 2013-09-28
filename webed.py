@@ -128,7 +128,9 @@ class FsbClear (Command):
 
     def run (self):
         if os.path.exists (app.config['COW_ROOT']):
-            shutil.rmtree (app.config['COW_ROOT'])
+            for path, dns, fns in os.walk (app.config['COW_ROOT']):
+                for fn in fns: os.unlink (os.path.join (path, fn))
+                for dn in dns: shutil.rmtree (os.path.join (path, dn))
         if os.path.exists (app.config['VCS_ROOT']):
             for path, dns, fns in os.walk (app.config['VCS_ROOT']):
                 for fn in fns: os.unlink (os.path.join (path, fn))
