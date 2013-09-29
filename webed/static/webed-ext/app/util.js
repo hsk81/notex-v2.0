@@ -267,17 +267,12 @@ var Traversor = function (root, treeName) {
     var me = this;
     me.stopFlag = false;
 
-    var traverse = function (node, callback, level) {
+    function do_traverse (callback, node, level) {
         if (!me.stopFlag) {
-            console.debug ('NODE', node);
-            console.debug ('TREE', node.childNodes);
-            console.debug ('NAME', treeName);
-            console.debug ('TREE', node[treeName]);
-
-            var array = assert (node[treeName]||[]);
+            var array = assert (node[treeName]);
             for (var index in array) {
-                if (array.hasOwnProperty (index)) traverse (
-                    array[index], callback, level + 1
+                if (array.hasOwnProperty (index)) do_traverse (
+                    callback, array[index], level + 1
                 );
 
                 if (me.stopFlag) break;
@@ -289,12 +284,12 @@ var Traversor = function (root, treeName) {
                 callback.callback.call (callback.scope||this, node, level);
             }
         }
-    };
+    }
 
     return {
-        traverse: traverse.partial ({
-            node: root, level: 0
-        }),
+        traverse: function (callback) {
+            do_traverse (callback, root, 0);
+        },
         doStop: function () {
             me.stopFlag = true;
         },
