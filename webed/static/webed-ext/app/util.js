@@ -269,8 +269,8 @@ var Traversor = function (root, treeName) {
 
     var traverse = function (node, callback, level) {
         if (!me.stopFlag) {
-            var array = assert (node[treeName]);
-            for (var index in array) {
+            var array = node[treeName];
+            if (array) for (var index in array) {
                 if (array.hasOwnProperty (index)) traverse (
                     array[index], callback, level + 1
                 );
