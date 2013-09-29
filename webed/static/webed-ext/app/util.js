@@ -287,7 +287,7 @@ var Traversor = function (root, treeName) {
     };
 
     return {
-        do: traverse.partial ({
+        traverse: traverse.partial ({
             node: root, level: 0
         }),
         doStop: function () {

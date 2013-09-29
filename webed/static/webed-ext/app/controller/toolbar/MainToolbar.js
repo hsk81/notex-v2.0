@@ -328,7 +328,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         var not_project = !MIME.is_project (mime);
         var traversor = new Traversor (node, 'childNodes');
 
-        traversor.do ({
+        traversor.traverse ({
             scope: this, callback: function (node) {
                 var mime = assert (node.get ('mime'));
                 if (MIME.is_folder (mime)) return;
