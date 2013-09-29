@@ -302,13 +302,20 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
     ///////////////////////////////////////////////////////////////////////////
 
     showGitHistory: function () {
-        var node = assert (this.get_selection ());
-        while (node.parentNode != null && node.parentNode.parentNode != null) {
-            node = node.parentNode;
+        var me = this,
+            node = up (assert (this.get_selection ()));
+
+        function up (node) {
+            while (node.parentNode != null &&
+                node.parentNode.parentNode != null) {
+                node = node.parentNode;
+            }
+
+            return node
         }
 
         if (node.isRoot ()) {
-            assert (this.getStatusbar ()).setStatus ({
+            assert (me.getStatusbar ()).setStatus ({
                 text: 'Select a project or file; none is selected.',
                 iconCls: 'x-status-error',
                 clear: true
@@ -317,24 +324,66 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             return;
         }
 
-        var uuid = assert (node.get ('uuid'));
         var mime = assert (node.get ('mime'));
+        var not_project = !MIME.is_project (mime);
+        var traversor = new Traversor (node, 'childNodes');
 
-        var protocol = location.protocol;
-        var host = ((location.hostname == 'localhost' ||
-                     location.hostname == '127.0.0.1') && location.port != 80)
-                        ? '{0}:{1}'.format (location.hostname, 8008)
-                        : location.host;
-        var path = 'git/?p={0}'.format (uuid);
-        var uri = '{0}//{1}/{2}'.format (protocol, host, path);
+        traversor.do ({
+            scope: this, callback: function (node) {
+                var mime = assert (node.get ('mime'));
+                if (MIME.is_folder (mime)) return;
 
-        var tab = window.open (uri, '_blank');
-        if (tab) tab.focus();
-
-        TRACKER.event ({
-            category: 'MainToolbar', action: 'show-git-history',
-            label: mime, value: 1
+                this.application.fireEvent ('get_property', this, {
+                    scope: this, callback: on_get_property, property: [{
+                        node_uuid: assert (node.get ('uuid')), name: 'data'
+                    }]
+                });
+            }
         });
+
+        function on_get_property (props) {
+            if (props && props.length > 0) {
+                var array = ['Base64VcsProperty', 'TextVcsProperty'];
+                var type = assert (props[0].get ('type'));
+
+                if (Ext.Array.contains (array, type)) {
+                    traversor.doStop (); do_show_history ();
+                } else {
+                    if (not_project) do_show_disabled ();
+                }
+            } else {
+                if (!traversor.isStopped ()) do_show_disabled ();
+            }
+        }
+
+        function do_show_disabled () {
+            assert (me.getStatusbar ()).setStatus ({
+                text: 'GIT versioning not enabled!',
+                iconCls: 'x-status-error',
+                clear: true
+            });
+        }
+
+        function do_show_history () {
+            var uuid = assert (node.get ('uuid'));
+            var mime = assert (node.get ('mime'));
+
+            var protocol = location.protocol;
+            var host = ((location.hostname == 'localhost' ||
+                location.hostname == '127.0.0.1') && location.port != 80)
+                    ? '{0}:{1}'.format (location.hostname, 8008)
+                    : location.host;
+            var path = 'git/?p={0}'.format (uuid);
+            var uri = '{0}//{1}/{2}'.format (protocol, host, path);
+
+            var tab = window.open (uri, '_blank');
+            if (tab) tab.focus();
+
+            TRACKER.event ({
+                category: 'MainToolbar', action: 'show-git-history',
+                label: mime, value: 1
+            });
+        }
     }
 });
 

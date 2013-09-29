@@ -252,3 +252,52 @@ var TRACKER = function () {
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Provides a tree traverser `do` for a given node `root` where `treeName` is
+ * the attribute name of the tree attached to `root`. With `doStop` function
+ * an ongoing tree traversal can be stopped, and with `isStopped` it can be
+ * queried if `doStop` has been invoked.
+ */
+
+var Traversor = function (root, treeName) {
+    assert (root);
+    assert (treeName);
+
+    var me = this;
+    me.stopFlag = false;
+
+    var traverse = function (node, callback, level) {
+        if (!me.stopFlag) {
+            var array = assert (node[treeName]);
+            for (var index in array) {
+                if (array.hasOwnProperty (index)) traverse (
+                    array[index], callback, level + 1
+                );
+
+                if (me.stopFlag) break;
+            }
+        }
+
+        if (!me.stopFlag) {
+            if (callback && callback.callback) {
+                callback.callback.call (callback.scope||this, node, level);
+            }
+        }
+    };
+
+    return {
+        do: traverse.partial ({
+            node: root, level: 0
+        }),
+        doStop: function () {
+            me.stopFlag = true;
+        },
+        isStopped: function () {
+            return me.stopFlag;
+        }
+    };
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
