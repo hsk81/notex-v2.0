@@ -18,6 +18,7 @@ from ..models import TextCowProperty
 from ..models import TextVcsProperty
 from ..models import Base64CowProperty
 from ..models import Base64VcsProperty
+from ..models import StringProperty
 
 import os
 import re
@@ -262,6 +263,11 @@ def create_txt (name, root, mime, path=None, source=None, vcs=None):
     prop = TextVcsProperty ('data', data, leaf, mime=mime) if vcs else \
            TextCowProperty ('data', data, leaf, mime=mime)
 
+    meta = StringProperty ('meta', JSON.encode ({
+        'type': 'TextVcsProperty' if vcs else 'TextCowProperty'
+    }), leaf, mime='application/json')
+
+    assert meta
     return leaf, prop
 
 def create_bin (name, root, mime, path=None, source=None, vcs=None):
@@ -277,6 +283,11 @@ def create_bin (name, root, mime, path=None, source=None, vcs=None):
     prop = Base64VcsProperty ('data', data, leaf, mime=mime) if vcs else \
            Base64CowProperty ('data', data, leaf, mime=mime)
 
+    meta = StringProperty ('meta', JSON.encode ({
+        'type': 'Base64VcsProperty' if vcs else 'Base64CowProperty'
+    }), leaf, mime='application/json')
+
+    assert meta
     return leaf, prop
 
 ###############################################################################

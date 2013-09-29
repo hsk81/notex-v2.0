@@ -278,7 +278,7 @@ class CowExternalProperty (Property, DataPropertyMixin):
         with open (path_to, 'rb') as source:
             return self.decode (source.read ())
 
-    def set_data (self, value, skip_patch=False, meta=None):
+    def set_data (self, value, skip_patch=False):
 
         value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))

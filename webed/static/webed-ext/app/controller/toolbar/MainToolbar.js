@@ -335,7 +335,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
                 this.application.fireEvent ('get_property', this, {
                     scope: this, callback: on_get_property, property: [{
-                        node_uuid: assert (node.get ('uuid')), name: 'data'
+                        node_uuid: assert (node.get ('uuid')), name: 'meta'
                     }]
                 });
             }
@@ -344,7 +344,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         function on_get_property (props) {
             if (props && props.length > 0) {
                 var array = ['Base64VcsProperty', 'TextVcsProperty'];
-                var type = assert (props[0].get ('type'));
+                var data = assert (props[0].get ('data'));
+                var meta = Ext.JSON.decode (data);
+                var type = assert (meta.type);
 
                 if (Ext.Array.contains (array, type)) {
                     traversor.doStop (); do_show_history ();
