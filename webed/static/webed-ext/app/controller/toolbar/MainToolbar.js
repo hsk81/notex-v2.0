@@ -303,7 +303,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
 
     showGitHistory: function () {
         var me = this,
-            node = up (assert (this.get_selection (), '306'));
+            node = up (assert (this.get_selection ()));
 
         function up (node) {
             while (node.parentNode != null &&
@@ -315,7 +315,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         if (node.isRoot ()) {
-            var statusbar = assert (me.getStatusbar (), '318');
+            var statusbar = assert (me.getStatusbar ());
             statusbar.setStatus ({
                 text: 'Select a project or file; none is selected.',
                 iconCls: 'x-status-error',
@@ -325,15 +325,15 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
             return;
         }
 
-        var mime = assert (node.get ('mime'), '328');
+        var mime = assert (node.get ('mime'));
         var not_project = !MIME.is_project (mime);
         var traversor = new Traversor (node, 'childNodes');
 
         traversor.traverse ({
             scope: this, callback: function (node) {
-                var mime = assert (node.get ('mime'), '334');
+                var mime = assert (node.get ('mime'));
                 if (MIME.is_folder (mime)) return;
-                var uuid = assert (node.get ('uuid'), '336');
+                var uuid = assert (node.get ('uuid'));
 
                 this.application.fireEvent ('get_property', this, {
                     scope: this, callback: on_get_property, property: [{
@@ -346,9 +346,9 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         function on_get_property (props) {
             if (props && props.length > 0) {
                 var array = ['Base64VcsProperty', 'TextVcsProperty'];
-                var data = assert (props[0].get ('data'), '349');
+                var data = assert (props[0].get ('data'));
                 var meta = Ext.JSON.decode (data);
-                var type = assert (meta.type, '351');
+                var type = assert (meta.type);
 
                 if (Ext.Array.contains (array, type)) {
                     traversor.doStop (); do_show_history ();
@@ -361,7 +361,7 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         function do_show_disabled () {
-            var statusbar = assert (me.getStatusbar (), '364');
+            var statusbar = assert (me.getStatusbar ());
             statusbar.setStatus ({
                 text: 'GIT versioning not enabled!',
                 iconCls: 'x-status-error',
@@ -370,8 +370,8 @@ Ext.define ('Webed.controller.toolbar.MainToolbar', {
         }
 
         function do_show_history () {
-            var uuid = assert (node.get ('uuid'), '373');
-            var mime = assert (node.get ('mime'), '374');
+            var uuid = assert (node.get ('uuid'));
+            var mime = assert (node.get ('mime'));
 
             var protocol = location.protocol;
             var host = ((location.hostname == 'localhost' ||
