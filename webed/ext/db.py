@@ -59,6 +59,13 @@ class WebedOrm (object):
         else:
             self.app = None
 
+    def __repr__(self):
+
+        return u'<WebedOrm: engine=%r>' % self.URI
+
+    def __getattr__ (self, item):
+        return getattr (sqlalchemy, item)
+
     def init_app (self, app, uri=None, echo=None):
 
         app.config.setdefault ('SQLALCHEMY_ECHO', False)
@@ -82,10 +89,6 @@ class WebedOrm (object):
         @app.teardown_appcontext
         def on_teardown (exception):
             self.session_manager.remove ()
-
-    def __repr__(self):
-
-        return u'<WebedOrm: engine=%r>' % self.URI
 
     @property
     def session (self):
@@ -143,9 +146,6 @@ class WebedOrm (object):
 
     def drop_all (self):
         self.Model.metadata.drop_all (self.engine)
-
-    def __getattr__ (self, item):
-        return getattr (sqlalchemy, item)
 
 ###############################################################################
 ###############################################################################
