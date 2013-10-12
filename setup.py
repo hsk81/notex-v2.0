@@ -28,7 +28,7 @@ if __name__ == '__main__':
             'acidfs>=1.0',
             'compressinja>=0.0.2',
             'Flask>=0.9',
-            'Flask-Admin>=1.0.4',
+            'Flask-Admin>=1.0.6',
             'Flask-Assets>=0.8',
             'Flask-DebugToolbar>=0.8',
             'Flask-Login>=0.1.3',
@@ -51,7 +51,8 @@ if __name__ == '__main__':
 
         dependency_links=[
             'http://github.com/hsk81/pylibmc/tarball/master#egg=pylibmc-1.2.3',
-            'http://github.com/hsk81/acidfs/tarball/master#egg=acidfs-1.0'
+            'http://github.com/hsk81/acidfs/tarball/master#egg=acidfs-1.0',
+            'http://github.com/hsk81/flask-admin/tarball/master#egg=Flask-Admin-1.0.6'
         ]
     )
 
