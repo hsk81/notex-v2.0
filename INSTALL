@@ -91,7 +91,7 @@ git checkout -b tag-v2.1.3
 su postgres
 psql -f webed/config/pg.sql
 psql -f webed/config/test.sql
-psql -f webed/config/production.sql
+psql -f webed/config/production.sql ## create!
 exit
 
 ## notex.ch: setup
@@ -104,6 +104,6 @@ pip uninstall Flask-Admin
 
 ## notex.ch: run (debug)
 
-export WEBED_SETTINGS=/srv/notex.git/webed/config/production.py
+export WEBED_SETTINGS=/srv/notex.git/webed/config/production.py ## create!
 cd /srv/notex.git && ./webed.py run -d
 
