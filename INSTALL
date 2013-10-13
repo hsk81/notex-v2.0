@@ -1,4 +1,4 @@
-#!/bin/bash
+## installation: Ubuntu 12.04 LTS
 
 apt-get update
 apt-get upgrade
