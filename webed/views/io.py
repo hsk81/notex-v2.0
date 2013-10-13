@@ -45,10 +45,12 @@ io = Blueprint ('io', __name__)
 def file_upload (vcs=None):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    if vcs is None: vcs = False if request.json is None \
-        else JSON.decode (request.json.get ('vcs', 'false'))
+    if vcs is None: vcs = False if request_json is None \
+        else JSON.decode (request_json.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     source = request.files['file']
@@ -57,7 +59,7 @@ def file_upload (vcs=None):
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         return response
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request_json.get ('root_uuid', None)
     assert root_uuid
 
     if root_uuid == '00000000-0000-0000-0000-000000000000':
@@ -102,10 +104,12 @@ def archive_upload (source=None, base=None, skip_commit=None, do_index=None,
                     json=True, vcs=None):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    if vcs is None: vcs = False if request.json is None \
-        else JSON.decode (request.json.get ('vcs', 'false'))
+    if vcs is None: vcs = False if request_json is None \
+        else JSON.decode (request_json.get ('vcs', 'false'))
     assert vcs in [True, False]
 
     source = source if source else request.files['file']
