@@ -1,7 +1,7 @@
 ## installation: Ubuntu 12.04 LTS
 
-apt-get update
-apt-get upgrade
+apt-get -y update
+apt-get -y upgrade
 
 ## locale: en_US.UTF-8
 
@@ -33,7 +33,7 @@ chown -R root:root /usr/lib/jvm/jdk1.7.0
 
 ## ruby: 1.8.7
 
-apt-get install ruby
+apt-get -y install ruby
 
 ## sencha command: 3.0.2.288
 
