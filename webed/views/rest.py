@@ -39,15 +39,17 @@ rest.add_url_rule ('/node', view_func=NodeApi.as_view ('node'))
 def node_create (leafs=True, json=True):
 
     if not request.is_xhr:
-        request.json = request.form
+        request_json = request.form
+    else:
+        request_json = request.json
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request_json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid or not uuid
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name is not None
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -118,15 +120,17 @@ def node_read (leafs=True, json=True):
 def node_update (leafs=True, json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request_json.get ('root_uuid', None)
     assert root_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name is not None
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -157,9 +161,11 @@ def node_update (leafs=True, json=True):
 def node_delete (leafs=True, json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
@@ -187,15 +193,17 @@ rest.add_url_rule ('/leaf', view_func=LeafApi.as_view ('leafs'))
 def leaf_create (json=True):
 
     if not request.is_xhr:
-        request.json = request.form
+        request_json = request.form
+    else:
+        request_json = request.json
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request_json.get ('root_uuid', None)
     assert root_uuid or not root_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid or not uuid
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name is not None
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -294,15 +302,17 @@ def leaf_read (json=True):
 def leaf_update (json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    root_uuid = request.json.get ('root_uuid', None)
+    root_uuid = request_json.get ('root_uuid', None)
     assert root_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name is not None
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -333,9 +343,11 @@ def leaf_update (json=True):
 def leaf_delete (json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
@@ -363,21 +375,23 @@ rest.add_url_rule ('/property', view_func=PropertyApi.as_view ('properties'))
 def property_create (json=True):
 
     if not request.is_xhr:
-        request.json = request.form
+        request_json = request.form
+    else:
+        request_json = request.json
 
-    node_uuid = request.json.get ('node_uuid', None)
+    node_uuid = request_json.get ('node_uuid', None)
     assert node_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid or not uuid
-    type = request.json.get ('type', None)
+    type = request_json.get ('type', None)
     assert type
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name
-    data = request.json.get ('data', None)
+    data = request_json.get ('data', None)
     assert data or not data
-    size = request.json.get ('size', None)
+    size = request_json.get ('size', None)
     assert size or not size
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -430,23 +444,25 @@ def property_read (json=True):
 def property_update (json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    node_uuid = request.json.get ('node_uuid', None)
+    node_uuid = request_json.get ('node_uuid', None)
     assert node_uuid
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
-    type = request.json.get ('type', None)
+    type = request_json.get ('type', None)
     assert type
-    mime = request.json.get ('mime', None)
+    mime = request_json.get ('mime', None)
     assert mime
-    name = request.json.get ('name', None)
+    name = request_json.get ('name', None)
     assert name
-    size = request.json.get ('size', None)
+    size = request_json.get ('size', None)
     assert size or not size
-    data = request.json.get ('data', None)
+    data = request_json.get ('data', None)
     assert data or not data
-    meta = request.json.get ('meta', None)
+    meta = request_json.get ('meta', None)
     assert meta or not meta
 
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
@@ -475,9 +491,11 @@ def property_update (json=True):
 def property_delete (json=True):
 
     if not request.is_xhr:
-        request.json = request.args
+        request_json = request.args
+    else:
+        request_json = request.json
 
-    uuid = request.json.get ('uuid', None)
+    uuid = request_json.get ('uuid', None)
     assert uuid
     base = Q (Node.query).one (uuid=app.session_manager.anchor)
     assert base
