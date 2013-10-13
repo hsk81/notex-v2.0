@@ -3,7 +3,7 @@ __author__ = 'hsk81'
 ###############################################################################
 ###############################################################################
 
-from flask.ext.admin.contrib.sqlamodel import ModelView
+from flask.ext.admin.contrib.sqla import ModelView
 from flask.ext.login import current_user
 
 from webed.ext import admin, db, login
