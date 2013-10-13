@@ -36,6 +36,7 @@ if __name__ == '__main__':
             'Flask-Script>=0.5.3',
             'Flask-SQLAlchemy>=0.16',
             'Flask-Psycopg2>=1.2',
+            'Werkzeug>=0.8.3',
             'ipython>=0.13.1',
             'hiredis>=0.1.1',
             'pylibmc>=1.2.3',
