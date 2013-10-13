@@ -1,2 +1,2 @@
-sudo -u www-data -g www-data WEBED_SETTINGS=$WEBED_SETTINGS \
+sudo -u www-data -g www-data WEBED_SETTINGS=/srv/notex.git/webed/config/production.py \
 uwsgi -s /var/www/webed/uwsgi.sock -w webed-wsgi:app --enable-threads
