@@ -73,7 +73,7 @@ if __name__ == '__main__':
     print "# If this is the 1st run, execute also:"
     print "$ pip uninstall Flask-Admin"
     print "# And then re-run setup:"
-    print "$ setup.py install"
+    print "$ ./setup.py install"
 
 ###############################################################################
 ###############################################################################
