@@ -58,7 +58,6 @@ if __name__ == '__main__':
             'uWSGI==1.9.18.1',
             'ujson==1.33',
             'webassets==0.8',
-            'webed==2.1.3',
             'wsgiref==0.1.2',
             'yuicompressor==2.4.8',
             'zope.interface==4.0.5',
