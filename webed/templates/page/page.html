@@ -21,7 +21,11 @@
         <a href="{{ url_for('.blog', theme=theme) }}"><span>Blog</span></a>
         </li>
         <li active="{{ page == 'forum' }}">
+        {% if bbs.startswith (request.scheme) %}
         <a href="{{ url_for('.forum', theme=theme) }}"><span>Forum</span></a>
+        {% else %}
+        <a href="{{ bbs }}" target="_blank"><span>Forum</span></a>
+        {% endif %}
         </li>
         <li active="{{ page == 'contact' }}" style="float: right;">
         <a href="{{ url_for('.contact', theme=theme) }}"><span>Contact</span></a>

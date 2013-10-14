@@ -58,7 +58,7 @@ def blog ():
     return main (page='blog', blog=blog)
 
 @page.route ('/forum/')
-def forum (): return main (page='forum', bbs=app.config['FORUM_URL'])
+def forum (): return main (page='forum')
 
 @page.route ('/contact/')
 def contact (): return main (page='contact')
@@ -80,6 +80,7 @@ def main (page='main', template='index.html', **kwargs):
 
     return cached_template (template,
         adsense=app.config['ADSENSE'],
+        bbs=app.config['FORUM_URL'],
         canonical=get_canonical (page),
         debug=False if 'no-debug' in request.args else app.debug,
         description=get_description (page),
