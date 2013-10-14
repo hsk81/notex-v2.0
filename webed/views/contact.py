@@ -23,6 +23,8 @@ contact = Blueprint ('contact', __name__)
 @contact.route ('/feedback/', methods=['POST'])
 def feedback ():
 
+    sender = app.config['DEFAULT_MAIL_SENDER']
+    assert sender
     recipients = app.config['DEFAULT_MAIL_RECEIVERS']
     assert recipients
 
@@ -33,8 +35,8 @@ def feedback ():
     text = request.form.get ('text')
     assert text
 
-    subject = "Feedback: %s <%s>" % (name,mail)
-    message = Message (subject, recipients=recipients)
+    subject = "Feedback: %s <%s>" % (name, mail)
+    message = Message (subject, recipients=recipients, sender=sender)
     message.body = text
     mailer.send (message)
 
