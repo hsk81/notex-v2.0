@@ -100,7 +100,7 @@ class DataPropertyMixin (object):
 
     def get_data (self):
         return self._data
-    def set_data(self, value, meta=None):
+    def set_data(self, value, **kwargs):
         self._data = value
         self._size = len (value) if value else 0
 
@@ -173,7 +173,7 @@ class VcsExternalProperty (Property, DataPropertyMixin, VcsTransaction):
         with self.vcs.open (path_to, mode='rb') as source:
             return self.decode (source.read ())
 
-    def set_data (self, value, skip_patch=False, meta=None):
+    def set_data (self, value, skip_patch=False, meta=None, **kwargs):
 
         value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))
@@ -278,7 +278,7 @@ class CowExternalProperty (Property, DataPropertyMixin):
         with open (path_to, 'rb') as source:
             return self.decode (source.read ())
 
-    def set_data (self, value, skip_patch=False):
+    def set_data (self, value, skip_patch=False, **kwargs):
 
         value = value if skip_patch else self.patch (value)
         value_key = unicode (dbs_cache.make_key (value))
