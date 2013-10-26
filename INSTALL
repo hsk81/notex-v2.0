@@ -17,7 +17,7 @@ apt-get -y install nano sudo
 
 ## java: 7u40
 
-wget jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU
+wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU
 tar -xvf *-linux-x64.tar.gz
 mkdir -p /usr/lib/jvm
 mv ./jdk1.7.0_40 /usr/lib/jvm/jdk1.7.0
