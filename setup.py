@@ -8,7 +8,7 @@ from setuptools import setup
 ###############################################################################
 ###############################################################################
 
-version = '2.1.5'
+version = '2.1.7'
 
 ###############################################################################
 ###############################################################################
@@ -26,8 +26,7 @@ if __name__ == '__main__':
         zip_safe=False,
         install_requires=[
             'Flask==0.10.1',
-             ## REQUIRES: `pip uninstall Flask-Admin` && `setup.py install`!!
-            'Flask-Admin==1.0.6',
+            'Flask-Admin==1.0.7',
             'Flask-Assets==0.8',
             'Flask-DebugToolbar==0.8.0',
             'Flask-Login==0.2.7',
@@ -65,15 +64,8 @@ if __name__ == '__main__':
 
         dependency_links=[
             'http://github.com/hsk81/acidfs/tarball/master#egg=acidfs-1.1dev',
-            'http://github.com/hsk81/flask-admin/tarball/master#egg=Flask-Admin-1.0.6'
         ]
     )
-
-    print
-    print "# If this is the 1st run, execute also:"
-    print "$ pip uninstall Flask-Admin"
-    print "# And then re-run setup:"
-    print "$ ./setup.py install"
 
 ###############################################################################
 ###############################################################################
