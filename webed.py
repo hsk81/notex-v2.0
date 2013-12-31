@@ -30,13 +30,13 @@ manager = Manager (app)
 ###############################################################################
 
 @manager.command
-def run (debug=False, config=None):
+def run (address='127.0.0.1', port=5000, debug=False, config=None):
     """Runs the Flask server i.e. app.run (debug=True|False)"""
 
     if config:
         app.config.from_pyfile (config, silent=False)
 
-    app.run (debug=debug)
+    app.run (host=address, port=int (port), debug=debug)
 
 ###############################################################################
 
