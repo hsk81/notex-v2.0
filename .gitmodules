@@ -27,4 +27,4 @@
 	url = https://github.com/hsk81/jasmine-standalone.git
 [submodule "webed/static/webed-ext/dat"]
 	path = webed/static/webed-ext/dat
-	url = git@github.com:hsk81/notex.dat.git
+	url = https://github.com/hsk81/notex.dat.git
