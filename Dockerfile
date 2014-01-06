@@ -115,28 +115,38 @@ RUN /etc/init.d/memcached start && \
         /usr/bin/sudo -u www-data -g www-data PYTHON_EGG_CACHE=.python-eggs \
             WEBED_SETTINGS=/srv/notex.git/webed/config/production.py ./webed.py reset'
 
-# notex: `webed-dev.run`
-RUN cd /srv/notex.git && echo '#!/bin/bash\n\
-if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached start ; fi\n\
-if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server start ; fi\n\
-if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql start ; fi\n\
-\n\
-cd /srv/notex.git && CMD=$@ && /bin/bash -c "source bin/activate && \
-    /usr/bin/sudo -u www-data -g www-data PYTHON_EGG_CACHE=.python-eggs \
-        WEBED_SETTINGS=/srv/notex.git/webed/config/production.py $CMD"\n\
-' > webed-dev.run && chmod +x webed-dev.run
-
-# notex: execute `webed-dev.run`
-ENTRYPOINT ["/srv/notex.git/webed-dev.run"]
-
 ## --------------------------------------------------------------------------------------------
 ## Part (c): `notex:pro` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-## RUN apt-get -y install nginx
+RUN apt-get -y install nginx-full && \
+    rm -rf /etc/nginx/sites-enabled/* && \
+    rm -rf /etc/nginx/conf.d/*
+
+ADD nginx.conf /etc/nginx/conf.d/webed.conf
+ADD robots.txt /etc/nginx/conf.d/robots.txt
 
 ## --------------------------------------------------------------------------------------------
-## Part (d): `notex:tex` ######################################################################
+## Part (d): `notex:run` ######################################################################
+## --------------------------------------------------------------------------------------------
+
+# notex: `webed.run`
+RUN cd /srv/notex.git && echo '#!/bin/bash\n\
+if [[ $@ =~ NGINX=(1|true) ]] ; then /etc/init.d/nginx start ; fi\n\
+if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server start ; fi\n\
+if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached start ; fi\n\
+if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql start ; fi\n\
+\n\
+cd /srv/notex.git && CMD=$@ && /usr/bin/sudo -u www-data -g www-data \
+    /bin/bash -c "source bin/activate && PYTHON_EGG_CACHE=.python-eggs \
+        WEBED_SETTINGS=/srv/notex.git/webed/config/production.py $CMD"\n\
+' > webed.run && chmod +x webed.run
+
+# notex: execute `webed.run`
+ENTRYPOINT ["/srv/notex.git/webed.run"]
+
+## --------------------------------------------------------------------------------------------
+## Part (e): `notex:tex` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
 ## RUN apt-get -y install texlive-full
@@ -144,4 +154,3 @@ ENTRYPOINT ["/srv/notex.git/webed-dev.run"]
 ## --------------------------------------------------------------------------------------------
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
-

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /static/webed-ext/resources/theme/img
+Disallow: /static
+Disallow: /git
+Sitemap: /sitemap.xml

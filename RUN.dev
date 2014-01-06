@@ -1,0 +1,1 @@
+NGINX=0 REDIS=1 MEMCACHED=1 POSTGRESQL=1 ./webed.py run -a 0.0.0.0 -p 5000 -d
