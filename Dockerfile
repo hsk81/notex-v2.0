@@ -123,9 +123,6 @@ RUN apt-get -y install nginx-full && \
     rm -rf /etc/nginx/sites-enabled/* && \
     rm -rf /etc/nginx/conf.d/*
 
-ADD nginx.conf /etc/nginx/conf.d/webed.conf
-ADD robots.txt /etc/nginx/conf.d/robots.txt
-
 # notex: execute `assets build`
 RUN cd /srv/notex.git && /bin/bash -c 'source bin/activate && \
         /usr/bin/sudo -u www-data -g www-data PYTHON_EGG_CACHE=.python-eggs \
@@ -159,7 +156,15 @@ ENTRYPOINT ["/srv/notex.git/webed.run"]
 ## Part (e): `notex:tex` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-## RUN apt-get -y install texlive-full
+RUN apt-get -y install texlive-full
+
+## --------------------------------------------------------------------------------------------
+## Part (f): `notex:cfg` ######################################################################
+## --------------------------------------------------------------------------------------------
+
+ADD nginx.conf /etc/nginx/conf.d/webed.conf
+ADD robots.txt /etc/nginx/conf.d/robots.txt
+ADD webed/config/production.py /srv/notex.git/webed/config/production.py
 
 ## --------------------------------------------------------------------------------------------
 ## ############################################################################################
