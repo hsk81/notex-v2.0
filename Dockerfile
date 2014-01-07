@@ -41,9 +41,8 @@ RUN apt-get -y install ruby
 
 # sencha command: 3.0.2.288
 RUN wget -O 3.0.2.288-linux-x64.run.zip https://db.tt/KEVpOKtG && \
-    unzip *.zip && chmod +x *.run && \
-    mkdir -p /opt/Sencha/Cmd && \
-    mv *.run /opt/Sencha/Cmd && \
+    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
+    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
     /opt/Sencha/Cmd/3.0.2.288-linux-x64.run --prefix /opt --mode unattended
 
 # memcached: 1.4.14
@@ -165,3 +164,4 @@ ENTRYPOINT ["/srv/notex.git/webed.run"]
 ## --------------------------------------------------------------------------------------------
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
+
