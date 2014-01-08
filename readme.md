@@ -10,7 +10,7 @@ Installation
 
 * ```git clone https://github.com/hsk81/notex notex.git && cd notex.git```
 
-Clone the GIT repository to the local disk and change the current working directory to the top level directory of the repository.
+Clone the GIT repository to the local disk and change the current working directory to the top level of the repository.
 
 * ```docker build -rm -t notex:run .```
 
