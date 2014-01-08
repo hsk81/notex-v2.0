@@ -158,23 +158,23 @@ ENTRYPOINT ["/srv/notex.git/webed.run"]
 ## --------------------------------------------------------------------------------------------
 
 RUN apt-get -y install \
-texlive \
-texlive-bibtex-extra \
-texlive-fonts-extra \
-texlive-formats-extra \
-texlive-games \
-texlive-generic-extra \
-texlive-humanities \
-texlive-latex-extra \
-texlive-latex3 \
-texlive-math-extra \
-texlive-metapost \
-texlive-music \
-texlive-omega \
-texlive-plain-extra \
-texlive-publishers \
-texlive-science \
-texlive-xetex
+ texlive \
+ texlive-bibtex-extra \
+ texlive-fonts-extra \
+ texlive-formats-extra \
+ texlive-games \
+ texlive-generic-extra \
+ texlive-humanities \
+ texlive-latex-extra \
+ texlive-latex3 \
+ texlive-math-extra \
+ texlive-metapost \
+ texlive-music \
+ texlive-omega \
+ texlive-plain-extra \
+ texlive-publishers \
+ texlive-science \
+ texlive-xetex
 
 ## --------------------------------------------------------------------------------------------
 ## Part (f): `notex:cfg` ######################################################################
