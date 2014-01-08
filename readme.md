@@ -41,5 +41,3 @@ Run the docker container and map the internal port `80` to the external port `80
 * ```http://localhost:8080```
 
 Navigate your browser to the above location, and enjoy! The container runs internally `nginx` to serve the application; depending on your needs use another external port than `8080` or proxy to `localhost:8080` via an `nginx` (or `apache` etc.) instance on your host machine.
-
-**INFO:** The actual conversion process has *not* been docker-ized yet; but this will be fixed very soon!
