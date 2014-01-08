@@ -14,7 +14,7 @@ Clone the GIT repository to the local disk and change the current working direct
 
 * ```docker build -rm -t notex:run .```
 
-Build a [docker](http://www.docker.io) container image and tag it as `notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.7.2` or newer is recommended.
+Build a [docker](http://www.docker.io) container image and tag it as `notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.7.4` or newer is recommended.
 
 Execution: Development
 ----------------------
