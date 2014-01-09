@@ -185,8 +185,9 @@ ADD robots.txt /etc/nginx/conf.d/robots.txt
 
 ADD webed/config/default.py /srv/notex.git/webed/config/default.py
 ADD webed/config/production.py /srv/notex.git/webed/config/production.py
+ADD webed/config/sphinx.py /srv/notex.git/webed/config/sphinx.py
+ADD webed/config/test.py /srv/notex.git/webed/config/test.py
 
 ## --------------------------------------------------------------------------------------------
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
-
