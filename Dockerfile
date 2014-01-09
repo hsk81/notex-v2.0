@@ -86,7 +86,7 @@ RUN apt-get -y clean && \
 
 # notex: fetch latest tag
 RUN git clone https://github.com/hsk81/notex /srv/notex.git && \
-    cd /srv/notex.git && \
+    cd /srv/notex.git && git checkout master && \
     git submodule update --init --recursive && \
     git checkout $(git tag | tail -n1) && \
     git checkout -b tag-$(git tag | tail -n1)
