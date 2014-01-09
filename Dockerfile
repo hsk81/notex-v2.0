@@ -2,7 +2,7 @@
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
 
-FROM ubuntu:quantal
+FROM ubuntu:precise
 MAINTAINER Hasan Karahan <hasan.karahan81@gmail.com>
 
 ## --------------------------------------------------------------------------------------------
@@ -26,9 +26,8 @@ RUN apt-get -y install \
 
 # java: 7u40
 RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
-    tar -xvf *-linux-x64.tar.gz && \
-    mkdir -p /usr/lib/jvm && \
-    mv ./jdk1.7.0_40 /usr/lib/jvm/jdk1.7.0 && \
+    tar -xvf *-linux-x64.tar.gz && mkdir -p /usr/lib/jvm && \
+    mv ./jdk1.7.0_40 /usr/lib/jvm/jdk1.7.0 && mv *.tar.gz /root/ && \
     \
     update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1 && \
     update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1 && \
@@ -70,7 +69,10 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" >> \
     apt-get -y install postgresql-9.3
 
 # python: 2.7.3, pip: 1.5, virtualenv: 1.11, sphinx: 1.1.3
-RUN apt-get -y install python2.7 python2.7-dev python-setuptools python-sphinx && \
+RUN curl -O http://python-distribute.org/distribute_setup.py && \
+    apt-get -y install python2.7 python2.7-dev python-sphinx && \
+    ln -s /usr/bin/sphinx-build /usr/bin/sphinx-build2 && \
+    python2 distribute_setup.py && mv *.py /root/ && mv *.tar.gz /root/ && \
     easy_install pip && pip2 install virtualenv
 
 # clean & remove
@@ -107,9 +109,9 @@ RUN mkdir -p /var/www/webed && \
     chown www-data:www-data /srv/notex.git -R
 
 # notex: execute `reset`
-RUN /etc/init.d/memcached start && \
-    /etc/init.d/redis-server start && \
-    /etc/init.d/postgresql start && \
+RUN /etc/init.d/memcached restart && \
+    /etc/init.d/redis-server restart && \
+    /etc/init.d/postgresql restart && \
     \
     cd /srv/notex.git && /bin/bash -c 'source bin/activate && \
         /usr/bin/sudo -u www-data -g www-data PYTHON_EGG_CACHE=.python-eggs \
@@ -120,7 +122,10 @@ RUN /etc/init.d/memcached start && \
 ## --------------------------------------------------------------------------------------------
 
 # nginx: 1.4.4
-RUN apt-get -y install nginx-full && \
+RUN echo "deb http://nginx.org/packages/ubuntu/ precise nginx" > \
+    /etc/apt/sources.list.d/nginx.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62 && \
+    apt-get -y update && apt-get -y install nginx && \
     rm -rf /etc/nginx/sites-enabled/* && \
     rm -rf /etc/nginx/conf.d/*
 
@@ -140,10 +145,10 @@ RUN cd /srv/notex.git && /bin/bash -c 'source bin/activate && \
 
 # notex: `webed.run`
 RUN cd /srv/notex.git && echo '#!/bin/bash\n\
-if [[ $@ =~ NGINX=(1|true) ]] ; then /etc/init.d/nginx start ; fi\n\
-if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server start ; fi\n\
-if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached start ; fi\n\
-if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql start ; fi\n\
+if [[ $@ =~ NGINX=(1|true) ]] ; then /etc/init.d/nginx restart 2> /dev/null ; fi\n\
+if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server restart 2> /dev/null ; fi\n\
+if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached restart 2> /dev/null ; fi\n\
+if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql restart 2> /dev/null ; fi\n\
 \n\
 cd /srv/notex.git && CMD=$@ && /usr/bin/sudo -u www-data -g www-data \
     /bin/bash -c "source bin/activate && PYTHON_EGG_CACHE=.python-eggs \
@@ -157,30 +162,31 @@ ENTRYPOINT ["/srv/notex.git/webed.run"]
 ## Part (e): `notex:tex` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-RUN apt-get -y install \
- texlive \
- texlive-bibtex-extra \
- texlive-fonts-extra \
- texlive-formats-extra \
- texlive-games \
- texlive-generic-extra \
- texlive-humanities \
- texlive-latex-extra \
- texlive-latex3 \
- texlive-math-extra \
- texlive-metapost \
- texlive-music \
- texlive-omega \
- texlive-plain-extra \
- texlive-publishers \
- texlive-science \
- texlive-xetex
+#RUN apt-get -y install \
+# texlive \
+# texlive-bibtex-extra \
+# texlive-fonts-extra \
+# texlive-formats-extra \
+# texlive-games \
+# texlive-generic-extra \
+# texlive-humanities \
+# texlive-latex-extra \
+# texlive-latex3 \
+# texlive-math-extra \
+# texlive-metapost \
+# texlive-music \
+# texlive-omega \
+# texlive-plain-extra \
+# texlive-publishers \
+# texlive-science \
+# texlive-xetex
 
 ## --------------------------------------------------------------------------------------------
 ## Part (f): `notex:cfg` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-ADD nginx.conf /etc/nginx/conf.d/webed.conf
+ADD nginx.conf /etc/nginx/nginx.conf
+ADD webed.conf /etc/nginx/conf.d/webed.conf
 ADD robots.txt /etc/nginx/conf.d/robots.txt
 
 ADD webed/config/default.py /srv/notex.git/webed/config/default.py
