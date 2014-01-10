@@ -66,3 +66,8 @@ You could also start another worker container by repeating the same command exce
 * ```http://localhost:8080```
 
 Navigate your browser to the above location, and enjoy! The frontend container runs internally `nginx` to serve the application; depending on your needs use another external port than `8080` or proxy to `localhost:8080` via an `nginx` (or `apache` etc.) instance on your host machine.
+
+Configuration
+-------------
+
+...
