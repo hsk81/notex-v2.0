@@ -45,9 +45,8 @@ Export first the `QUEUE` environment variable which needs to contain the TCP/IP 
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
 ```
-docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 \
-notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' \
--pba 'tcp://*:7171' -dba 'tcp://*:9191'
+docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 notex:run \
+./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' -pba 'tcp://*:7171' -dba 'tcp://*:9191'
 ```
 Start the *queue* container named `qqq`, map the required ports to the host machine, and ensure that the TCP/IP binding addresses for the *ping* and *data* channels are declared correctly; actually you could omit the `-pfa`, `-dfa`, `-pba` and `-dba` arguments, since this case the default values are used anyway.
 
