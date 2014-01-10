@@ -37,23 +37,27 @@ Execution: Production
 ---------------------
 
 You need to run *three* components to get a functional application: a frontend `ntx` which is connected via a queue `qqq` to a backend conversion worker `spx`:
-
-* ```export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)```
-
+```
+export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 notex:run \
+PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
+```
 Export first the `QUEUE` environment variable which needs to contain the TCP/IP address of a queue (to be started in the next step); if you run all three components on the same host then you can use the address of the bridge docker uses, e.g. `lxcbr0` (or similar: run `ifconfig` to get a listing of enabled interfaces).
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
-
-* ```docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 hsk81/notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' -pba 'tcp://*:7171' -dba 'tcp://*:9191'```
-
+```
+docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 \
+notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' \
+-pba 'tcp://*:7171' -dba 'tcp://*:9191'
+```
 Start the *queue* container named `qqq`, map the required ports to the host machine, and ensure that the TCP/IP binding addresses for the *ping* and *data* channels are declared correctly; actually you could omit the `-pfa`, `-dfa`, `-pba` and `-dba` arguments, since this case the default values are used anyway.
 
 As mentioned the queue offers four binding points: two for *frontend* container(s) to connect to (`-pfa` or `--ping-frontend-address`, and `-dfa` or `--data-frontend-address`), plus another two for *backend* worker(s) to connect to (`-pba` or `--ping-backend-address`, and `-dba` or `--data-backend-address`).
 
 The application uses the *ping* and *data* channels for different purposes: Given a conversion job, the frontend ask the queue via a "ping" through the former channel if a worker is available, and if so sends the corresponding data through the latter one. The queue figures in a similar way which backend converter is idle and chooses it for the job.
-
-* ```export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2```
-
+```
+export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t hsk81/notex:run \
+./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
+```
 Run a worker container named `spx-1`, and connect to the queue by wiring the *ping* and *data* channels to the corresponding addresses and ports; the worker starts internally two threads: depending on job load and resources you can increase or decrease the number of conversion threads per worker.
 
 You could also start another worker container by repeating the same command except by using another name, e.g. `spx-2`: But this does not make much sense, if the same physical host is used (increase the number of worker threads instead); if you would run the command on another host though, the you probably would need to provide the correct TCP/IP address via the `QUEUE` variable.
