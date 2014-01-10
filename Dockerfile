@@ -2,7 +2,7 @@
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
 
-FROM ubuntu:precise
+FROM stackbrew/ubuntu:saucy
 MAINTAINER Hasan Karahan <hasan.karahan81@gmail.com>
 
 ## --------------------------------------------------------------------------------------------
@@ -23,6 +23,9 @@ ENV LC_ALL en_US.UTF-8
 RUN apt-get -y install \
     build-essential git zip unzip \
     wget curl nano sudo
+
+RUN git config --global user.name "NoTex Blackhan.ch" && \
+    git config --global user.email "contact@blackhan.ch"
 
 # java: 7u40
 RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
@@ -55,12 +58,10 @@ RUN echo "deb http://packages.dotdeb.org squeeze all" >> \
     echo "deb-src http://packages.dotdeb.org squeeze all" >> \
     /etc/apt/sources.list.d/dotdeb.org.list && \
     wget -q -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-    \
-    apt-get -y update && \
-    apt-get -y install redis-server
+    apt-get -y update && apt-get -y install redis-server
 
 # postgresql: 9.3
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" >> \
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" >> \
     /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - && \
     \
@@ -68,7 +69,7 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" >> \
     apt-get -y install libpq-dev && \
     apt-get -y install postgresql-9.3
 
-# python: 2.7.3, pip: 1.5, virtualenv: 1.11, sphinx: 1.1.3
+# python: 2.7.5+, pip: 1.5, virtualenv: 1.11, sphinx: 1.1.3
 RUN curl -O http://python-distribute.org/distribute_setup.py && \
     apt-get -y install python2.7 python2.7-dev python-sphinx && \
     ln -s /usr/bin/sphinx-build /usr/bin/sphinx-build2 && \
@@ -162,24 +163,8 @@ ENTRYPOINT ["/srv/notex.git/webed.run"]
 ## Part (e): `notex:tex` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-#RUN apt-get -y install \
-# texlive \
-# texlive-bibtex-extra \
-# texlive-fonts-extra \
-# texlive-formats-extra \
-# texlive-games \
-# texlive-generic-extra \
-# texlive-humanities \
-# texlive-latex-extra \
-# texlive-latex3 \
-# texlive-math-extra \
-# texlive-metapost \
-# texlive-music \
-# texlive-omega \
-# texlive-plain-extra \
-# texlive-publishers \
-# texlive-science \
-# texlive-xetex
+## RUN apt-get -y install texlive-full
+## RUN apt-get -y install ttf-*
 
 ## --------------------------------------------------------------------------------------------
 ## Part (f): `notex:cfg` ######################################################################
