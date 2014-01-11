@@ -58,7 +58,7 @@ As mentioned the queue offers four binding points: two for *frontend* container(
 
 The application uses the *ping* and *data* channels for different purposes: Given a conversion job, the frontend asks the queue via a "ping" through the former channel if a worker is available, and if so it sends the corresponding data through the latter channel. The queue figures in a similar way which backend converter is idle and chooses it for the job.
 ```
-export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
+export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t -v /var/www/webed:/var/www/webed:rw hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
 ```
 Run a worker container named `spx-1`, and connect to the queue by wiring the *ping* and *data* channels to the corresponding address and ports. The worker starts internally two threads: depending on job load and resources you can increase or decrease the number of conversion threads per worker.
 
