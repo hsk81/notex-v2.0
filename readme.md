@@ -38,9 +38,13 @@ Navigate your browser to the above location, and enjoy! The application runs in 
 Execution: Production
 ---------------------
 
-You need to run *three* components to get a functional application: a frontend `ntx` which is connected via a queue `qqq` to a backend conversion worker `spx-1`:
+You need to run *three* components to get a functional application: a frontend `ntx` which is connected via a queue `qqq` to a backend conversion worker `spx-1`. But before starting any of the components you first need the setup a location, which can be used to exchange data:
+
+* ```mkdir -p /var/www/webed && chmod www-data:www-data /var/www/webed -R```
+
+Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some other GNU/Linux distributions use `http` instead of `www-data` as the owner. The ownership is actually not that important, but it's noteworthy that this shared folder could be anywhere in the network or even within another docker container (as long as the read/write latencies are sufficiently small - otherwise performance will be affected).
 ```
-export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
+export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
 Export first the `QUEUE` environment variable which needs to contain the TCP/IP address of a queue (to be started in the next step); if you run all three components on the same host then you can use the address of docker's bridge , e.g. `lxcbr0` (or similar: run `ifconfig` to get a listing of enabled interfaces).
 
