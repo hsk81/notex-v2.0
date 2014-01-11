@@ -42,7 +42,7 @@ You need to run *three* components to get a functional application: a frontend `
 
 * ```mkdir -p /var/www/webed && chmod www-data:www-data /var/www/webed -R```
 
-Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some other GNU/Linux distributions use `http` instead of `www-data` as the owner. The ownership is actually not that important, but it's noteworthy that this shared folder could be anywhere in the network or even within another docker container (as long as the read/write latencies are sufficiently small - otherwise performance will be affected).
+Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some other GNU/Linux distributions use `http` instead of `www-data` as the owner.
 ```
 export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
