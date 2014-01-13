@@ -44,11 +44,13 @@ You need to run *three* components to get a functional application: a frontend `
 
 Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some other GNU/Linux distributions use `http` instead of `www-data` as the owner.
 ```
-export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
+export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -p 9418:9418 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
 Export first the `QUEUE` environment variable which needs to contain the TCP/IP address of a queue (to be started in the next step); if you run all three components on the same host then you can use the address of docker's bridge , e.g. `lxcbr0` (or similar: run `ifconfig` to get a listing of enabled interfaces).
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
+
+The commands maps also the `9418` port, which belongs to a `git-daemon`: This allows youto  `clone` a particular repository from your host (if you know it's randomly generated name), like `git clone git://localhost/6b76c8b4-..-2aa1af896791`.
 ```
 docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 hsk81/notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' -pba 'tcp://*:7171' -dba 'tcp://*:9191'
 ```
