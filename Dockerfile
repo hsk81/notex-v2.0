@@ -122,6 +122,10 @@ RUN /etc/init.d/memcached restart && \
 ## Part (c): `notex:pro` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
+# lighttpd: 1.4.31, highlight: 3.9
+RUN apt-get -y install lighttpd && \
+    apt-get -y install highlight
+
 # nginx: 1.4.4
 RUN echo "deb http://nginx.org/packages/ubuntu/ precise nginx" > \
     /etc/apt/sources.list.d/nginx.list && \
@@ -147,6 +151,7 @@ RUN cd /srv/notex.git && /bin/bash -c 'source bin/activate && \
 # notex: `webed.run`
 RUN cd /srv/notex.git && echo '#!/bin/bash\n\
 if [[ $@ =~ NGINX=(1|true) ]] ; then /etc/init.d/nginx restart 2> /dev/null ; fi\n\
+if [[ $@ =~ LIGHTTPD=(1|true) ]] ; then /etc/init.d/lighttpd restart 2> /dev/null ; fi\n\
 if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server restart 2> /dev/null ; fi\n\
 if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached restart 2> /dev/null ; fi\n\
 if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql restart 2> /dev/null ; fi\n\
@@ -173,6 +178,8 @@ RUN apt-get -y install ttf-*
 ADD nginx.conf /etc/nginx/nginx.conf
 ADD webed.conf /etc/nginx/conf.d/webed.conf
 ADD robots.txt /etc/nginx/conf.d/robots.txt
+ADD lighttpd.conf /etc/lighttpd/lighttpd.conf
+ADD gitweb.conf /etc/gitweb.conf
 
 ADD webed/config/default.py /srv/notex.git/webed/config/default.py
 ADD webed/config/production.py /srv/notex.git/webed/config/production.py
