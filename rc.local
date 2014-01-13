@@ -11,6 +11,6 @@
 #
 # By default this script does nothing.
 
-REPOs="/var/www/webed/acid" git daemon --detach --export-all --user=www-data --group=www-data --reuseaddr --base-path=$REPOs $REPOs
+REPOs="/var/www/webed/acid" && git daemon --detach --export-all --user=www-data --group=www-data --reuseaddr --base-path=$REPOs $REPOs
 
 exit 0
