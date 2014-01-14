@@ -64,7 +64,7 @@ export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t -v /var/www/webed:/var/
 ```
 Run a worker container named `spx-1`, and connect to the queue by wiring the *ping* and *data* channels to the corresponding address and ports. The worker starts internally two threads: depending on job load and resources you can increase or decrease the number of conversion threads per worker.
 
-You could also start another worker container by repeating the same command except by using another name, e.g. `spx-2`: But this does not make much sense, if the same physical host is used (increase the number of worker threads instead); if you would run the command on another host though, then you probably would need to provide the correct TCP/IP address via the `QUEUE` variable.
+You could also start another worker container by repeating the same command except by using another name, e.g. `spx-2`: But this does not make much sense, if the same physical host is used (increase the number of worker threads instead); if you would run the command on another host though, then you probably would need to provide a correct TCP/IP address for the `QUEUE` variable.
 
 * ```http://localhost:8080```
 
