@@ -33,10 +33,7 @@ class WebedLoginManager (LoginManager):
     @staticmethod
     def is_privileged ():
 
-        if request.remote_addr not in app.config['PRIVILEGED_ADDRESSES']:
-            print >> sys.stderr, 'wrong req-address', request.remote_addr
-            return False
-        return True
+        return request.remote_addr in app.config['PRIVILEGED_ADDRESSES']
 
 ###############################################################################
 
