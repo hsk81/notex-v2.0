@@ -14,7 +14,7 @@ Clone the GIT repository to the local disk and change the current working direct
 
 * ```docker build -rm -t hsk81/notex:run .```
 
-Build a [docker](http://www.docker.io) container image and tag it as `notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.7.4` or newer is recommended.
+Build a [docker](http://www.docker.io) container image and tag it as `hsk81/notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.7.5` or newer is recommended.
 
 **INFO**: Due to some docker issues, there is a small possiblity that the process will fail: In such a case just repeat the build command, till it runs through.
 
@@ -33,16 +33,16 @@ Run the docker container and map the internal port `5000` to the external port `
 
 Navigate your browser to the above location, and enjoy! The application runs in debug mode, so don't use this approach in a production environment; see the next section for that.
 
-**INFO**: Actual conversions will not work yet, since the corresponding workers have not been started!
+**INFO**: Actual conversion (to PDF, HTML etc.) will not work yet, since the corresponding workers have not been started!
 
 Execution: Production
 ---------------------
 
-You need to run *three* components to get a functional application: a frontend `ntx` which is connected via a queue `qqq` to a backend conversion worker `spx-1`. But before starting any of the components you first need the setup a location, which can be used to exchange data:
+You need to run *three* components to get a functional application: a *frontend* `ntx` which is connected via a *queue* `qqq` to a *backend* conversion worker `spx-1`. But before starting any of the components you first need the setup a location, which can be used to exchange data:
 
 * ```mkdir -p /var/www/webed && chmod www-data:www-data /var/www/webed -R```
 
-Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some other GNU/Linux distributions use `http` instead of `www-data` as the owner.
+Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some GNU/Linux distributions may use `http` instead of `www-data` as the owner.
 ```
 export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -p 9418:9418 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
@@ -50,7 +50,7 @@ Export first the `QUEUE` environment variable which needs to contain the TCP/IP 
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
 
-The commands maps also the `9418` port, which belongs to a `git-daemon`: This allows youto  `clone` a particular repository from your host (if you know it's randomly generated name), like `git clone git://localhost/6b76c8b4-..-2aa1af896791`.
+The command also maps the `9418` port, which belongs to a `git-daemon`: This allows youto `clone` a particular repository from your host (if you know it's randomly generated name), like `git clone git://localhost/6b76c8b4-..-2aa1af896791`.
 ```
 docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 hsk81/notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' -pba 'tcp://*:7171' -dba 'tcp://*:9191'
 ```
@@ -64,7 +64,7 @@ export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t -v /var/www/webed:/var/
 ```
 Run a worker container named `spx-1`, and connect to the queue by wiring the *ping* and *data* channels to the corresponding address and ports. The worker starts internally two threads: depending on job load and resources you can increase or decrease the number of conversion threads per worker.
 
-You could also start another worker container by repeating the same command except by using another name, e.g. `spx-2`: But this does not make much sense, if the same physical host is used (increase the number of worker threads instead); if you would run the command on another host though, then you probably would need to provide the correct TCP/IP address via the `QUEUE` variable.
+You could also start another worker container by repeating the same command except by using another name, e.g. `spx-2`: But this does not make much sense, if the same physical host is used (increase the number of worker threads instead); if you would run the command on another host though, then you probably would need to provide a correct TCP/IP address for the `QUEUE` variable.
 
 * ```http://localhost:8080```
 
