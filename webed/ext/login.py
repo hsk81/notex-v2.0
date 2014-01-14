@@ -10,6 +10,7 @@ from ..app import app
 from ..models.user import User
 
 import functools
+import sys
 
 ###############################################################################
 ###############################################################################
@@ -32,7 +33,10 @@ class WebedLoginManager (LoginManager):
     @staticmethod
     def is_privileged ():
 
-        return request.remote_addr in app.config['PRIVILEGED_ADDRESSES']
+        if request.remote_addr not in app.config['PRIVILEGED_ADDRESSES']:
+            print >> sys.stderr, 'wrong req-address', request.remote_addr
+            return False
+        return True
 
 ###############################################################################
 
