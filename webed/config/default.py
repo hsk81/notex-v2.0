@@ -57,11 +57,16 @@ class DefaultConfig:
 
     ##
     ## PRIVILEGED_ADDRESSES is a list of IP addresses privileged actions can be
-    ## executed from, i.e. admin views.
+    ## executed from, i.e. admin views. If in production the app is run behind
+    ## a proxy server then PROXY_FIX should be set: Do **NOT** set PROXY_FIX if
+    ## there is *no* proxy, since this might be a security risk!
     ##
 
     PRIVILEGED_ADDRESSES = eval (os.getenv (
         'PRIVILEGED_ADDRESSES', str (['127.0.0.1'])))
+
+    PROXY_FIX = eval (os.getenv (
+        'PROXY_FIX', str (False)))
 
     ##
     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
