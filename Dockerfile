@@ -156,7 +156,7 @@ if [[ $@ =~ LIGHTTPD=(1|true) ]] ; then /etc/init.d/lighttpd restart 2> /dev/nul
 if [[ $@ =~ REDIS=(1|true) ]] ; then /etc/init.d/redis-server restart 2> /dev/null ; fi\n\
 if [[ $@ =~ MEMCACHED=(1|true) ]] ; then /etc/init.d/memcached restart 2> /dev/null ; fi\n\
 if [[ $@ =~ POSTGRESQL=(1|true) ]] ; then /etc/init.d/postgresql restart 2> /dev/null ; fi\n\
-if [[ $@ =~ RC_LOCAL=(1|true) ]] ; then /bin/sh -e /etc/rc.local 2> /dev/null ; fi\n\
+if [[ $@ =~ GITDAEMON=(1|true) ]] ; then /bin/sh -e /etc/rc.local 2> /dev/null ; fi\n\
 \n\
 cd /srv/notex.git && CMD=$@ && /usr/bin/sudo -u www-data -g www-data \
     /bin/bash -c "source bin/activate && PYTHON_EGG_CACHE=.python-eggs \
