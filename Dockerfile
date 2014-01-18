@@ -43,6 +43,8 @@ RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
 #RUN apt-get -y install ruby
 
 # sencha command: 3.0.2.288
+#ENV SENCHA_CMD_x32 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux.run.zip
+#ENV SENCHA_CMD_x64 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux-x64.run.zip
 #RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64 && \
 #    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
 #    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
