@@ -40,13 +40,13 @@ RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
     chown -R root:root /usr/lib/jvm/jdk1.7.0
 
 # ruby: 1.9.3
-RUN apt-get -y install ruby
+#RUN apt-get -y install ruby
 
 # sencha command: 3.0.2.288
-RUN wget -O 3.0.2.288-linux-x64.run.zip https://db.tt/KEVpOKtG && \
-    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
-    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
-    /opt/Sencha/Cmd/3.0.2.288-linux-x64.run --prefix /opt --mode unattended
+#RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64 && \
+#    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
+#    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
+#    /opt/Sencha/Cmd/3.0.2.288-linux-x64.run --prefix /opt --mode unattended
 
 # memcached: 1.4.14
 RUN apt-get -y install memcached && \
