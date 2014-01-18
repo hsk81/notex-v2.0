@@ -102,8 +102,7 @@ RUN /etc/init.d/postgresql start ; cd /srv/notex.git ; \
 
 # notex: setup sencha & python env
 RUN cd /srv/notex.git && \
-    /bin/bash -c 'source /.bashrc && ./setup.sh' && \
-    /bin/bash -c 'source /.bashrc && source bin/activate && ./setup.py install' && \
+    /bin/bash -c './setup.sh && source bin/activate && ./setup.py install' && \
     /bin/bash -c 'mkdir -p .python-eggs'
 
 # notex: setup dirs & owners
