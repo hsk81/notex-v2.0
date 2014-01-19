@@ -5,10 +5,10 @@ An online text editor for reStructuredText, Markdown, LaTex and more! It has int
 
 Give it a try: Visit https://notex.ch, open a sample project and press the *Export as .. PDF* button.
 
-Support
--------
+Commercial Support
+------------------
 
-Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Don't hesitate, and write to cotact@blackhan.ch: We'll provide you a corresponding SLA (service level agreement) tailored to your needs!
+Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Don't hesitate, and write to cotact@blackhan.ch: We'll provide you an SLA (service level agreement) tailored to your needs!
 
 Installation
 ------------
@@ -261,7 +261,7 @@ index 78c8ad1..5696f40 100644
 +$site_name = "NoTex.ch - Git Web Interface";
 ```
 
-Support
--------
+Commercial Support
+------------------
 
-Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Don't hesitate, and write to cotact@blackhan.ch: We'll provide you an corresponding SLA (service level agreement) tailored to your needs!
+Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Do not hesitate, and write to cotact@blackhan.ch: We'll provide you an SLA (service level agreement) tailored to your needs!
