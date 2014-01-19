@@ -6,6 +6,7 @@ __author__ = 'hsk81'
 from flask import Blueprint
 from flask import redirect
 from flask import request
+from flask import url_for
 
 from flask.ext.mail import Message
 
@@ -40,7 +41,7 @@ def feedback ():
     message.body = text
     mailer.send (message)
 
-    return redirect ('/contact/')
+    return redirect (url_for ('page.contact'))
 
 ###############################################################################
 ###############################################################################
