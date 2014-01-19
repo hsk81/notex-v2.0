@@ -75,7 +75,79 @@ Configuration
 
 The default configuration (for the production environment) should be adapted to your needs, since otherwise some of the services which are included in NoTex might not run as expected. Below you'll find the configuration apdaptations which are used for the [NoTex.ch](https://notex.ch) site itself.
 
-### Gitweb: Web frontend to GIT
+### Caching (`webed.conf`)
+
+On [NoTex.ch](https://notex.ch) `memcached` is not run within the container, but externally (the command from `RUN.pro` has been adapted by omitting `MEMCACHED` [it could have also be set to zero: `MEMCACHED=0`]). Therefore the corresponding `memcached_pass` value had to be adapted:
+
+```diff
+diff --git a/webed.conf b/webed.conf
+index 09aa27b..5c15110 100644
+--- a/webed.conf
++++ b/webed.conf
+@@ -15,7 +15,7 @@ server {
+     location /cache {
+         internal;
+         set $memcached_key      $args;
+-        memcached_pass          127.0.0.1:11211;
++        memcached_pass          10.0.3.1:11211;
+         default_type            application/octet-stream;
+         expires                 15s;
+         add_header              Cache-Control private;
+```
+
+### Caching and Admin (`webed/config/default.py`)
+
+On [NoTex.ch](https://notex.ch) `memcached` and `redis` are not run within the container, but externally (the command from `RUN.pro` has been adapted by omitting `MEMCACHED` and `REDIS` [they could have also be set to zero: `MEMCACHED=0` and `REDIS=0`]). Therefore the corresponding `CACHE{0,1,2,3}_SERVERS` values had to be adapted:
+
+```diff
+diff --git a/webed/config/default.py b/webed/config/default.py
+index e77e80c..751fcfc 100644
+--- a/webed/config/default.py
++++ b/webed/config/default.py
+@@ -27,13 +27,13 @@ class DefaultConfig:
+         'CACHE_DEFAULT_TIMEOUT', PERMANENT_SESSION_LIFETIME.total_seconds ()))
+ 
+     CACHE0_KEY_PREFIX = os.getenv ('CACHE0_KEY_PREFIX', 'webed-std:')
+-    CACHE0_SERVERS = eval (os.getenv ('CACHE0_SERVERS', str (['127.0.0.1'])))
++    CACHE0_SERVERS = eval (os.getenv ('CACHE0_SERVERS', str (['10.0.3.1'])))
+     CACHE1_KEY_PREFIX = os.getenv ('CACHE1_KEY_PREFIX', 'webed-obj:')
+-    CACHE1_SERVERS = eval (os.getenv ('CACHE1_SERVERS', str (['127.0.0.1'])))
++    CACHE1_SERVERS = eval (os.getenv ('CACHE1_SERVERS', str (['10.0.3.1'])))
+     CACHE2_KEY_PREFIX = os.getenv ('CACHE2_KEY_PREFIX', 'webed-sss:')
+-    CACHE2_SERVERS = eval (os.getenv ('CACHE2_SERVERS', str (['127.0.0.1'])))
++    CACHE2_SERVERS = eval (os.getenv ('CACHE2_SERVERS', str (['10.0.3.1'])))
+     CACHE3_KEY_PREFIX = os.getenv ('CACHE3_KEY_PREFIX', 'webed-dbs:')
+-    CACHE3_SERVERS = eval (os.getenv ('CACHE3_SERVERS', str (['127.0.0.1'])))
++    CACHE3_SERVERS = eval (os.getenv ('CACHE3_SERVERS', str (['10.0.3.1'])))
+ 
+     LOG_FILE = os.path.join ('..', 'webed.logs', 'webed.log')
+     LOG_FILE = os.getenv ('LOG_FILE', LOG_FILE)
+@@ -63,10 +63,10 @@ class DefaultConfig:
+     ##
+ 
+     PRIVILEGED_ADDRESSES = eval (os.getenv (
+-        'PRIVILEGED_ADDRESSES', str (['127.0.0.1'])))
++        'PRIVILEGED_ADDRESSES', str (['XXX.X.X.X'])))
+ 
+     PROXY_FIX = eval (os.getenv (
+-        'PROXY_FIX', str (False)))
++        'PROXY_FIX', str (True)))
+ 
+     ##
+     ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
+```
+
+In addition, the `PRIVILEGED_ADDRESSES` has been changed to allow **secure** access to the admin interface: To access it use (a) the IP address of a machine, which has a back-end proxy (like `squid`) running, (b) on which you can `SSH` tunnel to, and (c) which has a front-end proxy (like `nginx`) running (pointing to the NoTex instance). Further then (d) connect your browser to the local port of the SSH tunnel (change the corresponding proxy settings in your browser).
+
+You should also make sure to run the front-end proxy via HTTPS (for which a self-signed SSL certificated should be enough). Then navigate to e.g. `admin.notex.ch` (or whereever the now *priviledged machine* is running):
+
+* `https://admin.notex.ch/admin/`
+
+Provided, you've set-up the priviledged machine correctly, the admin interface should appear: By default you'll be recognized as an `annonymous` user. To login visit `https://admin.notex.ch/admin/login` and to logout `https://admin.notex.ch/admin/logout`: On successful login you should be recognized as an `admin` user, and acquire access to the corresponding actions/menus.
+
+The security of this setup is based upon the `admin` user possessing the SSH key file for the priviledged machine to be able to establish an SSH tunnel successfully. As long as the priviledged machine is not compromised, the access should be safe. Consider also a *browser plugin* which can quickly enable and disable the proxy access: As long as the proxy is disabled you should not be able to login as an amin user.
+
+### Web frontend to GIT (`gitweb.conf`)
 The `gitweb` service provides a web interface to a git repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable -- due to privacy reasons -- it point to an empty/non-existent `$projectroot/project.lst` file:
 ```diff
 diff --git a/gitweb.conf b/gitweb.conf
