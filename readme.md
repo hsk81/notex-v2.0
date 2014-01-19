@@ -139,13 +139,13 @@ index e77e80c..751fcfc 100644
 
 In addition, the `PRIVILEGED_ADDRESSES` has been changed to allow **secure** access to the admin interface: To access it use (a) the IP address of a machine, which has a back-end proxy (like `squid`) running, (b) on which you can `SSH` tunnel to, and (c) which has a front-end proxy (like `nginx`) running (pointing to the NoTex instance). Further then (d) connect your browser to the local port of the SSH tunnel (change the corresponding proxy settings in your browser).
 
-You should also make sure to run the front-end proxy via HTTPS (for which a self-signed SSL certificated should be enough). Then navigate to e.g. `admin.notex.ch` (or whereever the now *priviledged machine* is running):
+You should also make sure to run the front-end proxy via HTTPS (for which a self-signed SSL certificated should be enough). Then navigate to e.g. `admin.notex.ch` (or whereever the now *privileged machine* is running):
 
 * `https://admin.notex.ch/admin/`
 
-Provided, you've set-up the priviledged machine correctly, the admin interface should appear: By default you'll be recognized as an `annonymous` user. To login visit `https://admin.notex.ch/admin/login` and to logout `https://admin.notex.ch/admin/logout`: On successful login you should be recognized as an `admin` user, and acquire access to the corresponding actions/menus.
+Provided, you've set-up the privileged machine correctly, the admin interface should appear: By default you'll be recognized as an `annonymous` user. To login visit `https://admin.notex.ch/admin/login` and to logout `https://admin.notex.ch/admin/logout`: On successful login you should be recognized as an `admin` user, and acquire access to the corresponding actions/menus.
 
-The security of this setup is based upon the admin user possessing the SSH key file for the priviledged machine to be able to establish an SSH tunnel successfully. As long as the priviledged machine is not compromised, the access should be safe. Consider also a *browser plugin* which can quickly enable and disable the proxy access: As long as the proxy is disabled you should not be able to login as an amin user.
+The security of this setup is based upon the admin user possessing the SSH key file for the privileged machine to be able to establish an SSH tunnel successfully. As long as the priviledged machine is not compromised, the access should be safe. Consider also a *browser plugin* which can quickly enable and disable the proxy access: As long as the proxy is disabled you should not be able to login as an admin user.
 
 Set `PROXY_FIX` to `True`, and correctly forward the *remote address* of a client (in the front-end proxy via setting the `X-Forwarded-For` and `X-Real-IP` headers), since otherwise this setup will not work. Do *not* set `PROXY_FIX` to `True` if you connect the NoTex instance directly (without a proxy in between) to the internet!
 
