@@ -24,7 +24,25 @@ import subprocess
 ###############################################################################
 ###############################################################################
 
-manager = Manager (app)
+manager = Manager (app, with_default_commands=False)
+
+###############################################################################
+###############################################################################
+
+@manager.shell
+def make_context ():
+    from webed import app
+    from webed import admin
+    from webed import config
+    from webed import ext
+    from webed import models
+    from webed import session
+    from webed import test
+    from webed import util
+    from webed import views
+
+    return dict (app=app, admin=admin, config=config, ext=ext, models=models,
+        session=session, test=test, util=util, views=views)
 
 ###############################################################################
 ###############################################################################

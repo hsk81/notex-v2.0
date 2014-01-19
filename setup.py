@@ -45,7 +45,7 @@ if __name__ == '__main__':
             'blinker==1.3',
             'compressinja==0.0.2',
             'hiredis==0.1.1',
-            'ipython==1.1.0',
+            'ipython==0.13.2',
             'itsdangerous==0.23',
             'psycopg2==2.5.1',
             'pylibmc==1.2.3',
