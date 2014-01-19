@@ -73,7 +73,7 @@ Navigate your browser to the above location, and enjoy! The frontend container r
 Configuration
 -------------
 
-The default configuration (for the production environment) should be adapted to your needs, since otherwise some of the services which are included in NoTex might not run as expected. Below you'll find the example configuration apdaptation which are used for the [NoTex.ch](https://notex.ch) site itself.
+The default configuration (for the production environment) should be adapted to your needs, since otherwise some of the services which are included in NoTex might not run as expected. Below you'll find the configuration apdaptations which are used for the [NoTex.ch](https://notex.ch) site itself.
 
 ### Gitweb: Web frontend to GIT
 The `gitweb` service provides a web interface to a git repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable -- due to privacy reasons -- it point to an empty/non-existent `$projectroot/project.lst` file:
