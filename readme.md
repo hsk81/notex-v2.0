@@ -147,7 +147,7 @@ Provided, you've set-up the privileged machine correctly, the admin interface sh
 
 The security of this setup is based upon the admin user possessing the SSH key file for the privileged machine to be able to establish an SSH tunnel successfully. As long as the priviledged machine is not compromised, the access should be safe. Consider also a *browser plugin* which can quickly enable and disable the proxy access: As long as the proxy is disabled you should not be able to login as an admin user.
 
-Set `PROXY_FIX` to `True`, and correctly forward the *remote address* of a client (in the front-end proxy via setting the `X-Forwarded-For` and `X-Real-IP` headers), since otherwise this setup will not work. Do *not* set `PROXY_FIX` to `True` if you connect the NoTex instance directly (without a proxy in between) to the internet!
+Set `PROXY_FIX` to `True`, and correctly forward the *remote address* of a client (in the front-end proxy via setting the `X-Forwarded-For` and `X-Real-IP` headers), since otherwise this setup will not work. Do **not** set `PROXY_FIX` if you connect the NoTex instance directly (without a front-end proxy in between) to the internet!
 
 ### Web frontend to GIT (`gitweb.conf`)
 The `gitweb` service provides a web interface to a git repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable -- due to privacy reasons -- it point to an empty/non-existent `$projectroot/project.lst` file:
