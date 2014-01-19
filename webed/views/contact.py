@@ -41,7 +41,7 @@ def feedback ():
     message.body = text
     mailer.send (message)
 
-    return redirect (url_for ('page.contact'))
+    return redirect (url_for ('page.contact', _external=True))
 
 ###############################################################################
 ###############################################################################
