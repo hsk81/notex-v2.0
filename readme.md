@@ -1,5 +1,5 @@
-NoTex.ch
-========
+[NoTex.ch](https://notex.ch)
+============================
 
 An online text editor for reStructuredText, Markdown, LaTex and more! It has integrated project management, syntax highlighting, split view and spell checking for 85+ dictionaries. Projects can be exported and imported as ZIP archives plus reStructuredText projects can be converted to PDF, HTML or LaTex.
 
@@ -73,4 +73,40 @@ Navigate your browser to the above location, and enjoy! The frontend container r
 Configuration
 -------------
 
-...
+The default configuration (for the production environment) should be adapted to your needs, since otherwise some of the services which are included in NoTex might not run as expected. Below you'll find the example configuration apdaptation which are used for the [NoTex.ch](https://notex.ch) site itself.
+
+### Gitweb: Web frontend to GIT
+The `gitweb` service provides a web interface to a git repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable -- due to privacy reasons -- it point to an empty/non-existent `$projectroot/project.lst` file:
+```diff
+diff --git a/gitweb.conf b/gitweb.conf
+index 78c8ad1..5696f40 100644
+--- a/gitweb.conf
++++ b/gitweb.conf
+@@ -5,10 +5,10 @@ $git_temp = "/tmp";
+ $projectroot = "/var/www/webed/acid"; 
+ 
+ # File listing projects, or directory to be scanned for projets.
+-$projects_list = "$projectroot";
++$projects_list = "$projectroot/project.lst";
+ 
+ # Base URLs for links displayed in the web interface.
+-our @git_base_url_list = qw(git://localhost);
++our @git_base_url_list = qw(git://vcs.notex.ch);
+ 
+ # Show the author of each line in a source file.
+ $feature{'blame'}{'default'} = [1];
+@@ -17,10 +17,10 @@ $feature{'blame'}{'default'} = [1];
+ $feature{'highlight'}{'default'} = [1];
+ 
+ # Label for the "home link" at the top of all pages.
+-$home_link_str = "NoTex";
++$home_link_str = "NoTex.ch";
+ 
+ # Target of the home link on the top of all pages.
+-$home_link = "http://localhost:8008/git/";
++$home_link = "https://notex.ch";
+ 
+ # Name of your site or organization.
+-$site_name = "NoTex - Git Web Interface";
++$site_name = "NoTex.ch - Git Web Interface";
+```
