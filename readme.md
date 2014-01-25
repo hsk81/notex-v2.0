@@ -111,6 +111,8 @@ index 09aa27b..5c15110 100644
 
 ### Caching and Admin (`default.py`)
 
+**External Caching**
+
 On [NoTex.ch](https://notex.ch) `memcached` and `redis` are not run within the container, but externally (the command from `RUN.pro` has been adapted by omitting `MEMCACHED` and `REDIS` [they could have also be set to zero: `MEMCACHED=0` and `REDIS=0`]). Therefore the corresponding `CACHE{0,1,2,3}_SERVERS` values had to be adapted:
 
 ```diff
@@ -150,6 +152,8 @@ index e77e80c..751fcfc 100644
      ##
      ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
 ```
+
+**Admin Security: SSH Tunnel**
 
 In addition, the `PRIVILEGED_ADDRESSES` has been changed to allow **secure** access to the admin interface: To access it use (a) the IP address of a machine, which has a back-end proxy (like `squid`) running, (b) on which you can `SSH` tunnel to, and (c) which has a front-end proxy (like `nginx`) running (pointing to the NoTex instance). Further then (d) connect your browser to the local port of the SSH tunnel (change the corresponding proxy settings in your browser).
 
