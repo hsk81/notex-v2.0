@@ -48,6 +48,10 @@ You need to run *three* components to get a functional application: a *frontend*
 * ```mkdir -p /var/www/webed && chmod www-data:www-data /var/www/webed -R```
 
 Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some GNU/Linux distributions may use `http` instead of `www-data` as the owner.
+
+Frontend: `ntx`
+"""""""""""""""
+
 ```
 export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -p 9418:9418 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
@@ -55,7 +59,11 @@ Export first the `QUEUE` environment variable which needs to contain the TCP/IP 
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
 
-The command also maps the `9418` port, which belongs to a `git-daemon`: This allows youto `clone` a particular repository from your host (if you know its randomly generated name), like `git clone git://localhost/6b..91`.
+The command also maps the `9418` port, which belongs to a `git-daemon`: This allows youto `clone` a particular repository from your host (if you know its randomly generated name), like `git clone git://..`.
+
+Queue: `qqq`
+""""""""""""
+
 ```
 docker run -name qqq -t -p 7070:7070 -p 9090:9090 -p 7171:7171 -p 9191:9191 hsk81/notex:run ./webed-sphinx.py queue -pfa 'tcp://*:7070' -dfa 'tcp://*:9090' -pba 'tcp://*:7171' -dba 'tcp://*:9191'
 ```
@@ -64,6 +72,10 @@ Start the *queue* container named `qqq`, map the required ports to the host mach
 As mentioned the queue offers four binding points: two for *frontend* container(s) to connect to (`-pfa` or `--ping-frontend-address`, and `-dfa` or `--data-frontend-address`), plus another two for *backend* worker(s) to connect to (`-pba` or `--ping-backend-address`, and `-dba` or `--data-backend-address`).
 
 The application uses the *ping* and *data* channels for different purposes: Given a conversion job, the frontend asks the queue via a "ping" through the former channel if a worker is available, and if so it sends the corresponding data through the latter channel. The queue figures in a similar way which backend converter is idle and chooses it for the job.
+
+Backend: `spx-1`
+""""""""""""""""
+
 ```
 export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t -v /var/www/webed:/var/www/webed:rw hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
 ```
