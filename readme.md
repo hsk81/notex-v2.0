@@ -238,7 +238,7 @@ index 8f5e39a..3104eec 100644
 
 ### Web frontend to GIT (`gitweb.conf`)
 
-The `gitweb` service provides a web interface to a GIT repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable -- due to privacy reasons -- it point to an empty/non-existent `$projectroot/project.lst` file:
+The `gitweb` service provides a web interface to a GIT repository; the `$project_list` setting should definitely be set, since it controls which projects are seen on the main view. Since such a list is not desirable - due to privacy reasons - it points to an empty/non-existent `$projectroot/project.lst` file:
 
 ```diff
 diff --git a/gitweb.conf b/gitweb.conf
