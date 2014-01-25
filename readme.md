@@ -1,5 +1,5 @@
-[NoTex.ch](https://notex.ch): Online Text Editor
-================================================
+[NoTex.ch](https://notex.ch): An Online Text Editor
+===================================================
 
 An online text editor for reStructuredText, Markdown, LaTex and more! It has integrated project management, syntax highlighting, split view and spell checking for 85+ dictionaries. Projects can be exported and imported as ZIP archives plus reStructuredText projects can be converted to PDF, HTML or LaTex.
 
