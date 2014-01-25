@@ -153,7 +153,7 @@ index e77e80c..751fcfc 100644
      ## MIMETYPE_PATHs is a list of paths point to a `mime.types` file, which
 ```
 
-**Admin Security: SSH Tunnel**
+**Admin Security**
 
 In addition, the `PRIVILEGED_ADDRESSES` has been changed to allow **secure** access to the admin interface: To access it use (a) the IP address of a machine, which has a back-end proxy (like `squid`) running, (b) on which you can `SSH` tunnel to, and (c) which has a front-end proxy (like `nginx`) running (pointing to the NoTex instance). Further then (d) connect your browser to the local port of the SSH tunnel (change the corresponding proxy settings in your browser).
 
