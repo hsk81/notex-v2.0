@@ -58,7 +58,7 @@ Export first the `QUEUE` environment variable which needs to contain the TCP/IP 
 
 Then run the *frontend* container named `ntx` and map the internal port `80` to the external port `8080`; the `PING_ADRESS` and `DATA_ADDRESS` variables are set within the containers environment and tell the frontend where the *ping* and *data* channels need to connect to; finally the `$(cat RUN.pro)` sub-process delivers the actual command to start the application and is executed as a container process; see the `RUN.pro` file for details.
 
-The command also maps the `9418` port, which belongs to a `git-daemon`: This allows youto `clone` a particular repository from your host (if you know its randomly generated name), like `git clone git://..`.
+The command also maps the `9418` port, which belongs to a `git-daemon`: This allows you to `clone` a particular repository from your host (if you know its randomly generated name), like `git clone git://..`.
 
 ### Queue: `qqq`
 
