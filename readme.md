@@ -6,7 +6,7 @@ An online text editor for reStructuredText, Markdown, LaTex and more! It has int
 Commercial Support
 ------------------
 
-Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Don't hesitate, and write to 17fa6d23@opayq.com: We'll provide you with an SLA (service level agreement) tailored to your needs!
+Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Don't hesitate, and write to contact@blackhan.com: We'll provide you with an SLA (service level agreement) tailored to your needs!
 
 **INFO**: To avoid spam the contact email is random and changes on a regular basis.
 
@@ -277,6 +277,6 @@ index 78c8ad1..5696f40 100644
 Commercial Support
 ------------------
 
-Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Do not hesitate, and write to 17fa6d23@opayq.com: We'll provide you with an SLA (service level agreement) tailored to your needs!
+Do you need help in setting up NoTex for your organization or institution? Does the described setup not correspond to your requirements? Would you like to have the application customized? Do not hesitate, and write to contact@blackhan.com: We'll provide you with an SLA (service level agreement) tailored to your needs!
 
 **INFO**: To avoid spam the contact email is random and changes on a regular basis.
