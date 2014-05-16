@@ -183,10 +183,10 @@ Ext.define ('Webed.toolbar.MainToolbar', {
                 }
             },
 
-            padding: '3 2'
+            padding: '4 2'
         }]
     }],
 
     hidden: true,
-    height: 48
+    height: 50
 });
