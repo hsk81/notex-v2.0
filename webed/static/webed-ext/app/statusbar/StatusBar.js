@@ -18,7 +18,7 @@ Ext.define ('Webed.statusbar.StatusBar', {
         xtype: 'webed-statusbar-zoomslider'
     }],
 
-    defaultText: 'NoTex',
+    defaultText: 'NoTex.ch',
     hidden: true
 });
 

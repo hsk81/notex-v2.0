@@ -10,15 +10,13 @@
 {% if title -%}
 <title>{{ title }}</title>
 {%- else -%}
-<title>NoTex - A browser based text editor</title>
+<title>NoTex.ch - An online text editor</title>
 {%- endif %}
 
 <link rel="shortcut icon"
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
 <link rel="canonical"
       href="{{ canonical }}">
-<link rel="stylesheet"
-      href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 {% if debug -%}
 <script type="text/javascript">var _gaq = undefined;</script>
@@ -27,6 +25,12 @@
 {%- endif %}
 
 {% if debug -%}
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.css') }}" />
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/webed.css') }}" />
 <link rel="stylesheet" type="text/css"
@@ -41,10 +45,6 @@
       href="{{ url_for('static', filename='webed-ext/resources/theme/sprite-tbar.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/sprite-flag.css') }}" />
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='lib/codemirror/lib/codemirror.css') }}" />
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='lib/codemirror/addon/dialog/dialog.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/app-%s.css' % theme) }}" />
 {% else -%}
@@ -65,6 +65,8 @@
 </div>
 
 {% if debug -%}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
 <script type="text/javascript"
@@ -116,6 +118,5 @@
 {%- endif %}
 
 <script type="text/javascript">{% include 'js/codemirror.js' %}</script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>
