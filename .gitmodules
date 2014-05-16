@@ -28,3 +28,6 @@
 [submodule "webed/static/webed-ext/dat"]
 	path = webed/static/webed-ext/dat
 	url = https://github.com/hsk81/notex.dat.git
+[submodule "webed/static/lib/bootstrap.git"]
+	path = webed/static/lib/bootstrap.git
+	url = https://github.com/hsk81/bootstrap
