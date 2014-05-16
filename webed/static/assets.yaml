@@ -27,7 +27,6 @@ all-classes:
     output: all-classes.%(version)s.js
     contents:
         - contents:
-              - lib/bootstrap/js/bootstrap.js
               - lib/node-uuid/uuid.js
               - lib/dmp/javascript/diff_match_patch.js
               - lib/typojs/typo/typo.js
@@ -40,6 +39,8 @@ all-classes:
               - lib/codemirror/addon/mode/loadmode.js
               - lib/codemirror/addon/mode/overlay.js
               - lib/codemirror/mode/meta.js
+              - lib/jquery/jquery.min.js
+              - lib/bootstrap/js/bootstrap.min.js
           filters: yui_js
         - contents:
               - webed-ext/app/assert.js

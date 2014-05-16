@@ -66,6 +66,8 @@
 
 {% if debug -%}
 <script type="text/javascript"
+        src="{{ url_for('static', filename='lib/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript"
         src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='lib/node-uuid/uuid.js') }}"></script>
