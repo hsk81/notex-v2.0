@@ -9,14 +9,14 @@ function on_load () {
     var bbs_rect = bbs.getBoundingClientRect ();
 
     if (window.chrome) {
-        bbs.height = pwc_rect.bottom - bbs_rect.top;
+        bbs.height = pwc_rect.bottom - bbs_rect.top - 5;
     } else {
-        bbs.height = pwc_rect.bottom - bbs_rect.top - 3;
+        bbs.height = pwc_rect.bottom - bbs_rect.top - 4;
     }
 }
 </script>
 
 <iframe id='bbs-frame' src='{{ bbs }}' width='100%' height='480px'
-        onload='on_load ();' style='border: none; border-top: solid gray 1px;'
+        onload='on_load ();' style='border: none; border-top: solid #e7e7e7 1px;'
         seamless>
 </iframe>

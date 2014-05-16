@@ -3,9 +3,9 @@
           action="{{ url_for ('contact.feedback') }}"
           onsubmit="Ext.getBody ().mask ('Sending ..');">
 
-        <label>Name</label>
+        <label>Name:</label>
         <input class="input" type="text" name="name" placeholder=".." required>
-        <label>Email</label>
+        <label>Email:</label>
         <input class="input" type="email" name="mail" placeholder=".." required>
 
         <textarea class="textarea" name="text" placeholder=".." required></textarea>
@@ -14,16 +14,16 @@
         <input type="reset" value="Reset">
     </form>
 
-    <div class="subline" style="margin-top: 36px;">
+    <div class="subline" style="margin-top: 24px;">
         <ul>
             <li class="subline-icon icon-link-16"></li>
-            <li class="subline-text">&nbsp;<a href="http://blackhan.ch">http://blackhan.ch</a></li>
+            <li class="subline-text">&nbsp;<a href="http://blackhan.com">http://blackhan.com</a></li>
             <li class="subline-icon icon-email-16"></li>
-            <li class="subline-text">&laquo;contact[at]blackhan.ch&raquo;</li>
+            <li class="subline-text">&laquo;contact[at]blackhan.com&raquo;</li>
         </ul>
     </div>
 </div>
 
-<div class="footer-sticky">
+<div class="footer">
     {% include 'ssl-seal.html' %}
 </div>

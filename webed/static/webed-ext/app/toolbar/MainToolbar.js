@@ -164,6 +164,12 @@ Ext.define ('Webed.toolbar.MainToolbar', {
         columns: 1,
         height: '100%',
 
+        listeners: {
+            afterlayout: function (group) {
+                group.el.setTop (0);
+            }
+        },
+
         items: [{
             loader: {
                 url: '/btc-donate.html',
@@ -175,9 +181,12 @@ Ext.define ('Webed.toolbar.MainToolbar', {
                     var form = assert (button.el.down ('form'));
                     var dom = assert (form.dom); dom.submit ();
                 }
-            }
+            },
+
+            padding: '3 2'
         }]
     }],
 
-    hidden: true
+    hidden: true,
+    height: 48
 });

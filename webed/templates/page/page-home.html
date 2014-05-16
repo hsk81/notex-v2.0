@@ -1,8 +1,17 @@
 <div id="page" class="home">
-    <div class="title">NѻTeξ</div>
-    <div class="sub-title">
-        <hr>
-        <div class="text">An online text editor, v{{ version }}; it supports ..</div>
+    <div class="jumbotron" style="width: 768px; margin: 0 auto;">
+        <h1 class="title">NѻTeξ</h1>
+        <p style="text-align: justify;">
+            An online text editor, v2.1: It supports reStructuredText, Markdown,
+            LaTex and more! Export projects as PDF reports, HTML pages or LaTex
+            scripts.
+        </p>
+
+        <p>
+          <a class="btn btn-lg btn-primary btn-block"
+             href="{{ url_for('.home', theme=theme, expand='true') }}"
+             role="button">Start the Editor &raquo;</a>
+        </p>
 
         <a class="icon-email-16 link-icon email" title="Newsletter"
            target="_blank" href="https://confirmsubscription.com/h/j/654F4F0574E1339A">_</a>
@@ -12,35 +21,5 @@
            target="_blank" href="http://twitter.com/notexeditor">_</a>
         <a class="icon-blogger-16 link-icon blogger" title="Blogger"
            target="_blank" href="http://notexeditor.blogspot.com">_</a>
-    </div>
-
-    <div class="subline">
-        <ul>
-            <li class="subline-icon icon-report_rest-16"></li>
-            <li class="subline-text">&nbsp;reStructuredText</li>
-            <li class="subline-icon icon-report_markdown-16"></li>
-            <li class="subline-text">&nbsp;Markdown</li>
-            <li class="subline-icon icon-report_latex-16"></li>
-            <li class="subline-text">&nbsp;LaTex</li>
-            <li class="subline-icon icon-report-16"></li>
-            <li class="subline-text">&nbsp;.. and more!</li>
-        </ul>
-    </div>
-
-    <div class="start-box">
-        <a href="{{ url_for('.home', theme=theme, expand='true') }}" id="start-box-button-id" class="start-box-button">Start NoTex</a>
-    </div>
-
-    <div class="subline">
-        <ul>
-            <li class="subline-icon icon-report_go-16"></li>
-            <li class="subline-text">&nbsp;Export projects as ..</li>
-            <li class="subline-icon icon-page_white_acrobat-16"></li>
-            <li class="subline-text">&nbsp;PDF reports</li>
-            <li class="subline-icon icon-page_white_world-16"></li>
-            <li class="subline-text">&nbsp;HTML pages</li>
-            <li class="subline-icon icon-page_white_code-16"></li>
-            <li class="subline-text">&nbsp;or LaTex scripts.</li>
-        </ul>
     </div>
 </div>

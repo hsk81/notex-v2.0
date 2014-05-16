@@ -59,39 +59,17 @@ body {
  *****************************************************************************/
 
 #page.home {
-    padding: 2% 0;
+    padding: 0;
 }
 
 #page.home .title {
-    text-shadow: #888888 -1.00px -0.50px 2px;
+    text-shadow: #356fa1 -1.00px -0.50px 2px;
     text-align:center;
     font-weight:bold;
     font-variant:small-caps;
     font-size:160px;
     font-family:sans serif;
-    color:#f0f0f0;
-}
-
-#page.home .sub-title {
-    margin-left:auto;
-    margin-right: auto;
-    margin-bottom: 64px;
-    width:75%; height:32px;
-}
-
-#page.home .sub-title hr {
-    border: 0;
-    height: 2px;
-    color: #888888;
-    background-color: #888888;
-}
-
-#page.home .sub-title .text {
-    float:left;
-    position:relative;
-    font-weight:bold;
-    font-size: 13px;
-    color:#888888;
+    color:#ffffff;
 }
 
 #page.home .link-icon {
@@ -100,68 +78,27 @@ body {
     text-align:center;
     text-decoration:none;
     color:transparent;
+    opacity: 0.17;
+}
+
+#page.home .link-icon:hover {
+    opacity: 1.00;
 }
 
 #page.home .blogger {
-    float:right; position:relative; top:-3px; left:15px;
+    position:relative; top:-0px; left:-1px; float:right;
 }
 
 #page.home .twitter {
-    float:right; position:relative; top:-3px; left:16px;
+    position:relative; top:-0px; left:-0px; float:right;
 }
 
 #page.home .facebook {
-    float:right; position:relative; top:-3px; left:16px;
+    position:relative; top:-0px; left:-0px; float:right;
 }
 
 #page.home .email {
-    float:right; position:relative; top:-24px; left:-1px;
-}
-
-#page.home .start-box {
-    width: auto;
-    height: 72px;
-    text-align: center;
-    background-color:#f0f0f0;
-    border: 3px dotted white;
-    margin: 8px;
-}
-
-#page.home .start-box .start-box-button {
-    -moz-box-shadow: inset 0 1px 0 0 #ffffff;
-    -webkit-box-shadow: inset 0 1px 0 0 #ffffff;
-    box-shadow: inset 0 1px 0 0 #ffffff;
-    background:-webkit-gradient(
-        linear, left top, left bottom,
-        color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
-    background:-moz-linear-gradient(center top, #f9f9f9 5%, #e9e9e9 100%);
-    background-color: #f9f9f9;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    border: 2px solid #888888;
-    display: inline-block;
-    color: #666666;
-    font-family: arial,sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 6px 25%;
-    text-decoration: none;
-    text-shadow: 1px 1px 4px #ffffff;
-    margin-top: 11px;
-}
-
-#page.home .start-box .start-box-button:hover {
-    background:-webkit-gradient(
-        linear, left top, left bottom,
-        color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
-    background:-moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
-    background-color:#e9e9e9;
-}
-
-#page.home .start-box .start-box-button:active {
-    position:relative;
-    top:1px;
+    position:relative; top:-0px; left:-1px; float:left;
 }
 
 /******************************************************************************
@@ -173,15 +110,23 @@ body {
 
 #page.contact form {
     background-color: #f5f5f5;
-    border: grey solid 1px;
+    border: #e7e7e7 solid 1px;
+    border-radius: 6px;
     margin: 0 auto;
     padding: 8px;
-    width: 768px;
+    width: 90%;
+    max-width: 896px;
+}
+
+#page.contact form label {
+    font-weight: normal;
+    margin: 0;
 }
 
 #page.contact form input[type=text],
 #page.contact form input[type=email] {
-    border: grey solid 1px;
+    border: #e7e7e7 solid 1px;
+    border-radius: 4px;
     font-family: monospace;
     margin-bottom: 4px;
     font-size: 13px;
@@ -190,11 +135,12 @@ body {
 }
 
 #page.contact form textarea {
-    border: grey solid 1px;
+    border: #d3d3d3 solid 1px;
+    border-radius: 4px;
     font-family: monospace;
     margin-bottom: 4px;
     font-size: 13px;
-    height: 280px;
+    height: 256px;
     padding: 4px;
     width: 100%;
 }
@@ -241,6 +187,10 @@ body {
 #page.textual p {
     text-align: justify;
     padding: 0.5em 0;
+}
+
+#page.textual p:first-child {
+    padding: 0 0 0.5em 0;
 }
 
 #page.textual strong {
@@ -368,9 +318,9 @@ body {
 #page .subline ul {
     list-style-type: none;
     text-align: center;
-    background-color: #f0f0f0;
-    border-top: 1px solid #888888;
-    border-bottom: 1px solid #888888;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
 }
 
 #page .subline ul li {
@@ -381,8 +331,8 @@ body {
 }
 
 #page .subline ul li.subline-text {
-    padding: 6.5px 48px 6.5px 1px;
-    border-left: 1px solid #888888;
+    padding: 6px 48px 6px 1px;
+    border-left: 1px solid #e7e7e7;
 }
 
 #page .subline ul li.subline-icon {
@@ -396,23 +346,8 @@ body {
  * Page Wrap: Footer
  *****************************************************************************/
 
-#page-wrap-content .footer-sticky {
-    position: absolute;
-    margin-bottom: 24px;
-    width: 100%;
-    height: 32px;
-    bottom: 0;
-}
-
 #page-wrap-content .footer {
-    margin-bottom: 24px;
-    width: 100%;
-    height: 32px;
-}
-
-#page-wrap-content .ssl-seal-wrap {
-    margin: 0 auto;
-    width: 132px;
+    margin-top: 32px;
     height: 32px;
 }
 
@@ -427,8 +362,8 @@ body {
     height: 100%;
     width: 100%;
     background-color: #f5f5f5;
-    border-top: #d3d3d3 solid thin;
-    border-bottom: #d3d3d3 solid thin;
+    border-top: #e7e7e7 solid thin;
+    border-bottom: #e7e7e7 solid thin;
 }
 
 #page-wrap-content .ssl-seal-wrap .placeholder span {

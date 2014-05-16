@@ -1,37 +1,44 @@
 <div id="page-wrap">
 <div id="page-wrap-content">
-    <div id='cssmenu'>
-        <ul>
-        <li active="{{ page == 'home' or page == 'main' }}">
-        <a href="{{ url_for('.home', theme=theme) }}"><span>Home</span></a>
-        </li>
-        <li active="{{ page == 'overview' }}">
-        <a href="{{ url_for('.overview', theme=theme) }}"><span>NoTex</span></a>
-        </li>
-        <li active="{{ page == 'tutorial' }}" style="display: none;">
-        <a href="{{ url_for('.tutorial', theme=theme) }}"><span>Tutorial</span></a>
-        </li>
-        <li active="{{ page == 'rest' }}" style="display: none;">
-        <a href="{{ url_for('.rest', theme=theme) }}"><span>rST</span></a>
-        </li>
-        <li active="{{ page == 'faq' }}" style="display: none;">
-        <a href="{{ url_for('.faq', theme=theme) }}"><span>FAQ</span></a>
-        </li>
-        <li active="{{ page == 'blog' }}">
-        <a href="{{ url_for('.blog', theme=theme) }}"><span>Blog</span></a>
-        </li>
-        <li active="{{ page == 'forum' }}">
-        {% if bbs and bbs.startswith (request.scheme) %}
-        <a href="{{ url_for('.forum', theme=theme) }}"><span>Forum</span></a>
-        {% else %}
-        <a href="{{ bbs }}" target="_blank"><span>Forum</span></a>
-        {% endif %}
-        </li>
-        <li active="{{ page == 'contact' }}" style="float: right;">
-        <a href="{{ url_for('.contact', theme=theme) }}"><span>Contact</span></a>
-        </li>
-        </ul>
-    </div>
+
+    <div class="container" style="width: 90%; max-width: 896px;">
+        <div class="navbar navbar-default" role="navigation" style="margin: 24px 0;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">NoTex.ch</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="{{ 'active' if page == 'home' or page == 'main' }}">
+                            <a href="{{ url_for('.home', theme=theme) }}">Home</a>
+                        </li>
+                        <li class="{{ 'active' if page == 'overview' }}">
+                            <a href="{{ url_for('.overview', theme=theme) }}">Overview</a>
+                        </li>
+                        <li class="{{ 'active' if page == 'tutorial' }}">
+                            <a href="{{ url_for('.tutorial', theme=theme) }}">Tutorial</a>
+                        </li>
+                        <li class="{{ 'active' if page == 'blog' }}">
+                            <a href="{{ url_for('.blog', theme=theme) }}">Blog</a>
+                        </li>
+                        <li class="{{ 'active' if page == 'forum' }}">
+                            <a href="{{ url_for('.forum', theme=theme) }}">Forum</a>
+                        </li>
+                        <li class="{{ 'active' if page == 'faq' }}" style="display: none;">
+                            <a href="{{ url_for('.faq', theme=theme) }}"><span>FAQ</span></a>
+                        </li>
+                        <li class="{{ 'active' if page == 'rest' }}" style="display: none;">
+                            <a href="{{ url_for('.rest', theme=theme) }}"><span>rST</span></a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="{{ 'active' if page == 'contact' }}">
+                            <a href="{{ url_for('.contact', theme=theme) }}">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
     {% if page == 'main' %}
         {% include 'page/page-home.html' %}
@@ -54,5 +61,6 @@
     {% else %}
         {% include 'page/page-generic.html' %}
     {% endif %}
+    </div>
 </div>
 </div>

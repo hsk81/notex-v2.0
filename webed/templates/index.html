@@ -17,6 +17,8 @@
       href="{{ url_for('static', filename='ico/favicon.ico') }}">
 <link rel="canonical"
       href="{{ canonical }}">
+<link rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 {% if debug -%}
 <script type="text/javascript">var _gaq = undefined;</script>
@@ -25,8 +27,6 @@
 {%- endif %}
 
 {% if debug -%}
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='webed-ext/resources/theme/menu.css') }}" />
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='webed-ext/resources/theme/webed.css') }}" />
 <link rel="stylesheet" type="text/css"
@@ -116,5 +116,6 @@
 {%- endif %}
 
 <script type="text/javascript">{% include 'js/codemirror.js' %}</script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>
