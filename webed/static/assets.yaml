@@ -3,13 +3,13 @@ theme-base:
     output: webed-ext/resources/theme/theme-base.css
     contents:
         - webed-ext/resources/theme/reset.css
-        - webed-ext/resources/theme/menu.css
         - webed-ext/resources/theme/webed.css
         - webed-ext/resources/theme/sprite-home.css
         - webed-ext/resources/theme/sprite-main.css
         - webed-ext/resources/theme/sprite-mime.css
         - webed-ext/resources/theme/sprite-tbar.css
         - webed-ext/resources/theme/sprite-flag.css
+        - lib/bootstrap/css/bootstrap.css
         - lib/codemirror/lib/codemirror.css
         - lib/codemirror/addon/dialog/dialog.css
 
@@ -27,6 +27,7 @@ all-classes:
     output: all-classes.%(version)s.js
     contents:
         - contents:
+              - lib/bootstrap/js/bootstrap.js
               - lib/node-uuid/uuid.js
               - lib/dmp/javascript/diff_match_patch.js
               - lib/typojs/typo/typo.js
