@@ -139,36 +139,36 @@ def get_title (page):
             """,
         'overview':
             """
-            Overview - NoTex: An introduction to the editor plus motivation
+            Overview - NoTex.ch: An introduction to the editor plus motivation
             for reStructuredText (and other markups).
             """,
         'tutorial':
             """
-            Tutorial - NoTex: A step by step guide explaining the editor's
+            Tutorial - NoTex.ch: A step by step guide explaining the editor's
             user interface and how to create your first project.
             """,
         'rest':
             """
-            ReStructuredText - NoTex: A primer about reStructuredText.
+            ReStructuredText - NoTex.ch: A primer about reStructuredText.
             """,
         'faq':
             """
-            FAQ - NoTex: Frequently asked and important questions about
+            FAQ - NoTex.ch: Frequently asked and important questions about
             security, data, performance, documentation etc.
             """,
         'blog':
             """
-            Blog - NoTex: Get additional information and documentation plus
+            Blog - NoTex.ch: Get additional information and documentation plus
             follow the development process.
             """,
         'forum':
             """
-            Forum - NoTex: A builtin board to get support and help in using the
-            editor plus a place for discussing further development.
+            Forum - NoTex.ch: A builtin board to get support and help in using
+            the editor plus a place for discussing further development.
             """,
         'contact':
             """
-            Contact - NoTex: For questions and feedback contact us using our
+            Contact - NoTex.ch: For questions and feedback contact us using our
             form or e-mail address.
             """,
     }
@@ -185,7 +185,7 @@ def get_description (page):
     lookup = {
         'home':
             """
-            NoTex enables to write books, reports, articles and theses using
+            NoTex.ch enables to write books, reports, articles and theses using
             the reStructuredText markup language and converts them to LaTex,
             PDF or HTML. The PDF files are of high publication quality and
             are produced via Sphinx with the Texlive LaTex suite.
@@ -201,7 +201,7 @@ def get_description (page):
             """,
         'tutorial':
             """
-            A tutorial about user interface of NoTex, explaining the various
+            A tutorial about user interface of NoTex.ch, explaining the various
             elements like project manager, menu, editor, main toolbar and
             status bar. It provides a brief step-by-step guide explaining
             how a novice user can create his first report and convert it to
@@ -225,7 +225,7 @@ def get_description (page):
             """,
         'blog':
             """
-            The NoTex blog provides additional information about the editor,
+            The NoTex.ch blog provides additional information about the editor,
             is a rich source of documentation, and allows the users to follow
             the development process.
             """,
