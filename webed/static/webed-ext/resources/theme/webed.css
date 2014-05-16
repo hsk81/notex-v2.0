@@ -352,7 +352,7 @@ body {
 }
 
 #page-wrap-content .ssl-seal-wrap {
-    margin: 0 auto;
+    margin: 24px auto;
     width: 132px;
     height: 32px;
 }
