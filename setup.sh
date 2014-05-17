@@ -18,7 +18,7 @@ function setup_env () {
     if [ $VIRTUAL_ENV ] ; then
         exit 0
     else
-        git submodule update --init --recursive ## && build_env $1
+        git submodule update --init --recursive && build_env $1
         virtualenv-2.7 . --prompt="[$1] "
     fi
 }
