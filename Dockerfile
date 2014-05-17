@@ -2,7 +2,7 @@
 ## ############################################################################################
 ## --------------------------------------------------------------------------------------------
 
-FROM stackbrew/ubuntu:saucy
+FROM ubuntu:trusty
 MAINTAINER Hasan Karahan <hasan.karahan@blackhan.com>
 
 ## --------------------------------------------------------------------------------------------
@@ -21,16 +21,16 @@ ENV LC_ALL en_US.UTF-8
 
 # basic tools
 RUN apt-get -y install \
-    build-essential git zip unzip \
+    build-essential git zip unzip zlib \
     wget curl nano sudo
 
-RUN git config --global user.name "NoTex Blackhan.ch" && \
-    git config --global user.email "contact@blackhan.ch"
+RUN git config --global user.name "NoTex.ch" && \
+    git config --global user.email "contact@blackhan.com"
 
-# java: 7u40
-RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
+# java: 7u55
+RUN wget -O jdk-7u55-linux-x64.tar.gz https://db.tt/d8AltmDK && \
     tar -xvf *-linux-x64.tar.gz && mkdir -p /usr/lib/jvm && \
-    mv ./jdk1.7.0_40 /usr/lib/jvm/jdk1.7.0 && mv *.tar.gz /root/ && \
+    mv ./jdk1.7.0_55 /usr/lib/jvm/jdk1.7.0 && mv *.tar.gz /root/ && \
     \
     update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1 && \
     update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1 && \
@@ -39,39 +39,29 @@ RUN wget -O jdk-7u40-linux-x64.tar.gz https://db.tt/9z8ZYIJU && \
     chmod a+x /usr/bin/java /usr/bin/javac /usr/bin/javaws && \
     chown -R root:root /usr/lib/jvm/jdk1.7.0
 
-# ruby: 1.9.3
-#RUN apt-get -y install ruby
+# ruby: 1.9.1
+RUN apt-get -y install ruby
 
 # sencha command: 3.0.2.288
-#ENV SENCHA_CMD_x32 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux.run.zip
-#ENV SENCHA_CMD_x64 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux-x64.run.zip
-#RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64 && \
-#    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
-#    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
-#    /opt/Sencha/Cmd/3.0.2.288-linux-x64.run --prefix /opt --mode unattended
+ENV SENCHA_CMD_x32 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux.run.zip
+ENV SENCHA_CMD_x64 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux-x64.run.zip
+RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64 && \
+    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
+    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
+    /opt/Sencha/Cmd/SenchaCmd-3.0.2.288-linux-x64.run --prefix /opt --mode unattended
+ENV PATH /opt/Sencha/Cmd/3.0.2.288:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# memcached: 1.4.14
+# memcached: 1.4.14 & 1.0.8
 RUN apt-get -y install memcached && \
     apt-get -y install libmemcached-dev
 
-# redis: 2.8.3
-RUN echo "deb http://packages.dotdeb.org squeeze all" >> \
-    /etc/apt/sources.list.d/dotdeb.org.list && \
-    echo "deb-src http://packages.dotdeb.org squeeze all" >> \
-    /etc/apt/sources.list.d/dotdeb.org.list && \
-    wget -q -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-    apt-get -y update && apt-get -y install redis-server
+# redis: 2.8.4
+RUN apt-get -y install redis-server
 
 # postgresql: 9.3
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" >> \
-    /etc/apt/sources.list.d/pgdg.list && \
-    wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - && \
-    \
-    apt-get -y update && \
-    apt-get -y install libpq-dev && \
-    apt-get -y install postgresql-9.3
+RUN apt-get -y install postgresql postgresql-server-dev-9.3
 
-# python: 2.7.5+, pip: 1.5, virtualenv: 1.11, sphinx: 1.1.3
+# python: 2.7.6, pip: 1.5.6, virtualenv: 1.11, sphinx: 1.2.2
 RUN curl -O http://python-distribute.org/distribute_setup.py && \
     apt-get -y install python2.7 python2.7-dev python-sphinx && \
     ln -s /usr/bin/sphinx-build /usr/bin/sphinx-build2 && \
@@ -130,15 +120,12 @@ RUN /etc/init.d/memcached restart && \
 ## Part (d): `notex:pro` ######################################################################
 ## --------------------------------------------------------------------------------------------
 
-# lighttpd: 1.4.31, highlight: 3.9
+# lighttpd: 1.4.33, highlight: 3.9
 RUN apt-get -y install lighttpd && \
     apt-get -y install highlight
 
-# nginx: 1.4.4
-RUN echo "deb http://nginx.org/packages/ubuntu/ precise nginx" > \
-    /etc/apt/sources.list.d/nginx.list && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62 && \
-    apt-get -y update && apt-get -y install nginx && \
+# nginx: 1.4.6
+RUN apt-get -y install nginx && \
     rm -rf /etc/nginx/sites-enabled/* && \
     rm -rf /etc/nginx/conf.d/*
 
