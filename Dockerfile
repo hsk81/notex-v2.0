@@ -21,7 +21,7 @@ ENV LC_ALL en_US.UTF-8
 
 # basic tools
 RUN apt-get -y install \
-    build-essential git zip unzip zlib \
+    build-essential git zip unzip zlibc \
     wget curl nano sudo
 
 RUN git config --global user.name "NoTex.ch" && \
