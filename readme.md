@@ -17,9 +17,7 @@ Clone the GIT repository to the local disk and change the current working direct
 
 * ```docker build -rm -t hsk81/notex:run .```
 
-Build a [docker](http://www.docker.io) container image and tag it as `hsk81/notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.7.5` or newer is recommended.
-
-**INFO**: Due to some docker issues, there is a small possiblity that the process will fail: In such a case just repeat the build command, till it runs through.
+Build a [docker](http://www.docker.io) container image and tag it as `hsk81/notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.11.1` or newer is recommended.
 
 Execution: Development
 ----------------------
@@ -50,7 +48,7 @@ Create `/var/www/webed` for sharing purposes (on the host machine), and give own
 ### Frontend: `ntx`
 
 ```
-export QUEUE=tcp://10.0.3.1 && docker run -name ntx -t -p 8080:80 -p 9418:9418 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
+export QUEUE=tcp://172.17.42.1 && docker run -name ntx -t -p 8080:80 -p 9418:9418 -v /var/www/webed:/var/www/webed:rw hsk81/notex:run PING_ADDRESS=$QUEUE:7070 DATA_ADDRESS=$QUEUE:9090 $(cat RUN.pro)
 ```
 Export first the `QUEUE` environment variable which needs to contain the TCP/IP address of a queue (to be started in the next step); if you run all three components on the same host then you can use the address of docker's bridge , e.g. `lxcbr0` (or similar: run `ifconfig` to get a listing of enabled interfaces).
 
@@ -72,7 +70,7 @@ The application uses the *ping* and *data* channels for different purposes: Give
 ### Backend: `spx-1`
 
 ```
-export QUEUE=tcp://10.0.3.1 && docker run -name spx-1 -t -v /var/www/webed:/var/www/webed:rw hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
+export QUEUE=tcp://172.17.42.1 && docker run -name spx-1 -t -v /var/www/webed:/var/www/webed:rw hsk81/notex:run ./webed-sphinx.py converter -p $QUEUE:7171 -d $QUEUE:9191 --worker-threads 2
 ```
 Run a worker container named `spx-1`, and connect to the queue by wiring the *ping* and *data* channels to the corresponding address and ports. The worker starts internally two threads: depending on job load and resources you can increase or decrease the number of conversion threads per worker.
 
@@ -101,7 +99,7 @@ index 09aa27b..5c15110 100644
          internal;
          set $memcached_key      $args;
 -        memcached_pass          127.0.0.1:11211;
-+        memcached_pass          10.0.3.1:11211;
++        memcached_pass          172.17.42.1:11211;
          default_type            application/octet-stream;
          expires                 15s;
          add_header              Cache-Control private;
@@ -123,16 +121,16 @@ index e77e80c..751fcfc 100644
  
      CACHE0_KEY_PREFIX = os.getenv ('CACHE0_KEY_PREFIX', 'webed-std:')
 -    CACHE0_SERVERS = eval (os.getenv ('CACHE0_SERVERS', str (['127.0.0.1'])))
-+    CACHE0_SERVERS = eval (os.getenv ('CACHE0_SERVERS', str (['10.0.3.1'])))
++    CACHE0_SERVERS = eval (os.getenv ('CACHE0_SERVERS', str (['172.17.42.1'])))
      CACHE1_KEY_PREFIX = os.getenv ('CACHE1_KEY_PREFIX', 'webed-obj:')
 -    CACHE1_SERVERS = eval (os.getenv ('CACHE1_SERVERS', str (['127.0.0.1'])))
-+    CACHE1_SERVERS = eval (os.getenv ('CACHE1_SERVERS', str (['10.0.3.1'])))
++    CACHE1_SERVERS = eval (os.getenv ('CACHE1_SERVERS', str (['172.17.42.1'])))
      CACHE2_KEY_PREFIX = os.getenv ('CACHE2_KEY_PREFIX', 'webed-sss:')
 -    CACHE2_SERVERS = eval (os.getenv ('CACHE2_SERVERS', str (['127.0.0.1'])))
-+    CACHE2_SERVERS = eval (os.getenv ('CACHE2_SERVERS', str (['10.0.3.1'])))
++    CACHE2_SERVERS = eval (os.getenv ('CACHE2_SERVERS', str (['172.17.42.1'])))
      CACHE3_KEY_PREFIX = os.getenv ('CACHE3_KEY_PREFIX', 'webed-dbs:')
 -    CACHE3_SERVERS = eval (os.getenv ('CACHE3_SERVERS', str (['127.0.0.1'])))
-+    CACHE3_SERVERS = eval (os.getenv ('CACHE3_SERVERS', str (['10.0.3.1'])))
++    CACHE3_SERVERS = eval (os.getenv ('CACHE3_SERVERS', str (['172.17.42.1'])))
  
      LOG_FILE = os.path.join ('..', 'webed.logs', 'webed.log')
      LOG_FILE = os.getenv ('LOG_FILE', LOG_FILE)
@@ -187,7 +185,7 @@ index 8f5e39a..3104eec 100644
  
  SQLALCHEMY_DATABASE_URI = os.getenv ('SQLALCHEMY_DATABASE_URI',
 -    'postgresql://webed-p:password@localhost/webed-p') ## [ok]
-+    'postgresql://webed-p:password@10.0.3.1/webed-p') ## [ok]
++    'postgresql://webed-p:password@172.17.42.1/webed-p') ## [ok]
  
  ###############################################################################
  ###############################################################################
