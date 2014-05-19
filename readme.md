@@ -43,7 +43,7 @@ Execution: Production
 
 You need to run *three* components to get a functional application: a *frontend* `ntx` which is connected via a *queue* `qqq` to a *backend* conversion worker `spx-1`. But before starting any of the components you first need the setup a location, which can be used to exchange data:
 
-* ```mkdir -p /var/www/webed && chmod www-data:www-data /var/www/webed -R```
+* ```mkdir -p /var/www/webed && chown www-data:www-data /var/www/webed -R```
 
 Create `/var/www/webed` for sharing purposes (on the host machine), and give ownership to the `www-data` user and group; some GNU/Linux distributions may use `http` instead of `www-data` as the owner.
 
