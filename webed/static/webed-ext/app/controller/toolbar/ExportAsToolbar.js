@@ -148,7 +148,7 @@ Ext.define ('Webed.controller.toolbar.ExportAsToolbar', {
                 assert (response.meta);
                 assert (response.meta.uuid);
 
-                var href_url = '{0}/sphinx.err/{1}'.format (
+                var href_url = '{0}/sphinx.err/{1}/'.format (
                     location.origin, response.meta.uuid
                 );
 
