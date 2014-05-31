@@ -118,23 +118,12 @@ body {
     width: 100%;
 }
 
-#page.contact span#text-addon span.icon-user_silhouette-16 {
-    background-image: url(/static/ico/fatcow/16x16/user_silhouette.png);
-    background-repeat: no-repeat;
-    text-decoration: underline;
-}
 #page.contact input.form-control[type=text] {
     border-radius: 0 0 6px 0;
 }
 #page.contact span#email-addon {
     border-radius: 0 0 0 6px;
 }
-#page.contact span#email-addon span.icon-at_sign-16 {
-    background-image: url(/static/ico/fatcow/16x16/at_sign.png);
-    background-repeat: no-repeat;
-    text-decoration: underline;
-}
-
 #page.contact textarea {
     border-radius: 6px 6px 0 6px;
     min-height: 24em;
@@ -156,43 +145,30 @@ body {
 #page.contact div#author span.v-center {
     vertical-align: middle;
 }
-#page.contact div#author span.v-center img {
+#page.contact div#author span.v-center a {
+    text-decoration: none;
+}
+#page.contact div#author span.v-center a img {
     border: black solid 4px; height: 196px; width: 196px;
 }
-#page.contact div#author span.v-center span.caption {
+#page.contact div#author span.v-center a span.caption {
     position: relative; top:-56px;
-}
-#page.contact div#author span.v-center span.icon-linkedin-16 {
-    background-image: url(/static/ico/fatcow/16x16/linkedin.png);
-    background-repeat: no-repeat;
-}
-#page.contact div#author span.v-center span.icon-linkedin-16 span {
-    margin-right: 16px; visibility: hidden;
 }
 
 #page.contact div.well {
-    margin: 0;
-    text-align: center;
+    margin: 0; text-align: center;
 }
 #page.contact div.well span#company {
     padding: 8px;
 }
-#page.contact div.well span#company a.icon-world_link-16 {
-    background-image: url(/static/ico/fatcow/16x16/world_link.png);
-    background-repeat: no-repeat;
-}
-#page.contact div.well span#company a.icon-world_link-16 span {
-    margin-right: 16px; visibility: hidden;
+#page.contact div.well span#company a {
+    text-decoration: none;
 }
 #page.contact div.well span#contact {
     padding: 8px;
 }
-#page.contact div.well span#contact a.icon-email-16 {
-    background-image: url(/static/ico/fatcow/16x16/email.png);
-    background-repeat: no-repeat;
-}
-#page.contact div.well span#contact a.icon-email-16 span {
-    margin-right: 16px; visibility: hidden;
+#page.contact div.well span#contact a {
+    text-decoration: none;
 }
 
 /******************************************************************************
