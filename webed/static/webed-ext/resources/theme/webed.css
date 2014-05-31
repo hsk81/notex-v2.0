@@ -106,49 +106,48 @@ body {
  *****************************************************************************/
 
 #page.contact {
-}
-
-#page.contact form {
-    background-color: #f5f5f5;
-    border: #e7e7e7 solid 1px;
-    border-radius: 6px;
-    margin: 0 auto;
-    padding: 8px;
     width: 90%;
-    max-width: 896px;
 }
-
-#page.contact form label {
-    font-weight: normal;
-    margin: 0;
+#page.contact .row {
+    margin-bottom: 0.5em;
 }
-
-#page.contact form input[type=text],
-#page.contact form input[type=email] {
-    border: #e7e7e7 solid 1px;
-    border-radius: 4px;
-    font-family: monospace;
-    margin-bottom: 4px;
-    font-size: 13px;
-    padding: 4px;
+#page.contact .col-lg-6 {
+    padding: 0 3px;
+}
+#page.contact .btn-group-lg {
     width: 100%;
 }
 
-#page.contact form textarea {
-    border: #d3d3d3 solid 1px;
-    border-radius: 4px;
-    font-family: monospace;
-    margin-bottom: 4px;
-    font-size: 13px;
-    height: 256px;
-    padding: 4px;
-    width: 100%;
+#page.contact input.form-control[type=text] {
+    border-radius: 0;
+}
+#page.contact span#email-addon {
+    border-radius: 0;
+}
+#page.contact textarea {
+    border-radius: 6px 0 0 6px;
+}
+#page.contact .btn[type=submit] {
+    border-radius: 6px 0 0 6px;
+}
+#page.contact .btn[type=reset] {
+    border-radius: 0 6px 6px 0;
 }
 
-#page.contact form input[type=submit],
-#page.contact form input[type=reset] {
-    padding: 2px 0;
-    width: 96px;
+#page.contact div#author {
+    text-align: center; height: 336px;
+}
+#page.contact div#author span.v-spacer {
+    vertical-align: middle; display: inline-block; height: 100%;
+}
+#page.contact div#author span.v-center {
+    vertical-align: middle;
+}
+#page.contact div#author span.v-center img {
+    border: black solid 4px; height: 196px; width: 196px;
+}
+#page.contact div#author span.v-center span.caption {
+    position: relative; top:-56px;
 }
 
 /******************************************************************************
@@ -303,43 +302,6 @@ body {
     white-space: pre-wrap;
     margin: 1em auto;
     padding: 1em;
-}
-
-/******************************************************************************
- * Page: Subline
- *****************************************************************************/
-
-#page .subline {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#page .subline ul {
-    list-style-type: none;
-    text-align: center;
-    background-color: #f5f5f5;
-    border-top: 1px solid #e7e7e7;
-    border-bottom: 1px solid #e7e7e7;
-}
-
-#page .subline ul li {
-    display: inline;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 32px;
-}
-
-#page .subline ul li.subline-text {
-    padding: 6px 48px 6px 1px;
-    border-left: 1px solid #e7e7e7;
-}
-
-#page .subline ul li.subline-icon {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    top: 4px;
 }
 
 /******************************************************************************

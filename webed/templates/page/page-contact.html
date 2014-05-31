@@ -1,26 +1,69 @@
-<div id="page" class="contact">
+<div id="page" class="contact container">
+
     <form method="post"
           action="{{ url_for ('contact.feedback') }}"
           onsubmit="Ext.getBody ().mask ('Sending ..');">
 
-        <label>Name:</label>
-        <input class="input" type="text" name="name" placeholder=".." required>
-        <label>Email:</label>
-        <input class="input" type="email" name="mail" placeholder=".." required>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon" id="text-addon">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </span>
+                    <input class="form-control" placeholder="Name" tabindex="1"
+                           name="name" type="text">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon" id="email-addon">@</span>
+                    <input class="form-control" placeholder="Email" tabindex="2"
+                           name="mail" type="email">
+                </div>
+            </div>
+        </div>
 
-        <textarea class="textarea" name="text" placeholder=".." required></textarea>
+        <div class="row">
+            <div class="col-lg-6">
+                <textarea class="form-control" placeholder=".." tabindex="3"
+                          style="max-width: 100%; min-height: 24em;" name="text"></textarea>
+            </div>
+            <div class="col-lg-6" id="author">
+                <span class="v-spacer"></span>
+                <span class="v-center">
+                    <a href="http://www.linkedin.com/in/hasankarahan" target="_blank">
+                        <img src="/static/webed-ext/resources/theme/img/author-1.jpg"
+                             data-toggle=tooltip data-placement=auto data-animation=false
+                             title="Hasan Karahan, MSc ETH Zurich" />
+                        <br/><span class="caption">How can I help you?</span>
+                    </a>
+                </span>
+            </div>
+        </div>
 
-        <input type="submit" value="Send">
-        <input type="reset" value="Reset">
+        <div class="row">
+            <div class="btn-group btn-group-lg">
+                <div class="col-lg-6">
+                    <button class="btn btn-primary btn-lg btn-block"
+                            tabindex="3" name="send" type="submit">Send</button>
+                </div>
+                <div class="col-lg-6">
+                    <button class="btn btn-default btn-lg btn-block"
+                            tabindex="4" name="reset" type="reset">Reset</button>
+                </div>
+            </div>
+        </div>
     </form>
 
-    <div class="subline" style="margin-top: 24px;">
-        <ul>
-            <li class="subline-icon icon-link-16"></li>
-            <li class="subline-text">&nbsp;<a href="http://blackhan.com">http://blackhan.com</a></li>
-            <li class="subline-icon icon-email-16"></li>
-            <li class="subline-text">&laquo;contact[at]blackhan.com&raquo;</li>
-        </ul>
+    <div class="well well-sm" style="text-align: center; margin: 0;">
+        <span style="padding: 16px;">
+            <a href="http://www.blackhan.com" target="_blank">
+                <span class="glyphicon glyphicon-link" style="margin-right: 4px"></span>www.blackhan.com</a>
+        </span>
+        <span style="padding: 16px;">
+            <a href="mailto:contact@blackhan.com" target="_blank">
+                <span class="glyphicon glyphicon-envelope" style="margin-right: 4px"></span>contact@blackhan.com</a>
+        </span>
     </div>
 </div>
 
