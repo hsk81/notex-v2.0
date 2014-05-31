@@ -175,7 +175,7 @@ body {
     text-align: center;
 }
 #page.contact div.well span#company {
-    padding: 16px;
+    padding: 8px;
 }
 #page.contact div.well span#company a.icon-world_link-16 {
     background-image: url(/static/ico/fatcow/16x16/world_link.png);
@@ -185,7 +185,7 @@ body {
     margin-right: 16px; visibility: hidden;
 }
 #page.contact div.well span#contact {
-    padding: 16px;
+    padding: 8px;
 }
 #page.contact div.well span#contact a.icon-email-16 {
     background-image: url(/static/ico/fatcow/16x16/email.png);
