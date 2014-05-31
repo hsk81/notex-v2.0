@@ -8,7 +8,7 @@
             <div class="col-lg-6">
                 <div class="input-group input-group-lg">
                     <span class="input-group-addon" id="text-addon">
-                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="icon-user_silhouette-16 link-icon">&nbsp;&nbsp;&nbsp;</span>
                     </span>
                     <input class="form-control" placeholder="Name" tabindex="1"
                            name="name" type="text">
@@ -16,7 +16,9 @@
             </div>
             <div class="col-lg-6">
                 <div class="input-group input-group-lg">
-                    <span class="input-group-addon" id="email-addon">@</span>
+                    <span class="input-group-addon" id="email-addon">
+                        <span class="icon-at_sign-16 link-icon">&nbsp;&nbsp;&nbsp;</span>
+                    </span>
                     <input class="form-control" placeholder="Email" tabindex="2"
                            name="mail" type="email">
                 </div>
@@ -26,7 +28,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <textarea class="form-control" placeholder=".." tabindex="3"
-                          style="max-width: 100%; min-height: 24em;" name="text"></textarea>
+                          name="text"></textarea>
             </div>
             <div class="col-lg-6" id="author">
                 <span class="v-spacer"></span>
@@ -34,8 +36,9 @@
                     <a href="http://www.linkedin.com/in/hasankarahan" target="_blank">
                         <img src="/static/webed-ext/resources/theme/img/author-1.jpg"
                              data-toggle=tooltip data-placement=auto data-animation=false
-                             title="Hasan Karahan, MSc ETH Zurich" />
-                        <br/><span class="caption">How can I help you?</span>
+                             title="Hasan Karahan, MSc ETH Zurich" /><br/>
+                        <span class="icon-linkedin-16 link-icon caption">
+                            <span>&nbsp;</span>How can I help you?</span>
                     </a>
                 </span>
             </div>
@@ -55,14 +58,14 @@
         </div>
     </form>
 
-    <div class="well well-sm" style="text-align: center; margin: 0;">
-        <span style="padding: 16px;">
-            <a href="http://www.blackhan.com" target="_blank">
-                <span class="glyphicon glyphicon-link" style="margin-right: 4px"></span>www.blackhan.com</a>
+    <div class="well well-sm">
+        <span id="company">
+            <a class="icon-world_link-16 link-icon" href="http://www.blackhan.com"
+               target="_blank"> <span>&nbsp;</span>www.blackhan.com</a>
         </span>
-        <span style="padding: 16px;">
-            <a href="mailto:contact@blackhan.com" target="_blank">
-                <span class="glyphicon glyphicon-envelope" style="margin-right: 4px"></span>contact@blackhan.com</a>
+        <span id="contact">
+            <a class="icon-email-16 link-icon" href="mailto:contact@blackhan.com"
+               target="_blank"><span>&nbsp;</span>contact@blackhan.com</a>
         </span>
     </div>
 </div>
