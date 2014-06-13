@@ -121,16 +121,19 @@ body {
 #page.contact input.form-control[type=text] {
     border-radius: 0 0 6px 0;
 }
+#page.contact span#text-addon {
+    border-radius: 6px 0 0 0;
+}
 #page.contact span#email-addon {
     border-radius: 0 0 0 6px;
 }
 #page.contact textarea {
-    border-radius: 6px 6px 0 6px;
+    border-radius: 0 6px 0 0;
     min-height: 24em;
     resize: none;
 }
 #page.contact .btn[type=submit] {
-    border-radius: 6px 0 0 6px;
+    border-radius: 0 0 0 6px;
 }
 #page.contact .btn[type=reset] {
     border-radius: 0 6px 6px 0;
