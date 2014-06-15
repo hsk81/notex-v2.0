@@ -1,24 +1,43 @@
 <div id="page" class="home">
-    <div class="jumbotron" style="width: 768px; margin: 0 auto;">
-        <h1 class="title">NѻTeξ</h1>
-        <p style="text-align: justify;">
-            An online text editor, v2.2: It supports reStructuredText, Markdown,
-            LaTex and more! Export projects as PDFs, HTML pages or LaTex scripts.
-        </p>
 
-        <p>
-          <a class="btn btn-lg btn-primary btn-block"
-             href="{{ url_for('.home', theme=theme, expand='true') }}"
-             role="button">Start the Editor &raquo;</a>
-        </p>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-lg-7">
+                <h1 class="title">NѻTeξ</h1>
 
-        <a class="icon-email-16 link-icon email" title="Newsletter"
-           target="_blank" href="https://confirmsubscription.com/h/j/654F4F0574E1339A">_</a>
-        <a class="icon-facebook-16 link-icon facebook" title="Facebook"
-           target="_blank" href="http://www.facebook.com/notexeditor">_</a>
-        <a class="icon-twitter_1-16 link-icon twitter" title="Twitter"
-           target="_blank" href="http://twitter.com/notexeditor">_</a>
-        <a class="icon-blogger-16 link-icon blogger" title="Blogger"
-           target="_blank" href="http://notexeditor.blogspot.com">_</a>
+                <a class="icon-blogger-16 link-icon blogger" title="Blogger"
+                   target="_blank" href="https://notexeditor.blogspot.com">&nbsp;</a>
+                <a class="icon-facebook-16 link-icon facebook" title="Facebook"
+                   target="_blank" href="https://www.facebook.com/notexeditor">&nbsp;</a>
+                <a class="icon-twitter_1-16 link-icon twitter" title="Twitter"
+                   target="_blank" href="https://twitter.com/notexeditor">&nbsp;</a>
+                <a class="icon-email-16 link-icon email" title="Newsletter"
+                   target="_blank" href="https://confirmsubscription.com/h/j/654F4F0574E1339A">&nbsp;</a>
+
+                <p>
+                    An online text editor, v2.2: It supports reStructuredText, Markdown,
+                    LaTex and more! Export projects as PDF reports, HTML pages or LaTex scripts.
+                </p>
+
+              <a class="btn btn-lg btn-primary btn-block"
+                 href="{{ url_for('.home', theme=theme, expand='true') }}"
+                 role="button">Start the Editor &raquo;</a>
+            </div>
+
+            <div class="col-lg-5">
+                <a class="twitter-timeline" href="https://twitter.com/notexeditor"
+                   style="background-color: #ffffff; border: solid #428bca 1px;
+                   border-radius: 5px; display: block; text-align: center;
+                   height:345px; width:275px;" data-border-color="#428bca"
+                   data-widget-id="478184268640690176"height="345" width="275"
+                        >Tweets by @notexeditor</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="well well-sm">
+        <a class="icon-blogs-16 link-icon blogs" title="Quality Reports"
+           style="opacity: 1.00;" target="_self">&nbsp;</a>
+        <p>Create high publication quality documents and reports!</p>
     </div>
 </div>

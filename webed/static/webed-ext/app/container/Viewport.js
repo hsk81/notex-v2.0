@@ -74,6 +74,16 @@ Ext.define ('Webed.container.Viewport', {
                         if (ad_banner) ad_banner.show ();
                         var ad_medrec = Ext.get ('ad-medrec');
                         if (!ad_medrec) self.hide ();
+                    },
+                    render: function (self) {
+                        !function (d, s, id) {
+                            var js, fjs = d.getElementsByTagName (s)[0];
+                            if (!d.getElementById (id)){
+                                js = d.createElement (s); js.id=id;
+                                js.src = '/static/js/twitter-widgets.js';
+                                fjs.parentNode.insertBefore (js, fjs);
+                            }
+                        } (document, 'script', 'twitter-wjs');
                     }
                 }
             },{
