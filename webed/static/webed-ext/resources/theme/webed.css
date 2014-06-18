@@ -63,7 +63,7 @@ body {
 }
 
 #page.home .title {
-    text-shadow: darkgray -1.00px -0.50px 2px;
+    text-shadow: #428bca -1.00px -0.50px 2px;
     text-align:center;
     font-weight:bold;
     font-variant:small-caps;
@@ -115,7 +115,7 @@ body {
 #page.home div.jumbotron p {
     font-family: tahoma, arial, verdana, sans-serif;
     margin-top: 51px;
-    text-align: justify;
+    text-align: center;
 }
 
 #page.home div.jumbotron a.btn {
