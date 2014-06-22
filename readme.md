@@ -225,7 +225,7 @@ index 8f5e39a..3104eec 100644
 @@ -72,6 +72,7 @@ BLOG_HEADERS = eval (os.getenv ('BLOG_HEADERS', str (
  ###############################################################################
  
- FORUM_URL = os.getenv ('FORUM_URL', 'http://bbs.notex.ch/index.php') ## [ok]
+ FORUM_URL = os.getenv ('FORUM_URL', 'https://bbs.notex.ch/index.php') ## [ok]
 +CDN = os.getenv ('CDN', 'https://XXXXXXXXXXX') ## [**]
  
  ###############################################################################
