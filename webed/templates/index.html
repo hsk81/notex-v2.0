@@ -19,12 +19,6 @@
       href="{{ canonical }}">
 
 {% if debug -%}
-<script type="text/javascript">var _gaq = undefined;</script>
-{%- else -%}
-<script type="text/javascript">{% include 'js/analytics.js' %}</script>
-{%- endif %}
-
-{% if debug -%}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.css') }}" />
 <link rel="stylesheet" type="text/css"
