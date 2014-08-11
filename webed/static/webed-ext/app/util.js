@@ -229,7 +229,7 @@ var sprintf = (function () {
 var TRACKER = function () {
 
     function _event (arg) {
-        if (_gaq && _gaq.push) {
+        if (typeof _gaq !== 'undefined' && _gaq && _gaq.push) {
             _gaq.push (['_trackEvent',
                 arg['category'],
                 arg['action'],
