@@ -19,6 +19,12 @@
       href="{{ canonical }}">
 
 {% if debug -%}
+<script type="text/javascript">var _gaq = undefined;</script>
+{%- else -%}
+<script type="text/javascript">{% include 'js/analytics.js' %}</script>
+{%- endif %}
+
+{% if debug -%}
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.css') }}" />
 <link rel="stylesheet" type="text/css"
@@ -50,7 +56,7 @@
 <style type="text/css">{% include 'css/codemirror.css' %}</style>
 
 </head>
-<body>
+<body onload="{% if not debug %}ga_init ();{%- endif -%}">
 
 <div id="content-wrap">
 <div id="content">
