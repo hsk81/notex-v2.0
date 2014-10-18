@@ -10,8 +10,8 @@ MAINTAINER Hasan Karahan <hasan.karahan@blackhan.com>
 ## --------------------------------------------------------------------------------------------
 
 # ubuntu: updates & upgrades
-RUN apt-get -y update && \
-    apt-get -y upgrade
+RUN apt-get -y update
+RUN apt-get -y upgrade
 
 # locale: `en_US.UTF-8`
 RUN locale-gen en_US.UTF-8
@@ -20,24 +20,30 @@ ENV LANGUAGE en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 # basic tools
-RUN apt-get -y install \
-    build-essential git zip unzip zlibc \
-    wget curl nano sudo
+RUN apt-get -y install build-essential
+RUN apt-get -y install git
+RUN apt-get -y install zip
+RUN apt-get -y install unzip
+RUN apt-get -y install zlibc
+RUN apt-get -y install wget
+RUN apt-get -y install curl
+RUN apt-get -y install nano
+RUN apt-get -y install sudo
 
-RUN git config --global user.name "NoTex.ch" && \
-    git config --global user.email "contact@blackhan.com"
+RUN git config --global user.name "NoTex.ch"
+RUN git config --global user.email "contact@blackhan.com"
 
 # java: 7u55
-RUN wget -O jdk-7u55-linux-x64.tar.gz https://db.tt/d8AltmDK && \
-    tar -xvf *-linux-x64.tar.gz && mkdir -p /usr/lib/jvm && \
-    mv ./jdk1.7.0_55 /usr/lib/jvm/jdk1.7.0 && mv *.tar.gz /root/ && \
-    \
-    update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1 && \
-    update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1 && \
-    update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/bin/javaws" 1 && \
-    \
-    chmod a+x /usr/bin/java /usr/bin/javac /usr/bin/javaws && \
-    chown -R root:root /usr/lib/jvm/jdk1.7.0
+RUN wget -O jdk-7u55-linux-x64.tar.gz https://db.tt/d8AltmDK
+RUN tar -xvf *-linux-x64.tar.gz && mkdir -p /usr/lib/jvm
+RUN mv ./jdk1.7.0_55 /usr/lib/jvm/jdk1.7.0 && mv *.tar.gz /root/
+
+RUN update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1
+RUN update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1
+RUN update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/bin/javaws" 1
+
+RUN chmod a+x /usr/bin/java /usr/bin/javac /usr/bin/javaws
+RUN chown -R root:root /usr/lib/jvm/jdk1.7.0
 
 # ruby: 1.9.1
 RUN apt-get -y install ruby
@@ -45,15 +51,15 @@ RUN apt-get -y install ruby
 # sencha command: 3.0.2.288
 ENV SENCHA_CMD_x32 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux.run.zip
 ENV SENCHA_CMD_x64 http://cdn.sencha.com/cmd/3.0.2.288/SenchaCmd-3.0.2.288-linux-x64.run.zip
-RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64 && \
-    unzip *.run.zip && rm *.run.zip && chmod +x *.run && \
-    mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd && \
-    /opt/Sencha/Cmd/SenchaCmd-3.0.2.288-linux-x64.run --prefix /opt --mode unattended
+RUN wget -O 3.0.2.288-linux-x64.run.zip $SENCHA_CMD_x64
+RUN unzip *.run.zip && rm *.run.zip && chmod +x *.run
+RUN mkdir -p /opt/Sencha/Cmd && mv *.run /opt/Sencha/Cmd
+RUN /opt/Sencha/Cmd/SenchaCmd-3.0.2.288-linux-x64.run --prefix /opt --mode unattended
 ENV PATH /opt/Sencha/Cmd/3.0.2.288:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # memcached: 1.4.14 & 1.0.8
-RUN apt-get -y install memcached && \
-    apt-get -y install libmemcached-dev
+RUN apt-get -y install memcached
+RUN apt-get -y install libmemcached-dev
 
 # redis: 2.8.4
 RUN apt-get -y install redis-server
@@ -62,16 +68,14 @@ RUN apt-get -y install redis-server
 RUN apt-get -y install postgresql postgresql-server-dev-9.3
 
 # python: 2.7.6, pip: 1.5.6, virtualenv: 1.11, sphinx: 1.2.2
-RUN curl -O http://python-distribute.org/distribute_setup.py && \
-    apt-get -y install python2.7 python2.7-dev python-sphinx && \
-    ln -s /usr/bin/sphinx-build /usr/bin/sphinx-build2 && \
-    python2 distribute_setup.py && mv *.py /root/ && mv *.tar.gz /root/ && \
-    easy_install pip && pip2 install virtualenv
+RUN apt-get -y install python2.7 python2.7-dev python-sphinx
+RUN apt-get -y install python-pip && pip install virtualenv
+RUN ln -s /usr/bin/sphinx-build /usr/bin/sphinx-build2
 
 # clean & remove
-RUN apt-get -y clean && \
-    apt-get -y autoclean && \
-    apt-get -y autoremove
+RUN apt-get -y clean
+RUN apt-get -y autoclean
+RUN apt-get -y autoremove
 
 ## --------------------------------------------------------------------------------------------
 ## Part (b): `notex:tex` ######################################################################
@@ -92,10 +96,10 @@ RUN git clone https://github.com/hsk81/notex /srv/notex.git && \
     git checkout -b tag-$(git tag | tail -n1)
 
 # notex: setup postgres
-RUN /etc/init.d/postgresql start ; cd /srv/notex.git ; \
-    sudo -u postgres -g postgres psql -f webed/config/pg.sql ; \
-    sudo -u postgres -g postgres psql -f webed/config/test.sql ; \
-    sudo -u postgres -g postgres psql -f webed/config/production.sql 
+RUN /etc/init.d/postgresql start ; cd /srv/notex.git && \
+    sudo -u postgres -g postgres psql -f webed/config/pg.sql && \
+    sudo -u postgres -g postgres psql -f webed/config/test.sql && \
+    sudo -u postgres -g postgres psql -f webed/config/production.sql
 
 # notex: setup sencha & python env
 RUN cd /srv/notex.git && \
@@ -103,9 +107,9 @@ RUN cd /srv/notex.git && \
     /bin/bash -c 'mkdir -p .python-eggs'
 
 # notex: setup dirs & owners
-RUN mkdir -p /var/www/webed && \
-    chown www-data:www-data /var/www/webed -R && \
-    chown www-data:www-data /srv/notex.git -R
+RUN mkdir -p /var/www/webed
+RUN chown www-data:www-data /var/www/webed -R
+RUN chown www-data:www-data /srv/notex.git -R
 
 # notex: execute `reset`
 RUN /etc/init.d/memcached restart && \
@@ -121,13 +125,13 @@ RUN /etc/init.d/memcached restart && \
 ## --------------------------------------------------------------------------------------------
 
 # lighttpd: 1.4.33, highlight: 3.9
-RUN apt-get -y install lighttpd && \
-    apt-get -y install highlight
+RUN apt-get -y install lighttpd
+RUN apt-get -y install highlight
 
 # nginx: 1.4.6
-RUN apt-get -y install nginx && \
-    rm -rf /etc/nginx/sites-enabled/* && \
-    rm -rf /etc/nginx/conf.d/*
+RUN apt-get -y install nginx
+RUN rm -rf /etc/nginx/sites-enabled/*
+RUN rm -rf /etc/nginx/conf.d/*
 
 # notex: execute `assets build`
 RUN cd /srv/notex.git && /bin/bash -c 'source bin/activate && \
