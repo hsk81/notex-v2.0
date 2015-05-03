@@ -29,6 +29,7 @@ RUN apt-get -y install wget
 RUN apt-get -y install curl
 RUN apt-get -y install nano
 RUN apt-get -y install sudo
+RUN apt-get -y install tree
 
 RUN git config --global user.name "NoTex.ch"
 RUN git config --global user.email "contact@blackhan.com"
