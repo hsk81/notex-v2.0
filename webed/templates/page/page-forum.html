@@ -8,11 +8,8 @@ function on_load () {
     var pwc_rect = pwc.getBoundingClientRect ();
     var bbs_rect = bbs.getBoundingClientRect ();
 
-    if (window.chrome) {
-        bbs.height = pwc_rect.bottom - bbs_rect.top - 5;
-    } else {
-        bbs.height = pwc_rect.bottom - bbs_rect.top - 4;
-    }
+    bbs.height = pwc_rect.bottom - bbs_rect.top - 0;
+    pwc.style['overflow-y'] = 'hidden';
 }
 </script>
 
