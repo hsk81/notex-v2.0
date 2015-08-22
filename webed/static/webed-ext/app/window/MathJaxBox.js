@@ -25,7 +25,7 @@ Ext.define ('Webed.window.MathJaxBox', {
     }],
 
     config: {
-        ssl: 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js',
+        ssl: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js',
         url: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
         cfg: 'TeX-AMS_HTML',
         value: '$${{}}$$'
