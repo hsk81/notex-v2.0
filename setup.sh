@@ -19,7 +19,11 @@ function setup_env () {
         exit 0
     else
         git submodule update --init --recursive && build_env $1
-        virtualenv . --prompt="[$1] "
+        if command -v virtualenv2 ; then
+            virtualenv2 . --prompt="[$1] "
+        else
+            vitualenv . --prompt="[$1] "
+        fi
     fi
 }
 
