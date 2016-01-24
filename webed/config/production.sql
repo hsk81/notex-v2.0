@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
-DROP DATABASE "webed-p";
-DROP ROLE "webed-p";
+DROP DATABASE IF EXISTS "webed-p";
+DROP ROLE IF EXISTS "webed-p";
 
 -------------------------------------------------------------------------------
 CREATE ROLE "webed-p" LOGIN
