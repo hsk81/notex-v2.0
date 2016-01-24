@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
-DROP DATABASE "webed-t";
-DROP ROLE "webed-t";
+DROP DATABASE IF EXISTS "webed-t";
+DROP ROLE IF EXISTS "webed-t";
 
 -------------------------------------------------------------------------------
 CREATE ROLE "webed-t" LOGIN
