@@ -17,7 +17,7 @@ Installation
 
 Clone the GIT repository to the local disk and change the current working directory to the top level of the repository.
 
-* ```docker build -rm -t hsk81/notex:run .```
+* ```docker build --rm -t hsk81/notex:run .```
 
 Build a [docker](http://www.docker.io) container image and tag it as `hsk81/notex:run`: If your machine or internet connection is slow then just go have lunch, or do something time consuming, since the build process will take a while. A docker version `0.11.1` or newer is recommended.
 
