@@ -40,7 +40,7 @@ if __name__ == '__main__':
             'PyYAML==3.10',
             'SQLAlchemy==0.9.0',
             'WTForms==1.0.5',
-            'Werkzeug==0.9.4',
+            'Werkzeug==0.15.3',
             'acidfs==1.1dev',
             'blinker==1.3',
             'compressinja==0.0.2',
