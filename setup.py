@@ -35,7 +35,7 @@ if __name__ == '__main__':
             'Flask-SQLAlchemy==1.0',
             'Flask-Script==0.5.3', # <= 0.6.6
             'Flask-WTF==0.9.4',
-            'Jinja2==2.7.1',
+            'Jinja2==2.11.3',
             'MarkupSafe==0.18',
             'PyYAML==3.10',
             'SQLAlchemy==0.9.0',
