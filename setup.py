@@ -37,7 +37,7 @@ if __name__ == '__main__':
             'Flask-WTF==0.9.4',
             'Jinja2==2.7.1',
             'MarkupSafe==0.18',
-            'PyYAML==3.10',
+            'PyYAML==5.4',
             'SQLAlchemy==0.9.0',
             'WTForms==1.0.5',
             'Werkzeug==0.9.4',
