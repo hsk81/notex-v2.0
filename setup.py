@@ -55,7 +55,7 @@ if __name__ == '__main__':
             'spritemapper==1.0.0',
             'transaction==1.4.1',
             'uWSGI==2.0',
-            'ujson==1.33',
+            'ujson==5.4.0',
             'webassets==0.8', # <= 0.9
             'wsgiref==0.1.2',
             'yuicompressor==2.4.8',
