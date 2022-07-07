@@ -51,7 +51,7 @@ if __name__ == '__main__':
             'pylibmc==1.2.3',
             'pyzmq==14.0.1',
             'redis==2.9.0',
-            'requests==2.1.0',
+            'requests==2.20.0',
             'spritemapper==1.0.0',
             'transaction==1.4.1',
             'uWSGI==2.0',
